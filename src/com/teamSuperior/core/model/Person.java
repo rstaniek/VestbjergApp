@@ -1,4 +1,4 @@
-package com.teamSuperior.core;
+package com.teamSuperior.core.model;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
