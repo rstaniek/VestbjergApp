@@ -1,4 +1,4 @@
-package com.teamSuperior.core.model;
+package com.teamSuperior.core.model.entity;
 
 import com.teamSuperior.core.model.permission.Level1;
 import com.teamSuperior.core.model.permission.Level2;
