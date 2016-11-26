@@ -1,4 +1,4 @@
-package com.teamSuperior.core.GUI;
+package com.teamSuperior.guiApp.GUI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
