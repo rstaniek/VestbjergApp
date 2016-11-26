@@ -1,5 +1,6 @@
 package com.teamSuperior.core.GUI;
 
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -27,6 +28,7 @@ public class AlertBox {
         VBox layout = new VBox(10);
         layout.getChildren().addAll(label, btnClose);
         layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(10, 10, 10, 10));
 
         Scene scene = new Scene(layout);
         window.setScene(scene);
