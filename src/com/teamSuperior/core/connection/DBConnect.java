@@ -1,5 +1,7 @@
 package com.teamSuperior.core.connection;
 
+import com.teamSuperior.guiApp.GUI.AlertBox;
+
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ public class DBConnect {
         }catch (SQLException ex){
             //getErrorMessage
             System.out.println(ex.getMessage());
+            AlertBox.display("Connection Error", ex.getMessage());
         }
         return con;
     }
