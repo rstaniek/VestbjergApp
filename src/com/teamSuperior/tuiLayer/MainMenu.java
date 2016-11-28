@@ -9,6 +9,7 @@ public class MainMenu
 {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
+    private MenuCustomers menuCustomers = new MenuCustomers();
 
 
 
@@ -21,7 +22,6 @@ public class MainMenu
 
     public void printMenu() {
         System.out.println("Main Menu");
-        System.out.println("---------");
         System.out.println("1. Customers");
         System.out.println("2. Products");
         System.out.println("3. Offers");
@@ -29,7 +29,6 @@ public class MainMenu
         System.out.println("5. Contractors");
         System.out.println("6. Statistics");
         System.out.println("7. Exit");
-        System.out.println("-------");
         System.out.println("Your option");
     }
 
@@ -38,6 +37,7 @@ public class MainMenu
         choice = sc.nextInt();
         switch (choice) {
             case 1:
+                menuCustomers.printCustomersMenu();
                 break;
             case 2:
                 break;
