@@ -5,18 +5,18 @@ import java.util.Scanner;
 /**
  * Created by Smoothini on 28.11.2016.
  */
-public class MenuCustomers {
+public class MenuOrders {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
 
-    public void printCustomersMenu() {
+    public void printOrdersMenu() {
         int choice;
         while (isRunning) {
-            System.out.println("Customers Menu");
-            System.out.println("1. Add a customer");
-            System.out.println("2. Modify a customer");
-            System.out.println("3. Remove a customer");
-            System.out.println("4. Customer statistics");
+            System.out.println("Orders Menu");
+            System.out.println("1. Add an order");
+            System.out.println("2. Modify an order");
+            System.out.println("3. Remove an order");
+            System.out.println("4. Orders statistics");
             System.out.println("5. Go back");
             System.out.println("Your option:");
             choice = sc.nextInt();

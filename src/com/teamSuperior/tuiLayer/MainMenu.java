@@ -9,9 +9,13 @@ public class MainMenu
 {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
+
     private MenuCustomers menuCustomers = new MenuCustomers();
-
-
+    private MenuProducts menuProducts = new MenuProducts();
+    private MenuOffers menuOffers = new MenuOffers();
+    private MenuOrders menuOrders = new MenuOrders();
+    private MenuContractors menuContractors = new MenuContractors();
+    private MenuStatistics menuStatistics = new MenuStatistics();
 
     public MainMenu() {
         while (isRunning) {
@@ -40,14 +44,19 @@ public class MainMenu
                 menuCustomers.printCustomersMenu();
                 break;
             case 2:
+                menuProducts.printProductsMenu();
                 break;
             case 3:
+                menuOffers.printOffersMenu();
                 break;
             case 4:
+                menuOrders.printOrdersMenu();
                 break;
             case 5:
+                menuContractors.printContractorsMenu();
                 break;
             case 6:
+                menuStatistics.printStatisticsMenu();
                 break;
             case 7:
                 System.out.println("Thank you for using our software");
