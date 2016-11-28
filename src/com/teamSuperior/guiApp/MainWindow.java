@@ -1,10 +1,12 @@
 package com.teamSuperior.guiApp;
 
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
+import com.teamSuperior.guiApp.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.stage.Stage;
 
 /**
@@ -24,8 +26,9 @@ public class MainWindow extends Application {
             closeProgram();
         });
 
-        primaryStage.setScene(new Scene(root, 800, 600));
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
+
     }
 
     private void closeProgram(){
