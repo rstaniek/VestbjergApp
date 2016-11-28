@@ -15,13 +15,13 @@ public class DBConnect {
      * @return returns connection object
      */
     public static Connection connect(){
-        String hostName = "";
-        String userName = "";
-        String passWord = "";
+        String url = "jdbc:mysql://voonyx.mrhack.cz:3306/silvan";
+        String username = "silvan";
+        String password = "relae7VaelaiQuo";
+        Statement stmt = null;
         Connection con = null;
-
         try{
-            con = DriverManager.getConnection(hostName, userName, passWord);
+            con = DriverManager.getConnection(url, username, password);
         }catch (SQLException ex){
             //getErrorMessage
             System.out.println(ex.getMessage());
@@ -32,13 +32,12 @@ public class DBConnect {
 
     /***
      * Executes specified SQL query and returns the data from the table
-     * @param query
-     * @return ResultSet object
      */
-    public static ResultSet getFromDataBase(String query){
+    public static ResultSet getFromDataBase(){
+        String query = "SELECT * FROM test";
         Connection con = connect();
         ResultSet rs = null;
-        try{
+        try {
             Statement statement = con.createStatement();
             rs = statement.executeQuery(query);
         }catch (SQLException ex){
@@ -46,5 +45,4 @@ public class DBConnect {
         }
         return rs;
     }
-
 }
