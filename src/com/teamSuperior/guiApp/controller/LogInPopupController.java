@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
@@ -31,5 +32,6 @@ public class LogInPopupController {
 
     public void btn_cancel_click(ActionEvent actionEvent) {
         //TODO: close the window
+        AlertBox.display("Warning", "You need to log in if you want to use this application!");
     }
 }
