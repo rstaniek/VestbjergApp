@@ -39,6 +39,16 @@ public class MainMenu
         switch (choice) {
             case 1:
                 break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+            case 6:
+                break;
             case 7:
                 System.out.println("Thank you for using our software");
                 isRunning = false;
