@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -25,6 +26,8 @@ public class MainController implements Initializable {
 
     public Label label_name_welcome;
     public Label label_date;
+    public Label label_currencyRatio;
+    public Button btn_main_updateCurrencyRatio;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -43,5 +46,9 @@ public class MainController implements Initializable {
         Thread th = new Thread(task);
         th.setDaemon(true);
         th.start();
+    }
+
+    public void btn_main_updateCurrencyRatio_click(ActionEvent actionEvent) {
+        label_currencyRatio.setText(WebsiteCrawler.retrieveData("http://www.investing.com/currencies/eur-dkk", "last_last"));
     }
 }
