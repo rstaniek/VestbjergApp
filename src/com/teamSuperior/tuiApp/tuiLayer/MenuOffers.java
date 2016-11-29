@@ -1,25 +1,22 @@
-package com.teamSuperior.core.tuiLayer;
-
-import com.teamSuperior.core.controlLayer.CustomerControl;
+package com.teamSuperior.tuiApp.tuiLayer;
 
 import java.util.Scanner;
 
 /**
  * Created by Smoothini on 28.11.2016.
  */
-public class MenuCustomers {
+public class MenuOffers {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
-    private CustomerControl customerControl = new CustomerControl();
 
-    public void printCustomersMenu() {
+    public void printOffersMenu() {
         int choice;
         while (isRunning) {
-            System.out.println("Customers Menu");
-            System.out.println("1. Add a customer");
-            System.out.println("2. Modify a customer");
-            System.out.println("3. Remove a customer");
-            System.out.println("4. View customers");
+            System.out.println("Offers Menu");
+            System.out.println("1. Add an offer");
+            System.out.println("2. Modify an offer");
+            System.out.println("3. Remove an offer");
+            System.out.println("4. Offers statistics");
             System.out.println("5. Go back");
             System.out.println("Your option:");
             choice = sc.nextInt();
@@ -34,7 +31,7 @@ public class MenuCustomers {
                     System.out.println("remove");
                     break;
                 case 4:
-                    customerControl.viewCustomers();
+                    System.out.println("stats");
                     break;
                 case 5:
                     isRunning = false;

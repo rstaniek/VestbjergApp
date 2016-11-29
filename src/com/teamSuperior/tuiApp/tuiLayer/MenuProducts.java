@@ -1,22 +1,22 @@
-package com.teamSuperior.core.tuiLayer;
+package com.teamSuperior.tuiApp.tuiLayer;
 
 import java.util.Scanner;
 
 /**
  * Created by Smoothini on 28.11.2016.
  */
-public class MenuContractors {
+public class MenuProducts {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
 
-    public void printContractorsMenu() {
+    public void printProductsMenu() {
         int choice;
         while (isRunning) {
-            System.out.println("Contractors Menu");
-            System.out.println("1. Add a contractor");
-            System.out.println("2. Modify a contractor");
-            System.out.println("3. Remove a contractor");
-            System.out.println("4. Contractors statistics");
+            System.out.println("Products Menu");
+            System.out.println("1. Add a product");
+            System.out.println("2. Modify a product");
+            System.out.println("3. Remove a product");
+            System.out.println("4. Product statistics");
             System.out.println("5. Go back");
             System.out.println("Your option:");
             choice = sc.nextInt();
