@@ -9,12 +9,7 @@ import java.sql.ResultSet;
 
 public class Contractor {
     private static int id;
-    private String name;
-    private String address;
-    private String city;
-    private String zip;
-    private String phone;
-    private String email;
+    private String name, address, city, zip, phone, email;
 
     public Contractor(String name, String address, String city, String zip, String phone, String email) {
         this.name = name;

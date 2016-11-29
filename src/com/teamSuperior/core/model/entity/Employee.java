@@ -21,15 +21,7 @@ public class Employee{
     private Level3 accessLevel3;
     ResultSet res = null;
     private static int id = 0;
-    private String name;
-    private String surname;
-    private String address;
-    private String city;
-    private String zip;
-    private String email;
-    private String phone;
-    private String password;
-    private String position;
+    private String name, surname, address, city, zip, email, phone, password, position;
     private int numberOfSales;
     private double totalRevenue;
     private int accessLevel;
@@ -129,35 +121,6 @@ public class Employee{
         this.password = password;
     }
 
-    public String getPosition() {
-        return position;
-    }
 
-    public void setPosition(String position) {
-        this.position = position;
-    }
 
-    public int getNumberOfSales() {
-        return numberOfSales;
-    }
-
-    public void setNumberOfSales(int numberOfSales) {
-        this.numberOfSales = numberOfSales;
-    }
-
-    public double getTotalRevenue() {
-        return totalRevenue;
-    }
-
-    public void setTotalRevenue(double totalRevenue) {
-        this.totalRevenue = totalRevenue;
-    }
-
-    public int getAccessLevel() {
-        return accessLevel;
-    }
-
-    public void setAccessLevel(int accessLevel) {
-        this.accessLevel = accessLevel;
-    }
 }
