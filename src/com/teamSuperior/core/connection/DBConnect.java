@@ -18,11 +18,12 @@ public class DBConnect {
         String url = "jdbc:mysql://voonyx.mrhack.cz:3306/silvan";
         String username = "silvan";
         String password = "relae7VaelaiQuo";
-        Statement stmt = null;
         Connection con = null;
-        try{
+        try
+        {
             con = DriverManager.getConnection(url, username, password);
-        }catch (SQLException ex){
+        }
+        catch (SQLException ex){
             //getErrorMessage
             System.out.println(ex.getMessage());
             AlertBox.display("Connection Error", ex.getMessage());
@@ -33,8 +34,7 @@ public class DBConnect {
     /***
      * Executes specified SQL query and returns the data from the table
      */
-    public static ResultSet getFromDataBase(){
-        String query = "SELECT * FROM test";
+    public static ResultSet getFromDataBase(String query){
         Connection con = connect();
         ResultSet rs = null;
         try {

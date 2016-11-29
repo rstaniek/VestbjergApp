@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp;
 
+import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.controller.MainController;
@@ -17,6 +18,7 @@ import javafx.stage.Stage;
 public class MainWindow extends Application {
     private Stage window;
     private boolean isLoggedIn;
+    Employee em;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -41,6 +43,10 @@ public class MainWindow extends Application {
                 window.setTitle("Log in");
                 window.setScene(new Scene(logInScreen));
                 window.show();
+
+                // testing db access
+                em = new Employee();
+                AlertBox.display("title", em.getName() + " " + em.getSurname() + " " + em.getEmail());
             }
             catch (Exception ex){
                 AlertBox.display("Unexpected exception", ex.getMessage());

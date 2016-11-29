@@ -2,7 +2,7 @@ package com.teamSuperior.core.model.entity;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
- */
+
 public abstract class Person {
     private String name, surname, street, city, zip, email, phoneNo, password;
 
@@ -50,3 +50,4 @@ public abstract class Person {
     }
 }
 //SOME COMMENT
+ */
