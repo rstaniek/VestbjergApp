@@ -40,9 +40,24 @@ public class DBConnect {
         try {
             Statement statement = con.createStatement();
             rs = statement.executeQuery(query);
+            con.close();
         }catch (SQLException ex){
             System.out.println(ex.getMessage());
+            AlertBox.display("Connection Error", ex.getMessage());
         }
         return rs;
+    }
+
+    public static boolean upload(String query){
+        Connection con = connect();
+        boolean isExecuted = false;
+        try{
+            Statement statement = con.createStatement();
+            isExecuted = statement.execute(query);
+            con.close();
+        }catch (SQLException ex){
+            AlertBox.display("Connection Error", ex.getMessage());
+        }
+        return isExecuted;
     }
 }

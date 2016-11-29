@@ -21,14 +21,10 @@ public class Employee{
     private Level3 accessLevel3;
     ResultSet res = null;
     private static int id = 0;
-    private String name;
-    private String surname;
-    private String street;
-    private String city;
-    private String zip;
-    private String email;
-    private String phone;
-    private String password;
+    private String name, surname, address, city, zip, email, phone, password, position;
+    private int numberOfSales;
+    private double totalRevenue;
+    private int accessLevel;
     public Employee() {
         try
         {
@@ -39,12 +35,16 @@ public class Employee{
             {
                 this.name = res.getString(2);
                 this.surname = res.getString(3);
-                this.street = res.getString(4);
+                this.address = res.getString(4);
                 this.city = res.getString(5);
                 this.zip = res.getString(6);
                 this.email = res.getString(7);
                 this.phone = res.getString(8);
                 this.password = res.getString(9);
+                this.position = res.getString(10);
+                this.numberOfSales = res.getInt(11);
+                this.totalRevenue = res.getDouble(12);
+                this.accessLevel = res.getInt(13);
             }
         }
         catch(SQLException ex)
@@ -73,12 +73,12 @@ public class Employee{
         this.surname = surname;
     }
 
-    public String getStreet() {
-        return street;
+    public String getAddress() {
+        return address;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getCity() {
@@ -120,6 +120,7 @@ public class Employee{
     public void setPassword(String password) {
         this.password = password;
     }
+
 
 
 }
