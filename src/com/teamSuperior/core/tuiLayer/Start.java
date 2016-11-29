@@ -1,4 +1,4 @@
-package com.teamSuperior.tuiLayer;
+package com.teamSuperior.core.tuiLayer;
 
 /**
  * Created by Smoothini on 28.11.2016.

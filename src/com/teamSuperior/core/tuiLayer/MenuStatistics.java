@@ -1,4 +1,4 @@
-package com.teamSuperior.tuiLayer;
+package com.teamSuperior.core.tuiLayer;
 
 import java.util.Scanner;
 
