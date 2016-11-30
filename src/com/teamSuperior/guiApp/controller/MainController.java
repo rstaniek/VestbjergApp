@@ -1,13 +1,21 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
+import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.stage.Stage;
 
+import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -18,10 +26,20 @@ import java.util.ResourceBundle;
  */
 public class MainController implements Initializable {
 
+    @FXML
     public Label label_name_welcome;
+    @FXML
     public Label label_date;
+    @FXML
     public Label label_ratioUSDDKK;
+    @FXML
     public Label label_ratioEURDKK;
+    @FXML
+    public MenuItem menu_close;
+    @FXML
+    public MenuItem menu_settings;
+
+    private Stage settings;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -61,5 +79,37 @@ public class MainController implements Initializable {
         th2.setDaemon(true);
         th.start();
         th2.start();
+    }
+
+    //Menu strip handling
+    public void menu_close_clicked(ActionEvent actionEvent) {
+        Platform.exit();
+    }
+
+    public void menu_settings_clicked(ActionEvent actionEvent) {
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
+            Stage settingsWnd = new Stage();
+            settingsWnd.setOnCloseRequest(e -> {
+                e.consume();
+                settingsWndClose();
+            });
+            settingsWnd.setTitle("Settings");
+            settingsWnd.setResizable(false);
+            settingsWnd.setScene(new Scene(root));
+            settings = settingsWnd;
+            settingsWnd.show();
+        }
+        catch (IOException ex){
+            AlertBox.display("Java IO Exception", ex.getMessage());
+        }
+        catch (Exception ex2){
+            AlertBox.display("Unexpected exception", ex2.getMessage());
+        }
+    }
+
+    private void settingsWndClose(){
+        //TODO: handle seving the settings before closing
+        settings.close();
     }
 }
