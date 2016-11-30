@@ -1,18 +1,23 @@
 package com.teamSuperior.core.connection;
 
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import javafx.fxml.Initializable;
 
+import java.net.URL;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
  */
-public class DBConnect {
+public class DBConnect implements Initializable{
 
-    private static final String url = "jdbc:mysql://voonyx.mrhack.cz:3306/silvan";
-    private static final String username = "silvan";
-    private static final String password = "relae7VaelaiQuo";
+    private static String url;
+    private static String username;
+    private static String password;
+    private Preferences reg;
 
     /***
      * Connects to thee database
@@ -72,5 +77,13 @@ public class DBConnect {
             AlertBox.display("Connection Error", ex.getMessage());
         }
         return isExecuted;
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        reg = Preferences.userRoot();
+        url = reg.get("DATABASE_HOSTNAME", "");
+        username = reg.get("DATABASE_USER", "");
+        password = reg.get("DATABASE_PASS", "");
     }
 }
