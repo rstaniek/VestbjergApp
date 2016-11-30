@@ -22,9 +22,8 @@ public class Employee{
     ResultSet res = null;
     private static int id = 0;
     private String name, surname, address, city, zip, email, phone, password, position;
-    private int numberOfSales;
+    private int numberOfSales, accessLevel;
     private double totalRevenue;
-    private int accessLevel;
     public Employee() {
         try
         {
