@@ -12,12 +12,19 @@ import java.util.prefs.Preferences;
 /**
  * Created by Domestos Maximus on 24-Nov-16.
  */
-public class DBConnect implements Initializable{
+public class DBConnect{
 
     private static String url;
     private static String username;
     private static String password;
     private Preferences reg;
+
+    public DBConnect(){
+        reg = Preferences.userRoot();
+        url = reg.get("DATABASE_HOSTNAME", "");
+        username = reg.get("DATABASE_USER", "");
+        password = reg.get("DATABASE_PASS", "");
+    }
 
     /***
      * Connects to thee database
@@ -52,7 +59,7 @@ public class DBConnect implements Initializable{
     /***
      * Executes specified SQL query and returns the data from the table
      */
-    public static ResultSet getFromDataBase(String query){
+    public ResultSet getFromDataBase(String query){
         Connection con = connect(url, username, password);
         ResultSet rs = null;
         try {
@@ -66,7 +73,7 @@ public class DBConnect implements Initializable{
         return rs;
     }
 
-    public static boolean upload(String query){
+    public boolean upload(String query){
         Connection con = connect(url, username, password);
         boolean isExecuted = false;
         try{
@@ -77,13 +84,5 @@ public class DBConnect implements Initializable{
             AlertBox.display("Connection Error", ex.getMessage());
         }
         return isExecuted;
-    }
-
-    @Override
-    public void initialize(URL location, ResourceBundle resources) {
-        reg = Preferences.userRoot();
-        url = reg.get("DATABASE_HOSTNAME", "");
-        username = reg.get("DATABASE_USER", "");
-        password = reg.get("DATABASE_PASS", "");
     }
 }

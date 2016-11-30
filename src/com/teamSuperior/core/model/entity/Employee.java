@@ -9,7 +9,6 @@ import com.teamSuperior.guiApp.GUI.AlertBox;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.teamSuperior.core.connection.DBConnect.*;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
@@ -24,12 +23,15 @@ public class Employee{
     private String name, surname, address, city, zip, email, phone, password, position;
     private int numberOfSales, accessLevel;
     private double totalRevenue;
+    private DBConnect db;
+
     public Employee() {
+        db = new DBConnect();
         try
         {
             id++;
             String query = "SELECT * FROM employees WHERE id = 1";
-            res = getFromDataBase(query);
+            res = db.getFromDataBase(query);
             while(res.next())
             {
                 this.name = res.getString(2);

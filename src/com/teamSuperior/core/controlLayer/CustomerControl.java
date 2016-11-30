@@ -1,5 +1,7 @@
 package com.teamSuperior.core.controlLayer;
 
+import com.teamSuperior.core.connection.DBConnect;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -8,6 +10,7 @@ import static com.teamSuperior.core.connection.DBConnect.*;
  * Created by Smoothini on 29.11.2016.
  */
 public class CustomerControl {
+    private DBConnect db;
 
     /*public void addCustomer(String name, String surname, String street, String city, String zip, String email, String phone, String password){
         try{
@@ -15,12 +18,15 @@ public class CustomerControl {
         }
     }*/
 
+    public CustomerControl(){
+        db = new DBConnect();
+    }
 
     public void viewCustomers(){
         ResultSet resultSet = null;
         try {
             String query = "SELECT * FROM employees";
-            resultSet = getFromDataBase(query);
+            resultSet = db.getFromDataBase(query);
             while(resultSet.next())
             {
                 System.out.println("Name: " + resultSet.getString(2));
