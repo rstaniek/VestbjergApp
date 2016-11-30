@@ -4,6 +4,10 @@ package com.teamSuperior.guiApp.GUI;
  * Created by Domestos Maximus on 29-Nov-16.
  */
 public enum ErrorCode {
+    CONNECTION_HOSTNAME_EMPTY("Database connection ERROR", "No path to host was specified"),
+    CONNECTION_USERNAME_EMPTY("Database connection ERROR", "Username cannot be empty"),
+    CONNECTION_PASSWORD_EMPTY("Database connection ERROR", "Password cannot be empty"),
+    CONNECTION_TEST_FAILED("Database connection ERROR", "Test Failed"),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty"),
     LOGIN_USERNAME_EMPTY("User validation error", "Employee ID cannot be empty"),
     LOGIN_PASSW_EMPTY("User validation error", "The password field cannot be empty");

@@ -10,21 +10,21 @@ import java.util.ArrayList;
  */
 public class DBConnect {
 
+    private static final String url = "jdbc:mysql://voonyx.mrhack.cz:3306/silvan";
+    private static final String username = "silvan";
+    private static final String password = "relae7VaelaiQuo";
+
     /***
      * Connects to thee database
      * @return returns connection object
      */
-    public static Connection connect(){
-        String url = "jdbc:mysql://voonyx.mrhack.cz:3306/silvan";
-        String username = "silvan";
-        String password = "relae7VaelaiQuo";
+    private static Connection connect(String hostname, String user, String pass){
         Connection con = null;
         try
         {
-            con = DriverManager.getConnection(url, username, password);
+            con = DriverManager.getConnection(hostname, user, pass);
         }
         catch (SQLException ex){
-            //getErrorMessage
             System.out.println(ex.getMessage());
             AlertBox.display("Connection Error", ex.getMessage());
         }
@@ -32,10 +32,23 @@ public class DBConnect {
     }
 
     /***
+     * Test the connection
+     * @return returns True when connected, otherwise false
+     */
+    public static boolean testConnection(String host, String user, String pass){
+        try(Connection conn = DriverManager.getConnection(host, user, pass)){
+            return true;
+        }
+        catch (SQLException ex){
+            return false;
+        }
+    }
+
+    /***
      * Executes specified SQL query and returns the data from the table
      */
     public static ResultSet getFromDataBase(String query){
-        Connection con = connect();
+        Connection con = connect(url, username, password);
         ResultSet rs = null;
         try {
             Statement statement = con.createStatement();
@@ -49,7 +62,7 @@ public class DBConnect {
     }
 
     public static boolean upload(String query){
-        Connection con = connect();
+        Connection con = connect(url, username, password);
         boolean isExecuted = false;
         try{
             Statement statement = con.createStatement();
