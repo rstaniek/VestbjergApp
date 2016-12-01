@@ -1,6 +1,6 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
-import com.teamSuperior.core.controlLayer.ProductControl;
+import com.teamSuperior.tuiApp.controlLayer.ProductController;
 
 import java.util.Scanner;
 
@@ -10,7 +10,11 @@ import java.util.Scanner;
 public class MenuProducts {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
-    ProductControl productControl = new ProductControl();
+    ProductController productController;
+
+    public MenuProducts(){
+        productController = new ProductController();
+    }
 
     public void printProductsMenu() {
         int choice, id, barcode, quantity, contractorId;
@@ -29,6 +33,8 @@ public class MenuProducts {
                 case 1:
                     System.out.println("Add a product:");
 
+                    System.out.println("Id:");
+                    id = sc.nextInt();
                     System.out.println("Name:");
                     name = sc.next();
                     System.out.println("Subname:");
@@ -45,7 +51,7 @@ public class MenuProducts {
                     quantity = sc.nextInt();
                     System.out.println("Contractor ID:");
                     contractorId = sc.nextInt();
-                    //productControl.addProduct(name, subname, barcode, category, price, location, quantity, contractorId);
+                    productController.addProduct(id, name, subname, barcode, category, price, location, quantity, contractorId);
                     break;
                 case 2:
                     System.out.println("Select the ID of the product you want to modify:");
@@ -58,15 +64,23 @@ public class MenuProducts {
                     //~*may need more methods*~
                     break;
                 case 3:
-                    System.out.println("Select the ID of the product you want to modify:");
-                    //productControl method to list only id and product names
+                    System.out.println("Select the ID of the product you want to remove:");
+                    productController.listIdAndNameOfProducts();
                     id = sc.nextInt();
-                    //maybe a confirmation before removal?
-                    //productControl.removeById(id);
+                    if(productController.foundProductById(id)){
+                        System.out.println("Are you sure you want to remove this product? (y/n)");
+                        String confirmation = sc.next();
+                        if(confirmation.equals("y") || confirmation.equals("Y"))
+                            if(productController.removeProductById(id))
+                                System.out.println("Product succesfuly removed");;
+                    }
+                    else
+                        System.out.println("There is no product coresponding to that ID!");
                     break;
                 case 4:
                     System.out.println("Existing products:");
-                    //productControl.viewProducts();
+                    if(productController.listAllProducts() == 0)
+                        System.out.println("There are no products at this moment");
                     break;
                 case 5:
                     isRunning = false;
