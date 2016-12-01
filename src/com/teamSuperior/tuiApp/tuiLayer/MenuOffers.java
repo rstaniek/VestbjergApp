@@ -1,5 +1,8 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Scanner;
 
 /**
@@ -28,15 +31,20 @@ public class MenuOffers {
                     System.out.println("Add an offer:");
                     //show products by id name and price
 
-                    System.out.println("Date:");
-                    date = sc.next();
                     System.out.println("Product ID:");
                     productId = sc.nextInt();
+
                     System.out.println("Discounted price:");
                     price = sc.nextDouble();
+
+                    DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+                    Date dateobj = new Date();
+                    date = df.format(dateobj);
+                    System.out.println("The date assigned to this offer is: " + date);
+
                     //calculate the dicount
                     //dicount = old price - price
-                    //offersControl.addOffer(date, productId, price, discount)
+                    //offersControl.addOffer(productId, date, price, discount)
                     break;
                 case 2:
                     System.out.println("Select the ID of the offer you want to modify:");
@@ -44,6 +52,7 @@ public class MenuOffers {
                     id = sc.nextInt();
                     //select which atributes you want to modify
                     //modify em
+                    //fok bitches
                     //???
                     //profit
                     //~*may need more methods*~
