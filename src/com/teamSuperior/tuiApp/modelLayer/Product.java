@@ -8,7 +8,8 @@ public class Product {
     private double price;
     private String name, subname, category, location;
 
-    public Product(int barcode, int quantity, int contractorId, double price, String name, String subname, String category, String location) {
+    public Product(int id, int barcode, int quantity, int contractorId, double price, String name, String subname, String category, String location) {
+        this.id = id;
         this.barcode = barcode;
         this.quantity = quantity;
         this.contractorId = contractorId;
