@@ -64,21 +64,22 @@ public class MenuProducts {
                     //~*may need more methods*~
                     break;
                 case 3:
-                    System.out.println("Select the ID of the product you want to remove:");
-                    productController.listIdAndNameOfProducts();
-                    id = sc.nextInt();
-                    if(productController.foundProductById(id)){
-                        System.out.println("Are you sure you want to remove this product? (y/n)");
-                        String confirmation = sc.next();
-                        if(confirmation.equals("y") || confirmation.equals("Y"))
-                            if(productController.removeProductById(id))
-                                System.out.println("Product succesfuly removed");
+                    if(productController.listIdAndNameOfProducts() > 0) {
+                        System.out.println("Select the ID of the product you want to remove:");
+                        id = sc.nextInt();
+                        if (productController.foundProductById(id)) {
+                            System.out.println("Are you sure you want to remove this product? (y/n)");
+                            String confirmation = sc.next();
+                            if (confirmation.equals("y") || confirmation.equals("Y"))
+                                if (productController.removeProductById(id))
+                                    System.out.println("Product succesfuly removed");
+                        } else
+                            System.out.println("There is no product coresponding to that ID");
                     }
                     else
-                        System.out.println("There is no product coresponding to that ID!");
+                        System.out.println("There are no products at this moment");
                     break;
                 case 4:
-                    System.out.println("Existing products:");
                     if(productController.listAllProducts() == 0)
                         System.out.println("There are no products at this moment");
                     break;
