@@ -3,6 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.GUI.ErrorCode;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -14,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -41,6 +45,10 @@ public class MainController implements Initializable {
     public MenuItem menu_close;
     @FXML
     public MenuItem menu_settings;
+    @FXML
+    public Button btn_logIn;
+    @FXML
+    public ImageView imgView_logo;
 
     private Stage settings;
 
@@ -54,32 +62,7 @@ public class MainController implements Initializable {
         registry = Preferences.userRoot();
         isLoggedIn = false;
 
-        //init loginPupup
-        if(!isLoggedIn && !registry.get("DATABASE_HOSTNAME", "").equals("")){
-            try{
-                Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
-                Stage window = new Stage();
-                window.initModality(Modality.APPLICATION_MODAL);
-                window.setTitle("Log in");
-                window.setScene(new Scene(logInScreen));
-                window.show();
-
-                // testing db access
-                em = new Employee();
-                AlertBox.display("title", em.getName() + " " + em.getSurname() + " " + em.getEmail());
-            }
-            catch (Exception ex){
-                AlertBox.display("Unexpected exception", ex.getMessage());
-            }
-            finally {
-                //TODO: handle logging in
-            }
-        }
-        else{
-            menu_settings_clicked(null);
-        }
-
-
+        imgView_logo.setImage(new Image("http://www.gmkfreelogos.com/logos/S/img/Silvan.gif"));
 
         //Date and time
         Task getDateTime = new Task<Void>() {
@@ -149,5 +132,29 @@ public class MainController implements Initializable {
     private void settingsWndClose(){
         //TODO: handle seving the settings before closing
         settings.close();
+    }
+
+    public void btn_logIn_cicked(ActionEvent actionEvent) {
+        if(!registry.get("DATABASE_HOSTNAME", "").equals("")){
+            try{
+                Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
+                Stage window = new Stage();
+                window.initModality(Modality.WINDOW_MODAL);
+                window.setTitle("Log in");
+                window.setScene(new Scene(logInScreen));
+                window.show();
+
+
+            }
+            catch (Exception ex){
+                AlertBox.display("Unexpected exception", ex.getMessage());
+            }
+            finally {
+                //TODO: handle logging in
+            }
+        }
+        else{
+            Error.displayError(ErrorCode.CONNECTION_HOSTNAME_EMPTY);
+        }
     }
 }
