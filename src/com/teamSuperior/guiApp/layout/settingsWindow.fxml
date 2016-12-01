@@ -33,6 +33,9 @@
                         </AnchorPane>
                   </content>
                 </Tab>
+                  <Tab text="Discounts">
+                      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                  </Tab>
                   <Tab text="Misc">
                       <content>
                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
