@@ -36,24 +36,7 @@ public class MainWindow extends Application {
         primaryStage.show();
 
         if(!isLoggedIn){
-            try{
-                Parent logInScreen = FXMLLoader.load(getClass().getResource("layout/loginWindowPopup.fxml"));
-                Stage window = new Stage();
-                window.initModality(Modality.APPLICATION_MODAL);
-                window.setTitle("Log in");
-                window.setScene(new Scene(logInScreen));
-                window.show();
-
-                // testing db access
-                em = new Employee();
-                AlertBox.display("title", em.getName() + " " + em.getSurname() + " " + em.getEmail());
-            }
-            catch (Exception ex){
-                AlertBox.display("Unexpected exception", ex.getMessage());
-            }
-            finally {
-                //TODO: handle logging in
-            }
+            //ghhkgjhg
         }
     }
 

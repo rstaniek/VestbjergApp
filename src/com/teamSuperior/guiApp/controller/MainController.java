@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
+import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -13,6 +14,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Domestos on 16.11.26.
@@ -41,8 +44,43 @@ public class MainController implements Initializable {
 
     private Stage settings;
 
+    private Preferences registry;
+    private boolean isLoggedIn;
+
+    private Employee em;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        registry = Preferences.userRoot();
+        isLoggedIn = false;
+
+        //init loginPupup
+        if(!isLoggedIn && !registry.get("DATABASE_HOSTNAME", "").equals("")){
+            try{
+                Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
+                Stage window = new Stage();
+                window.initModality(Modality.APPLICATION_MODAL);
+                window.setTitle("Log in");
+                window.setScene(new Scene(logInScreen));
+                window.show();
+
+                // testing db access
+                em = new Employee();
+                AlertBox.display("title", em.getName() + " " + em.getSurname() + " " + em.getEmail());
+            }
+            catch (Exception ex){
+                AlertBox.display("Unexpected exception", ex.getMessage());
+            }
+            finally {
+                //TODO: handle logging in
+            }
+        }
+        else{
+            menu_settings_clicked(null);
+        }
+
+
+
         //Date and time
         Task getDateTime = new Task<Void>() {
             @Override
