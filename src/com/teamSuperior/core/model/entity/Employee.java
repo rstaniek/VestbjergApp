@@ -24,7 +24,11 @@ public class Employee{
     private String email;
     private String phone;
     private String password;
-    public Employee(int id, String name, String surname, String address, String city, String zip, String email, String phone, String password) {
+    private String position;
+    private int numberOfSales;
+    private double totalRevenue;
+    private int accessLevel;
+    public Employee(int id, String name, String surname, String address, String city, String zip, String email, String phone, String password, String position, int numberOfSales, double totalRevenue, int accessLevel) {
         this.id = id;
         this.name = name;
         this.surname = surname;
@@ -34,6 +38,10 @@ public class Employee{
         this.email = email;
         this.phone = phone;
         this.password = password;
+        this.position = position;
+        this.numberOfSales = numberOfSales;
+        this.totalRevenue = totalRevenue;
+        this.accessLevel = accessLevel;
         accessLevel1 = new Level1();
         accessLevel2 = new Level2();
         accessLevel3 = new Level3();

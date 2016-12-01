@@ -95,11 +95,14 @@ public class MainController implements Initializable {
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
                     String password = rs.getString("password");
-                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password);
+                    String position = rs.getString("position");
+                    int numberOfSales = rs.getInt("numberOfSales");
+                    double totalRevenue = rs.getDouble("totalRevenue");
+                    int accessLevel = rs.getInt("accessLevel");
+                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
                     employees.add(emp);
                 }
             }
-            System.out.println(employees.get(5).getName());
         }
         catch(SQLException ex)
         {
