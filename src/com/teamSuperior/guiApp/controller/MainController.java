@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
@@ -23,8 +24,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -57,6 +61,10 @@ public class MainController implements Initializable {
 
     private Employee em;
 
+    // just database things
+    DBConnect conn;
+    private Employee emp;
+    private ArrayList<Employee> employees;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         registry = Preferences.userRoot();
@@ -64,7 +72,41 @@ public class MainController implements Initializable {
 
         imgView_logo.setImage(new Image("http://www.gmkfreelogos.com/logos/S/img/Silvan.gif"));
 
-        //Date and time
+        conn = new DBConnect();
+        // generating array list and users
+        employees = new ArrayList<>();
+        try
+        {
+            ResultSet rsCount = conn.getFromDataBase("SELECT COUNT(*) FROM employees");
+            rsCount.next();
+            int count = rsCount.getInt(1);
+            rsCount.close();
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
+            for(int i = 0; i < count -1; i++)
+            {
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    String surname = rs.getString("surname");
+                    String address = rs.getString("address");
+                    String city = rs.getString("city");
+                    String zip = rs.getString("zip");
+                    String email = rs.getString("email");
+                    String phone = rs.getString("phone");
+                    String password = rs.getString("password");
+                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password);
+                    employees.add(emp);
+                }
+            }
+            System.out.println(employees.get(5).getName());
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            AlertBox.display("Connection Error", ex.getMessage());
+        }
+
         Task getDateTime = new Task<Void>() {
             @Override
             public Void call() throws Exception {
