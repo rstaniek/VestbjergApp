@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class MenuProducts {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
-    ProductController productController;
+    private ProductController productController;
 
     public MenuProducts(){
         productController = new ProductController();
@@ -72,7 +72,7 @@ public class MenuProducts {
                         String confirmation = sc.next();
                         if(confirmation.equals("y") || confirmation.equals("Y"))
                             if(productController.removeProductById(id))
-                                System.out.println("Product succesfuly removed");;
+                                System.out.println("Product succesfuly removed");
                     }
                     else
                         System.out.println("There is no product coresponding to that ID!");

@@ -43,6 +43,13 @@ public class ProductController {
         return productContainer.getProducts().size();
     }
 
+    public int listIdNamePriceOfProducts(){
+        for(Product product : productContainer.getProducts()) {
+            System.out.println("ID: " + product.getId() + "  Name: " + product.getName() + "  Normal price: " + product.getPrice() + "$");
+        }
+        return productContainer.getProducts().size();
+    }
+
     public boolean foundProductById(int id){
         boolean found = false;
         for(Product product : productContainer.getProducts())
@@ -62,6 +69,18 @@ public class ProductController {
             }
         }
         return removed;
+    }
+
+    public double calculateDiscount(int id, double newPrice){
+        double discount = 0;
+        Iterator<Product> it = productContainer.getProducts().iterator();
+        while(it.hasNext()){
+            Product product = it.next();
+            if(product.getId() == id){
+                discount = product.getPrice() - newPrice;
+            }
+        }
+        return discount;
     }
 
 }
