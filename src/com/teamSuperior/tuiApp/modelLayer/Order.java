@@ -7,14 +7,14 @@ public class Order {
     private int id, productId, contractorId, quantity, approved, delivered;
     private String department;
 
-    public Order(int id, int productId, int contractorId, int quantity, int approved, int delivered, String department) {
+    public Order(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered) {
         this.id = id;
         this.productId = productId;
         this.contractorId = contractorId;
         this.quantity = quantity;
+        this.department = department;
         this.approved = approved;
         this.delivered = delivered;
-        this.department = department;
     }
 
     public int getId() {
