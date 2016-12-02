@@ -180,11 +180,11 @@ public class MainController implements Initializable {
     }
 
     public void btn_logIn_cicked(ActionEvent actionEvent) {
-        if(!registry.get("DATABASE_HOSTNAME", "").equals("")){
+        if(!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")){
             try{
                 Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
                 Stage window = new Stage();
-                window.initModality(Modality.WINDOW_MODAL);
+                window.initModality(Modality.APPLICATION_MODAL);
                 window.setTitle("Log in");
                 window.setScene(new Scene(logInScreen));
                 window.show();
@@ -199,7 +199,7 @@ public class MainController implements Initializable {
             }
         }
         else{
-            Error.displayError(ErrorCode.CONNECTION_HOSTNAME_EMPTY);
+            AlertBox.display("Log in ERROR", "Please set up the configuration first!");
         }
     }
 }

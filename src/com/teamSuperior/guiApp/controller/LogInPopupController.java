@@ -38,6 +38,9 @@ public class LogInPopupController {
         //handling the input
         //TODO: log in the user
         boolean isValid = validateUser(txt_empID.getText(), txt_empPassw.getText());
+        if(isValid){
+            AlertBox.display("Operation succeeded", String.format("Welcome %1$s", loggedUser.getName()));
+        }
     }
 
     public void btn_cancel_click(ActionEvent actionEvent) {

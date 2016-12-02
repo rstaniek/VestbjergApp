@@ -118,6 +118,7 @@ public class SettingsController implements Initializable {
         //connection
         text_settings_connection_hostname.setText(registry.get("DATABASE_HOSTNAME", ""));
         text_settings_connection_username.setText(registry.get("DATABASE_USER", ""));
+        text_settings_connection_password.setText(registry.get("DATABASE_PASS", ""));
 
 
         //discounts
