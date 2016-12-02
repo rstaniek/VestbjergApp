@@ -1,5 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,6 +9,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collections;
 
 import static com.teamSuperior.guiApp.GUI.Error.*;
@@ -20,6 +24,7 @@ public class LogInPopupController {
     public Button btn_cancel;
     public PasswordField txt_empPassw;
     public TextField txt_empID;
+    private Employee loggedUser;
 
     public void btn_logIn_click(ActionEvent actionEvent) {
         //TODO: write an enum for error codes
@@ -72,8 +77,45 @@ public class LogInPopupController {
         styleClass.removeAll(Collections.singleton("tferror"));
     }
 
-    private boolean validateUser(String username, String password){
-        //TODO: to be finished
-        return true;
+    private boolean validateUser(String username, String password) {
+        DBConnect conn = new DBConnect();
+        ResultSet rs = null;
+        boolean ret = false;
+        rs = conn.getFromDataBase("SELECT * FROM employees WHERE email ='"+username+"' AND password = '"+password+"'");
+        try
+        {
+            rs.next();
+            if(rs.getInt("id") != 0 && rs.getString("name") != null
+                    && rs.getString("surname") != null
+                    && rs.getString("address") != null
+                    && rs.getString("city") != null
+                    && rs.getString("zip") != null
+                    && rs.getString("email") != null
+                    && rs.getString("phone") != null
+                    && rs.getString("password") != null
+                    && rs.getString("position") != null
+                    && rs.getInt("accessLevel") >= 1
+                    )
+            {
+                loggedUser = new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("surname"), rs.getString("address"), rs.getString("city"), rs.getString("zip"), rs.getString("email"), rs.getString("phone"), rs.getString("password"), rs.getString("position"), rs.getInt("numberOfSales"), rs.getDouble("totalRevenue"), rs.getInt("accessLevel"));
+                ret = true;
+            }
+            else
+            {
+                ret = false;
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            AlertBox.display("Connection Error", ex.getMessage());
+        }
+
+        return ret;
+    }
+
+    public Employee getUser()
+    {
+        return loggedUser;
     }
 }
