@@ -1,9 +1,6 @@
 package com.teamSuperior.core.model.entity;
 
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.core.model.permission.Level1;
-import com.teamSuperior.core.model.permission.Level2;
-import com.teamSuperior.core.model.permission.Level3;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 
 import java.sql.ResultSet;
@@ -15,9 +12,6 @@ import java.sql.SQLException;
  */
 public class Employee{
 
-    private Level1 accessLevel1;
-    private Level2 accessLevel2;
-    private Level3 accessLevel3;
     ResultSet res = null;
     private static int id = 0;
     private String name, surname, address, city, zip, email, phone, password, position;
@@ -53,9 +47,6 @@ public class Employee{
             System.out.println(ex.getMessage());
             AlertBox.display("Connection Error", ex.getMessage());
         }
-        accessLevel1 = new Level1();
-        accessLevel2 = new Level2();
-        accessLevel3 = new Level3();
     }
 
     public String getName() {
