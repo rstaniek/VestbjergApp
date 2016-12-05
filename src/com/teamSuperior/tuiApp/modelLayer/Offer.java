@@ -55,4 +55,12 @@ public class Offer {
     public void setDiscount(double discount) {
         this.discount = discount;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nProduct ID: %d%nDate: %s%nPrice: $%.2f%nDiscount: $%.2f%n%n",
+                id, productId, date, price, discount
+        );
+    }
 }

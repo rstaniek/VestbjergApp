@@ -20,20 +20,13 @@ public class OfferController {
     }
 
     public int viewOffers() {
-        for (Offer offer : offerContainer.getOffers()) {
-            System.out.println("ID: " + offer.getId());
-            System.out.println("Product ID: " + offer.getProductId());
-            System.out.println("Date: " + offer.getDate());
-            System.out.println("Price: " + offer.getPrice() + "$");
-            System.out.println("Discount: " + offer.getDiscount() + "$");
-            System.out.println();
-        }
+        offerContainer.getOffers().forEach(System.out::print);
         return offerContainer.getOffers().size();
     }
 
     public int listOfferDetails() {
         for (Offer offer : offerContainer.getOffers())
-            System.out.println("ID: " + offer.getId() + "  Product ID: " + offer.getProductId() + "  Discounted price: " + offer.getPrice() + "$");
+            System.out.printf("ID: %d  Product ID: %d  Discounted price: %s$%n", offer.getId(), offer.getProductId(), offer.getPrice());
         return offerContainer.getOffers().size();
     }
 
@@ -57,6 +50,5 @@ public class OfferController {
         }
         return removed;
     }
-
 
 }
