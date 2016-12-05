@@ -10,32 +10,35 @@ import java.util.Iterator;
  */
 public class OrderController {
     private OrderContainer orderContainer;
-    public OrderController() { orderContainer = OrderContainer.getInstance(); }
 
-    public void addOrder(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered){
+    public OrderController() {
+        orderContainer = OrderContainer.getInstance();
+    }
+
+    public void addOrder(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered) {
         orderContainer.getOrders().add(new Order(id, productId, contractorId, quantity, department, approved, delivered));
     }
 
-    public int viewSimpleOrders(){
-        for(Order order : orderContainer.getOrders())
+    public int viewSimpleOrders() {
+        for (Order order : orderContainer.getOrders())
             System.out.println("Order ID: " + order.getId() + "  Product ID: " + order.getProductId() + "  Contractor ID: " + order.getContractorId());
         return orderContainer.getOrders().size();
     }
 
-    public boolean foundOrderById(int id){
+    public boolean foundOrderById(int id) {
         boolean found = false;
-        for(Order order : orderContainer.getOrders())
-            if(order.getId() == id)
+        for (Order order : orderContainer.getOrders())
+            if (order.getId() == id)
                 found = true;
         return found;
     }
 
-    public boolean removeOrderById(int id){
+    public boolean removeOrderById(int id) {
         boolean removed = false;
         Iterator<Order> it = orderContainer.getOrders().iterator();
-        while(!removed && it.hasNext()){
+        while (!removed && it.hasNext()) {
             Order order = it.next();
-            if(order.getId() == id){
+            if (order.getId() == id) {
                 removed = true;
                 it.remove();
             }
@@ -43,18 +46,18 @@ public class OrderController {
         return removed;
     }
 
-    public int viewOrders(){
-        for(Order order : orderContainer.getOrders()){
+    public int viewOrders() {
+        for (Order order : orderContainer.getOrders()) {
             System.out.println("ID: " + order.getId());
             System.out.println("Product ID: " + order.getProductId());
             System.out.println("Contractor ID: " + order.getContractorId());
             System.out.println("Quantity: " + order.getQuantity());
             System.out.println("Department: " + order.getDepartment());
-            if(order.getApproved() == 0)
+            if (order.getApproved() == 0)
                 System.out.println("Approved: No");
             else
                 System.out.println("Approved: Yes");
-            if(order.getDelivered() == 0)
+            if (order.getDelivered() == 0)
                 System.out.println("Delivered: No");
             else
                 System.out.println("Delivered: Yes");

@@ -15,7 +15,7 @@ public class CustomerContainer {
     private ArrayList<Customer> customers;
 
     private CustomerContainer() {
-        customers = new ArrayList<Customer>();
+        customers = new ArrayList<>();
     }
 
     public ArrayList<Customer> getCustomer() {

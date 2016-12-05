@@ -15,7 +15,7 @@ public class OfferContainer {
     private ArrayList<Offer> offers;
 
     private OfferContainer() {
-        offers = new ArrayList<Offer>();
+        offers = new ArrayList<>();
     }
 
     public ArrayList<Offer> getOffers() {
