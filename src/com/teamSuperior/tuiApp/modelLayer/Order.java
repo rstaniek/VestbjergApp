@@ -72,4 +72,13 @@ public class Order {
     public void setDepartment(String department) {
         this.department = department;
     }
+
+    @Override
+    public String toString() {
+        String[] state = {"No", "Yes"};
+        return String.format(
+                "ID: %d%nProduct ID: %d%nContractor ID: %d%nQuantity: %d%nDepartment: %s%nApproved: %s%nDelivered: %s%n%n",
+                id, productId, contractorId, quantity, department, state[approved], state[delivered]
+        );
+    }
 }

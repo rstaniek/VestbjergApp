@@ -47,22 +47,7 @@ public class OrderController {
     }
 
     public int viewOrders() {
-        for (Order order : orderContainer.getOrders()) {
-            System.out.println("ID: " + order.getId());
-            System.out.println("Product ID: " + order.getProductId());
-            System.out.println("Contractor ID: " + order.getContractorId());
-            System.out.println("Quantity: " + order.getQuantity());
-            System.out.println("Department: " + order.getDepartment());
-            if (order.getApproved() == 0)
-                System.out.println("Approved: No");
-            else
-                System.out.println("Approved: Yes");
-            if (order.getDelivered() == 0)
-                System.out.println("Delivered: No");
-            else
-                System.out.println("Delivered: Yes");
-            System.out.println();
-        }
+        orderContainer.getOrders().forEach(System.out::print);
         return orderContainer.getOrders().size();
     }
 }
