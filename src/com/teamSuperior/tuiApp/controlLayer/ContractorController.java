@@ -21,7 +21,7 @@ public class ContractorController {
 
     public int listIdAndNames() {
         for (Contractor contractor : contractorContainer.getContractors())
-            System.out.println("ID: " + contractor.getId() + "  Name: " + contractor.getName());
+            System.out.printf("ID: %d  Name: %s%n", contractor.getId(), contractor.getName());
         return contractorContainer.getContractors().size();
     }
 
@@ -47,16 +47,7 @@ public class ContractorController {
     }
 
     public int viewContractors() {
-        for (Contractor contractor : contractorContainer.getContractors()) {
-            System.out.println("ID: " + contractor.getId());
-            System.out.println("Name: " + contractor.getName());
-            System.out.println("Address: " + contractor.getAddress());
-            System.out.println("City: " + contractor.getCity());
-            System.out.println("ZIP: " + contractor.getZip());
-            System.out.println("Phone: " + contractor.getPhone());
-            System.out.println("Email: " + contractor.getEmail());
-            System.out.println();
-        }
+        contractorContainer.getContractors().forEach(System.out::print);
         return contractorContainer.getContractors().size();
     }
 }
