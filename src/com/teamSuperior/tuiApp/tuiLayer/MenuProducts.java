@@ -12,7 +12,7 @@ public class MenuProducts {
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
 
-    public MenuProducts(){
+    public MenuProducts() {
         productController = new ProductController();
     }
 
@@ -57,14 +57,14 @@ public class MenuProducts {
                     System.out.println("Select the ID of the product you want to modify:");
                     //productControl method to list only id and product names
                     id = sc.nextInt();
-                    //select which atributes you want to modify
+                    //select which attributes you want to modify
                     //modify em
                     //???
                     //profit
                     //~*may need more methods*~
                     break;
                 case 3:
-                    if(productController.listIdAndNameOfProducts() > 0) {
+                    if (productController.listIdAndNameOfProducts() > 0) {
                         System.out.println("Select the ID of the product you want to remove:");
                         id = sc.nextInt();
                         if (productController.foundProductById(id)) {
@@ -72,15 +72,14 @@ public class MenuProducts {
                             String confirmation = sc.next();
                             if (confirmation.equals("y") || confirmation.equals("Y"))
                                 if (productController.removeProductById(id))
-                                    System.out.println("Product succesfuly removed");
+                                    System.out.println("Product successfully removed");
                         } else
-                            System.out.println("There is no product coresponding to that ID");
-                    }
-                    else
+                            System.out.println("There is no product corresponding to that ID");
+                    } else
                         System.out.println("There are no products at this moment");
                     break;
                 case 4:
-                    if(productController.listAllProducts() == 0)
+                    if (productController.listAllProducts() == 0)
                         System.out.println("There are no products at this moment");
                     break;
                 case 5:

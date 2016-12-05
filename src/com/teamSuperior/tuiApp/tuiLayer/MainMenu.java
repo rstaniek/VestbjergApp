@@ -5,8 +5,7 @@ import java.util.Scanner;
 /**
  * Created by Smoothini on 28.11.2016.
  */
-public class MainMenu
-{
+public class MainMenu {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
 
@@ -37,7 +36,7 @@ public class MainMenu
         System.out.println("Your option");
     }
 
-    public void chooseSubMenu(){
+    public void chooseSubMenu() {
         int choice;
         choice = sc.nextInt();
         switch (choice) {

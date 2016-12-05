@@ -11,7 +11,10 @@ public class MenuStatistics {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     StatsController statsController;
-    public MenuStatistics(){ statsController = new StatsController(); }
+
+    public MenuStatistics() {
+        statsController = new StatsController();
+    }
 
     public void printStatisticsMenu() {
         int choice;

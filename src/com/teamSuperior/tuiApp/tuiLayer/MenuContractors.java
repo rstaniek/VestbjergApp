@@ -12,7 +12,9 @@ public class MenuContractors {
     private Scanner sc = new Scanner(System.in);
     private ContractorController contractorController;
 
-    public MenuContractors() { contractorController = new ContractorController(); }
+    public MenuContractors() {
+        contractorController = new ContractorController();
+    }
 
     public void printContractorsMenu() {
         int choice, id;
@@ -51,32 +53,30 @@ public class MenuContractors {
                     System.out.println("Select the ID of the contractor you want to modify:");
                     //contractorControl method to list only id and names
                     id = sc.nextInt();
-                    //select which atributes you want to modify
+                    //select which attributes you want to modify
                     //modify em
                     //???
                     //profit
                     //~*may need more methods*~
                     break;
                 case 3:
-                    if(contractorController.listIdAndNames() != 0){
+                    if (contractorController.listIdAndNames() != 0) {
                         System.out.println("Select the ID of the contractor you want to remove:");
                         id = sc.nextInt();
-                        if(contractorController.foundContractorById(id)){
+                        if (contractorController.foundContractorById(id)) {
                             System.out.println("Are you sure you want to remove this contractor? (y/n)");
                             String confirmation = sc.next();
-                            if(confirmation.equals("y") || confirmation.equals("Y"))
-                                if(contractorController.removeContractorById(id))
-                                    System.out.println("Contractor succesfuly removed");
-                        }
-                        else
+                            if (confirmation.equals("y") || confirmation.equals("Y"))
+                                if (contractorController.removeContractorById(id))
+                                    System.out.println("Contractor successfully removed");
+                        } else
                             System.out.println("No contractor found by that ID");
-                    }
-                    else
+                    } else
                         System.out.println("There are no contractors at this moment");
                     break;
                 case 4:
                     System.out.println("Existing contractors:");
-                    if(contractorController.viewContractors() == 0)
+                    if (contractorController.viewContractors() == 0)
                         System.out.println("There are no contractors at this time");
                     break;
                 case 5:
