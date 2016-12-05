@@ -21,7 +21,7 @@ public class OrderController {
 
     public int viewSimpleOrders() {
         for (Order order : orderContainer.getOrders())
-            System.out.println("Order ID: " + order.getId() + "  Product ID: " + order.getProductId() + "  Contractor ID: " + order.getContractorId());
+            System.out.printf("Order ID: %d  Product ID: %d  Contractor ID: %d%n", order.getId(), order.getProductId(), order.getContractorId());
         return orderContainer.getOrders().size();
     }
 
