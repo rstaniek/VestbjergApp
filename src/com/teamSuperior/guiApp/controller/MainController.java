@@ -3,9 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.*;
 import com.teamSuperior.guiApp.GUI.Error;
-import com.teamSuperior.guiApp.GUI.ErrorCode;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -66,6 +65,7 @@ public class MainController implements Initializable {
 
     private Stage settings;
     public static Stage loginWindow;
+    private Window wnd;
 
     private Preferences registry;
     private boolean isLoggedIn;
@@ -82,6 +82,7 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         registry = Preferences.userRoot();
         isLoggedIn = false;
+        wnd = new Window();
 
         imgView_logo.setImage(new Image("http://www.gmkfreelogos.com/logos/S/img/Silvan.gif"));
 
@@ -267,8 +268,10 @@ public class MainController implements Initializable {
     }
 
     public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
+        wnd.inflate(WindowType.EMP_STATS);
     }
 
     public void menu_employees_manage_clicked(ActionEvent actionEvent) {
+        wnd.inflate(WindowType.EMP_MANAGEMENT);
     }
 }

@@ -1,36 +1,29 @@
 package com.teamSuperior.guiApp.GUI;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+
 /**
  * Created by Domestos Maximus on 06-Dec-16.
  */
 public class Window {
-    public static void inflate(window wnd){
+    public void inflate(WindowType wnd){
         //TODO: inflate window
-    }
-}
-
-enum window{
-    EMP_STATS("../layout/empStatistics.fxml", "Statistics", false),
-    SETTINGS("../layout/settingsWindow.fxml", "Settings", false);
-
-
-    private String layoutPath, wndTitle;
-    private boolean resizable;
-    window(String layoutPath, String wndTitle, boolean resizable){
-        this.layoutPath = layoutPath;
-        this.wndTitle = wndTitle;
-        this.resizable = resizable;
-    }
-
-    public String getLayoutPath() {
-        return layoutPath;
-    }
-
-    public String getWndTitle() {
-        return wndTitle;
-    }
-
-    public boolean isResizable() {
-        return resizable;
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource(wnd.getLayoutPath()));
+            Stage window = new Stage();
+            window.setTitle(wnd.getWndTitle());
+            window.setResizable(wnd.isResizable());
+            window.setScene(new Scene(root));
+            window.show();
+        } catch (IOException ex) {
+            AlertBox.display("Java IO Exception", ex.getMessage());
+        } catch (Exception ex2) {
+            AlertBox.display("Unexpected exception", ex2.getMessage());
+        }
     }
 }
