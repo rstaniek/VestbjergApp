@@ -8,6 +8,7 @@ public enum ErrorCode {
     CONNECTION_USERNAME_EMPTY("Database connection ERROR", "Username cannot be empty"),
     CONNECTION_PASSWORD_EMPTY("Database connection ERROR", "Password cannot be empty"),
     CONNECTION_TEST_FAILED("Database connection ERROR", "Test Failed"),
+    CONNECTION_REG_EMPTY("Connection ERROR", "In order to connect please fill out the configuration first!"),
     VALIDATION_FIELD_EMPTY("Input ERROR", "All fields must be filled properly"),
     VALIDATION_ILLEGAL_CHARS("Input ERROR", "Illegal characters spotted in th input"),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty"),

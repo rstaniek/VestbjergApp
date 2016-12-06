@@ -53,6 +53,8 @@ public class MainController implements Initializable {
     public Button btn_logIn;
     @FXML
     public ImageView imgView_logo;
+    @FXML
+    public MenuItem menu_connection_connect;
 
     private Stage settings;
 
@@ -75,40 +77,13 @@ public class MainController implements Initializable {
         conn = new DBConnect();
         // generating array list and users
         employees = new ArrayList<>();
-        try
-        {
-            ResultSet rsCount = conn.getFromDataBase("SELECT COUNT(*) FROM employees");
-            rsCount.next();
-            int count = rsCount.getInt(1);
-            rsCount.close();
-            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-            for(int i = 0; i < count -1; i++)
-            {
-                while(rs.next())
-                {
-                    int id = rs.getInt("id");
-                    String name = rs.getString("name");
-                    String surname = rs.getString("surname");
-                    String address = rs.getString("address");
-                    String city = rs.getString("city");
-                    String zip = rs.getString("zip");
-                    String email = rs.getString("email");
-                    String phone = rs.getString("phone");
-                    String password = rs.getString("password");
-                    String position = rs.getString("position");
-                    int numberOfSales = rs.getInt("numberOfSales");
-                    double totalRevenue = rs.getDouble("totalRevenue");
-                    int accessLevel = rs.getInt("accessLevel");
-                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
-                    employees.add(emp);
-                }
-            }
+        if(credentialsSaved()){
+            connectClient();
         }
-        catch(SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
+        else{
+            Error.displayError(ErrorCode.CONNECTION_REG_EMPTY);
         }
+
 
         Task getDateTime = new Task<Void>() {
             @Override
@@ -145,6 +120,49 @@ public class MainController implements Initializable {
         th2.setDaemon(true);
         th.start();
         th2.start();
+    }
+
+    private void connectClient(){
+        try
+        {
+            ResultSet rsCount = conn.getFromDataBase("SELECT COUNT(*) FROM employees");
+            rsCount.next();
+            int count = rsCount.getInt(1);
+            rsCount.close();
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
+            for(int i = 0; i < count -1; i++)
+            {
+                while(rs.next())
+                {
+                    int id = rs.getInt("id");
+                    String name = rs.getString("name");
+                    String surname = rs.getString("surname");
+                    String address = rs.getString("address");
+                    String city = rs.getString("city");
+                    String zip = rs.getString("zip");
+                    String email = rs.getString("email");
+                    String phone = rs.getString("phone");
+                    String password = rs.getString("password");
+                    String position = rs.getString("position");
+                    int numberOfSales = rs.getInt("numberOfSales");
+                    double totalRevenue = rs.getDouble("totalRevenue");
+                    int accessLevel = rs.getInt("accessLevel");
+                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
+                    employees.add(emp);
+                }
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+            AlertBox.display("Connection Error", ex.getMessage());
+        }
+    }
+
+    private boolean credentialsSaved(){
+        return !registry.get("DATABASE_HOSTNAME", "").isEmpty() &&
+                !registry.get("DATABASE_USER", "").isEmpty() &&
+                !registry.get("DATABASE_PASS", "").isEmpty();
     }
 
     //Menu strip handling
@@ -201,5 +219,9 @@ public class MainController implements Initializable {
         else{
             AlertBox.display("Log in ERROR", "Please set up the configuration first!");
         }
+    }
+
+    public void menu_connection_connect_clicked(ActionEvent actionEvent) {
+        connectClient();
     }
 }

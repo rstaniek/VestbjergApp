@@ -30,6 +30,11 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Connection">
+              <items>
+                <MenuItem fx:id="menu_connection_connect" mnemonicParsing="false" onAction="#menu_connection_connect_clicked" text="Connect" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Products">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
