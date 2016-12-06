@@ -1,4 +1,4 @@
-package com.teamSuperior.guiApp.GUI;
+package com.teamSuperior.guiApp.enums;
 
 /**
  * Created by Domestos Maximus on 06-Dec-16.

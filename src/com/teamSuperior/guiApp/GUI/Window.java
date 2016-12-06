@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.GUI;
 
+import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;

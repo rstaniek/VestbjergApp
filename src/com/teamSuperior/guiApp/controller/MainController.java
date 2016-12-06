@@ -5,6 +5,8 @@ import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.*;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.enums.ErrorCode;
+import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -30,6 +32,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+
+import static com.teamSuperior.guiApp.enums.Drawable.*;
 
 /**
  * Created by Domestos on 16.11.26.
@@ -64,7 +68,7 @@ public class MainController implements Initializable {
     public MenuItem menu_employees_manage;
 
     private Stage settings;
-    public static Stage loginWindow;
+    static Stage loginWindow;
     private Window wnd;
 
     private Preferences registry;
@@ -84,7 +88,7 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
-        imgView_logo.setImage(new Image("http://www.gmkfreelogos.com/logos/S/img/Silvan.gif"));
+        imgView_logo.setImage(new Image(APP_LOGO.getPath()));
 
         conn = new DBConnect();
         // generating array list and users
@@ -119,9 +123,6 @@ public class MainController implements Initializable {
                     Platform.runLater(() -> {
                         label_ratioUSDDKK.setText(ratioUSD);
                         label_ratioEURDKK.setText(ratioEUR);
-                        if (welcome() != true) {
-                            welcome();
-                        }
                     });
                     Thread.sleep(2000);
                 }
@@ -133,9 +134,8 @@ public class MainController implements Initializable {
             protected Void call() throws Exception {
                 while (true) {
                     Platform.runLater(() -> {
-                        if (welcome() != true) {
+                        if (!welcome()) {
                             welcome();
-                        } else {
                         }
                     });
                     Thread.sleep(1000);
@@ -222,7 +222,7 @@ public class MainController implements Initializable {
         settings.close();
     }
 
-    public void btn_logIn_cicked(ActionEvent actionEvent) {
+    public void btn_logIn_clicked(ActionEvent actionEvent) {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
             try {
                 Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
@@ -247,7 +247,7 @@ public class MainController implements Initializable {
     }
 
     public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
-        btn_logIn_cicked(actionEvent);
+        btn_logIn_clicked(actionEvent);
     }
 
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {

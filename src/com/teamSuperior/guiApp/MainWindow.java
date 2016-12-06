@@ -17,15 +17,13 @@ import javafx.stage.Stage;
  */
 public class MainWindow extends Application {
     private Stage window;
-    private boolean isLoggedIn;
-    Employee em;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        isLoggedIn = false;
         window = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("layout/mainWindow.fxml"));
         primaryStage.setTitle("Team Superior - representing Silvan Inc.");
+        primaryStage.setResizable(false);
 
         primaryStage.setOnCloseRequest(e -> {
             e.consume();
@@ -34,10 +32,6 @@ public class MainWindow extends Application {
 
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
-
-        if(!isLoggedIn){
-            //ghhkgjhg
-        }
     }
 
     private void closeProgram(){
