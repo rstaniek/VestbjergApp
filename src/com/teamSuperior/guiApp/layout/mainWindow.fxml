@@ -92,9 +92,9 @@
    <bottom>
       <AnchorPane prefHeight="60.0" prefWidth="809.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btn_logIn" layoutX="689.0" layoutY="-3.0" mnemonicParsing="false" onAction="#btn_logIn_clicked" text="Log In">
+            <Button fx:id="btn_logIn" layoutX="736.0" layoutY="34.0" mnemonicParsing="false" onAction="#btn_logIn_clicked" text="Log In">
             </Button>
-            <Label fx:id="label_date" layoutX="514.0" layoutY="10.0" text="Label">
+            <Label fx:id="label_date" layoutY="36.0" text="Label">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets>
@@ -102,7 +102,7 @@
                   <Insets bottom="5.0" left="10.0" />
                </padding>
             </Label>
-            <Label fx:id="label_name_welcome" layoutY="4.0" text="Please log in first">
+            <Label fx:id="label_name_welcome" text="Please log in first">
                <padding>
                   <Insets left="10.0" />
                </padding>
