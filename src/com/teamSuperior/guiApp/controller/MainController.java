@@ -131,7 +131,6 @@ public class MainController implements Initializable {
                         if (welcome() != true) {
                             welcome();
                         } else {
-                            cleanup();
                         }
                     });
                     Thread.sleep(1000);
@@ -255,15 +254,11 @@ public class MainController implements Initializable {
         boolean ret = false;
         if (LogInPopupController.isLogged()) {
             Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
+            Platform.runLater(() -> btn_logIn.setVisible(false));
             ret = true;
         } else {
             ret = false;
         }
         return ret;
-    }
-
-    public void cleanup()
-    {
-        th3.stop();
     }
 }
