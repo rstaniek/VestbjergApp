@@ -61,16 +61,19 @@ public class MainController implements Initializable {
     public MenuItem menu_connection_logOut;
 
     private Stage settings;
+    public static Stage loginWindow;
 
     private Preferences registry;
     private boolean isLoggedIn;
 
     private Employee em;
+    private Thread th3;
 
     // just database things
     DBConnect conn;
     private Employee emp;
     private ArrayList<Employee> employees;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         registry = Preferences.userRoot();
@@ -81,10 +84,9 @@ public class MainController implements Initializable {
         conn = new DBConnect();
         // generating array list and users
         employees = new ArrayList<>();
-        if(credentialsSaved()){
+        if (credentialsSaved()) {
             connectClient();
-        }
-        else{
+        } else {
             Error.displayError(ErrorCode.CONNECTION_REG_EMPTY);
         }
 
@@ -106,38 +108,57 @@ public class MainController implements Initializable {
         Task getCurrencyRatios = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                while (true){
+                while (true) {
                     String ratioUSD = WebsiteCrawler.getExchangeRatio("https://finance.yahoo.com/quote/USDDKK=X?ltr=1");
                     String ratioEUR = WebsiteCrawler.getExchangeRatio("https://finance.yahoo.com/quote/EURDKK=X?ltr=1");
-                    Platform.runLater(()->{
+                    Platform.runLater(() -> {
                         label_ratioUSDDKK.setText(ratioUSD);
                         label_ratioEURDKK.setText(ratioEUR);
+                        if (welcome() != true) {
+                            welcome();
+                        }
                     });
                     Thread.sleep(2000);
                 }
             }
         };
 
+        Task waitForLogin = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while (true) {
+                    Platform.runLater(() -> {
+                        if (welcome() != true) {
+                            welcome();
+                        } else {
+                            cleanup();
+                        }
+                    });
+                    Thread.sleep(1000);
+                }
+            }
+        };
+
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
+        th3 = new Thread(waitForLogin);
         th.setDaemon(true);
         th2.setDaemon(true);
+        th3.setDaemon(true);
         th.start();
         th2.start();
+        th3.start();
     }
 
-    private void connectClient(){
-        try
-        {
+    private void connectClient() {
+        try {
             ResultSet rsCount = conn.getFromDataBase("SELECT COUNT(*) FROM employees");
             rsCount.next();
             int count = rsCount.getInt(1);
             rsCount.close();
             ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-            for(int i = 0; i < count -1; i++)
-            {
-                while(rs.next())
-                {
+            for (int i = 0; i < count - 1; i++) {
+                while (rs.next()) {
                     int id = rs.getInt("id");
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
@@ -155,15 +176,13 @@ public class MainController implements Initializable {
                     employees.add(emp);
                 }
             }
-        }
-        catch(SQLException ex)
-        {
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             AlertBox.display("Connection Error", ex.getMessage());
         }
     }
 
-    private boolean credentialsSaved(){
+    private boolean credentialsSaved() {
         return !registry.get("DATABASE_HOSTNAME", "").isEmpty() &&
                 !registry.get("DATABASE_USER", "").isEmpty() &&
                 !registry.get("DATABASE_PASS", "").isEmpty();
@@ -175,7 +194,7 @@ public class MainController implements Initializable {
     }
 
     public void menu_settings_clicked(ActionEvent actionEvent) {
-        try{
+        try {
             Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
             Stage settingsWnd = new Stage();
             settingsWnd.setOnCloseRequest(e -> {
@@ -187,40 +206,35 @@ public class MainController implements Initializable {
             settingsWnd.setScene(new Scene(root));
             settings = settingsWnd;
             settingsWnd.show();
-        }
-        catch (IOException ex){
+        } catch (IOException ex) {
             AlertBox.display("Java IO Exception", ex.getMessage());
-        }
-        catch (Exception ex2){
+        } catch (Exception ex2) {
             AlertBox.display("Unexpected exception", ex2.getMessage());
         }
     }
 
-    private void settingsWndClose(){
+    private void settingsWndClose() {
         //TODO: handle seving the settings before closing
         settings.close();
     }
 
     public void btn_logIn_cicked(ActionEvent actionEvent) {
-        if(!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")){
-            try{
+        if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
+            try {
                 Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
-                Stage window = new Stage();
-                window.initModality(Modality.APPLICATION_MODAL);
-                window.setTitle("Log in");
-                window.setScene(new Scene(logInScreen));
-                window.show();
+                loginWindow = new Stage();
+                loginWindow.initModality(Modality.APPLICATION_MODAL);
+                loginWindow.setTitle("Log in");
+                loginWindow.setScene(new Scene(logInScreen));
+                loginWindow.show();
 
 
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 AlertBox.display("Unexpected exception", ex.getMessage());
-            }
-            finally {
+            } finally {
                 //TODO: handle logging in
             }
-        }
-        else{
+        } else {
             AlertBox.display("Log in ERROR", "Please set up the configuration first!");
         }
     }
@@ -235,5 +249,21 @@ public class MainController implements Initializable {
 
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
         //TODO: implement logOut action
+    }
+
+    public boolean welcome() {
+        boolean ret = false;
+        if (LogInPopupController.isLogged()) {
+            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
+            ret = true;
+        } else {
+            ret = false;
+        }
+        return ret;
+    }
+
+    public void cleanup()
+    {
+        th3.stop();
     }
 }
