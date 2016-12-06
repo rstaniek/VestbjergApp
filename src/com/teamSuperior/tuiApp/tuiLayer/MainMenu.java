@@ -26,6 +26,7 @@ public class MainMenu
 
     public void printMenu() {
         System.out.println("Main Menu");
+        System.out.println("0. Add testing data");
         System.out.println("1. Customers");
         System.out.println("2. Products");
         System.out.println("3. Offers");
@@ -40,6 +41,9 @@ public class MainMenu
         int choice;
         choice = sc.nextInt();
         switch (choice) {
+            case 0:
+                AddTestingData addTestingData = new AddTestingData();
+                break;
             case 1:
                 menuCustomers.printCustomersMenu();
                 break;
@@ -66,10 +70,5 @@ public class MainMenu
                 System.out.println("Error, please try again");
                 break;
         }
-    }
-
-    public void printCustomersMenu()
-    {
-
     }
 }

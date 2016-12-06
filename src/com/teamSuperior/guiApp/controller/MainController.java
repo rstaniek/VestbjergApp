@@ -1,7 +1,10 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
+import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.GUI.ErrorCode;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -13,6 +16,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -20,6 +26,7 @@ import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Domestos on 16.11.26.
@@ -38,11 +45,25 @@ public class MainController implements Initializable {
     public MenuItem menu_close;
     @FXML
     public MenuItem menu_settings;
+    @FXML
+    public Button btn_logIn;
+    @FXML
+    public ImageView imgView_logo;
 
     private Stage settings;
 
+    private Preferences registry;
+    private boolean isLoggedIn;
+
+    private Employee em;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        registry = Preferences.userRoot();
+        isLoggedIn = false;
+
+        imgView_logo.setImage(new Image("http://www.gmkfreelogos.com/logos/S/img/Silvan.gif"));
+
         //Date and time
         Task getDateTime = new Task<Void>() {
             @Override
@@ -111,5 +132,29 @@ public class MainController implements Initializable {
     private void settingsWndClose(){
         //TODO: handle seving the settings before closing
         settings.close();
+    }
+
+    public void btn_logIn_cicked(ActionEvent actionEvent) {
+        if(!registry.get("DATABASE_HOSTNAME", "").equals("")){
+            try{
+                Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
+                Stage window = new Stage();
+                window.initModality(Modality.WINDOW_MODAL);
+                window.setTitle("Log in");
+                window.setScene(new Scene(logInScreen));
+                window.show();
+
+
+            }
+            catch (Exception ex){
+                AlertBox.display("Unexpected exception", ex.getMessage());
+            }
+            finally {
+                //TODO: handle logging in
+            }
+        }
+        else{
+            Error.displayError(ErrorCode.CONNECTION_HOSTNAME_EMPTY);
+        }
     }
 }
