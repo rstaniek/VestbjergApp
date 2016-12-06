@@ -1,5 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -7,10 +9,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
-import java.util.Collections;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.teamSuperior.guiApp.GUI.Error.*;
-import static com.teamSuperior.guiApp.GUI.ErrorCode.*;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 /**
  * Created by Domestos Maximus on 28-Nov-16.
@@ -20,11 +23,13 @@ public class LogInPopupController {
     public Button btn_cancel;
     public PasswordField txt_empPassw;
     public TextField txt_empID;
+    private static Employee loggedUser;
+    public static boolean loggedFinal = false;
 
     public void btn_logIn_click(ActionEvent actionEvent) {
         //TODO: write an enum for error codes
-        removeRed(txt_empID);
-        removeRed(txt_empPassw);
+        //removeRed(txt_empID);
+        //removeRed(txt_empPassw);
 
         //validating user input
         //TODO: changing textField outline doesn't work
@@ -33,11 +38,17 @@ public class LogInPopupController {
         //handling the input
         //TODO: log in the user
         boolean isValid = validateUser(txt_empID.getText(), txt_empPassw.getText());
+        if(isValid){
+            MainController.loginWindow.close();
+        }
+        else
+        {
+            AlertBox.display("Wrong credentials!", "Wrong e-mail/password, please try again.");
+        }
     }
 
     public void btn_cancel_click(ActionEvent actionEvent) {
-        //TODO: close the window
-        AlertBox.display("Warning", "You need to log in if you want to use this application!");
+        MainController.loginWindow.close();
     }
 
     private boolean validateInput(TextField user, TextField pass){
@@ -67,13 +78,51 @@ public class LogInPopupController {
     }
 
 
-    private void removeRed(TextField tf) {
-        ObservableList<String> styleClass = tf.getStyleClass();
-        styleClass.removeAll(Collections.singleton("tferror"));
+    private boolean validateUser(String username, String password) {
+        DBConnect conn = new DBConnect();
+        ResultSet rs = null;
+        boolean ret = false;
+        String safeUsername = org.apache.commons.codec.digest.DigestUtils.sha256Hex(username);
+        String safePassword = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password);
+        rs = conn.getFromDataBase("SELECT * FROM employees WHERE email ='"+safeUsername+"' AND password = '"+safePassword+"'");
+        try
+        {
+            rs.next();
+            if(rs.getInt("id") != 0 && rs.getString("name") != null
+                    && rs.getString("surname") != null
+                    && rs.getString("address") != null
+                    && rs.getString("city") != null
+                    && rs.getString("zip") != null
+                    && rs.getString("email") != null
+                    && rs.getString("phone") != null
+                    && rs.getString("password") != null
+                    && rs.getString("position") != null
+                    && rs.getInt("accessLevel") >= 1
+                    ) {
+                loggedUser = new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("surname"), rs.getString("address"), rs.getString("city"), rs.getString("zip"), rs.getString("email"), rs.getString("phone"), rs.getString("password"), rs.getString("position"), rs.getInt("numberOfSales"), rs.getDouble("totalRevenue"), rs.getInt("accessLevel"));
+                ret = true;
+                loggedFinal = true;
+            }
+            else
+            {
+                ret = false;
+                loggedFinal = true;
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println(ex.getMessage());
+
+            // Throws an exception if you input wrong login credentials, TODO: fix this, obviously
+            // AlertBox.display("Connection Error", ex.getMessage());
+        }
+
+        return ret;
     }
 
-    private boolean validateUser(String username, String password){
-        //TODO: to be finished
-        return true;
+    public static Employee getUser()
+    {
+        return loggedUser;
     }
+    public static boolean isLogged() { return loggedFinal;}
 }

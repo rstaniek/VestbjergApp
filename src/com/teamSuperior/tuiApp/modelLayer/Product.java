@@ -91,4 +91,11 @@ public class Product {
     public void setLocation(String location) {
         this.location = location;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nName: %s%nSubname: %s%nBarcode: %d%nCategory: %s%nPrice: $%.2f%nLocation: %s%nQuantity: %d%nContractor ID: %d%n%n",
+                id, name, subname, barcode, category, price, location, quantity, contractorId);
+    }
 }

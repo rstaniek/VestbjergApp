@@ -72,4 +72,12 @@ public class Contractor {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nName: %s%nAddress: %s%nCity: %s%nZIP: %s%nPhone: %s%nEmail: %s%n%n",
+                id, name, address, city, zip, phone, email
+        );
+    }
 }

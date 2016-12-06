@@ -12,14 +12,14 @@ import java.util.prefs.Preferences;
 /**
  * Created by Domestos Maximus on 24-Nov-16.
  */
-public class DBConnect{
+public class DBConnect {
 
     private static String url;
     private static String username;
     private static String password;
     private Preferences reg;
 
-    public DBConnect(){
+    public DBConnect() {
         reg = Preferences.userRoot();
         url = reg.get("DATABASE_HOSTNAME", "");
         username = reg.get("DATABASE_USER", "");
@@ -30,13 +30,11 @@ public class DBConnect{
      * Connects to thee database
      * @return returns connection object
      */
-    private static Connection connect(String hostname, String user, String pass){
+    private static Connection connect(String hostname, String user, String pass) {
         Connection con = null;
-        try
-        {
+        try {
             con = DriverManager.getConnection(hostname, user, pass);
-        }
-        catch (SQLException ex){
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             AlertBox.display("Connection Error", ex.getMessage());
         }
@@ -47,11 +45,10 @@ public class DBConnect{
      * Test the connection
      * @return returns True when connected, otherwise false
      */
-    public static boolean testConnection(String host, String user, String pass){
-        try(Connection conn = DriverManager.getConnection(host, user, pass)){
+    public static boolean testConnection(String host, String user, String pass) {
+        try (Connection conn = DriverManager.getConnection(host, user, pass)) {
             return true;
-        }
-        catch (SQLException ex){
+        } catch (SQLException ex) {
             return false;
         }
     }
@@ -59,28 +56,27 @@ public class DBConnect{
     /***
      * Executes specified SQL query and returns the data from the table
      */
-    public ResultSet getFromDataBase(String query){
+    public ResultSet getFromDataBase(String query) {
         Connection con = connect(url, username, password);
         ResultSet rs = null;
         try {
             Statement statement = con.createStatement();
             rs = statement.executeQuery(query);
-            con.close();
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
             AlertBox.display("Connection Error", ex.getMessage());
         }
         return rs;
     }
 
-    public boolean upload(String query){
+    public boolean upload(String query) {
         Connection con = connect(url, username, password);
         boolean isExecuted = false;
-        try{
+        try {
             Statement statement = con.createStatement();
             isExecuted = statement.execute(query);
             con.close();
-        }catch (SQLException ex){
+        } catch (SQLException ex) {
             AlertBox.display("Connection Error", ex.getMessage());
         }
         return isExecuted;

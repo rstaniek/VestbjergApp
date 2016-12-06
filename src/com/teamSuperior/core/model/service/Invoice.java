@@ -8,17 +8,16 @@ import java.util.Date;
 public class Invoice {
     private static int id;
     private Date invoiceDate, dueDate;
-    private int productsID, saleID;
-    private String buyerName;
+    private int productsID, saleID, customerID;
     private double price;
     private boolean paid;
 
-    public Invoice(Date invoiceDate, Date dueDate, int productsID, int saleID, String buyerName, double price, boolean paid) {
+    public Invoice(Date invoiceDate, Date dueDate, int productsID, int saleID, int customerID, double price, boolean paid) {
         this.invoiceDate = invoiceDate;
         this.dueDate = dueDate;
         this.productsID = productsID;
         this.saleID = saleID;
-        this.buyerName = buyerName;
+        this.customerID = customerID;
         this.price = price;
         this.paid = paid;
     }
@@ -59,12 +58,12 @@ public class Invoice {
         this.saleID = saleID;
     }
 
-    public String getBuyerName() {
-        return buyerName;
+    public int getCustomerID() {
+        return customerID;
     }
 
-    public void setBuyerName(String buyerName) {
-        this.buyerName = buyerName;
+    public void setCustomerID(String buyerName) {
+        this.customerID = customerID;
     }
 
     public double getPrice() {

@@ -15,7 +15,7 @@ public class ProductContainer {
     private ArrayList<Product> products;
 
     private ProductContainer() {
-        products = new ArrayList<Product>();
+        products = new ArrayList<>();
     }
 
     public ArrayList<Product> getProducts() {

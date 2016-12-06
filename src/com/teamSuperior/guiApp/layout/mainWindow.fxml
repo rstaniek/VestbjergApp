@@ -9,13 +9,9 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
         <menus>
@@ -30,6 +26,13 @@
               <MenuItem mnemonicParsing="false" text="Delete" />
             </items>
           </Menu>
+            <Menu mnemonicParsing="false" text="Connection">
+              <items>
+                <MenuItem fx:id="menu_connection_connect" mnemonicParsing="false" onAction="#menu_connection_connect_clicked" text="Connect" />
+                  <MenuItem fx:id="menu_connection_logIn" mnemonicParsing="false" onAction="#menu_connection_logIn_clicked" text="Log in" />
+                  <MenuItem fx:id="menu_connection_logOut" mnemonicParsing="false" onAction="#menu_connection_logOut_clicked" text="Log out" />
+              </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Products">
               <items>
                 <MenuItem mnemonicParsing="false" text="Action 1" />
@@ -42,7 +45,8 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Employees">
                <items>
-                  <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" text="Statistics" />
+                  <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" onAction="#menu_employees_statistics_clicked" text="Statistics" />
+                   <MenuItem fx:id="menu_employees_manage" mnemonicParsing="false" onAction="#menu_employees_manage_clicked" text="Manage" />
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Contractors">
@@ -59,60 +63,36 @@
       </MenuBar>
    </top>
    <center>
-      <GridPane BorderPane.alignment="CENTER">
-        <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-        </columnConstraints>
-        <rowConstraints>
-          <RowConstraints maxHeight="262.0" minHeight="10.0" prefHeight="262.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="365.0" minHeight="10.0" prefHeight="172.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+       <AnchorPane BorderPane.alignment="CENTER">
          <children>
-            <VBox prefHeight="200.0" prefWidth="100.0">
-               <children>
-                  <ImageView fx:id="imgView_logo" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
-               </children></VBox>
-            <GridPane alignment="CENTER" GridPane.columnIndex="1">
-              <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-              </columnConstraints>
-              <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-              </rowConstraints>
-               <children>
-                  <Label fx:id="label_ratioUSDDKK" alignment="CENTER" text="please wait" textAlignment="CENTER" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="System Bold" size="25.0" />
-                     </font>
-                  </Label>
-                  <Label text="USD/DKK">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label text="EUR/DKK" GridPane.columnIndex="1">
-                     <font>
-                        <Font size="25.0" />
-                     </font>
-                  </Label>
-                  <Label fx:id="label_ratioEURDKK" text="please wait" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                     <font>
-                        <Font name="System Bold" size="25.0" />
-                     </font>
-                  </Label>
-               </children>
-            </GridPane>
+            <ImageView fx:id="imgView_logo" fitHeight="150.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="label_ratioUSDDKK" layoutX="14.0" layoutY="186.0" text="please wait">
+                <font>
+                    <Font name="System Bold" size="25.0" />
+                </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="150.0" text="USD/DKK">
+                <font>
+                    <Font name="System Bold" size="25.0" />
+                </font>
+            </Label>
+            <Label layoutX="191.0" layoutY="150.0" text="EUR/DKK">
+                <font>
+                    <Font name="System Bold" size="25.0" />
+                </font>
+            </Label>
+            <Label fx:id="label_ratioEURDKK" layoutX="191.0" layoutY="186.0" text="please wait">
+                <font>
+                    <Font name="System Bold" size="25.0" />
+                </font>
+            </Label>
          </children>
-      </GridPane>
+       </AnchorPane>
    </center>
    <bottom>
       <AnchorPane prefHeight="60.0" prefWidth="809.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btn_logIn" layoutX="689.0" layoutY="-3.0" mnemonicParsing="false" onAction="#btn_logIn_cicked" text="Log In">
+            <Button fx:id="btn_logIn" layoutX="689.0" layoutY="-3.0" mnemonicParsing="false" onAction="#btn_logIn_clicked" text="Log In">
             </Button>
             <Label fx:id="label_date" layoutX="514.0" layoutY="10.0" text="Label">
                <opaqueInsets>

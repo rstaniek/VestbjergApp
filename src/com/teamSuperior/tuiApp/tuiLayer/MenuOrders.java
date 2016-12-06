@@ -16,7 +16,7 @@ public class MenuOrders {
     private ContractorController contractorController;
     private OrderController orderController;
 
-    public MenuOrders(){
+    public MenuOrders() {
         productController = new ProductController();
         contractorController = new ContractorController();
         orderController = new OrderController();
@@ -37,14 +37,14 @@ public class MenuOrders {
             switch (choice) {
                 case 1:
                     System.out.println("Add an order:");
-                    if(productController.listIdNamePriceOfProducts() > 0){
+                    if (productController.listIdNamePriceOfProducts() > 0) {
                         System.out.println("Product ID:");
                         productId = sc.nextInt();
-                        if(productController.foundProductById(productId)){
-                            if(contractorController.listIdAndNames() > 0){
+                        if (productController.foundProductById(productId)) {
+                            if (contractorController.listIdAndNames() > 0) {
                                 System.out.println("Contractor ID:");
                                 contractorId = sc.nextInt();
-                                if(contractorController.foundContractorById(contractorId)){
+                                if (contractorController.foundContractorById(contractorId)) {
                                     System.out.println("Quantity:");
                                     quantity = sc.nextInt();
                                     System.out.println("Department:");
@@ -55,17 +55,13 @@ public class MenuOrders {
                                     //delivered = 0;
 
                                     orderController.addOrder(id, productId, contractorId, quantity, department, 0, 0);
-                                }
-                                else
+                                } else
                                     System.out.println("No contractor found by that id");
-                            }
-                            else
+                            } else
                                 System.out.println("No contractors available at this time");
-                        }
-                        else
+                        } else
                             System.out.println("No product found by that ID");
-                    }
-                    else
+                    } else
                         System.out.println("There are no products at this time");
                     break;
                 case 2:
@@ -79,24 +75,22 @@ public class MenuOrders {
                     //~*may need more methods*~
                     break;
                 case 3:
-                    if(orderController.viewSimpleOrders() > 0){
+                    if (orderController.viewSimpleOrders() > 0) {
                         System.out.println("Select the ID of the order you want to remove:");
                         id = sc.nextInt();
-                        if(orderController.foundOrderById(id)){
+                        if (orderController.foundOrderById(id)) {
                             System.out.println("Are you sure you want to remove this order? (y/n)");
                             String confirmation = sc.next();
-                            if(confirmation.equals("y") || confirmation.equals("Y"))
-                                if(orderController.removeOrderById(id))
-                                    System.out.println("Order succesfuly removed");
-                        }
-                        else
+                            if (confirmation.equals("y") || confirmation.equals("Y"))
+                                if (orderController.removeOrderById(id))
+                                    System.out.println("Order successfully removed");
+                        } else
                             System.out.println("No order found for that ID");
-                    }
-                    else
+                    } else
                         System.out.println("There are no orders to remove");
                     break;
                 case 4:
-                    if(orderController.viewOrders() == 0)
+                    if (orderController.viewOrders() == 0)
                         System.out.println("There are no orders at the moment");
                     break;
                 case 5:

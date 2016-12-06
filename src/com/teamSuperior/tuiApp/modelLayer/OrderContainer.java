@@ -15,7 +15,7 @@ public class OrderContainer {
     private ArrayList<Order> orders;
 
     private OrderContainer() {
-        orders = new ArrayList<Order>();
+        orders = new ArrayList<>();
     }
 
     public ArrayList<Order> getOrders() {

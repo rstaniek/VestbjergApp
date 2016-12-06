@@ -1,5 +1,7 @@
 package com.teamSuperior.guiApp.GUI;
 
+import com.teamSuperior.guiApp.enums.ErrorCode;
+
 /**
  * Created by Domestos Maximus on 29-Nov-16.
  */

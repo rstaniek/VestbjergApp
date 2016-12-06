@@ -15,7 +15,7 @@ public class ContractorContainer {
     private ArrayList<Contractor> contractors;
 
     private ContractorContainer() {
-        contractors = new ArrayList<Contractor>();
+        contractors = new ArrayList<>();
     }
 
     public ArrayList<Contractor> getContractors() {
