@@ -229,14 +229,13 @@ public class MainController implements Initializable {
                 loginWindow = new Stage();
                 loginWindow.initModality(Modality.APPLICATION_MODAL);
                 loginWindow.setTitle("Log in");
+                loginWindow.setResizable(false);
                 loginWindow.setScene(new Scene(logInScreen));
                 loginWindow.show();
 
 
             } catch (Exception ex) {
                 AlertBox.display("Unexpected exception", ex.getMessage());
-            } finally {
-                //TODO: handle logging in
             }
         } else {
             AlertBox.display("Log in ERROR", "Please set up the configuration first!");
@@ -248,7 +247,7 @@ public class MainController implements Initializable {
     }
 
     public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
-        btn_logIn_cicked(null);
+        btn_logIn_cicked(actionEvent);
     }
 
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
@@ -259,7 +258,7 @@ public class MainController implements Initializable {
         boolean ret = false;
         if (LogInPopupController.isLogged()) {
             Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
-            Platform.runLater(() -> btn_logIn.setVisible(false));
+            Platform.runLater(() -> btn_logIn.setDisable(true));
             ret = true;
         } else {
             ret = false;
