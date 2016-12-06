@@ -55,6 +55,10 @@ public class MainController implements Initializable {
     public ImageView imgView_logo;
     @FXML
     public MenuItem menu_connection_connect;
+    @FXML
+    public MenuItem menu_connection_logIn;
+    @FXML
+    public MenuItem menu_connection_logOut;
 
     private Stage settings;
 
@@ -223,5 +227,13 @@ public class MainController implements Initializable {
 
     public void menu_connection_connect_clicked(ActionEvent actionEvent) {
         connectClient();
+    }
+
+    public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
+        btn_logIn_cicked(null);
+    }
+
+    public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
+        //TODO: implement logOut action
     }
 }

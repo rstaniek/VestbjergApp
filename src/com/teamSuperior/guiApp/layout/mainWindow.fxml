@@ -33,6 +33,8 @@
             <Menu mnemonicParsing="false" text="Connection">
               <items>
                 <MenuItem fx:id="menu_connection_connect" mnemonicParsing="false" onAction="#menu_connection_connect_clicked" text="Connect" />
+                  <MenuItem fx:id="menu_connection_logIn" mnemonicParsing="false" onAction="#menu_connection_logIn_clicked" text="Log in" />
+                  <MenuItem fx:id="menu_connection_logOut" mnemonicParsing="false" onAction="#menu_connection_logOut_clicked" text="Log out" />
               </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Products">
