@@ -59,6 +59,10 @@ public class MainController implements Initializable {
     public MenuItem menu_connection_logIn;
     @FXML
     public MenuItem menu_connection_logOut;
+    @FXML
+    public MenuItem menu_employees_statistics;
+    @FXML
+    public MenuItem menu_employees_manage;
 
     private Stage settings;
     public static Stage loginWindow;
@@ -260,5 +264,11 @@ public class MainController implements Initializable {
             ret = false;
         }
         return ret;
+    }
+
+    public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
+    }
+
+    public void menu_employees_manage_clicked(ActionEvent actionEvent) {
     }
 }
