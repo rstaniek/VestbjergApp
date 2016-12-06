@@ -45,14 +45,16 @@ public class LogInPopupController {
         //TODO: log in the user
         boolean isValid = validateUser(txt_empID.getText(), txt_empPassw.getText());
         if(isValid){
-            //AlertBox.display("Operation succeeded", String.format("Welcome %1$s", loggedUser.getName());
             MainController.loginWindow.close();
+        }
+        else
+        {
+            AlertBox.display("Wrong credentials!", "Wrong e-mail/password, please try again.");
         }
     }
 
     public void btn_cancel_click(ActionEvent actionEvent) {
-        //TODO: close the window
-        AlertBox.display("Warning", "You need to log in if you want to use this application!");
+        MainController.loginWindow.close();
     }
 
     private boolean validateInput(TextField user, TextField pass){
@@ -106,8 +108,6 @@ public class LogInPopupController {
                 loggedUser = new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("surname"), rs.getString("address"), rs.getString("city"), rs.getString("zip"), rs.getString("email"), rs.getString("phone"), rs.getString("password"), rs.getString("position"), rs.getInt("numberOfSales"), rs.getDouble("totalRevenue"), rs.getInt("accessLevel"));
                 ret = true;
                 loggedFinal = true;
-
-
             }
             else
             {
@@ -118,7 +118,9 @@ public class LogInPopupController {
         catch(SQLException ex)
         {
             System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
+
+            // Throws an exception if you input wrong login credentials, TODO: fix this, obviously
+            // AlertBox.display("Connection Error", ex.getMessage());
         }
 
         return ret;
