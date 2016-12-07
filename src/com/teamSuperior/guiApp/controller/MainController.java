@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -65,6 +66,12 @@ public class MainController implements Initializable {
     public MenuItem menu_employees_manage;
     @FXML
     public ImageView imgView_logo;
+    @FXML
+    public AnchorPane anchorPane_center;
+    @FXML
+    public Label label_ratioDesc1;
+    @FXML
+    public Label label_ratioDesc2;
 
     private Stage settings;
     static Stage loginWindow;
@@ -85,6 +92,12 @@ public class MainController implements Initializable {
         registry = Preferences.userRoot();
         isLoggedIn = false;
         wnd = new Window();
+
+        label_ratioEURDKK.getStyleClass().add("fontWhite");
+        label_ratioUSDDKK.getStyleClass().add("fontWhite");
+        label_ratioDesc1.getStyleClass().add("fontWhite");
+        label_ratioDesc2.getStyleClass().add("fontWhite"); //doesn't fucking work
+        anchorPane_center.getStyleClass().add("backgroundBlue");
 
         imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
 

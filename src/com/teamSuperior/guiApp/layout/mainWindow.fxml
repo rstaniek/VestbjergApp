@@ -63,7 +63,7 @@
         </MenuBar>
     </top>
     <center>
-        <AnchorPane BorderPane.alignment="CENTER">
+        <AnchorPane fx:id="anchorPane_center" BorderPane.alignment="CENTER">
             <children>
                 <ImageView fx:id="imgView_logo" fitHeight="150.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
                 <Label fx:id="label_ratioUSDDKK" layoutX="14.0" layoutY="186.0" text="please wait">
@@ -71,12 +71,12 @@
                         <Font name="System Bold" size="25.0" />
                     </font>
                 </Label>
-                <Label layoutX="14.0" layoutY="150.0" text="USD/DKK">
+                <Label fx:id="label_ratioDesc1" layoutX="14.0" layoutY="150.0" text="USD/DKK">
                     <font>
                         <Font name="System Bold" size="25.0" />
                     </font>
                 </Label>
-                <Label layoutX="191.0" layoutY="150.0" text="EUR/DKK">
+                <Label fx:id="label_ratioDesc2" layoutX="191.0" layoutY="150.0" text="EUR/DKK">
                     <font>
                         <Font name="System Bold" size="25.0" />
                     </font>
