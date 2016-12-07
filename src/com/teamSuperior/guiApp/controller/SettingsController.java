@@ -55,42 +55,37 @@ public class SettingsController implements Initializable {
     private Preferences registry; //application settings
 
     public void btn_settings_connection_testConn_clicked(ActionEvent actionEvent) {
-        if(validateDatabaseCredentials()){
-            if(DBConnect.testConnection(text_settings_connection_hostname.getText(), text_settings_connection_username.getText(), text_settings_connection_password.getText())){
+        if (validateDatabaseCredentials()) {
+            if (DBConnect.testConnection(text_settings_connection_hostname.getText(), text_settings_connection_username.getText(), text_settings_connection_password.getText())) {
                 AlertBox.display("Connection test", "Operation successful");
-            }
-            else Error.displayError(ErrorCode.CONNECTION_TEST_FAILED);
+            } else Error.displayError(ErrorCode.CONNECTION_TEST_FAILED);
         }
     }
 
-    private boolean validateDatabaseCredentials(){
-        if(text_settings_connection_hostname.getText().isEmpty()){
+    private boolean validateDatabaseCredentials() {
+        if (text_settings_connection_hostname.getText().isEmpty()) {
             displayError(ErrorCode.CONNECTION_HOSTNAME_EMPTY);
             return false;
-        }
-        else if(text_settings_connection_username.getText().isEmpty()){
+        } else if (text_settings_connection_username.getText().isEmpty()) {
             displayError(ErrorCode.CONNECTION_USERNAME_EMPTY);
             return false;
-        }
-        else if(text_settings_connection_password.getText().isEmpty()){
+        } else if (text_settings_connection_password.getText().isEmpty()) {
             displayError(ErrorCode.CONNECTION_PASSWORD_EMPTY);
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
-    private boolean validateDiscount(TextField tf){
-        if(tf.getText().isEmpty()){
+    private boolean validateDiscount(TextField tf) {
+        if (tf.getText().isEmpty()) {
             Error.displayError(ErrorCode.VALIDATION_FIELD_EMPTY);
             return false;
-        }else if(tf.getText().contains("[a-zA-Z]+")){
+        } else if (tf.getText().contains("[a-zA-Z]+")) {
             Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
-    private void save(){
+    private void save() {
         //connection
         registry.put("DATABASE_HOSTNAME", text_settings_connection_hostname.getText());
         registry.put("DATABASE_USER", text_settings_connection_username.getText());
@@ -105,11 +100,11 @@ public class SettingsController implements Initializable {
     }
 
     public void btn_save_click(ActionEvent actionEvent) {
-        if(validateDiscount(text_settings_discounts_registered) &&
+        if (validateDiscount(text_settings_discounts_registered) &&
                 validateDiscount(text_settings_discounts_craftsman) &&
                 validateDiscount(text_settings_discounts_quantity) &&
                 validateDiscount(text_settings_discounts_selfPickUp) &&
-                validateDiscount(text_settings_discounts_maxTreshold)){
+                validateDiscount(text_settings_discounts_maxTreshold)) {
             save();
         }
     }

@@ -12,7 +12,7 @@ import java.io.IOException;
  * Created by Domestos Maximus on 06-Dec-16.
  */
 public class Window {
-    public void inflate(WindowType wnd){
+    public void inflate(WindowType wnd) {
         //TODO: inflate window
         try {
             Parent root = FXMLLoader.load(getClass().getResource(wnd.getLayoutPath()));

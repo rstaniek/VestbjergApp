@@ -12,7 +12,7 @@ import javafx.scene.control.TextField;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 /**
@@ -38,11 +38,9 @@ public class LogInPopupController {
         //handling the input
         //TODO: log in the user
         boolean isValid = validateUser(txt_empID.getText(), txt_empPassw.getText());
-        if(isValid){
+        if (isValid) {
             MainController.loginWindow.close();
-        }
-        else
-        {
+        } else {
             AlertBox.display("Wrong credentials!", "Wrong e-mail/password, please try again.");
         }
     }
@@ -51,28 +49,25 @@ public class LogInPopupController {
         MainController.loginWindow.close();
     }
 
-    private boolean validateInput(TextField user, TextField pass){
-        if(user.getText().isEmpty() && pass.getText().isEmpty()){
+    private boolean validateInput(TextField user, TextField pass) {
+        if (user.getText().isEmpty() && pass.getText().isEmpty()) {
             displayError(LOGIN_EMPTY_INPUT);
             setRed(user);
             setRed(pass);
             return false;
-        }
-        else if(user.getText().isEmpty()){
+        } else if (user.getText().isEmpty()) {
             displayError(LOGIN_USERNAME_EMPTY);
             return false;
-        }
-        else if(pass.getText().isEmpty()){
-            displayError(LOGIN_PASSW_EMPTY);
+        } else if (pass.getText().isEmpty()) {
+            displayError(LOGIN_PASSWORD_EMPTY);
             return false;
-        }
-        else return true;
+        } else return true;
     }
 
     private void setRed(TextField tf) {
         ObservableList<String> styleClass = tf.getStyleClass();
 
-        if(!styleClass.contains("tferror")) {
+        if (!styleClass.contains("tferror")) {
             styleClass.add("tferror");
         }
     }
@@ -84,11 +79,10 @@ public class LogInPopupController {
         boolean ret = false;
         String safeUsername = org.apache.commons.codec.digest.DigestUtils.sha256Hex(username);
         String safePassword = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password);
-        rs = conn.getFromDataBase("SELECT * FROM employees WHERE email ='"+safeUsername+"' AND password = '"+safePassword+"'");
-        try
-        {
+        rs = conn.getFromDataBase("SELECT * FROM employees WHERE email ='" + safeUsername + "' AND password = '" + safePassword + "'");
+        try {
             rs.next();
-            if(rs.getInt("id") != 0 && rs.getString("name") != null
+            if (rs.getInt("id") != 0 && rs.getString("name") != null
                     && rs.getString("surname") != null
                     && rs.getString("address") != null
                     && rs.getString("city") != null
@@ -102,15 +96,11 @@ public class LogInPopupController {
                 loggedUser = new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("surname"), rs.getString("address"), rs.getString("city"), rs.getString("zip"), rs.getString("email"), rs.getString("phone"), rs.getString("password"), rs.getString("position"), rs.getInt("numberOfSales"), rs.getDouble("totalRevenue"), rs.getInt("accessLevel"));
                 ret = true;
                 loggedFinal = true;
-            }
-            else
-            {
+            } else {
                 ret = false;
                 loggedFinal = true;
             }
-        }
-        catch(SQLException ex)
-        {
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
 
             // Throws an exception if you input wrong login credentials, TODO: fix this, obviously
@@ -120,9 +110,11 @@ public class LogInPopupController {
         return ret;
     }
 
-    public static Employee getUser()
-    {
+    public static Employee getUser() {
         return loggedUser;
     }
-    public static boolean isLogged() { return loggedFinal;}
+
+    public static boolean isLogged() {
+        return loggedFinal;
+    }
 }

@@ -10,11 +10,12 @@ public enum Drawables {
     APP_LOGO("/silvan_logo_rectangle.png");
 
     private String path;
-    Drawables(String path){
+
+    Drawables(String path) {
         this.path = path;
     }
 
-    public String getPath(){
+    public String getPath() {
         return path;
     }
 }
