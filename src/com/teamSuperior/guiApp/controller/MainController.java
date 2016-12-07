@@ -7,6 +7,7 @@ import com.teamSuperior.guiApp.GUI.*;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import com.teamSuperior.guiApp.enums.WindowType;
+import com.teamSuperior.tuiApp.Main;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -33,7 +34,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static com.teamSuperior.guiApp.enums.Drawable.*;
 
 /**
  * Created by Domestos on 16.11.26.
@@ -55,8 +55,6 @@ public class MainController implements Initializable {
     @FXML
     public Button btn_logIn;
     @FXML
-    public ImageView imgView_logo;
-    @FXML
     public MenuItem menu_connection_connect;
     @FXML
     public MenuItem menu_connection_logIn;
@@ -66,6 +64,8 @@ public class MainController implements Initializable {
     public MenuItem menu_employees_statistics;
     @FXML
     public MenuItem menu_employees_manage;
+    @FXML
+    public ImageView imgView_logo;
 
     private Stage settings;
     static Stage loginWindow;
@@ -88,7 +88,8 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
-        imgView_logo.setImage(new Image(APP_LOGO.getPath()));
+        //TODO: THIS MOTHERFUCKER WAS CAUSING ALL THIS FUCKING NoSuchMethodException AND I'VE SPENT 5HRS FUCKING WITH THE FXML STYLESHEET LOOKING FOR A BUG OR UNCLOSED TAG!!!!! GODDAMMIT
+        //imgView_logo.setImage(new Image(Main.class.getResourceAsStream("silvan_logo_rectangle.png")));
 
         conn = new DBConnect();
         // generating array list and users
