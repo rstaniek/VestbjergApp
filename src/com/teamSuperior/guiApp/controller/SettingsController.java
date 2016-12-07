@@ -3,6 +3,7 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -10,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -46,6 +48,8 @@ public class SettingsController implements Initializable {
     public TextField text_settings_discounts_selfPickUp;
     @FXML
     public TextField text_settings_discounts_maxTreshold;
+    @FXML
+    public ImageView img_testMeme;
 
 
     private Preferences registry; //application settings
@@ -112,6 +116,9 @@ public class SettingsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        img_testMeme.setImage(Drawable.getImage(this.getClass(), Drawables.TEST_MEME));
+
         registry = Preferences.userRoot();
 
         //connection

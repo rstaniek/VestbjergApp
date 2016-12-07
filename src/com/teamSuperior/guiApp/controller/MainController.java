@@ -5,6 +5,7 @@ import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.*;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
@@ -18,7 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static com.teamSuperior.guiApp.enums.Drawable.*;
 
 /**
  * Created by Domestos on 16.11.26.
@@ -55,8 +54,6 @@ public class MainController implements Initializable {
     @FXML
     public Button btn_logIn;
     @FXML
-    public ImageView imgView_logo;
-    @FXML
     public MenuItem menu_connection_connect;
     @FXML
     public MenuItem menu_connection_logIn;
@@ -66,6 +63,8 @@ public class MainController implements Initializable {
     public MenuItem menu_employees_statistics;
     @FXML
     public MenuItem menu_employees_manage;
+    @FXML
+    public ImageView imgView_logo;
 
     private Stage settings;
     static Stage loginWindow;
@@ -75,7 +74,6 @@ public class MainController implements Initializable {
     private boolean isLoggedIn;
 
     private Employee em;
-    private Thread th3;
 
     // just database things
     DBConnect conn;
@@ -88,7 +86,7 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
-        imgView_logo.setImage(new Image(APP_LOGO.getPath()));
+        imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
 
         conn = new DBConnect();
         // generating array list and users
@@ -145,7 +143,7 @@ public class MainController implements Initializable {
 
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
-        th3 = new Thread(waitForLogin);
+        Thread th3 = new Thread(waitForLogin);
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
