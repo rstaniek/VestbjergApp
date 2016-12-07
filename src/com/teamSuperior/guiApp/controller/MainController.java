@@ -5,9 +5,9 @@ import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.*;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import com.teamSuperior.guiApp.enums.WindowType;
-import com.teamSuperior.tuiApp.Main;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
@@ -19,7 +19,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -75,7 +74,6 @@ public class MainController implements Initializable {
     private boolean isLoggedIn;
 
     private Employee em;
-    private Thread th3;
 
     // just database things
     DBConnect conn;
@@ -88,8 +86,7 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
-        //TODO: THIS MOTHERFUCKER WAS CAUSING ALL THIS FUCKING NoSuchMethodException AND I'VE SPENT 5HRS FUCKING WITH THE FXML STYLESHEET LOOKING FOR A BUG OR UNCLOSED TAG!!!!! GODDAMMIT
-        //imgView_logo.setImage(new Image(Main.class.getResourceAsStream("silvan_logo_rectangle.png")));
+        imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
 
         conn = new DBConnect();
         // generating array list and users
@@ -146,7 +143,7 @@ public class MainController implements Initializable {
 
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
-        th3 = new Thread(waitForLogin);
+        Thread th3 = new Thread(waitForLogin);
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
