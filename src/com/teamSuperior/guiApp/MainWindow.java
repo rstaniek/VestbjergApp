@@ -34,9 +34,9 @@ public class MainWindow extends Application {
         primaryStage.show();
     }
 
-    private void closeProgram(){
+    private void closeProgram() {
         boolean answer = ConfirmBox.display("Closing the program", "There might be unsaved changes. Are you sure you want to close the application?");
-        if(answer){
+        if (answer) {
             window.close();
         }
     }
