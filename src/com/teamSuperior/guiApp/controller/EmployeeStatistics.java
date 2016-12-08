@@ -7,10 +7,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Tab;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -24,9 +26,14 @@ public class EmployeeStatistics implements Initializable {
 
     @FXML
     public TableView tableView_employees;
+    @FXML
+    public BarChart chart_numberOfSales;
+    @FXML
+    public BarChart chart_revenue;
 
     private ObservableList<Employee> employees;
     private static Employee loggedInUser;
+    private Employee selectedEmployee;
     private DBConnect conn;
 
     @Override
@@ -73,6 +80,9 @@ public class EmployeeStatistics implements Initializable {
 
         //fill the table with data
         initTableColumns(loggedInUser.getAccessLevel());
+        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
+        System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
+        initStatsView();
     }
 
     private void initTableColumns(int accessLevel){
@@ -109,7 +119,7 @@ public class EmployeeStatistics implements Initializable {
             accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
             tableView_employees.getColumns().addAll(numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
-        }if(accessLevel == 3){
+        }if(accessLevel >= 3){
             //stuff
             TableColumn<Employee, String> addressColumn = new TableColumn<>("Address");
             addressColumn.setMinWidth(120);
@@ -125,5 +135,48 @@ public class EmployeeStatistics implements Initializable {
 
             tableView_employees.getColumns().addAll(addressColumn, cityColumn, zipColumn);
         }
+    }
+
+    @FXML
+    public void tableView_employees_onMouseClicked(MouseEvent mouseEvent) {
+        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
+        initStatsView();
+        System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
+    }
+
+    private void initStatsView(){
+        chart_numberOfSales.getData().clear();
+        chart_revenue.getData().clear();
+        XYChart.Series sales = new XYChart.Series<>();
+        XYChart.Series revenue = new XYChart.Series<>();
+        if(loggedInUser.getAccessLevel() == 1){
+            sales.getData().add(new XYChart.Data<>("You", loggedInUser.getNumberOfSales()));
+            revenue.getData().add(new XYChart.Data<>("You", loggedInUser.getTotalRevenue()));
+        }else{
+            sales.getData().add(new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales()));
+            revenue.getData().add(new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()));
+        }
+        sales.getData().addAll(new XYChart.Data<>("Average", calculateAvgSales()));
+        revenue.getData().addAll(new XYChart.Data<>("Average", calculateAvgRevenue()));
+        chart_numberOfSales.getData().addAll(sales);
+        chart_revenue.getData().addAll(revenue);
+    }
+
+    private float calculateAvgSales(){
+        float avg = 0;
+        for(Employee e : employees){
+            avg += e.getNumberOfSales();
+        }
+        avg /= employees.size();
+        return avg;
+    }
+
+    private float calculateAvgRevenue(){
+        float avg = 0;
+        for(Employee e : employees){
+            avg += e.getTotalRevenue();
+        }
+        avg /= employees.size();
+        return avg;
     }
 }
