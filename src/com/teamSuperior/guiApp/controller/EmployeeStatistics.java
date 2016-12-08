@@ -145,20 +145,31 @@ public class EmployeeStatistics implements Initializable {
     }
 
     private void initStatsView(){
-        //TODO: add colors to the bars depending on their value (from empStats.css)
+        //TODO: add colors to the bars depending on their value (from empStats.css) for some reason it doesn't work
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
         XYChart.Series sales = new XYChart.Series<>();
         XYChart.Series revenue = new XYChart.Series<>();
+        XYChart.Data numOfSalesBar;
+        XYChart.Data revenueBar;
         if(loggedInUser.getAccessLevel() == 1){
-            sales.getData().add(new XYChart.Data<>("You", loggedInUser.getNumberOfSales()));
-            revenue.getData().add(new XYChart.Data<>("You", loggedInUser.getTotalRevenue()));
+            numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
+            revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
+            /*if(loggedInUser.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
+            else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
+            if(loggedInUser.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
+            else revenueBar.getNode().getStyleClass().add("greater-than-avg");*/
         }else{
-            sales.getData().add(new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales()));
-            revenue.getData().add(new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()));
+            numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
+            revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
+           /* if(selectedEmployee.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
+            else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
+            if(selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
+            else revenueBar.getNode().getStyleClass().add("greater-than-avg");*/
         }
-        sales.getData().addAll(new XYChart.Data<>("Average", calculateAvgSales()));
-        revenue.getData().addAll(new XYChart.Data<>("Average", calculateAvgRevenue()));
+
+        sales.getData().addAll(numOfSalesBar, new XYChart.Data<>("Average", calculateAvgSales()));
+        revenue.getData().addAll(revenueBar, new XYChart.Data<>("Average", calculateAvgRevenue()));
         chart_numberOfSales.getData().addAll(sales);
         chart_revenue.getData().addAll(revenue);
     }
