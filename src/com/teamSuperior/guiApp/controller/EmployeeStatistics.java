@@ -96,20 +96,19 @@ public class EmployeeStatistics implements Initializable {
             tableView_employees.setItems(employees);
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn);
         }if(accessLevel >= 2){
-            //TODO: all this commented shit apparently doesn't work even tho it should
-            /*TableColumn<Employee, String> numOfSalesColumn = new TableColumn<>("Number of sales");
-            numOfSalesColumn.setMinWidth(75);
-            numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfSales_str"));
+            TableColumn<Employee, String> numOfSalesColumn = new TableColumn<>("Number of sales");
+            numOfSalesColumn.setMinWidth(80);
+            numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("numberOfSales_str"));
 
-            TableColumn<Employee, String> totalRevenueColumn = new TableColumn<>("Total Revenue");
-            totalRevenueColumn.setMinWidth(75);
-            totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<>("totalRevenue_str"));
+            TableColumn<Employee, String> totalRevenueColumn = new TableColumn<>("Total revenue");
+            totalRevenueColumn.setMinWidth(80);
+            totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("totalRevenue_str"));
 
-            TableColumn<Employee, String> accessLevelColumn = new TableColumn<>("Access Level");
-            accessLevelColumn.setMinWidth(75);
-            accessLevelColumn.setCellValueFactory(new PropertyValueFactory<>("accessLevel_str"));
+            TableColumn<Employee, String> accessLevelColumn = new TableColumn<>("Access level");
+            accessLevelColumn.setMinWidth(80);
+            accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
-            tableView_employees.getColumns().addAll(numOfSalesColumn, totalRevenueColumn, accessLevel);*/
+            tableView_employees.getColumns().addAll(numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
         }if(accessLevel == 3){
             //stuff
             TableColumn<Employee, String> addressColumn = new TableColumn<>("Address");
