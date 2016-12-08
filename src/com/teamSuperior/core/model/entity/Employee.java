@@ -1,11 +1,8 @@
 package com.teamSuperior.core.model.entity;
 
-import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.permission.Level1;
 import com.teamSuperior.core.model.permission.Level2;
 import com.teamSuperior.core.model.permission.Level3;
-import com.teamSuperior.guiApp.GUI.AlertBox;
-import static com.teamSuperior.core.connection.DBConnect.*;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
@@ -28,6 +25,9 @@ public class Employee{
     private int numberOfSales;
     private double totalRevenue;
     private int accessLevel;
+    private String numberOfSales_str;
+    private String totalRevenue_str;
+    private String accessLevel_str;
     public Employee(int id, String name, String surname, String address, String city, String zip, String email, String phone, String password, String position, int numberOfSales, double totalRevenue, int accessLevel) {
         this.id = id;
         this.name = name;
@@ -42,9 +42,24 @@ public class Employee{
         this.numberOfSales = numberOfSales;
         this.totalRevenue = totalRevenue;
         this.accessLevel = accessLevel;
+        numberOfSales_str = String.valueOf(numberOfSales);
+        totalRevenue_str = String.valueOf(totalRevenue);
+        accessLevel_str = String.valueOf(accessLevel);
         accessLevel1 = new Level1();
         accessLevel2 = new Level2();
         accessLevel3 = new Level3();
+    }
+
+    public String getNumberOfSales_str() {
+        return numberOfSales_str;
+    }
+
+    public String getTotalRevenue_str() {
+        return totalRevenue_str;
+    }
+
+    public String getAccessLevel_str() {
+        return accessLevel_str;
     }
 
     public String getName() {

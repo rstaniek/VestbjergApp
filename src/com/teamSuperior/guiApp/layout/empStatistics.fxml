@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
-<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.EmployeeStatistics" prefHeight="800.0" prefWidth="600.0"
-            xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"/>
+
+<AnchorPane prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeStatistics">
+   <children>
+      <TableView fx:id="tableView_employees" prefHeight="350.0" prefWidth="900.0">
+      </TableView>
+   </children>
+</AnchorPane>
