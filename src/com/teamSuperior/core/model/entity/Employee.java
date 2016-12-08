@@ -1,52 +1,65 @@
 package com.teamSuperior.core.model.entity;
 
-import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.guiApp.GUI.AlertBox;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import com.teamSuperior.core.model.permission.Level1;
+import com.teamSuperior.core.model.permission.Level2;
+import com.teamSuperior.core.model.permission.Level3;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
  */
 public class Employee{
 
-    ResultSet res = null;
-    private static int id = 0;
-    private String name, surname, address, city, zip, email, phone, password, position;
-    private int numberOfSales, accessLevel;
+    private Level1 accessLevel1;
+    private Level2 accessLevel2;
+    private Level3 accessLevel3;
+    private int id;
+    private String name;
+    private String surname;
+    private String address;
+    private String city;
+    private String zip;
+    private String email;
+    private String phone;
+    private String password;
+    private String position;
+    private int numberOfSales;
     private double totalRevenue;
-    private DBConnect db;
+    private int accessLevel;
+    private String numberOfSales_str;
+    private String totalRevenue_str;
+    private String accessLevel_str;
+    public Employee(int id, String name, String surname, String address, String city, String zip, String email, String phone, String password, String position, int numberOfSales, double totalRevenue, int accessLevel) {
+        this.id = id;
+        this.name = name;
+        this.surname = surname;
+        this.address = address;
+        this.city = city;
+        this.zip = zip;
+        this.email = email;
+        this.phone = phone;
+        this.password = password;
+        this.position = position;
+        this.numberOfSales = numberOfSales;
+        this.totalRevenue = totalRevenue;
+        this.accessLevel = accessLevel;
+        numberOfSales_str = String.valueOf(numberOfSales);
+        totalRevenue_str = String.valueOf(totalRevenue);
+        accessLevel_str = String.valueOf(accessLevel);
+        accessLevel1 = new Level1();
+        accessLevel2 = new Level2();
+        accessLevel3 = new Level3();
+    }
 
-    public Employee() {
-        db = new DBConnect();
-        try
-        {
-            id++;
-            String query = "SELECT * FROM employees WHERE id = 1";
-            res = db.getFromDataBase(query);
-            while(res.next())
-            {
-                this.name = res.getString(2);
-                this.surname = res.getString(3);
-                this.address = res.getString(4);
-                this.city = res.getString(5);
-                this.zip = res.getString(6);
-                this.email = res.getString(7);
-                this.phone = res.getString(8);
-                this.password = res.getString(9);
-                this.position = res.getString(10);
-                this.numberOfSales = res.getInt(11);
-                this.totalRevenue = res.getDouble(12);
-                this.accessLevel = res.getInt(13);
-            }
-        }
-        catch(SQLException ex)
-        {
-            System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
-        }
+    public String getNumberOfSales_str() {
+        return numberOfSales_str;
+    }
+
+    public String getTotalRevenue_str() {
+        return totalRevenue_str;
+    }
+
+    public String getAccessLevel_str() {
+        return accessLevel_str;
     }
 
     public String getName() {
@@ -67,6 +80,22 @@ public class Employee{
 
     public String getAddress() {
         return address;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public int getNumberOfSales() {
+        return numberOfSales;
+    }
+
+    public double getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public int getAccessLevel() {
+        return accessLevel;
     }
 
     public void setAddress(String address) {
@@ -112,7 +141,6 @@ public class Employee{
     public void setPassword(String password) {
         this.password = password;
     }
-
 
 
 }

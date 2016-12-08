@@ -69,7 +69,7 @@ public class Drawable extends Image {
      * @param c current class
      * @param d image enum
      */
-    public static Image getImage(Class c, Drawables d){
+    public static Image getImage(Class c, Drawables d) {
         return new Drawable(c.getClass().getResource(d.getPath()).toString());
     }
 }

@@ -1,15 +1,10 @@
 package com.teamSuperior.guiApp;
 
-import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
-import com.teamSuperior.guiApp.controller.MainController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
@@ -30,13 +25,15 @@ public class MainWindow extends Application {
             closeProgram();
         });
 
-        primaryStage.setScene(new Scene(root));
+        Scene scene = new Scene(root);
+        scene.getStylesheets().add(this.getClass().getResource("/style/mainWindow.css").toString());
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    private void closeProgram(){
+    private void closeProgram() {
         boolean answer = ConfirmBox.display("Closing the program", "There might be unsaved changes. Are you sure you want to close the application?");
-        if(answer){
+        if (answer) {
             window.close();
         }
     }

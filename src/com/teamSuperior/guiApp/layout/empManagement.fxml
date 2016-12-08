@@ -1,6 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagement" prefHeight="800.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" />
+<AnchorPane prefHeight="570.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagement">
+    <TableView fx:id="tableView_employees" onMouseClicked="#tableView_employees_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
+    </TableView>
+   <AnchorPane layoutY="400.0" prefHeight="170.0" prefWidth="1000.0">
+      <children>
+         <TextField fx:id="text_name" layoutX="14.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
+         <TextField fx:id="text_surname" layoutX="14.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="Surname" />
+          <TextField fx:id="text_email" layoutX="14.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" />
+         <TextField fx:id="text_position" layoutX="14.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" promptText="Position" />
+         <Label layoutX="225.0" layoutY="19.0" text="- Name" />
+          <Label layoutX="225.0" layoutY="59.0" text="- Surname" />
+          <Label layoutX="225.0" layoutY="99.0" text="- Email" />
+          <Label layoutX="225.0" layoutY="139.0" text="- Position" />
+         <TextField fx:id="text_address" layoutX="514.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
+          <TextField fx:id="text_city" layoutX="514.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
+          <TextField fx:id="text_zip" layoutX="514.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
+         <Label layoutX="725.0" layoutY="19.0" text=" - Address" />
+          <Label layoutX="725.0" layoutY="59.0" text=" - City" />
+          <Label layoutX="725.0" layoutY="99.0" text=" - ZIP code" />
+         <Button fx:id="btn_save" layoutX="514.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_save_onClick" text="Save" />
+         <Button fx:id="btn_saveQuit" layoutX="570.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_saveQuit_onClick" text="Save &amp; Quit" />
+         <Button fx:id="btn_quit" layoutX="665.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_quit_onClick" text="Quit without saving" />
+      </children>
+   </AnchorPane>
+</AnchorPane>

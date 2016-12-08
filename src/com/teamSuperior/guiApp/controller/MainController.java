@@ -3,8 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.*;
-import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Window;
 import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import com.teamSuperior.guiApp.enums.WindowType;
@@ -20,6 +20,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -32,6 +33,9 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+
+import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 
 /**
@@ -65,6 +69,12 @@ public class MainController implements Initializable {
     public MenuItem menu_employees_manage;
     @FXML
     public ImageView imgView_logo;
+    @FXML
+    public AnchorPane anchorPane_center;
+    @FXML
+    public Label label_ratioDesc1;
+    @FXML
+    public Label label_ratioDesc2;
 
     private Stage settings;
     static Stage loginWindow;
@@ -86,6 +96,12 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
+        label_ratioEURDKK.getStyleClass().add("fontWhite");
+        label_ratioUSDDKK.getStyleClass().add("fontWhite");
+        label_ratioDesc1.getStyleClass().add("fontWhite");
+        label_ratioDesc2.getStyleClass().add("fontWhite"); //doesn't fucking work
+        anchorPane_center.getStyleClass().add("backgroundBlue");
+
         imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
 
         conn = new DBConnect();
@@ -94,7 +110,7 @@ public class MainController implements Initializable {
         if (credentialsSaved()) {
             connectClient();
         } else {
-            Error.displayError(ErrorCode.CONNECTION_REG_EMPTY);
+            displayError(CONNECTION_REG_EMPTY);
         }
 
 
@@ -190,11 +206,30 @@ public class MainController implements Initializable {
                 !registry.get("DATABASE_PASS", "").isEmpty();
     }
 
+    private void settingsWndClose() {
+        //TODO: handle seving the settings before closing
+        settings.close();
+    }
+
+    public boolean welcome() {
+        boolean ret = false;
+        if (LogInPopupController.isLogged()) {
+            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
+            Platform.runLater(() -> btn_logIn.setDisable(true));
+            ret = true;
+        } else {
+            ret = false;
+        }
+        return ret;
+    }
+
     //Menu strip handling
+    @FXML
     public void menu_close_clicked(ActionEvent actionEvent) {
         Platform.exit();
     }
 
+    @FXML
     public void menu_settings_clicked(ActionEvent actionEvent) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
@@ -215,11 +250,7 @@ public class MainController implements Initializable {
         }
     }
 
-    private void settingsWndClose() {
-        //TODO: handle seving the settings before closing
-        settings.close();
-    }
-
+    @FXML
     public void btn_logIn_clicked(ActionEvent actionEvent) {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
             try {
@@ -228,7 +259,9 @@ public class MainController implements Initializable {
                 loginWindow.initModality(Modality.APPLICATION_MODAL);
                 loginWindow.setTitle("Log in");
                 loginWindow.setResizable(false);
-                loginWindow.setScene(new Scene(logInScreen));
+                Scene scene = new Scene(logInScreen);
+                scene.getStylesheets().add(this.getClass().getResource("/style/textField-error.css").toString());
+                loginWindow.setScene(scene);
                 loginWindow.show();
 
 
@@ -240,35 +273,49 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
     public void menu_connection_connect_clicked(ActionEvent actionEvent) {
         connectClient();
     }
 
+    @FXML
     public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
         btn_logIn_clicked(actionEvent);
     }
 
+    @FXML
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
         //TODO: implement logOut action
     }
 
-    public boolean welcome() {
-        boolean ret = false;
-        if (LogInPopupController.isLogged()) {
-            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
-            Platform.runLater(() -> btn_logIn.setDisable(true));
-            ret = true;
-        } else {
-            ret = false;
-        }
-        return ret;
-    }
-
+    @FXML
     public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
-        wnd.inflate(WindowType.EMP_STATS);
+        if(LogInPopupController.isLogged()){
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Employee statistics");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(this.getClass().getResource("/style/empStats.css").toString());
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                AlertBox.display("Java IO Exception", ex.getMessage());
+            } catch (Exception ex2) {
+                AlertBox.display("Unexpected exception", ex2.getMessage());
+            }
+        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
+    @FXML
     public void menu_employees_manage_clicked(ActionEvent actionEvent) {
-        wnd.inflate(WindowType.EMP_MANAGEMENT);
+        if(LogInPopupController.isLogged()) {
+            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+                wnd.inflate(WindowType.EMP_MANAGEMENT);
+            }else{
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 }
