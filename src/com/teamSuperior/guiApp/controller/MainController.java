@@ -4,7 +4,6 @@ import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
-import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.Window;
 import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.ErrorCode;
@@ -206,11 +205,30 @@ public class MainController implements Initializable {
                 !registry.get("DATABASE_PASS", "").isEmpty();
     }
 
+    private void settingsWndClose() {
+        //TODO: handle seving the settings before closing
+        settings.close();
+    }
+
+    public boolean welcome() {
+        boolean ret = false;
+        if (LogInPopupController.isLogged()) {
+            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
+            Platform.runLater(() -> btn_logIn.setDisable(true));
+            ret = true;
+        } else {
+            ret = false;
+        }
+        return ret;
+    }
+
     //Menu strip handling
+    @FXML
     public void menu_close_clicked(ActionEvent actionEvent) {
         Platform.exit();
     }
 
+    @FXML
     public void menu_settings_clicked(ActionEvent actionEvent) {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
@@ -231,11 +249,7 @@ public class MainController implements Initializable {
         }
     }
 
-    private void settingsWndClose() {
-        //TODO: handle seving the settings before closing
-        settings.close();
-    }
-
+    @FXML
     public void btn_logIn_clicked(ActionEvent actionEvent) {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
             try {
@@ -244,7 +258,9 @@ public class MainController implements Initializable {
                 loginWindow.initModality(Modality.APPLICATION_MODAL);
                 loginWindow.setTitle("Log in");
                 loginWindow.setResizable(false);
-                loginWindow.setScene(new Scene(logInScreen));
+                Scene scene = new Scene(logInScreen);
+                scene.getStylesheets().add(this.getClass().getResource("/style/textField-error.css").toString());
+                loginWindow.setScene(scene);
                 loginWindow.show();
 
 
@@ -256,30 +272,22 @@ public class MainController implements Initializable {
         }
     }
 
+    @FXML
     public void menu_connection_connect_clicked(ActionEvent actionEvent) {
         connectClient();
     }
 
+    @FXML
     public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
         btn_logIn_clicked(actionEvent);
     }
 
+    @FXML
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
         //TODO: implement logOut action
     }
 
-    public boolean welcome() {
-        boolean ret = false;
-        if (LogInPopupController.isLogged()) {
-            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
-            Platform.runLater(() -> btn_logIn.setDisable(true));
-            ret = true;
-        } else {
-            ret = false;
-        }
-        return ret;
-    }
-
+    @FXML
     public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()){
             try {
@@ -299,6 +307,7 @@ public class MainController implements Initializable {
         }else displayError(ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
+    @FXML
     public void menu_employees_manage_clicked(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()) {
             wnd.inflate(WindowType.EMP_MANAGEMENT);

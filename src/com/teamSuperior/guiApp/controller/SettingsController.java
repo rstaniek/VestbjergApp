@@ -54,6 +54,7 @@ public class SettingsController implements Initializable {
 
     private Preferences registry; //application settings
 
+    @FXML
     public void btn_settings_connection_testConn_clicked(ActionEvent actionEvent) {
         if (validateDatabaseCredentials()) {
             if (DBConnect.testConnection(text_settings_connection_hostname.getText(), text_settings_connection_username.getText(), text_settings_connection_password.getText())) {
@@ -99,6 +100,7 @@ public class SettingsController implements Initializable {
         registry.putFloat("DISCOUNT_MAX", Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
     }
 
+    @FXML
     public void btn_save_click(ActionEvent actionEvent) {
         if (validateDiscount(text_settings_discounts_registered) &&
                 validateDiscount(text_settings_discounts_craftsman) &&
@@ -130,12 +132,14 @@ public class SettingsController implements Initializable {
         text_settings_discounts_maxTreshold.setText(String.valueOf(registry.getFloat("DISCOUNT_MAX", 0)));
     }
 
+    @FXML
     public void btn_saveQuit_clicked(ActionEvent actionEvent) {
         save();
         Stage stage = (Stage) btn_saveQuit.getScene().getWindow();
         stage.close();
     }
 
+    @FXML
     public void btn_quit_clicked(ActionEvent actionEvent) {
         Stage stage = (Stage) btn_quit.getScene().getWindow();
         stage.close();

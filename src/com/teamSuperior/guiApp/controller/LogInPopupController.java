@@ -5,6 +5,7 @@ import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -26,6 +27,7 @@ public class LogInPopupController {
     private static Employee loggedUser;
     public static boolean loggedFinal = false;
 
+    @FXML
     public void btn_logIn_click(ActionEvent actionEvent) {
         //TODO: write an enum for error codes
         //removeRed(txt_empID);
@@ -45,6 +47,7 @@ public class LogInPopupController {
         }
     }
 
+    @FXML
     public void btn_cancel_click(ActionEvent actionEvent) {
         MainController.loginWindow.close();
     }

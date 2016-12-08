@@ -162,7 +162,7 @@ public class EmployeeStatistics implements Initializable {
         }else{
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
-           /* if(selectedEmployee.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
+            /*if(selectedEmployee.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
             else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
             if(selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
             else revenueBar.getNode().getStyleClass().add("greater-than-avg");*/
