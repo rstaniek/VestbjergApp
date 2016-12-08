@@ -5,7 +5,7 @@ package com.teamSuperior.guiApp.enums;
  */
 public enum WindowType {
     EMP_STATS("../layout/empStatistics.fxml", "Statistics", true),
-    EMP_MANAGEMENT("../layout/empManagement.fxml", "Manage Employees", true),
+    EMP_MANAGEMENT("../layout/empManagement.fxml", "Manage Employees", false),
     SETTINGS("../layout/settingsWindow.fxml", "Settings", false);
 
 

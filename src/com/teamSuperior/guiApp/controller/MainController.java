@@ -35,6 +35,7 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 
 /**
@@ -109,7 +110,7 @@ public class MainController implements Initializable {
         if (credentialsSaved()) {
             connectClient();
         } else {
-            displayError(ErrorCode.CONNECTION_REG_EMPTY);
+            displayError(CONNECTION_REG_EMPTY);
         }
 
 
@@ -304,13 +305,17 @@ public class MainController implements Initializable {
             } catch (Exception ex2) {
                 AlertBox.display("Unexpected exception", ex2.getMessage());
             }
-        }else displayError(ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN);
+        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
     @FXML
     public void menu_employees_manage_clicked(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()) {
-            wnd.inflate(WindowType.EMP_MANAGEMENT);
-        }else displayError(ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN);
+            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+                wnd.inflate(WindowType.EMP_MANAGEMENT);
+            }else{
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 }
