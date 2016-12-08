@@ -282,7 +282,20 @@ public class MainController implements Initializable {
 
     public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()){
-            wnd.inflate(WindowType.EMP_STATS);
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Employee statistics");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                scene.getStylesheets().add(this.getClass().getResource("/style/empStats.css").toString());
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                AlertBox.display("Java IO Exception", ex.getMessage());
+            } catch (Exception ex2) {
+                AlertBox.display("Unexpected exception", ex2.getMessage());
+            }
         }else displayError(ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN);
     }
 

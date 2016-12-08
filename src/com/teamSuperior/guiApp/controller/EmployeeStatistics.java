@@ -145,6 +145,7 @@ public class EmployeeStatistics implements Initializable {
     }
 
     private void initStatsView(){
+        //TODO: add colors to the bars depending on their value (from empStats.css)
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
         XYChart.Series sales = new XYChart.Series<>();

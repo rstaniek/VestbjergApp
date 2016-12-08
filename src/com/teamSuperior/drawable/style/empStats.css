@@ -1,0 +1,7 @@
+.greater-than-avg {
+    -fx-bar-fill: #42f445;
+}
+
+.less-than-avg {
+    -fx-bar-fill: #f44b42;
+}
