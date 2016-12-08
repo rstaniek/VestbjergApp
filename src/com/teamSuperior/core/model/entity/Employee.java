@@ -67,6 +67,22 @@ public class Employee{
         return address;
     }
 
+    public String getPosition() {
+        return position;
+    }
+
+    public int getNumberOfSales() {
+        return numberOfSales;
+    }
+
+    public double getTotalRevenue() {
+        return totalRevenue;
+    }
+
+    public int getAccessLevel() {
+        return accessLevel;
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }
