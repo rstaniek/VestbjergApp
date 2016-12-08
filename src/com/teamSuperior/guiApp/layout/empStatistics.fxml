@@ -3,6 +3,7 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
@@ -26,5 +27,6 @@
           <NumberAxis side="LEFT" />
         </yAxis>
       </BarChart>
+      <Label fx:id="label_productivity" layoutX="710.0" layoutY="410.0" text="Label" />
    </children>
 </AnchorPane>

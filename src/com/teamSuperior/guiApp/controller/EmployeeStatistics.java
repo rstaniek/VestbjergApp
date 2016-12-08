@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -30,6 +31,8 @@ public class EmployeeStatistics implements Initializable {
     public BarChart chart_numberOfSales;
     @FXML
     public BarChart chart_revenue;
+    @FXML
+    public Label label_productivity;
 
     private ObservableList<Employee> employees;
     private static Employee loggedInUser;
@@ -82,7 +85,8 @@ public class EmployeeStatistics implements Initializable {
         initTableColumns(loggedInUser.getAccessLevel());
         selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
         System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
-        initStatsView();
+        updateStatsView();
+        updateLabels();
     }
 
     private void initTableColumns(int accessLevel){
@@ -140,11 +144,12 @@ public class EmployeeStatistics implements Initializable {
     @FXML
     public void tableView_employees_onMouseClicked(MouseEvent mouseEvent) {
         selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
-        initStatsView();
+        updateStatsView();
+        updateLabels();
         System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
     }
 
-    private void initStatsView(){
+    private void updateStatsView(){
         //TODO: add colors to the bars depending on their value (from empStats.css) for some reason it doesn't work
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
@@ -172,6 +177,30 @@ public class EmployeeStatistics implements Initializable {
         revenue.getData().addAll(revenueBar, new XYChart.Data<>("Average", calculateAvgRevenue()));
         chart_numberOfSales.getData().addAll(sales);
         chart_revenue.getData().addAll(revenue);
+    }
+
+    private void updateLabels(){
+        String productivity;
+        if(loggedInUser.getAccessLevel() == 1){
+            if(loggedInUser.getNumberOfSales() >= calculateAvgSales()){
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n better than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
+            }
+            else{
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n worse than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
+            }
+        }else{
+            if(selectedEmployee.getNumberOfSales() >= calculateAvgSales()){
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n better than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
+            }
+            else{
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n worse than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
+            }
+        }
+        label_productivity.setText(productivity);
+    }
+
+    private float getProductivityPercentage(Employee e, float avg){
+        return (Math.abs(e.getNumberOfSales() - avg) / avg) * 100;
     }
 
     private float calculateAvgSales(){
