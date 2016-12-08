@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static com.teamSuperior.guiApp.GUI.Error.*;
+
 
 /**
  * Created by Domestos on 16.11.26.
@@ -108,7 +110,7 @@ public class MainController implements Initializable {
         if (credentialsSaved()) {
             connectClient();
         } else {
-            Error.displayError(ErrorCode.CONNECTION_REG_EMPTY);
+            displayError(ErrorCode.CONNECTION_REG_EMPTY);
         }
 
 
@@ -279,10 +281,14 @@ public class MainController implements Initializable {
     }
 
     public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
-        wnd.inflate(WindowType.EMP_STATS);
+        if(LogInPopupController.isLogged()){
+            wnd.inflate(WindowType.EMP_STATS);
+        }else displayError(ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
     public void menu_employees_manage_clicked(ActionEvent actionEvent) {
-        wnd.inflate(WindowType.EMP_MANAGEMENT);
+        if(LogInPopupController.isLogged()) {
+            wnd.inflate(WindowType.EMP_MANAGEMENT);
+        }else displayError(ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN);
     }
 }

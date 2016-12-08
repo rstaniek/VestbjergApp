@@ -11,6 +11,8 @@ public enum ErrorCode {
     CONNECTION_REG_EMPTY("Connection ERROR", "In order to connect please fill out the configuration first!"),
     VALIDATION_FIELD_EMPTY("Input ERROR", "All fields must be filled properly"),
     VALIDATION_ILLEGAL_CHARS("Input ERROR", "Illegal characters spotted in th input"),
+    ACCESS_DENIED_NOT_LOGGED_IN("Access denied", "You need to be logged in to access this function!"),
+    ACCESS_DENIED_INSUFFICIENT_PERMISSIONS("Access denied", "You don't have permission to access this function!"),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty"),
     LOGIN_USERNAME_EMPTY("User validation error", "Employee ID cannot be empty"),
     LOGIN_PASSWORD_EMPTY("User validation error", "The password field cannot be empty");
