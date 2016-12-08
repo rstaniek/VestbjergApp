@@ -46,8 +46,7 @@ public class Customer {
 
     public String getPhone() { return phone; }
 
-    public void setPhone(String phone) { this.phone = phone;
-    }
+    public void setPhone(String phone) { this.phone = phone; }
 
     public String getEmail() { return email; }
 
