@@ -13,7 +13,7 @@ public enum ErrorCode {
     VALIDATION_ILLEGAL_CHARS("Input ERROR", "Illegal characters spotted in th input"),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty"),
     LOGIN_USERNAME_EMPTY("User validation error", "Employee ID cannot be empty"),
-    LOGIN_PASSW_EMPTY("User validation error", "The password field cannot be empty");
+    LOGIN_PASSWORD_EMPTY("User validation error", "The password field cannot be empty");
 
 
     private String errorTitle;
@@ -28,7 +28,7 @@ public enum ErrorCode {
         return errorMessage;
     }
 
-    public String getErrorTitle(){
+    public String getErrorTitle() {
         return errorTitle;
     }
 }

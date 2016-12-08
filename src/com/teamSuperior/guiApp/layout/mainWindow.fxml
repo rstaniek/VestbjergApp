@@ -1,62 +1,65 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.teamSuperior.guiApp.controller.MainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
                 <Menu mnemonicParsing="false" text="File">
                     <items>
-                        <MenuItem fx:id="menu_close" mnemonicParsing="false" onAction="#menu_close_clicked" text="Close" />
-                        <MenuItem fx:id="menu_settings" mnemonicParsing="false" onAction="#menu_settings_clicked" text="Settings" />
+                        <MenuItem fx:id="menu_close" mnemonicParsing="false" onAction="#menu_close_clicked"
+                                  text="Close"/>
+                        <MenuItem fx:id="menu_settings" mnemonicParsing="false" onAction="#menu_settings_clicked"
+                                  text="Settings"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
+                        <MenuItem mnemonicParsing="false" text="Delete"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Connection">
                     <items>
-                        <MenuItem fx:id="menu_connection_connect" mnemonicParsing="false" onAction="#menu_connection_connect_clicked" text="Connect" />
-                        <MenuItem fx:id="menu_connection_logIn" mnemonicParsing="false" onAction="#menu_connection_logIn_clicked" text="Log in" />
-                        <MenuItem fx:id="menu_connection_logOut" mnemonicParsing="false" onAction="#menu_connection_logOut_clicked" text="Log out" />
+                        <MenuItem fx:id="menu_connection_connect" mnemonicParsing="false"
+                                  onAction="#menu_connection_connect_clicked" text="Connect"/>
+                        <MenuItem fx:id="menu_connection_logIn" mnemonicParsing="false"
+                                  onAction="#menu_connection_logIn_clicked" text="Log in"/>
+                        <MenuItem fx:id="menu_connection_logOut" mnemonicParsing="false"
+                                  onAction="#menu_connection_logOut_clicked" text="Log out"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Products">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 1"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Offers">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 1"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Employees">
                     <items>
-                        <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" onAction="#menu_employees_statistics_clicked" text="Statistics" />
-                        <MenuItem fx:id="menu_employees_manage" mnemonicParsing="false" onAction="#menu_employees_manage_clicked" text="Manage" />
+                        <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false"
+                                  onAction="#menu_employees_statistics_clicked" text="Statistics"/>
+                        <MenuItem fx:id="menu_employees_manage" mnemonicParsing="false"
+                                  onAction="#menu_employees_manage_clicked" text="Manage"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Contractors">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem mnemonicParsing="false" text="Action 1"/>
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Help">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
+                        <MenuItem mnemonicParsing="false" text="About"/>
                     </items>
                 </Menu>
             </menus>
@@ -65,25 +68,26 @@
     <center>
         <AnchorPane fx:id="anchorPane_center" BorderPane.alignment="CENTER">
             <children>
-                <ImageView fx:id="imgView_logo" fitHeight="150.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
+                <ImageView fx:id="imgView_logo" fitHeight="150.0" fitWidth="800.0" pickOnBounds="true"
+                           preserveRatio="true"/>
                 <Label fx:id="label_ratioUSDDKK" layoutX="14.0" layoutY="186.0" text="please wait">
                     <font>
-                        <Font name="System Bold" size="25.0" />
+                        <Font name="System Bold" size="25.0"/>
                     </font>
                 </Label>
                 <Label fx:id="label_ratioDesc1" layoutX="14.0" layoutY="150.0" text="USD/DKK">
                     <font>
-                        <Font name="System Bold" size="25.0" />
+                        <Font name="System Bold" size="25.0"/>
                     </font>
                 </Label>
                 <Label fx:id="label_ratioDesc2" layoutX="191.0" layoutY="150.0" text="EUR/DKK">
                     <font>
-                        <Font name="System Bold" size="25.0" />
+                        <Font name="System Bold" size="25.0"/>
                     </font>
                 </Label>
                 <Label fx:id="label_ratioEURDKK" layoutX="191.0" layoutY="186.0" text="please wait">
                     <font>
-                        <Font name="System Bold" size="25.0" />
+                        <Font name="System Bold" size="25.0"/>
                     </font>
                 </Label>
             </children>
@@ -92,22 +96,23 @@
     <bottom>
         <AnchorPane prefHeight="60.0" prefWidth="809.0" BorderPane.alignment="CENTER">
             <children>
-                <Button fx:id="btn_logIn" layoutX="737.0" layoutY="25.0" mnemonicParsing="false" onAction="#btn_logIn_clicked" text="Log In">
+                <Button fx:id="btn_logIn" layoutX="737.0" layoutY="25.0" mnemonicParsing="false"
+                        onAction="#btn_logIn_clicked" text="Log In">
                     <padding>
-                        <Insets bottom="5.0" left="10.0" right="5.0" />
+                        <Insets bottom="5.0" left="10.0" right="5.0"/>
                     </padding>
                 </Button>
                 <Label fx:id="label_date" layoutY="36.0" text="Label">
                     <padding>
-                        <Insets bottom="5.0" left="10.0" />
+                        <Insets bottom="5.0" left="10.0"/>
                     </padding>
                 </Label>
                 <Label fx:id="label_name_welcome" text="Please log in first">
                     <padding>
-                        <Insets left="10.0" />
+                        <Insets left="10.0"/>
                     </padding>
                     <font>
-                        <Font name="System Bold" size="24.0" />
+                        <Font name="System Bold" size="24.0"/>
                     </font>
                 </Label>
             </children>

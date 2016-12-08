@@ -11,7 +11,8 @@ public enum WindowType {
 
     private String layoutPath, wndTitle;
     private boolean resizable;
-    WindowType(String layoutPath, String wndTitle, boolean resizable){
+
+    WindowType(String layoutPath, String wndTitle, boolean resizable) {
         this.layoutPath = layoutPath;
         this.wndTitle = wndTitle;
         this.resizable = resizable;
