@@ -164,6 +164,11 @@ public class SettingsController implements Initializable {
             catch (Exception ex){
                 AlertBox.display("SQL Exception", ex.getMessage());
             }
+
+            //CEO only features
+            if(loggedUser.getAccessLevel() < 3){
+                text_settings_discounts_maxTreshold.setDisable(true);
+            }
         }
 
 
