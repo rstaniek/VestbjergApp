@@ -20,7 +20,9 @@ public class MenuOffers {
 
     public MenuOffers() {
         productController = new ProductController();
+        productController.importFromFile();
         offerController = new OfferController();
+        offerController.importFromFile();
     }
 
     public void printOffersMenu() {
@@ -94,6 +96,8 @@ public class MenuOffers {
                     break;
                 case 5:
                     isRunning = false;
+                    productController.exportToFile();
+                    offerController.exportToFile();
                     break;
                 default:
                     System.out.println("Error, please try again");

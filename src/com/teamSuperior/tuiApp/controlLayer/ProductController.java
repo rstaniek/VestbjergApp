@@ -3,7 +3,14 @@ package com.teamSuperior.tuiApp.controlLayer;
 import com.teamSuperior.tuiApp.modelLayer.Product;
 import com.teamSuperior.tuiApp.modelLayer.ProductContainer;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.util.Iterator;
 
 /**
@@ -35,6 +42,9 @@ public class ProductController {
     }
 
     public void exportToFile() {
+        clearFileContent();
+        File file = new File(fileName);
+        file.delete();
         try (
                 FileOutputStream fos = new FileOutputStream(fileName);
                 PrintWriter writer = new PrintWriter(fos)
@@ -42,6 +52,21 @@ public class ProductController {
             for (Product product : productContainer.getProducts()) {
                 writer.printf("%d|%s|%s|%d|%s|%f|%s|%d|%d%n", product.getId(), product.getName(), product.getSubname(), product.getBarcode(), product.getCategory(), product.getPrice(), product.getLocation(), product.getQuantity(), product.getContractorId());
             }
+            writer.close();
+        } catch (IOException e) {
+            System.out.printf("Problem saving %s %n", fileName);
+            e.printStackTrace();
+        }
+    }
+
+    public void clearFileContent() {
+        try (
+                FileWriter fw = new FileWriter(fileName, false);
+                PrintWriter pw = new PrintWriter(fw, false)
+        ) {
+            pw.flush();
+            pw.close();
+            fw.close();
         } catch (IOException e) {
             System.out.printf("Problem saving %s %n", fileName);
             e.printStackTrace();
