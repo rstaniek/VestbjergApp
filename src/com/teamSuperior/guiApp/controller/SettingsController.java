@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
@@ -10,11 +11,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -50,9 +54,13 @@ public class SettingsController implements Initializable {
     public TextField text_settings_discounts_maxTreshold;
     @FXML
     public ImageView img_testMeme;
+    @FXML
+    public Tab tab_discounts;
 
 
     private Preferences registry; //application settings
+    private DBConnect conn;
+    private Employee loggedUser;
 
     @FXML
     public void btn_settings_connection_testConn_clicked(ActionEvent actionEvent) {
@@ -98,6 +106,13 @@ public class SettingsController implements Initializable {
         registry.putFloat("DISCOUNT_SELF_PICKUP", Float.parseFloat(text_settings_discounts_selfPickUp.getText()));
         registry.putFloat("DISCOUNT_QUANTITY", Float.parseFloat(text_settings_discounts_quantity.getText()));
         registry.putFloat("DISCOUNT_MAX", Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
+
+        conn = new DBConnect();
+        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 1", registry.getFloat("DISCOUNT_REGISTERED", 0)));
+        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 2", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
+        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 3", registry.getFloat("DISCOUNT_QUANTITY", 0)));
+        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 4", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
+        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 5", registry.getFloat("DISCOUNT_MAX", 0)));
     }
 
     @FXML
@@ -117,11 +132,39 @@ public class SettingsController implements Initializable {
         img_testMeme.setImage(Drawable.getImage(this.getClass(), Drawables.TEST_MEME));
 
         registry = Preferences.userRoot();
+        loggedUser = LogInPopupController.getUser();
+        if(!LogInPopupController.isLogged()){
+            tab_discounts.setDisable(true);
+        }else if(loggedUser.getAccessLevel() < 2){
+            tab_discounts.setDisable(true);
+        }
 
         //connection
         text_settings_connection_hostname.setText(registry.get("DATABASE_HOSTNAME", ""));
         text_settings_connection_username.setText(registry.get("DATABASE_USER", ""));
         text_settings_connection_password.setText(registry.get("DATABASE_PASS", ""));
+
+        if(LogInPopupController.isLogged() && !registry.get("DATABASE_HOSTNAME", "").isEmpty()){
+            conn = new DBConnect();
+            ResultSet rs;
+            try{
+                rs = conn.getFromDataBase("SELECT * FROM discounts");
+                rs.next();
+                registry.putFloat("DISCOUNT_REGISTERED", rs.getFloat("value"));
+                rs.next();
+                registry.putFloat("DISCOUNT_CRAFTSMAN", rs.getFloat("value"));
+                rs.next();
+                registry.putFloat("DISCOUNT_QUANTITY", rs.getFloat("value"));
+                rs.next();
+                registry.putFloat("DISCOUNT_SELF_PICKUP", rs.getFloat("value"));
+                rs.next();
+                registry.putFloat("DISCOUNT_MAX", rs.getFloat("value"));
+
+            }
+            catch (Exception ex){
+                AlertBox.display("SQL Exception", ex.getMessage());
+            }
+        }
 
 
         //discounts
