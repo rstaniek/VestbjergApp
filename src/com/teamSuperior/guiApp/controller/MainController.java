@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -100,10 +101,15 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
-        label_ratioEURDKK.getStyleClass().add("fontWhite");
+        /*label_ratioEURDKK.getStyleClass().add("fontWhite");
         label_ratioUSDDKK.getStyleClass().add("fontWhite");
         label_ratioDesc1.getStyleClass().add("fontWhite");
-        label_ratioDesc2.getStyleClass().add("fontWhite"); //doesn't fucking work
+        label_ratioDesc2.getStyleClass().add("fontWhite");*/ //doesn't fucking work
+        Color white = Color.web("#eeeeee");
+        label_ratioEURDKK.setTextFill(white);
+        label_ratioUSDDKK.setTextFill(white);
+        label_ratioDesc1.setTextFill(white);
+        label_ratioDesc2.setTextFill(white);
         anchorPane_center.getStyleClass().add("backgroundBlue");
 
         imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
