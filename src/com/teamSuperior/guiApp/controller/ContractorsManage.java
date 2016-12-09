@@ -131,28 +131,31 @@ public class ContractorsManage implements Initializable {
 
     @FXML
     public void btn_save_onClick(ActionEvent actionEvent) throws SQLException {
-        if(validateField(text_name) &&
-                validateField(text_address) &&
-                validateField(text_city) &&
-                validateField(text_zip) &&
-                validateField(text_phone)){
-            conn = new DBConnect();
-            try{
-                conn.upload(String.format("UPDATE contractors SET name='%2$s',adress='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
-                        selectedContractor.getEmail(),
-                        text_name.getText(),
-                        text_address.getText(),
-                        text_city.getText(),
-                        text_zip.getText(),
-                        text_phone.getText()));
-            }
-            catch (Exception ex){
-                AlertBox.display("Unexpected exception", ex.getMessage());
-            }
-            finally {
-                contractors.removeAll();
-                retrieveData();
-                initTableColumns();
+        boolean result = ConfirmBox.display("Update info confirmation", String.format("Are you sure you want to update information about %1$s contractor?", selectedContractor.getName()));
+        if(result){
+            if(validateField(text_name) &&
+                    validateField(text_address) &&
+                    validateField(text_city) &&
+                    validateField(text_zip) &&
+                    validateField(text_phone)){
+                conn = new DBConnect();
+                try{
+                    conn.upload(String.format("UPDATE contractors SET name='%2$s',adress='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
+                            selectedContractor.getEmail(),
+                            text_name.getText(),
+                            text_address.getText(),
+                            text_city.getText(),
+                            text_zip.getText(),
+                            text_phone.getText()));
+                }
+                catch (Exception ex){
+                    AlertBox.display("Unexpected exception", ex.getMessage());
+                }
+                finally {
+                    contractors.removeAll();
+                    retrieveData();
+                    initTableColumns();
+                }
             }
         }
     }
