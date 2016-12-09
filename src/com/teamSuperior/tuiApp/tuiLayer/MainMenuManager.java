@@ -1,23 +1,29 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
+import com.teamSuperior.tuiApp.controlLayer.ContractorController;
+import com.teamSuperior.tuiApp.controlLayer.CustomerController;
+import com.teamSuperior.tuiApp.controlLayer.ProductController;
+import com.teamSuperior.tuiApp.controlLayer.StatsController;
+import com.teamSuperior.tuiApp.modelLayer.Contractor;
+
 import java.util.Scanner;
 
 /**
  * Created by Smoothini on 28.11.2016.
  */
-public class MainMenu {
+public class MainMenuManager {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
-    private String[] menuItems = {"Add testing data", "Products", "Offers", "Contractors", "Orders", "Statistics", "Exit"};
+    private String[] menuItems = {"Products", "Offers", "Orders", "Customers", "Display contractors", "Statistics", "Exit"};
 
-    //private MenuCustomers menuCustomers = new MenuCustomers();
-    private MenuProducts menuProducts = new MenuProducts();
     private MenuOffers menuOffers = new MenuOffers();
-    private MenuContractors menuContractors = new MenuContractors();
     private MenuOrders menuOrders = new MenuOrders();
-    private MenuStatistics menuStatistics = new MenuStatistics();
+    private MenuProducts menuProducts = new MenuProducts();
+    private MenuCustomers menuCustomers = new MenuCustomers();
+    private StatsController statsController = new StatsController();
+    private ContractorController contractorController = new ContractorController();
 
-    public MainMenu() {
+    public MainMenuManager() {
         while (isRunning) {
             printMenu();
             chooseSubMenu();
@@ -25,8 +31,8 @@ public class MainMenu {
     }
 
     public void printMenu() {
-        System.out.println("Main Menu");
-        int i = 0;
+        System.out.println("Main Menu for manager");
+        int i = 1;
         for (String item : menuItems) {
             System.out.println(i + ". " + item);
             i++;
@@ -38,12 +44,6 @@ public class MainMenu {
         int choice;
         choice = sc.nextInt();
         switch (choice) {
-            case 0:
-                AddTestingData addTestingData = new AddTestingData();
-                break;
-            /*case 1:
-                menuCustomers.printCustomersMenu();
-                break;*/
             case 1:
                 menuProducts.printProductsMenu();
                 break;
@@ -51,15 +51,18 @@ public class MainMenu {
                 menuOffers.printOffersMenu();
                 break;
             case 3:
-                menuContractors.printContractorsMenu();
-                break;
-            case 4:
                 menuOrders.printOrdersMenu();
                 break;
+            case 4:
+                menuCustomers.printCustomersMenu();
+                break;
             case 5:
-                menuStatistics.printStatisticsMenu();
+                contractorController.listIdAndNames();
                 break;
             case 6:
+                statsController.generateStats();
+                break;
+            case 7:
                 System.out.println("Thank you for using our software");
                 isRunning = false;
                 break;

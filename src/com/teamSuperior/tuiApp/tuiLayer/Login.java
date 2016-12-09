@@ -9,10 +9,13 @@ import java.util.Scanner;
  */
 public class Login {
 
-    Scanner sc = new Scanner(System.in);
+    private Scanner sc = new Scanner(System.in);
     private LoginController loginController = new LoginController();
     private boolean isLogged = false;
-    private MainMenu mainMenu;
+    private MainMenuEmployee mainMenuEmployee;
+    private MainMenuSalesman mainMenuSalesman;
+    private MainMenuManager mainMenuManager;
+    private MainMenuCeo mainMenuCeo;
 
     public Login() {
         while (!isLogged) {
@@ -20,22 +23,33 @@ public class Login {
         }
     }
 
-    public void displayLoginScreen(){
+    private void displayLoginScreen() {
         String user, pass;
         System.out.println("Username: ");
         user = sc.next();
-        if(loginController.userExists(user)){
+        if (loginController.userExists(user)) {
             System.out.println("Password: ");
             pass = sc.next();
-            if(loginController.passwordMatches(user, pass)){
-                System.out.println("You have succesfuly logged in!");
+            if (loginController.passwordMatches(user, pass)) {
+                System.out.println("You have successfully logged in!");
                 isLogged = true;
-                mainMenu = new MainMenu();
-            }
-            else
+                switch(loginController.getAccessLevel(user)){
+                    case 0:
+                        mainMenuEmployee = new MainMenuEmployee();
+                        break;
+                    case 1:
+                        mainMenuSalesman = new MainMenuSalesman();
+                        break;
+                    case 2:
+                        mainMenuManager = new MainMenuManager();
+                        break;
+                    case 3:
+                        mainMenuCeo = new MainMenuCeo();
+                        break;
+                }
+            } else
                 System.out.println("Error, password does not match");
-        }
-        else
+        } else
             System.out.println("Error, that user does not exist");
     }
 

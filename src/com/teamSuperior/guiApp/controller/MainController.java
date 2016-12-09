@@ -21,6 +21,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -75,6 +76,10 @@ public class MainController implements Initializable {
     public Label label_ratioDesc1;
     @FXML
     public Label label_ratioDesc2;
+    @FXML
+    public MenuItem menu_contractors_add;
+    @FXML
+    public MenuItem menu_contractors_manage;
 
     private Stage settings;
     static Stage loginWindow;
@@ -96,10 +101,15 @@ public class MainController implements Initializable {
         isLoggedIn = false;
         wnd = new Window();
 
-        label_ratioEURDKK.getStyleClass().add("fontWhite");
+        /*label_ratioEURDKK.getStyleClass().add("fontWhite");
         label_ratioUSDDKK.getStyleClass().add("fontWhite");
         label_ratioDesc1.getStyleClass().add("fontWhite");
-        label_ratioDesc2.getStyleClass().add("fontWhite"); //doesn't fucking work
+        label_ratioDesc2.getStyleClass().add("fontWhite");*/ //doesn't fucking work
+        Color white = Color.web("#eeeeee");
+        label_ratioEURDKK.setTextFill(white);
+        label_ratioUSDDKK.setTextFill(white);
+        label_ratioDesc1.setTextFill(white);
+        label_ratioDesc2.setTextFill(white);
         anchorPane_center.getStyleClass().add("backgroundBlue");
 
         imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
@@ -285,7 +295,10 @@ public class MainController implements Initializable {
 
     @FXML
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
-        //TODO: implement logOut action
+        if(LogInPopupController.logOut()){
+            label_name_welcome.setText("Please log in first");
+            btn_logIn.setDisable(false);
+        }else displayError(USER_ALREADY_LOGGED_OUT);
     }
 
     @FXML
@@ -317,5 +330,65 @@ public class MainController implements Initializable {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
         }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+    }
+
+    @FXML
+    public void menu_contractors_add_onClick(ActionEvent actionEvent) {
+        if(LogInPopupController.isLogged()){
+            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+                try{
+                    Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
+                    Stage window = new Stage();
+                    window.setTitle("Add a new contractor");
+                    window.setResizable(false);
+                    Scene scene = new Scene(root);
+                    //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
+                    window.setScene(scene);
+                    window.show();
+                }
+                catch (IOException ioex){
+                    AlertBox.display("IO Exception", ioex.getMessage());
+                }
+                catch (Exception ex){
+                    AlertBox.display("Unexpected Exception", ex.getMessage());
+                }
+            }
+            else{
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }
+        else{
+            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        }
+    }
+
+    @FXML
+    public void menu_contractors_manage_onClick(ActionEvent actionEvent) {
+        if(LogInPopupController.isLogged()){
+            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+                try{
+                    Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
+                    Stage window = new Stage();
+                    window.setTitle("Manage contractors");
+                    window.setResizable(false);
+                    Scene scene = new Scene(root);
+                    //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
+                    window.setScene(scene);
+                    window.show();
+                }
+                catch (IOException ioex){
+                    AlertBox.display("IO Exception", ioex.getMessage());
+                }
+                catch (Exception ex){
+                    AlertBox.display("Unexpected Exception", ex.getMessage());
+                }
+            }
+            else{
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }
+        else{
+            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        }
     }
 }

@@ -1,6 +1,8 @@
 package com.teamSuperior.core.connection;
 
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.fxml.Initializable;
 
 import java.net.URL;
@@ -42,6 +44,14 @@ public class DBConnect {
     }
 
     /***
+     * Returns the connection object
+     * @return Connection
+     */
+    public Connection getConnection(){
+        return connect(url, username, password);
+    }
+
+    /***
      * Test the connection
      * @return returns True when connected, otherwise false
      */
@@ -69,16 +79,30 @@ public class DBConnect {
         return rs;
     }
 
-    public boolean upload(String query) {
+    public void upload(String query) {
         Connection con = connect(url, username, password);
         boolean isExecuted = false;
         try {
             Statement statement = con.createStatement();
             isExecuted = statement.execute(query);
             con.close();
+            isExecuted = true;
         } catch (SQLException ex) {
             AlertBox.display("Connection Error", ex.getMessage());
         }
-        return isExecuted;
+        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+    }
+
+    public void uploadSafe(PreparedStatement stmt) {
+        Connection con = connect(url, username, password);
+        boolean isExecuted = false;
+        try {
+            stmt.executeUpdate();
+            con.close();
+            isExecuted = true;
+        } catch (SQLException ex) {
+            AlertBox.display("Connection Error", ex.getMessage());
+        }
+        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
     }
 }

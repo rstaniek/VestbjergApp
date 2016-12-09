@@ -11,6 +11,7 @@ public class MenuContractors {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private ContractorController contractorController;
+    private String[] menuItems = {"Add a contractor", "Modify a contractor", "Remove a contractor", "View contractors", "Go back"};
 
     public MenuContractors() {
         contractorController = new ContractorController();
@@ -21,11 +22,11 @@ public class MenuContractors {
         String name, address, city, zip, phone, email;
         while (isRunning) {
             System.out.println("Contractors Menu");
-            System.out.println("1. Add a contractor");
-            System.out.println("2. Modify a contractor");
-            System.out.println("3. Remove a contractor");
-            System.out.println("4. View contractors");
-            System.out.println("5. Go back");
+            int i = 1;
+            for (String item : menuItems) {
+                System.out.println(i + ". " + item);
+                i++;
+            }
             System.out.println("Your option:");
             choice = sc.nextInt();
             switch (choice) {

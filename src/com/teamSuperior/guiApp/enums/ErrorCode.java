@@ -14,6 +14,8 @@ public enum ErrorCode {
     ACCESS_DENIED_NOT_LOGGED_IN("Access denied", "You need to be logged in to access this function!"),
     ACCESS_DENIED_INSUFFICIENT_PERMISSIONS("Access denied", "You don't have permission to access this function!"),
     NOT_IMPLEMENTED("Sorry", "This functionality is not yet implemented."),
+    USER_ALREADY_LOGGED_OUT("Warning", "You are already logged out"),
+    DATABASE_UPLOAD_ERROR("Upload ERROR", "Could upload changes to the database!"),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty"),
     LOGIN_USERNAME_EMPTY("User validation error", "Employee ID cannot be empty"),
     LOGIN_PASSWORD_EMPTY("User validation error", "The password field cannot be empty");

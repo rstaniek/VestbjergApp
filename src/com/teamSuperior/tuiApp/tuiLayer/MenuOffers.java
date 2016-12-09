@@ -16,10 +16,13 @@ public class MenuOffers {
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
     private OfferController offerController;
+    private String[] menuItems = {"Create an offer", "Modify an offer", "Remove an offer", "View offers", "Go back"};
 
     public MenuOffers() {
         productController = new ProductController();
+        productController.importFromFile();
         offerController = new OfferController();
+        offerController.importFromFile();
     }
 
     public void printOffersMenu() {
@@ -29,11 +32,11 @@ public class MenuOffers {
 
         while (isRunning) {
             System.out.println("Offers Menu");
-            System.out.println("1. Create an offer");
-            System.out.println("2. Modify an offer");
-            System.out.println("3. Remove an offer");
-            System.out.println("4. View offers");
-            System.out.println("5. Go back");
+            int i = 1;
+            for (String item : menuItems) {
+                System.out.println(i + ". " + item);
+                i++;
+            }
             System.out.println("Your option:");
             choice = sc.nextInt();
             switch (choice) {
@@ -93,6 +96,8 @@ public class MenuOffers {
                     break;
                 case 5:
                     isRunning = false;
+                    productController.exportToFile();
+                    offerController.exportToFile();
                     break;
                 default:
                     System.out.println("Error, please try again");

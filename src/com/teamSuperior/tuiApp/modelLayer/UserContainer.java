@@ -16,7 +16,10 @@ public class UserContainer {
 
     private UserContainer() {
         users = new ArrayList<User>();
-        users.add(new User("admin", "pass", 0));
+        users.add(new User("employee", "pass", 0));
+        users.add(new User("salesman", "pass", 1));
+        users.add(new User("manager", "pass", 2));
+        users.add(new User("ceo", "pass", 3));
     }
 
     public ArrayList<User> getUsers() {
