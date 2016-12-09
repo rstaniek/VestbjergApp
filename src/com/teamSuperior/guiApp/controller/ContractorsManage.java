@@ -49,6 +49,14 @@ public class ContractorsManage implements Initializable {
     private Contractor selectedContractor;
     private DBConnect conn;
 
+    //columns
+    private TableColumn<Contractor, String> nameCol;
+    private TableColumn<Contractor, String> addressCol;
+    private TableColumn<Contractor, String> cityCol;
+    private TableColumn<Contractor, String> zipCol;
+    private TableColumn<Contractor, String> phoneCol;
+    private TableColumn<Contractor, String> emailCol;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         System.out.println("Initialized");
@@ -59,6 +67,7 @@ public class ContractorsManage implements Initializable {
         retrieveData();
         //init table
         initTableColumns();
+        selectedContractor = (Contractor) tableView_contractors.getFocusModel().getFocusedItem();
     }
 
     private void retrieveData(){
@@ -91,27 +100,27 @@ public class ContractorsManage implements Initializable {
     }
 
     private void initTableColumns(){
-        TableColumn<Contractor, String> nameCol = new TableColumn<>("Name");
+        nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(80);
         nameCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("name"));
 
-        TableColumn<Contractor, String> addressCol = new TableColumn<>("Address");
+        addressCol = new TableColumn<>("Address");
         addressCol.setMinWidth(150);
         addressCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("address"));
 
-        TableColumn<Contractor, String> cityCol = new TableColumn<>("City");
+        cityCol = new TableColumn<>("City");
         cityCol.setMinWidth(80);
         cityCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("city"));
 
-        TableColumn<Contractor, String> zipCol = new TableColumn<>("ZIP");
+        zipCol = new TableColumn<>("ZIP");
         zipCol.setMinWidth(50);
         zipCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("zip"));
 
-        TableColumn<Contractor, String> phoneCol = new TableColumn<>("Phone number");
+        phoneCol = new TableColumn<>("Phone number");
         phoneCol.setMinWidth(150);
         phoneCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("phone"));
 
-        TableColumn<Contractor, String> emailCol = new TableColumn<>("Email");
+        emailCol = new TableColumn<>("Email");
         emailCol.setMinWidth(150);
         emailCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("email"));
 
@@ -152,12 +161,7 @@ public class ContractorsManage implements Initializable {
                     AlertBox.display("Unexpected exception", ex.getMessage());
                 }
                 finally {
-                    contractors.removeAll();
-                    contractors = null;
-                    contractors = FXCollections.observableArrayList();
-                    //TODO: fix double content
-                    retrieveData();
-                    initTableColumns();
+                    refreshTable();
                 }
             }
         }
@@ -176,12 +180,7 @@ public class ContractorsManage implements Initializable {
                     AlertBox.display("Unexpected exception", ex.getMessage());
                 }
                 finally {
-                    contractors.removeAll();
-                    contractors = null;
-                    contractors = FXCollections.observableArrayList();
-                    //TODO: fix double content
-                    retrieveData();
-                    initTableColumns();
+                    refreshTable();
                 }
             }
         }
@@ -190,5 +189,19 @@ public class ContractorsManage implements Initializable {
     private boolean validateField(TextField tf){
         //TODO: should be implemented better but didn't have creativity to do it better
         return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
+    }
+
+    private void refreshTable(){
+        contractors.removeAll();
+        contractors = null;
+        contractors = FXCollections.observableArrayList();
+        tableView_contractors.getColumns().removeAll(nameCol,
+                addressCol,
+                cityCol,
+                zipCol,
+                phoneCol,
+                emailCol);
+        retrieveData();
+        initTableColumns();
     }
 }

@@ -57,6 +57,18 @@ public class EmployeeManagement implements Initializable {
     private Employee selectedEmployee;
     private DBConnect conn;
 
+    //Columns
+    private TableColumn<Employee, String> nameColumn;
+    private TableColumn<Employee, String> surnameColumn;
+    private TableColumn<Employee, String> emailColumn;
+    private TableColumn<Employee, String> positionColumn;
+    private TableColumn<Employee, String> numOfSalesColumn;
+    private TableColumn<Employee, String> totalRevenueColumn;
+    private TableColumn<Employee, String> accessLevelColumn;
+    private TableColumn<Employee, String> addressColumn;
+    private TableColumn<Employee, String> cityColumn;
+    private TableColumn<Employee, String> zipColumn;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
@@ -66,6 +78,7 @@ public class EmployeeManagement implements Initializable {
         retrieveData();
         //fill the table with data
         initTableColumns(loggedInUser.getAccessLevel());
+        selectedEmployee = (Employee)tableView_employees.getFocusModel().getFocusedItem();
     }
 
     private void retrieveData(){
@@ -109,31 +122,31 @@ public class EmployeeManagement implements Initializable {
 
     private void initTableColumns(int accessLevel){
         if(accessLevel >= 2){
-            TableColumn<Employee, String> nameColumn = new TableColumn<>("Name");
+            nameColumn = new TableColumn<>("Name");
             nameColumn.setMinWidth(90);
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-            TableColumn<Employee, String> surnameColumn = new TableColumn<>("Surname");
+            surnameColumn = new TableColumn<>("Surname");
             surnameColumn.setMinWidth(90);
             surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
-            TableColumn<Employee, String> emailColumn = new TableColumn<>("Email");
+            emailColumn = new TableColumn<>("Email");
             emailColumn.setMinWidth(150);
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-            TableColumn<Employee, String> positionColumn = new TableColumn<>("Position");
+            positionColumn = new TableColumn<>("Position");
             positionColumn.setMinWidth(90);
             positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
 
-            TableColumn<Employee, String> numOfSalesColumn = new TableColumn<>("Number of sales");
+            numOfSalesColumn = new TableColumn<>("Number of sales");
             numOfSalesColumn.setMinWidth(80);
             numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("numberOfSales_str"));
 
-            TableColumn<Employee, String> totalRevenueColumn = new TableColumn<>("Total revenue");
+            totalRevenueColumn = new TableColumn<>("Total revenue");
             totalRevenueColumn.setMinWidth(80);
             totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("totalRevenue_str"));
 
-            TableColumn<Employee, String> accessLevelColumn = new TableColumn<>("Access level");
+            accessLevelColumn = new TableColumn<>("Access level");
             accessLevelColumn.setMinWidth(80);
             accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
@@ -141,15 +154,15 @@ public class EmployeeManagement implements Initializable {
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn, numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
         }if(accessLevel >= 3){
             //stuff
-            TableColumn<Employee, String> addressColumn = new TableColumn<>("Address");
+            addressColumn = new TableColumn<>("Address");
             addressColumn.setMinWidth(120);
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
 
-            TableColumn<Employee, String> cityColumn = new TableColumn<>("City");
+            cityColumn = new TableColumn<>("City");
             cityColumn.setMinWidth(100);
             cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
 
-            TableColumn<Employee, String> zipColumn = new TableColumn<>("ZIP code");
+            zipColumn = new TableColumn<>("ZIP code");
             zipColumn.setMinWidth(80);
             zipColumn.setCellValueFactory(new PropertyValueFactory<>("zip"));
 
@@ -212,11 +225,35 @@ public class EmployeeManagement implements Initializable {
             catch (Exception ex){
                 AlertBox.display("Unexpected exception", ex.getMessage());
             }
-        } else Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        } else if(result) Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        refreshTable();
+    }
+
+    private void refreshTable(){
         employees.removeAll();
         employees = null;
         employees = FXCollections.observableArrayList();
-        //TODO: fix double content
+        if(loggedInUser.getAccessLevel() < 3){
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn);
+        }
+        else{
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn,
+                    addressColumn,
+                    cityColumn,
+                    zipColumn);
+        }
         retrieveData();
         initTableColumns(loggedInUser.getAccessLevel());
     }
