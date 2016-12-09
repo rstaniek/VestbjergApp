@@ -8,6 +8,7 @@ import java.util.Scanner;
 public class MainMenu {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
+    private String[] menuItems = {"Add testing data", "Products", "Offers", "Contractors", "Orders", "Statistics", "Exit"};
 
     //private MenuCustomers menuCustomers = new MenuCustomers();
     private MenuProducts menuProducts = new MenuProducts();
@@ -25,14 +26,11 @@ public class MainMenu {
 
     public void printMenu() {
         System.out.println("Main Menu");
-        System.out.println("0. Add testing data");
-        //System.out.println("1. Customers");
-        System.out.println("1. Products");
-        System.out.println("2. Offers");
-        System.out.println("3. Contractors");
-        System.out.println("4. Orders");
-        System.out.println("5. Statistics");
-        System.out.println("6. Exit");
+        int i = 0;
+        for (String item : menuItems) {
+            System.out.println(i + ". " + item);
+            i++;
+        }
         System.out.println("Your option");
     }
 

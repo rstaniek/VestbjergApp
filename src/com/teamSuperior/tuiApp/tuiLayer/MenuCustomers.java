@@ -11,16 +11,17 @@ public class MenuCustomers {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private CustomerControl customerControl = new CustomerControl();
+    private String[] menuItems = {"Add a customer", "Modify a customer", "Remove a customer", "View customers", "Go back"};
 
     public void printCustomersMenu() {
         int choice;
         while (isRunning) {
             System.out.println("Customers Menu");
-            System.out.println("1. Add a customer");
-            System.out.println("2. Modify a customer");
-            System.out.println("3. Remove a customer");
-            System.out.println("4. View customers");
-            System.out.println("5. Go back");
+            int i = 1;
+            for (String item : menuItems) {
+                System.out.println(i + ". " + item);
+                i++;
+            }
             System.out.println("Your option:");
             choice = sc.nextInt();
             switch (choice) {

@@ -15,6 +15,7 @@ public class MenuOrders {
     private ProductController productController;
     private ContractorController contractorController;
     private OrderController orderController;
+    private String[] menuItems = {"Add an order", "Modify an order", "Remove an order", "View orders", "Go back"};
 
     public MenuOrders() {
         productController = new ProductController();
@@ -23,15 +24,15 @@ public class MenuOrders {
     }
 
     public void printOrdersMenu() {
-        int choice, id, productId, contractorId, quantity, approved, delivered;
+        int choice, id, productId, contractorId, quantity;
         String department;
         while (isRunning) {
             System.out.println("Orders Menu");
-            System.out.println("1. Add an order");
-            System.out.println("2. Modify an order");
-            System.out.println("3. Remove an order");
-            System.out.println("4. View orders");
-            System.out.println("5. Go back");
+            int i = 1;
+            for (String item : menuItems) {
+                System.out.println(i + ". " + item);
+                i++;
+            }
             System.out.println("Your option:");
             choice = sc.nextInt();
             switch (choice) {

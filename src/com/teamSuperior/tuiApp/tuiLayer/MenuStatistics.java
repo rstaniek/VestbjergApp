@@ -10,7 +10,7 @@ import java.util.Scanner;
 public class MenuStatistics {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
-    StatsController statsController;
+    private StatsController statsController;
 
     public MenuStatistics() {
         statsController = new StatsController();

@@ -11,9 +11,11 @@ public class MenuProducts {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
+    private String[] menuItems = {"Add a product", "Modify a product", "Remove a product", "View products", "Go back"};
 
     public MenuProducts() {
         productController = new ProductController();
+        productController.importFromFile();
     }
 
     public void printProductsMenu() {
@@ -22,11 +24,11 @@ public class MenuProducts {
         String name, subname, category, location;
         while (isRunning) {
             System.out.println("Products Menu");
-            System.out.println("1. Add a product");
-            System.out.println("2. Modify a product");
-            System.out.println("3. Remove a product");
-            System.out.println("4. View products");
-            System.out.println("5. Go back");
+            int i = 1;
+            for (String item : menuItems) {
+                System.out.println(i + ". " + item);
+                i++;
+            }
             System.out.println("Your option:");
             choice = sc.nextInt();
             switch (choice) {
@@ -84,6 +86,7 @@ public class MenuProducts {
                     break;
                 case 5:
                     isRunning = false;
+                    productController.exportToFile();
                     break;
                 default:
                     System.out.println("Error, please try again");
