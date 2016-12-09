@@ -7,6 +7,10 @@ import com.teamSuperior.tuiApp.modelLayer.*;
  */
 public class AddTestingData {
     public AddTestingData() {
+        ProductContainer.getInstance().getProducts().add(new Product(1, "biscuit", "cock sucker", 12312, "food", 20, "fakta", 123, 1234));
+        ProductContainer.getInstance().getProducts().add(new Product(2, "dildo", "giana mouse", 18512, "food", 69, "futex", 1, 72));
+        ProductContainer.getInstance().getProducts().add(new Product(3, "devils dick", "best shit ever", 66666, "leisure objects", 0, "hell", 666, 23422));
+
         OfferContainer.getInstance().getOffers().add(new Offer(1, 2, "12/12/2066", 24, 4));
 
         ContractorContainer.getInstance().getContractors().add(new Contractor(1, "johny cocksucher", "qwety", "fuckvile", "12345", "0987654321", "cock@sucker.com"));

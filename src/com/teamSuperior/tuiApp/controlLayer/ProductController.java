@@ -26,37 +26,40 @@ public class ProductController {
     }
 
     public void importFromFile() {
-        try (
-                FileInputStream fis = new FileInputStream(fileName);
-                BufferedReader reader = new BufferedReader(new InputStreamReader(fis))
-        ) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] args = line.split("\\|");
-                addProduct(Integer.parseInt(args[0]), args[1], args[2], Integer.parseInt(args[3]), args[4], Double.parseDouble(args[5]), args[6], Integer.parseInt(args[7]), Integer.parseInt(args[8]));
-            }
-        } catch (IOException e) {
-            System.out.printf("Problems loading %s %n", fileName);
-            e.printStackTrace();
-        }
+//        try (
+//                FileInputStream fis = new FileInputStream(fileName);
+//                BufferedReader reader = new BufferedReader(new InputStreamReader(fis))
+//        ) {
+//            String line;
+//            while ((line = reader.readLine()) != null) {
+//                String[] args = line.split("\\|");
+//                addProduct(Integer.parseInt(args[0]), args[1], args[2], Integer.parseInt(args[3]), args[4], Double.parseDouble(args[5]), args[6], Integer.parseInt(args[7]), Integer.parseInt(args[8]));
+//            }
+//        } catch (IOException e) {
+//            System.out.printf("Problems loading %s %n", fileName);
+//            e.printStackTrace();
+//        }
     }
 
     public void exportToFile() {
-        clearFileContent();
-        File file = new File(fileName);
-        file.delete();
-        try (
-                FileOutputStream fos = new FileOutputStream(fileName);
-                PrintWriter writer = new PrintWriter(fos)
-        ) {
-            for (Product product : productContainer.getProducts()) {
-                writer.printf("%d|%s|%s|%d|%s|%f|%s|%d|%d%n", product.getId(), product.getName(), product.getSubname(), product.getBarcode(), product.getCategory(), product.getPrice(), product.getLocation(), product.getQuantity(), product.getContractorId());
-            }
-            writer.close();
-        } catch (IOException e) {
-            System.out.printf("Problem saving %s %n", fileName);
-            e.printStackTrace();
-        }
+//        File file = new File(fileName);
+//        if(file.delete()){
+//            System.out.println(file.getName() + " is deleted!");
+//        }else{
+//            System.out.println("Delete operation is failed.");
+//        }
+//        try (
+//                FileOutputStream fos = new FileOutputStream(fileName);
+//                PrintWriter writer = new PrintWriter(fos)
+//        ) {
+//            for (Product product : productContainer.getProducts()) {
+//                writer.printf("%d|%s|%s|%d|%s|%f|%s|%d|%d%n", product.getId(), product.getName(), product.getSubname(), product.getBarcode(), product.getCategory(), product.getPrice(), product.getLocation(), product.getQuantity(), product.getContractorId());
+//            }
+//            writer.close();
+//        } catch (IOException e) {
+//            System.out.printf("Problem saving %s %n", fileName);
+//            e.printStackTrace();
+//        }
     }
 
     public void clearFileContent() {
