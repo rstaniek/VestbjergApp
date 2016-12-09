@@ -285,7 +285,10 @@ public class MainController implements Initializable {
 
     @FXML
     public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
-        //TODO: implement logOut action
+        if(LogInPopupController.logOut()){
+            label_name_welcome.setText("Please log in first");
+            btn_logIn.setDisable(false);
+        }else displayError(USER_ALREADY_LOGGED_OUT);
     }
 
     @FXML

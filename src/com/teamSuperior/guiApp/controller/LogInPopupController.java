@@ -120,4 +120,12 @@ public class LogInPopupController {
     public static boolean isLogged() {
         return loggedFinal;
     }
+
+    public static boolean logOut(){
+        if(loggedUser != null && loggedFinal == true){
+            loggedUser = null;
+            loggedFinal = false;
+            return true;
+        }else return false;
+    }
 }
