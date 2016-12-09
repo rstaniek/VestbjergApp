@@ -3,6 +3,7 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
@@ -61,6 +62,13 @@ public class EmployeeManagement implements Initializable {
         employees = FXCollections.observableArrayList();
         conn = new DBConnect();
         loggedInUser = LogInPopupController.getUser();
+
+        retrieveData();
+        //fill the table with data
+        initTableColumns(loggedInUser.getAccessLevel());
+    }
+
+    private void retrieveData(){
         ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
         try{
             while (rs.next()){
@@ -97,10 +105,6 @@ public class EmployeeManagement implements Initializable {
         catch (Exception ex){
             AlertBox.display("Unexpected exception", ex.getMessage());
         }
-
-        //fill the table with data
-        initTableColumns(loggedInUser.getAccessLevel());
-        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
     }
 
     private void initTableColumns(int accessLevel){
@@ -184,7 +188,41 @@ public class EmployeeManagement implements Initializable {
     }
 
     private void saveChanges(Employee e){
-        //TODO: implement saving changes
-        Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+        boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about" + selectedEmployee.getName() + "?");
+        if(result &&
+                validateField(text_name) &&
+                validateField(text_surname) &&
+                validateField(text_email) &&
+                validateField(text_position) &&
+                validateField(text_address) &&
+                validateField(text_city) &&
+                validateField(text_zip)){
+            conn = new DBConnect();
+            try{
+                conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s' WHERE id='%8$d'",
+                        text_name.getText(),
+                        text_surname.getText(),
+                        text_address.getText(),
+                        text_city.getText(),
+                        text_zip.getText(),
+                        text_position.getText(),
+                        text_email.getText(),
+                        e.getId()));
+            }
+            catch (Exception ex){
+                AlertBox.display("Unexpected exception", ex.getMessage());
+            }
+        } else Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        employees.removeAll();
+        employees = null;
+        employees = FXCollections.observableArrayList();
+        //TODO: fix double content
+        retrieveData();
+        initTableColumns(loggedInUser.getAccessLevel());
+    }
+
+    private boolean validateField(TextField tf){
+        //TODO: should be implemented better but didn't have creativity to do it better
+        return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
     }
 }
