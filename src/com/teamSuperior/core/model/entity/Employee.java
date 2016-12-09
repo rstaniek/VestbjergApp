@@ -4,6 +4,9 @@ import com.teamSuperior.core.model.permission.Level1;
 import com.teamSuperior.core.model.permission.Level2;
 import com.teamSuperior.core.model.permission.Level3;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 /**
  * Created by Domestos Maximus on 24-Nov-16.
  */
@@ -22,6 +25,8 @@ public class Employee{
     private String phone;
     private String password;
     private String position;
+    private NumberFormat formatter;
+    private Locale loc;
     private int numberOfSales;
     private double totalRevenue;
     private int accessLevel;
@@ -42,8 +47,10 @@ public class Employee{
         this.numberOfSales = numberOfSales;
         this.totalRevenue = totalRevenue;
         this.accessLevel = accessLevel;
+        setLocale("da_dk");
+        formatter = NumberFormat.getCurrencyInstance();
         numberOfSales_str = String.valueOf(numberOfSales);
-        totalRevenue_str = String.valueOf(totalRevenue);
+        totalRevenue_str = String.valueOf(formatter.format(totalRevenue));
         accessLevel_str = String.valueOf(accessLevel);
         accessLevel1 = new Level1();
         accessLevel2 = new Level2();
@@ -138,9 +145,9 @@ public class Employee{
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPassword(String password) { this.password = password; }
+
+    private void setLocale(String lang) {
+        loc = new Locale(lang);
     }
-
-
 }
