@@ -44,6 +44,14 @@ public class DBConnect {
     }
 
     /***
+     * Returns the connection object
+     * @return Connection
+     */
+    public Connection getConnection(){
+        return connect(url, username, password);
+    }
+
+    /***
      * Test the connection
      * @return returns True when connected, otherwise false
      */
@@ -77,6 +85,19 @@ public class DBConnect {
         try {
             Statement statement = con.createStatement();
             isExecuted = statement.execute(query);
+            con.close();
+            isExecuted = true;
+        } catch (SQLException ex) {
+            AlertBox.display("Connection Error", ex.getMessage());
+        }
+        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+    }
+
+    public void uploadSafe(PreparedStatement stmt) {
+        Connection con = connect(url, username, password);
+        boolean isExecuted = false;
+        try {
+            stmt.executeUpdate();
             con.close();
             isExecuted = true;
         } catch (SQLException ex) {
