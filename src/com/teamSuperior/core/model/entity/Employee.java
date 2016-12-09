@@ -150,4 +150,28 @@ public class Employee{
     private void setLocale(String lang) {
         loc = new Locale(lang);
     }
+
+    @Override
+    public String toString() {
+        return "Employee{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", zip='" + zip + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", password='" + password + '\'' +
+                ", position='" + position + '\'' +
+                ", formatter=" + formatter +
+                ", loc=" + loc +
+                ", numberOfSales=" + numberOfSales +
+                ", totalRevenue=" + totalRevenue +
+                ", accessLevel=" + accessLevel +
+                ", numberOfSales_str='" + numberOfSales_str + '\'' +
+                ", totalRevenue_str='" + totalRevenue_str + '\'' +
+                ", accessLevel_str='" + accessLevel_str + '\'' +
+                '}';
+    }
 }
