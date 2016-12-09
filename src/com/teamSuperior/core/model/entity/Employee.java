@@ -47,10 +47,10 @@ public class Employee{
         this.numberOfSales = numberOfSales;
         this.totalRevenue = totalRevenue;
         this.accessLevel = accessLevel;
-        setLocale("da_dk");
-        formatter = NumberFormat.getCurrencyInstance();
+        loc = new Locale("da","DK");
+        formatter = NumberFormat.getInstance(loc);
         numberOfSales_str = String.valueOf(numberOfSales);
-        totalRevenue_str = String.valueOf(formatter.format(totalRevenue));
+        totalRevenue_str = String.valueOf("kr " + formatter.format(totalRevenue));
         accessLevel_str = String.valueOf(accessLevel);
         accessLevel1 = new Level1();
         accessLevel2 = new Level2();
