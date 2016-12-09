@@ -29,4 +29,12 @@ public class LoginController {
                 match = true;
         return match;
     }
+
+    public int getAccessLevel(String user){
+        int level = 0;
+        for (User u : userContainer.getUsers())
+            if (u.getUser().equals(user))
+                level = u.getAccessLevel();
+        return level;
+    }
 }
