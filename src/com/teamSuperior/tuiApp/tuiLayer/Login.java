@@ -12,7 +12,10 @@ public class Login {
     private Scanner sc = new Scanner(System.in);
     private LoginController loginController = new LoginController();
     private boolean isLogged = false;
-    private MainMenu mainMenu;
+    private MainMenuEmployee mainMenuEmployee;
+    private MainMenuSalesman mainMenuSalesman;
+    private MainMenuManager mainMenuManager;
+    private MainMenuCeo mainMenuCeo;
 
     public Login() {
         while (!isLogged) {
@@ -30,7 +33,20 @@ public class Login {
             if (loginController.passwordMatches(user, pass)) {
                 System.out.println("You have successfully logged in!");
                 isLogged = true;
-                mainMenu = new MainMenu();
+                switch(loginController.getAccessLevel(user)){
+                    case 0:
+                        mainMenuEmployee = new MainMenuEmployee();
+                        break;
+                    case 1:
+                        mainMenuSalesman = new MainMenuSalesman();
+                        break;
+                    case 2:
+                        mainMenuManager = new MainMenuManager();
+                        break;
+                    case 3:
+                        mainMenuCeo = new MainMenuCeo();
+                        break;
+                }
             } else
                 System.out.println("Error, password does not match");
         } else
