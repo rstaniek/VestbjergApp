@@ -75,6 +75,10 @@ public class MainController implements Initializable {
     public Label label_ratioDesc1;
     @FXML
     public Label label_ratioDesc2;
+    @FXML
+    public MenuItem menu_contractors_add;
+    @FXML
+    public MenuItem menu_contractors_manage;
 
     private Stage settings;
     static Stage loginWindow;
@@ -320,5 +324,13 @@ public class MainController implements Initializable {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
         }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+    }
+
+    @FXML
+    public void menu_contractors_add_onClick(ActionEvent actionEvent) {
+    }
+
+    @FXML
+    public void menu_contractors_manage_onClick(ActionEvent actionEvent) {
     }
 }
