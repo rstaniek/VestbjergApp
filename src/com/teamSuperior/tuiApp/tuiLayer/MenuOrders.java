@@ -15,7 +15,7 @@ public class MenuOrders {
     private ProductController productController;
     private ContractorController contractorController;
     private OrderController orderController;
-    private String[] menuItems = {"Add an order", "Modify an order", "Remove an order", "View orders", "Go back"};
+    private String[] menuItems = {"Add an order", "Remove an order", "View orders", "Go back"};
 
     public MenuOrders() {
         productController = new ProductController();
@@ -66,16 +66,6 @@ public class MenuOrders {
                         System.out.println("There are no products at this time");
                     break;
                 case 2:
-                    System.out.println("Select the ID of the order you want to modify:");
-                    //orderControl.viewOrders()
-                    id = sc.nextInt();
-                    //select which atributes you want to modify
-                    //modify em
-                    //???
-                    //profit
-                    //~*may need more methods*~
-                    break;
-                case 3:
                     if (orderController.viewSimpleOrders() > 0) {
                         System.out.println("Select the ID of the order you want to remove:");
                         id = sc.nextInt();
@@ -90,11 +80,11 @@ public class MenuOrders {
                     } else
                         System.out.println("There are no orders to remove");
                     break;
-                case 4:
+                case 3:
                     if (orderController.viewOrders() == 0)
                         System.out.println("There are no orders at the moment");
                     break;
-                case 5:
+                case 4:
                     isRunning = false;
                     break;
                 default:

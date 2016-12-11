@@ -11,7 +11,7 @@ public class MenuContractors {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private ContractorController contractorController;
-    private String[] menuItems = {"Add a contractor", "Modify a contractor", "Remove a contractor", "View contractors", "Go back"};
+    private String[] menuItems = {"Add a contractor", "Remove a contractor", "View contractors", "Go back"};
 
     public MenuContractors() {
         contractorController = new ContractorController();
@@ -51,16 +51,6 @@ public class MenuContractors {
                     contractorController.addContractor(id, name, address, city, zip, phone, email);
                     break;
                 case 2:
-                    System.out.println("Select the ID of the contractor you want to modify:");
-                    //contractorControl method to list only id and names
-                    id = sc.nextInt();
-                    //select which attributes you want to modify
-                    //modify em
-                    //???
-                    //profit
-                    //~*may need more methods*~
-                    break;
-                case 3:
                     if (contractorController.listIdAndNames() != 0) {
                         System.out.println("Select the ID of the contractor you want to remove:");
                         id = sc.nextInt();
@@ -75,12 +65,12 @@ public class MenuContractors {
                     } else
                         System.out.println("There are no contractors at this moment");
                     break;
-                case 4:
+                case 3:
                     System.out.println("Existing contractors:");
                     if (contractorController.viewContractors() == 0)
                         System.out.println("There are no contractors at this time");
                     break;
-                case 5:
+                case 4:
                     isRunning = false;
                     break;
                 default:

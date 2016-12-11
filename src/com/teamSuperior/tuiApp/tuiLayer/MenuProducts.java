@@ -11,7 +11,7 @@ public class MenuProducts {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
-    private String[] menuItems = {"Add a product", "Modify a product", "Remove a product", "View products", "Go back"};
+    private String[] menuItems = {"Add a product", "Remove a product", "View products", "Go back"};
 
     public MenuProducts() {
         productController = new ProductController();
@@ -56,16 +56,6 @@ public class MenuProducts {
                     productController.addProduct(id, name, subname, barcode, category, price, location, quantity, contractorId);
                     break;
                 case 2:
-                    System.out.println("Select the ID of the product you want to modify:");
-                    //productControl method to list only id and product names
-                    id = sc.nextInt();
-                    //select which attributes you want to modify
-                    //modify em
-                    //???
-                    //profit
-                    //~*may need more methods*~
-                    break;
-                case 3:
                     if (productController.listIdAndNameOfProducts() > 0) {
                         System.out.println("Select the ID of the product you want to remove:");
                         id = sc.nextInt();
@@ -80,11 +70,11 @@ public class MenuProducts {
                     } else
                         System.out.println("There are no products at this moment");
                     break;
-                case 4:
+                case 3:
                     if (productController.listAllProducts() == 0)
                         System.out.println("There are no products at this moment");
                     break;
-                case 5:
+                case 4:
                     isRunning = false;
                     productController.exportToFile();
                     break;

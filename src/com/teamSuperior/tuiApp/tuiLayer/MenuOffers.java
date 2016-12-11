@@ -16,7 +16,7 @@ public class MenuOffers {
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
     private OfferController offerController;
-    private String[] menuItems = {"Create an offer", "Modify an offer", "Remove an offer", "View offers", "Go back"};
+    private String[] menuItems = {"Create an offer", "Remove an offer", "View offers", "Go back"};
 
     public MenuOffers() {
         productController = new ProductController();
@@ -64,17 +64,6 @@ public class MenuOffers {
                         System.out.println("There are no products available at this time");
                     break;
                 case 2:
-                    System.out.println("Select the ID of the offer you want to modify:");
-                    //offerControl method to list all but date
-                    id = sc.nextInt();
-                    //select which attributes you want to modify
-                    //modify em
-                    //fok bitches
-                    //???
-                    //profit
-                    //~*may need more methods*~
-                    break;
-                case 3:
                     if (offerController.listOfferDetails() != 0) {
                         System.out.println("Select the ID of the offer you want to remove:");
                         id = sc.nextInt();
@@ -89,12 +78,12 @@ public class MenuOffers {
                     } else
                         System.out.println("There are no offers at the moment");
                     break;
-                case 4:
+                case 3:
                     System.out.println("Existing offers:");
                     if (offerController.viewOffers() == 0)
                         System.out.println("There are no offers at this time!");
                     break;
-                case 5:
+                case 4:
                     isRunning = false;
                     productController.exportToFile();
                     offerController.exportToFile();

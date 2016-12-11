@@ -11,7 +11,7 @@ public class MenuCustomers {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private CustomerControl customerControl = new CustomerControl();
-    private String[] menuItems = {"Add a customer", "Modify a customer", "Remove a customer", "View customers", "Go back"};
+    private String[] menuItems = {"Add a customer", "Remove a customer", "View customers", "Go back"};
 
     public void printCustomersMenu() {
         int choice;
@@ -29,15 +29,12 @@ public class MenuCustomers {
                     System.out.println("add");
                     break;
                 case 2:
-                    System.out.println("modify");
-                    break;
-                case 3:
                     System.out.println("remove");
                     break;
-                case 4:
+                case 3:
                     customerControl.viewCustomers();
                     break;
-                case 5:
+                case 4:
                     isRunning = false;
                     break;
                 default:
