@@ -1,6 +1,7 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
-import com.teamSuperior.core.controlLayer.CustomerControl;
+
+import com.teamSuperior.tuiApp.controlLayer.CustomerController;
 
 import java.util.Scanner;
 
@@ -10,11 +11,16 @@ import java.util.Scanner;
 public class MenuCustomers {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
-    private CustomerControl customerControl = new CustomerControl();
+    private CustomerController customerController;
     private String[] menuItems = {"Add a customer", "Remove a customer", "View customers", "Go back"};
 
+    public MenuCustomers(){
+        customerController = new CustomerController();
+    }
+
     public void printCustomersMenu() {
-        int choice;
+        int choice, id;
+        String name, surname, address, city, zip, phone, email;
         while (isRunning) {
             System.out.println("Customers Menu");
             int i = 1;
@@ -26,13 +32,45 @@ public class MenuCustomers {
             choice = sc.nextInt();
             switch (choice) {
                 case 1:
-                    System.out.println("add");
+                    System.out.println("ID: ");
+                    id = sc.nextInt();
+                    System.out.println("Name: ");
+                    name = sc.next();
+                    System.out.println("Surname: ");
+                    surname = sc.next();
+                    System.out.println("Addresss: ");
+                    address = sc.next();
+                    System.out.println("City: ");
+                    city = sc.next();
+                    System.out.println("Zip: ");
+                    zip = sc.next();
+                    System.out.println("Phone: ");
+                    phone = sc.next();
+                    System.out.println("Email: ");
+                    email = sc.next();
+                    customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
+                    System.out.println("Customer successfuly registered!");
                     break;
                 case 2:
-                    System.out.println("remove");
+                    if(customerController.listIdAndNames() != 0){
+                        System.out.println("Select the ID of the customer you want to remove:");
+                        id = sc.nextInt();
+                        if(customerController.foundCustomerById(id)){
+                            System.out.println("Are you sure you want to remove this customer? (y/n)");
+                            String confirmation = sc.next();
+                            if (confirmation.equals("y") || confirmation.equals("Y"))
+                                if (customerController.removeCustomerById(id))
+                                    System.out.println("Contractor successfully removed");
+                        }
+                        else
+                            System.out.println("Could not find customer by that ID");
+                    }
+                    else
+                        System.out.println("There are no customers at this moment");
                     break;
                 case 3:
-                    customerControl.viewCustomers();
+                    if(customerController.viewCustomers() == 0)
+                        System.out.println("No customers registered at this time");
                     break;
                 case 4:
                     isRunning = false;
