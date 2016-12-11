@@ -1,10 +1,7 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
 import com.teamSuperior.tuiApp.controlLayer.ContractorController;
-import com.teamSuperior.tuiApp.controlLayer.CustomerController;
-import com.teamSuperior.tuiApp.controlLayer.ProductController;
 import com.teamSuperior.tuiApp.controlLayer.StatsController;
-import com.teamSuperior.tuiApp.modelLayer.Contractor;
 
 import java.util.Scanner;
 
