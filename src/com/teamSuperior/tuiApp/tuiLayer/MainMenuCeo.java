@@ -19,6 +19,7 @@ public class MainMenuCeo {
     private MenuCustomers menuCustomers = new MenuCustomers();
     private MenuContractors menuContractors = new MenuContractors();
     private StatsController statsController = new StatsController();
+    private AddTestingData addTestingData;
 
     public MainMenuCeo() {
         while (isRunning) {
@@ -41,6 +42,10 @@ public class MainMenuCeo {
         int choice;
         choice = sc.nextInt();
         switch (choice) {
+            case 0:
+                addTestingData = new AddTestingData();
+                System.out.println("Testing data loaded");
+                break;
             case 1:
                 menuProducts.printProductsMenu();
                 break;

@@ -15,7 +15,7 @@ public class MenuOrders {
     private ProductController productController;
     private ContractorController contractorController;
     private OrderController orderController;
-    private String[] menuItems = {"Add an order", "Remove an order", "View orders", "Go back"};
+    private String[] menuItems = {"Add an order", "Remove an order", "Approve an order", "View orders", "Go back"};
 
     public MenuOrders() {
         productController = new ProductController();
@@ -81,10 +81,27 @@ public class MenuOrders {
                         System.out.println("There are no orders to remove");
                     break;
                 case 3:
+                    if(orderController.viewNotApprovedOrders() > 0) {
+                        System.out.println("Select the ID of the order you want to approve:");
+                        id = sc.nextInt();
+                        if (orderController.foundOrderById(id)) {
+                            System.out.println("Are you sure you want to approve this order? (y/n)");
+                            String confirmation = sc.next();
+                            if (confirmation.equals("y") || confirmation.equals("Y"))
+                                if (orderController.approveOrderById(id))
+                                    System.out.println("Order succesfuly approved");
+                        }
+                        else
+                            System.out.println("No orders found by that ID");
+                    }
+                    else
+                        System.out.println("There are no orders waiting approval");
+                    break;
+                case 4:
                     if (orderController.viewOrders() == 0)
                         System.out.println("There are no orders at the moment");
                     break;
-                case 4:
+                case 5:
                     isRunning = false;
                     break;
                 default:
