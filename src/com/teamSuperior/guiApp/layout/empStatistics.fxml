@@ -3,30 +3,41 @@
 <?import javafx.scene.chart.BarChart?>
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeStatistics">
+<AnchorPane prefHeight="800.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeStatistics">
    <children>
       <TableView fx:id="tableView_employees" onMouseClicked="#tableView_employees_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
       </TableView>
-      <BarChart fx:id="chart_numberOfSales" layoutY="400.0" prefHeight="400.0" prefWidth="350.0" title="Number of sales">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </BarChart>
-      <BarChart fx:id="chart_revenue" layoutX="350.0" layoutY="400.0" prefHeight="400.0" prefWidth="350.0" title="Revenue">
-        <xAxis>
-          <CategoryAxis side="BOTTOM" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis side="LEFT" />
-        </yAxis>
-      </BarChart>
-      <Label fx:id="label_productivity" layoutX="710.0" layoutY="410.0" text="Label" />
+      <ScrollPane layoutY="400.0" prefHeight="400.0" prefWidth="1000.0">
+        <content>
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="1000.0">
+               <children>
+                  <BarChart fx:id="chart_numberOfSales" prefHeight="400.0" prefWidth="250.0" title="Number of sales">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+                  <BarChart fx:id="chart_revenue" layoutX="250.0" prefHeight="400.0" prefWidth="250.0" title="Revenue">
+                    <xAxis>
+                      <CategoryAxis side="BOTTOM" />
+                    </xAxis>
+                    <yAxis>
+                      <NumberAxis side="LEFT" />
+                    </yAxis>
+                  </BarChart>
+                  <Label fx:id="label_productivity" layoutX="15.0" layoutY="415.0" text="Label" />
+                  <PieChart layoutX="500.0" prefHeight="400.0" title="WIP"/>
+               </children>
+            </AnchorPane>
+        </content>
+      </ScrollPane>
    </children>
 </AnchorPane>
