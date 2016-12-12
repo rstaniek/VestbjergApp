@@ -443,5 +443,27 @@ public class MainController implements Initializable {
 
     @FXML
     public void menu_employees_add_onClick(ActionEvent actionEvent) {
+        if(LogInPopupController.isLogged()){
+            if(LogInPopupController.getUser().getAccessLevel() >= 3){
+                try{
+                    Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
+                    Stage window = new Stage();
+                    window.setTitle("Add a new employee");
+                    window.setResizable(false);
+                    Scene scene = new Scene(root);
+                    window.setScene(scene);
+                    window.show();
+                }
+                catch (IOException ex){
+                    AlertBox.display("IO Exception", ex.getMessage());
+                }
+            }
+            else {
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }
+        else {
+            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        }
     }
 }

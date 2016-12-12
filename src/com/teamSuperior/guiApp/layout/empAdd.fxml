@@ -1,5 +1,128 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane/>
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeAddController">
+  <columnConstraints>
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="87.0" />
+    <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="10.0" prefWidth="46.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="10.0" prefWidth="219.0" />
+  </columnConstraints>
+  <rowConstraints>
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+    <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+  </rowConstraints>
+   <children>
+      <Label text="Name -">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Surname -" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Address -" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="City -" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="ZIP code -" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Email -" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Phone -" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="Password -" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <Label text="position -" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Label>
+      <TextField fx:id="text_name" promptText="Name" GridPane.columnIndex="1" GridPane.columnSpan="2">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="text_surname" promptText="Surname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="text_address" promptText="Address" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="text_city" promptText="City" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="text_zip" promptText="ZIP code" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="text_email" promptText="example@server.com" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <TextField fx:id="text_phone" promptText="(45) 00 00 00 00" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></TextField>
+      <PasswordField fx:id="text_password" promptText="password" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></PasswordField>
+      <ChoiceBox fx:id="choiceBox_position" prefHeight="25.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+         <GridPane.margin>
+            <Insets right="15.0" />
+         </GridPane.margin></ChoiceBox>
+      <Button fx:id="btn_add" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+         <GridPane.margin>
+            <Insets left="15.0" right="15.0" />
+         </GridPane.margin>
+      </Button>
+      <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#btn_clear_onClick" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="9" />
+      <Button fx:id="btn_editEmployees" mnemonicParsing="false" onAction="#btn_editEmployees_onClick" text="Edit employees" GridPane.columnIndex="2" GridPane.rowIndex="9">
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <GridPane.margin>
+            <Insets left="15.0" />
+         </GridPane.margin>
+      </Button>
+   </children>
+</GridPane>
