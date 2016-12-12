@@ -30,7 +30,7 @@ public class LoginController {
         return match;
     }
 
-    public int getAccessLevel(String user){
+    public int getAccessLevel(String user) {
         int level = 0;
         for (User u : userContainer.getUsers())
             if (u.getUser().equals(user))

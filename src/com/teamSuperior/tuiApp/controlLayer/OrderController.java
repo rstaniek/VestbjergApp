@@ -51,20 +51,20 @@ public class OrderController {
         return orderContainer.getOrders().size();
     }
 
-    public int viewNotApprovedOrders(){
+    public int viewNotApprovedOrders() {
         int count = 0;
-        for(Order order : orderContainer.getOrders())
-            if(order.getApproved() == 0){
+        for (Order order : orderContainer.getOrders())
+            if (order.getApproved() == 0) {
                 System.out.printf("Order ID: %d  Product ID: %d  Contractor ID: %d%n", order.getId(), order.getProductId(), order.getContractorId());
-                count ++;
+                count++;
             }
-        return  count;
+        return count;
     }
 
-    public boolean approveOrderById(int id){
+    public boolean approveOrderById(int id) {
         boolean approved = false;
-        for(Order order : orderContainer.getOrders())
-            if(order.getId() == id){
+        for (Order order : orderContainer.getOrders())
+            if (order.getId() == id) {
                 order.setApproved(1);
                 approved = true;
             }

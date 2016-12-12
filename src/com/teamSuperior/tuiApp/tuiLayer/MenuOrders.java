@@ -81,7 +81,7 @@ public class MenuOrders {
                         System.out.println("There are no orders to remove");
                     break;
                 case 3:
-                    if(orderController.viewNotApprovedOrders() > 0) {
+                    if (orderController.viewNotApprovedOrders() > 0) {
                         System.out.println("Select the ID of the order you want to approve:");
                         id = sc.nextInt();
                         if (orderController.foundOrderById(id)) {
@@ -90,11 +90,9 @@ public class MenuOrders {
                             if (confirmation.equals("y") || confirmation.equals("Y"))
                                 if (orderController.approveOrderById(id))
                                     System.out.println("Order succesfuly approved");
-                        }
-                        else
+                        } else
                             System.out.println("No orders found by that ID");
-                    }
-                    else
+                    } else
                         System.out.println("There are no orders waiting approval");
                     break;
                 case 4:

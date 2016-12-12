@@ -13,14 +13,16 @@ public class CustomerController {
 
     private CustomerContainer customerContainer;
 
-    public CustomerController() { customerContainer = CustomerContainer.getInstance(); }
+    public CustomerController() {
+        customerContainer = CustomerContainer.getInstance();
+    }
 
-    public void addCustomer(int id, String name, String surname, String address, String city, String zip, String phone, String email){
+    public void addCustomer(int id, String name, String surname, String address, String city, String zip, String phone, String email) {
         customerContainer.getCustomer().add(new Customer(id, name, surname, address, city, zip, phone, email));
     }
 
-    public int viewCustomers(){
-        for(Customer customer : customerContainer.getCustomer()) {
+    public int viewCustomers() {
+        for (Customer customer : customerContainer.getCustomer()) {
             System.out.println("Id: " + customer.getId());
             System.out.println("Name: " + customer.getName());
             System.out.println("Surname: " + customer.getSurname());
@@ -34,26 +36,26 @@ public class CustomerController {
         return customerContainer.getCustomer().size();
     }
 
-    public int listIdAndNames(){
-        for(Customer customer : customerContainer.getCustomer())
+    public int listIdAndNames() {
+        for (Customer customer : customerContainer.getCustomer())
             System.out.println("ID: " + customer.getId() + "  Name: " + customer.getName() + " " + customer.getSurname());
         return customerContainer.getCustomer().size();
     }
 
-    public boolean foundCustomerById(int id){
+    public boolean foundCustomerById(int id) {
         boolean found = false;
-        for(Customer customer : customerContainer.getCustomer())
-            if(customer.getId() == id)
+        for (Customer customer : customerContainer.getCustomer())
+            if (customer.getId() == id)
                 found = true;
         return found;
     }
 
-    public boolean removeCustomerById(int id){
+    public boolean removeCustomerById(int id) {
         boolean removed = false;
         Iterator<Customer> iterator = customerContainer.getCustomer().iterator();
-        while(iterator.hasNext() && !removed){
+        while (iterator.hasNext() && !removed) {
             Customer customer = iterator.next();
-            if(customer.getId() == id) {
+            if (customer.getId() == id) {
                 iterator.remove();
                 removed = true;
             }
@@ -62,8 +64,6 @@ public class CustomerController {
     }
 
 }
-
-
 
 
 //<3

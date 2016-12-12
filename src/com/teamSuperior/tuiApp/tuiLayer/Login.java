@@ -33,7 +33,7 @@ public class Login {
             if (loginController.passwordMatches(user, pass)) {
                 System.out.println("You have successfully logged in!");
                 isLogged = true;
-                switch(loginController.getAccessLevel(user)){
+                switch (loginController.getAccessLevel(user)) {
                     case 0:
                         mainMenuEmployee = new MainMenuEmployee();
                         break;

@@ -14,7 +14,7 @@ public class MenuCustomers {
     private CustomerController customerController;
     private String[] menuItems = {"Add a customer", "Remove a customer", "View customers", "Go back"};
 
-    public MenuCustomers(){
+    public MenuCustomers() {
         customerController = new CustomerController();
     }
 
@@ -52,24 +52,22 @@ public class MenuCustomers {
                     System.out.println("Customer successfuly registered!");
                     break;
                 case 2:
-                    if(customerController.listIdAndNames() != 0){
+                    if (customerController.listIdAndNames() != 0) {
                         System.out.println("Select the ID of the customer you want to remove:");
                         id = sc.nextInt();
-                        if(customerController.foundCustomerById(id)){
+                        if (customerController.foundCustomerById(id)) {
                             System.out.println("Are you sure you want to remove this customer? (y/n)");
                             String confirmation = sc.next();
                             if (confirmation.equals("y") || confirmation.equals("Y"))
                                 if (customerController.removeCustomerById(id))
                                     System.out.println("Contractor successfully removed");
-                        }
-                        else
+                        } else
                             System.out.println("Could not find customer by that ID");
-                    }
-                    else
+                    } else
                         System.out.println("There are no customers at this moment");
                     break;
                 case 3:
-                    if(customerController.viewCustomers() == 0)
+                    if (customerController.viewCustomers() == 0)
                         System.out.println("No customers registered at this time");
                     break;
                 case 4:
