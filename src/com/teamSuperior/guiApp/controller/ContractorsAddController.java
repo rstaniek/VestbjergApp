@@ -21,7 +21,7 @@ import static com.teamSuperior.guiApp.enums.ErrorCode.ACCESS_DENIED_NOT_LOGGED_I
 /**
  * Created by Domestos Maximus on 09-Dec-16.
  */
-public class ContractorsAdd {
+public class ContractorsAddController {
     @FXML
     public TextField text_name;
     @FXML

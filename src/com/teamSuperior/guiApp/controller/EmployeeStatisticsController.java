@@ -25,7 +25,7 @@ import java.util.ResourceBundle;
 /**
  * Created by Domestos Maximus on 06-Dec-16.
  */
-public class EmployeeStatistics implements Initializable {
+public class EmployeeStatisticsController implements Initializable {
 
     @FXML
     public TableView tableView_employees;

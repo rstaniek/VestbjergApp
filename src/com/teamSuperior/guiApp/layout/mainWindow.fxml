@@ -46,6 +46,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Employees">
                     <items>
+                        <MenuItem fx:id="menu_employees_add" mnemonicParsing="false" onAction="#menu_employees_add_onClick" text="Add" />
                         <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" onAction="#menu_employees_statistics_clicked" text="Statistics" />
                         <MenuItem fx:id="menu_employees_edit" mnemonicParsing="false" onAction="#menu_employees_edit_clicked" text="Edit" />
                     </items>

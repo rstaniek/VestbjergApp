@@ -84,6 +84,8 @@ public class MainController implements Initializable {
     public MenuItem menu_file_test;
     @FXML
     public MenuItem menu_products_view;
+    @FXML
+    public MenuItem menu_employees_add;
 
     private Stage settings;
     static Stage loginWindow;
@@ -437,5 +439,9 @@ public class MainController implements Initializable {
         else {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
+    }
+
+    @FXML
+    public void menu_employees_add_onClick(ActionEvent actionEvent) {
     }
 }

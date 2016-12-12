@@ -28,7 +28,7 @@ import static com.teamSuperior.core.connection.DBConnect.validateField;
 /**
  * Created by Domestos Maximus on 09-Dec-16.
  */
-public class ContractorsManage implements Initializable {
+public class ContractorsManageController implements Initializable {
     @FXML
     public TableView tableView_contractors;
     @FXML

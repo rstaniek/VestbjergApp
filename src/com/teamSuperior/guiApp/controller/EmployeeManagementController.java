@@ -30,7 +30,7 @@ import static com.teamSuperior.core.connection.DBConnect.*;
 /**
  * Created by Domestos Maximus on 06-Dec-16.
  */
-public class EmployeeManagement implements Initializable {
+public class EmployeeManagementController implements Initializable {
     @FXML
     public TableView tableView_employees;
     @FXML
