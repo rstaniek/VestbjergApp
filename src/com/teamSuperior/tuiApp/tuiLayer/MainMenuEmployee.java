@@ -6,66 +6,50 @@ import com.teamSuperior.tuiApp.controlLayer.ProductController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Main menu for employees.
  */
-public class MainMenuEmployee {
-    private boolean isRunning = true;
-    private Scanner sc = new Scanner(System.in);
-    private String[] menuItems = {"Display products", "Orders", "Register a customer", "Exit"};
+class MainMenuEmployee extends Menu {
 
     private MenuOrders menuOrders = new MenuOrders();
     private ProductController productController = new ProductController();
     private CustomerController customerController = new CustomerController();
 
-    public MainMenuEmployee() {
-        while (isRunning) {
-            printMenu();
-            chooseSubMenu();
-        }
+    MainMenuEmployee() {
+        menuItems = new String[]{"Display products", "Orders", "Register a customer", "Exit"};
+        title = "Main Menu for employees";
     }
 
-    public void printMenu() {
-        System.out.println("Main Menu for employees");
-        int i = 1;
-        for (String item : menuItems) {
-            System.out.println(i + ". " + item);
-            i++;
-        }
-        System.out.println("Your option");
-    }
-
-    public void chooseSubMenu() {
-        int choice;
-        choice = sc.nextInt();
-        switch (choice) {
+    @Override
+    protected void switchSubMenu() {
+        switch (scanInt()) {
             case 1:
                 if (productController.listAllProducts() == 0)
                     System.out.println("There are no products at this moment");
                 break;
             case 2:
-                menuOrders.printOrdersMenu();
+                menuOrders.run();
                 break;
             case 3:
                 int id;
                 String name, surname, address, city, zip, phone, email;
                 System.out.println("ID: ");
-                id = sc.nextInt();
+                id = scanInt();
                 System.out.println("Name: ");
-                name = sc.next();
+                name = scanString();
                 System.out.println("Surname: ");
-                surname = sc.next();
-                System.out.println("Addresss: ");
-                address = sc.next();
+                surname = scanString();
+                System.out.println("Address: ");
+                address = scanString();
                 System.out.println("City: ");
-                city = sc.next();
+                city = scanString();
                 System.out.println("Zip: ");
-                zip = sc.next();
+                zip = scanString();
                 System.out.println("Phone: ");
-                phone = sc.next();
+                phone = scanString();
                 System.out.println("Email: ");
-                email = sc.next();
+                email = scanString();
                 customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
-                System.out.println("Customer successfuly registered!");
+                System.out.println("Customer successfully registered!");
                 break;
             case 4:
                 System.out.println("Thank you for using our software");

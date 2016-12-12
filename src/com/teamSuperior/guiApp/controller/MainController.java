@@ -80,6 +80,8 @@ public class MainController implements Initializable {
     public MenuItem menu_contractors_add;
     @FXML
     public MenuItem menu_contractors_manage;
+    @FXML
+    public MenuItem menu_file_test;
 
     private Stage settings;
     static Stage loginWindow;
@@ -390,5 +392,22 @@ public class MainController implements Initializable {
         else{
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
+    }
+
+    @FXML
+    public void menu_file_test_onClick(ActionEvent actionEvent) {
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/pieChartTest.fxml"));
+            Stage window = new Stage();
+            window.setTitle("Test");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        }
+        catch (IOException ex){
+            AlertBox.display("IO Exception", ex.getMessage());
+        }
+
     }
 }

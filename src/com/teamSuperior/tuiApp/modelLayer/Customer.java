@@ -1,11 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Customer model class.
  */
 public class Customer {
     private int id;
-    // to be made: enum field for customer type
+    // TODO: enum field for customer type
     private String name, surname, address, city, zip, phone, email;
 
     public Customer(int id, String name, String surname, String address, String city, String zip, String phone, String email) {
@@ -81,5 +81,13 @@ public class Customer {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nName: %s %s%nAddress: %s, %s %s%nPhone: %s%nEmail: %s%n%n",
+                id, name, surname, address, zip, city, phone, email
+        );
     }
 }

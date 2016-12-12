@@ -3,6 +3,7 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
@@ -56,11 +57,31 @@ public class EmployeeManagement implements Initializable {
     private Employee selectedEmployee;
     private DBConnect conn;
 
+    //Columns
+    private TableColumn<Employee, String> nameColumn;
+    private TableColumn<Employee, String> surnameColumn;
+    private TableColumn<Employee, String> emailColumn;
+    private TableColumn<Employee, String> positionColumn;
+    private TableColumn<Employee, String> numOfSalesColumn;
+    private TableColumn<Employee, String> totalRevenueColumn;
+    private TableColumn<Employee, String> accessLevelColumn;
+    private TableColumn<Employee, String> addressColumn;
+    private TableColumn<Employee, String> cityColumn;
+    private TableColumn<Employee, String> zipColumn;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
         conn = new DBConnect();
         loggedInUser = LogInPopupController.getUser();
+
+        retrieveData();
+        //fill the table with data
+        initTableColumns(loggedInUser.getAccessLevel());
+        selectedEmployee = (Employee)tableView_employees.getFocusModel().getFocusedItem();
+    }
+
+    private void retrieveData(){
         ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
         try{
             while (rs.next()){
@@ -97,39 +118,35 @@ public class EmployeeManagement implements Initializable {
         catch (Exception ex){
             AlertBox.display("Unexpected exception", ex.getMessage());
         }
-
-        //fill the table with data
-        initTableColumns(loggedInUser.getAccessLevel());
-        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
     }
 
     private void initTableColumns(int accessLevel){
         if(accessLevel >= 2){
-            TableColumn<Employee, String> nameColumn = new TableColumn<>("Name");
+            nameColumn = new TableColumn<>("Name");
             nameColumn.setMinWidth(90);
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-            TableColumn<Employee, String> surnameColumn = new TableColumn<>("Surname");
+            surnameColumn = new TableColumn<>("Surname");
             surnameColumn.setMinWidth(90);
             surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
-            TableColumn<Employee, String> emailColumn = new TableColumn<>("Email");
+            emailColumn = new TableColumn<>("Email");
             emailColumn.setMinWidth(150);
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-            TableColumn<Employee, String> positionColumn = new TableColumn<>("Position");
+            positionColumn = new TableColumn<>("Position");
             positionColumn.setMinWidth(90);
             positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
 
-            TableColumn<Employee, String> numOfSalesColumn = new TableColumn<>("Number of sales");
+            numOfSalesColumn = new TableColumn<>("Number of sales");
             numOfSalesColumn.setMinWidth(80);
             numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("numberOfSales_str"));
 
-            TableColumn<Employee, String> totalRevenueColumn = new TableColumn<>("Total revenue");
+            totalRevenueColumn = new TableColumn<>("Total revenue");
             totalRevenueColumn.setMinWidth(80);
             totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("totalRevenue_str"));
 
-            TableColumn<Employee, String> accessLevelColumn = new TableColumn<>("Access level");
+            accessLevelColumn = new TableColumn<>("Access level");
             accessLevelColumn.setMinWidth(80);
             accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
@@ -137,15 +154,15 @@ public class EmployeeManagement implements Initializable {
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn, numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
         }if(accessLevel >= 3){
             //stuff
-            TableColumn<Employee, String> addressColumn = new TableColumn<>("Address");
+            addressColumn = new TableColumn<>("Address");
             addressColumn.setMinWidth(120);
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
 
-            TableColumn<Employee, String> cityColumn = new TableColumn<>("City");
+            cityColumn = new TableColumn<>("City");
             cityColumn.setMinWidth(100);
             cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
 
-            TableColumn<Employee, String> zipColumn = new TableColumn<>("ZIP code");
+            zipColumn = new TableColumn<>("ZIP code");
             zipColumn.setMinWidth(80);
             zipColumn.setCellValueFactory(new PropertyValueFactory<>("zip"));
 
@@ -184,7 +201,65 @@ public class EmployeeManagement implements Initializable {
     }
 
     private void saveChanges(Employee e){
-        //TODO: implement saving changes
-        Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+        boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about" + selectedEmployee.getName() + "?");
+        if(result &&
+                validateField(text_name) &&
+                validateField(text_surname) &&
+                validateField(text_email) &&
+                validateField(text_position) &&
+                validateField(text_address) &&
+                validateField(text_city) &&
+                validateField(text_zip)){
+            conn = new DBConnect();
+            try{
+                conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s' WHERE id='%8$d'",
+                        text_name.getText(),
+                        text_surname.getText(),
+                        text_address.getText(),
+                        text_city.getText(),
+                        text_zip.getText(),
+                        text_position.getText(),
+                        text_email.getText(),
+                        e.getId()));
+            }
+            catch (Exception ex){
+                AlertBox.display("Unexpected exception", ex.getMessage());
+            }
+        } else if(result) Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        refreshTable();
+    }
+
+    private void refreshTable(){
+        employees.removeAll();
+        employees = null;
+        employees = FXCollections.observableArrayList();
+        if(loggedInUser.getAccessLevel() < 3){
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn);
+        }
+        else{
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn,
+                    addressColumn,
+                    cityColumn,
+                    zipColumn);
+        }
+        retrieveData();
+        initTableColumns(loggedInUser.getAccessLevel());
+    }
+
+    private boolean validateField(TextField tf){
+        //TODO: should be implemented better but didn't have creativity to do it better
+        return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
     }
 }

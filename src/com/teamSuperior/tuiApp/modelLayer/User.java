@@ -1,13 +1,13 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 08.12.2016.
+ * User model class.
  */
 public class User {
     private String user, password;
     private int accessLevel;
 
-    public User(String user, String password, int accessLevel) {
+    User(String user, String password, int accessLevel) {
         this.user = user;
         this.password = password;
         this.accessLevel = accessLevel;
@@ -15,10 +15,6 @@ public class User {
 
     public String getUser() {
         return user;
-    }
-
-    public void setUser(String user) {
-        this.user = user;
     }
 
     public String getPassword() {
@@ -33,7 +29,4 @@ public class User {
         return accessLevel;
     }
 
-    public void setAccessLevel(int accessLevel) {
-        this.accessLevel = accessLevel;
-    }
 }

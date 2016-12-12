@@ -1,6 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.ContractorsAdd" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" />
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="294.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ContractorsAdd">
+   <children>
+      <TextField layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" fx:id="text_name" />
+       <TextField layoutX="15.0" layoutY="54.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" fx:id="text_address" />
+       <TextField layoutX="15.0" layoutY="94.0" prefHeight="25.0" prefWidth="200.0" promptText="City" fx:id="text_city" />
+       <TextField layoutX="15.0" layoutY="134.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" fx:id="text_zip" />
+       <TextField layoutX="15.0" layoutY="174.0" prefHeight="25.0" prefWidth="200.0" promptText="Phone number" fx:id="text_phone" />
+       <TextField layoutX="15.0" layoutY="214.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" fx:id="text_email" />
+      <Label layoutX="230.0" layoutY="18.0" text="- Name" />
+       <Label layoutX="230.0" layoutY="58.0" text="- Address" />
+       <Label layoutX="230.0" layoutY="98.0" text="- City" />
+       <Label layoutX="230.0" layoutY="138.0" text="- ZIP code" />
+       <Label layoutX="230.0" layoutY="177.0" text="- Phone" />
+       <Label layoutX="230.0" layoutY="218.0" text="- Email" />
+      <Button layoutX="15.0" layoutY="254.0" mnemonicParsing="false" text="Add" fx:id="btn_add" onAction="#btn_add_onClick" />
+       <Button layoutX="68.0" layoutY="254.0" mnemonicParsing="false" text="Clear" fx:id="btn_clear" onAction="#btn_clear_onClick" />
+       <Button layoutX="126.0" layoutY="254.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Manage contractors" fx:id="btn_manageContractors" onAction="#btn_manageContractors_onClick" />
+   </children>
+</AnchorPane>

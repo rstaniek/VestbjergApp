@@ -8,11 +8,13 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.effect.FloatMap;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
@@ -33,6 +35,10 @@ public class EmployeeStatistics implements Initializable {
     public BarChart chart_revenue;
     @FXML
     public Label label_productivity;
+    @FXML
+    public PieChart chart_contribution;
+    @FXML
+    public Label label_efficiency;
 
     private ObservableList<Employee> employees;
     private static Employee loggedInUser;
@@ -153,13 +159,16 @@ public class EmployeeStatistics implements Initializable {
         //TODO: add colors to the bars depending on their value (from empStats.css) for some reason it doesn't work
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
+        chart_contribution.getData().clear();
         XYChart.Series sales = new XYChart.Series<>();
         XYChart.Series revenue = new XYChart.Series<>();
+        ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
         XYChart.Data numOfSalesBar;
         XYChart.Data revenueBar;
         if(loggedInUser.getAccessLevel() == 1){
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
+            contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
             /*if(loggedInUser.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
             else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
             if(loggedInUser.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
@@ -167,6 +176,7 @@ public class EmployeeStatistics implements Initializable {
         }else{
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
+            contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
             /*if(selectedEmployee.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
             else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
             if(selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
@@ -177,30 +187,38 @@ public class EmployeeStatistics implements Initializable {
         revenue.getData().addAll(revenueBar, new XYChart.Data<>("Average", calculateAvgRevenue()));
         chart_numberOfSales.getData().addAll(sales);
         chart_revenue.getData().addAll(revenue);
+        chart_contribution.getData().addAll(contributionData);
     }
 
     private void updateLabels(){
-        String productivity;
+        String productivity, efficiency;
         if(loggedInUser.getAccessLevel() == 1){
             if(loggedInUser.getNumberOfSales() >= calculateAvgSales()){
-                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n better than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s better than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
             }
             else{
-                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n worse than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s worse than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
             }
+            efficiency = String.format("Efficiency of %1$s is %2$.2f DKK/sale", loggedInUser.getName(), getEfficiency(loggedInUser));
         }else{
             if(selectedEmployee.getNumberOfSales() >= calculateAvgSales()){
-                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n better than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s better than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
             }
             else{
-                productivity = String.format("The productivity of %1$s is %2$.1f%3$s\n worse than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
+                productivity = String.format("The productivity of %1$s is %2$.1f%3$s worse than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
             }
+            efficiency = String.format("Efficiency of %1$s is %2$.2f DKK/sale", selectedEmployee.getName(), getEfficiency(selectedEmployee));
         }
         label_productivity.setText(productivity);
+        label_efficiency.setText(efficiency);
     }
 
     private float getProductivityPercentage(Employee e, float avg){
         return (Math.abs(e.getNumberOfSales() - avg) / avg) * 100;
+    }
+
+    private double getEfficiency(Employee e){
+        return e.getTotalRevenue() / e.getNumberOfSales();
     }
 
     private float calculateAvgSales(){

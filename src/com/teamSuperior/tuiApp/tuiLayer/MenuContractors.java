@@ -2,92 +2,70 @@ package com.teamSuperior.tuiApp.tuiLayer;
 
 import com.teamSuperior.tuiApp.controlLayer.ContractorController;
 
-import java.util.Scanner;
-
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of contractors.
  */
-public class MenuContractors {
-    private boolean isRunning = true;
-    private Scanner sc = new Scanner(System.in);
+class MenuContractors extends Menu {
     private ContractorController contractorController;
-    private String[] menuItems = {"Add a contractor", "Modify a contractor", "Remove a contractor", "View contractors", "Go back"};
 
-    public MenuContractors() {
+    MenuContractors() {
         contractorController = new ContractorController();
+        menuItems = new String[]{"Add a contractor", "Remove a contractor", "View contractors", "Go back"};
+        title = "Contractors Menu";
     }
 
-    public void printContractorsMenu() {
-        int choice, id;
+    @Override
+    protected void switchSubMenu() {
+        int id;
         String name, address, city, zip, phone, email;
-        while (isRunning) {
-            System.out.println("Contractors Menu");
-            int i = 1;
-            for (String item : menuItems) {
-                System.out.println(i + ". " + item);
-                i++;
-            }
-            System.out.println("Your option:");
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    System.out.println("Add a contractor:");
+        switch (scanInt()) {
+            case 1:
+                System.out.println("Add a contractor:");
 
-                    System.out.println("ID:");
-                    id = sc.nextInt();
-                    System.out.println("Name:");
-                    name = sc.next();
-                    System.out.println("Address:");
-                    address = sc.next();
-                    System.out.println("City:");
-                    city = sc.next();
-                    System.out.println("Zip:");
-                    zip = sc.next();
-                    System.out.println("Phone:");
-                    phone = sc.next();
-                    System.out.println("Email:");
-                    email = sc.next();
+                System.out.println("ID:");
+                id = scanInt();
+                System.out.println("Name:");
+                name = scanString();
+                System.out.println("Address:");
+                address = scanString();
+                System.out.println("City:");
+                city = scanString();
+                System.out.println("Zip:");
+                zip = scanString();
+                System.out.println("Phone:");
+                phone = scanString();
+                System.out.println("Email:");
+                email = scanString();
 
-                    contractorController.addContractor(id, name, address, city, zip, phone, email);
-                    break;
-                case 2:
-                    System.out.println("Select the ID of the contractor you want to modify:");
-                    //contractorControl method to list only id and names
-                    id = sc.nextInt();
-                    //select which attributes you want to modify
-                    //modify em
-                    //???
-                    //profit
-                    //~*may need more methods*~
-                    break;
-                case 3:
-                    if (contractorController.listIdAndNames() != 0) {
-                        System.out.println("Select the ID of the contractor you want to remove:");
-                        id = sc.nextInt();
-                        if (contractorController.foundContractorById(id)) {
-                            System.out.println("Are you sure you want to remove this contractor? (y/n)");
-                            String confirmation = sc.next();
-                            if (confirmation.equals("y") || confirmation.equals("Y"))
-                                if (contractorController.removeContractorById(id))
-                                    System.out.println("Contractor successfully removed");
-                        } else
-                            System.out.println("No contractor found by that ID");
+                contractorController.addContractor(id, name, address, city, zip, phone, email);
+                System.out.println("Contractor successfully added!");
+                break;
+            case 2:
+                if (contractorController.listIdAndNames() != 0) {
+                    System.out.println("Select the ID of the contractor you want to remove:");
+                    id = scanInt();
+                    if (contractorController.foundContractorById(id)) {
+                        System.out.println("Are you sure you want to remove this contractor? (y/n)");
+                        String confirmation = scanString();
+                        if (confirmation.toLowerCase().equals("y"))
+                            if (contractorController.removeContractorById(id))
+                                System.out.println("Contractor successfully removed");
                     } else
-                        System.out.println("There are no contractors at this moment");
-                    break;
-                case 4:
-                    System.out.println("Existing contractors:");
-                    if (contractorController.viewContractors() == 0)
-                        System.out.println("There are no contractors at this time");
-                    break;
-                case 5:
-                    isRunning = false;
-                    break;
-                default:
-                    System.out.println("Error, please try again");
-                    break;
-            }
-
+                        System.out.println("No contractor found by that ID");
+                } else
+                    System.out.println("There are no contractors at this moment");
+                break;
+            case 3:
+                System.out.println("Existing contractors:");
+                if (contractorController.viewContractors() == 0)
+                    System.out.println("There are no contractors at this time");
+                break;
+            case 4:
+                isRunning = false;
+                break;
+            default:
+                System.out.println("Error, please try again");
+                break;
         }
 
     }

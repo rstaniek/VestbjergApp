@@ -3,7 +3,7 @@ package com.teamSuperior.tuiApp.controlLayer;
 import com.teamSuperior.tuiApp.modelLayer.*;
 
 /**
- * Created by Smoothini on 02.12.2016.
+ * Stats controller.
  */
 public class StatsController {
     public void generateStats() {

@@ -3,10 +3,13 @@ package com.teamSuperior.tuiApp;
 import com.teamSuperior.tuiApp.tuiLayer.Login;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Vestbjerg App TUI Version
+ *
+ * @author Smoothini <katona.andrei@gmail.com>, cervm <marek.cervinka@gmail.com>
  */
 public class Main {
     public static void main(String[] args) {
         Login login = new Login();
+        login.run();
     }
 }

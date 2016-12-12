@@ -1,20 +1,12 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
 import com.teamSuperior.tuiApp.controlLayer.ContractorController;
-import com.teamSuperior.tuiApp.controlLayer.CustomerController;
-import com.teamSuperior.tuiApp.controlLayer.ProductController;
 import com.teamSuperior.tuiApp.controlLayer.StatsController;
-import com.teamSuperior.tuiApp.modelLayer.Contractor;
-
-import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Main menu for managers.
  */
-public class MainMenuManager {
-    private boolean isRunning = true;
-    private Scanner sc = new Scanner(System.in);
-    private String[] menuItems = {"Products", "Offers", "Orders", "Customers", "Display contractors", "Statistics", "Exit"};
+class MainMenuManager extends Menu {
 
     private MenuOffers menuOffers = new MenuOffers();
     private MenuOrders menuOrders = new MenuOrders();
@@ -23,38 +15,24 @@ public class MainMenuManager {
     private StatsController statsController = new StatsController();
     private ContractorController contractorController = new ContractorController();
 
-    public MainMenuManager() {
-        while (isRunning) {
-            printMenu();
-            chooseSubMenu();
-        }
+    MainMenuManager() {
+        menuItems = new String[]{"Products", "Offers", "Orders", "Customers", "Display contractors", "Statistics", "Exit"};
     }
 
-    public void printMenu() {
-        System.out.println("Main Menu for manager");
-        int i = 1;
-        for (String item : menuItems) {
-            System.out.println(i + ". " + item);
-            i++;
-        }
-        System.out.println("Your option");
-    }
-
-    public void chooseSubMenu() {
-        int choice;
-        choice = sc.nextInt();
-        switch (choice) {
+    @Override
+    protected void switchSubMenu() {
+        switch (scanInt()) {
             case 1:
-                menuProducts.printProductsMenu();
+                menuProducts.run();
                 break;
             case 2:
-                menuOffers.printOffersMenu();
+                menuOffers.run();
                 break;
             case 3:
-                menuOrders.printOrdersMenu();
+                menuOrders.run();
                 break;
             case 4:
-                menuCustomers.printCustomersMenu();
+                menuCustomers.run();
                 break;
             case 5:
                 contractorController.listIdAndNames();

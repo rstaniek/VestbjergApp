@@ -1,7 +1,7 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Order model class.
  */
 public class Order {
     private int id, productId, contractorId, quantity, approved, delivered;
@@ -29,24 +29,8 @@ public class Order {
         return productId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
     public int getContractorId() {
         return contractorId;
-    }
-
-    public void setContractorId(int contractorId) {
-        this.contractorId = contractorId;
-    }
-
-    public int getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(int quantity) {
-        this.quantity = quantity;
     }
 
     public int getApproved() {
@@ -59,18 +43,6 @@ public class Order {
 
     public int getDelivered() {
         return delivered;
-    }
-
-    public void setDelivered(int delivered) {
-        this.delivered = delivered;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
     }
 
     @Override

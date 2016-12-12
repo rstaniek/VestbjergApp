@@ -6,7 +6,7 @@ import com.teamSuperior.tuiApp.modelLayer.OrderContainer;
 import java.util.Iterator;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Orders controller.
  */
 public class OrderController {
     private OrderContainer orderContainer;
@@ -49,5 +49,25 @@ public class OrderController {
     public int viewOrders() {
         orderContainer.getOrders().forEach(System.out::print);
         return orderContainer.getOrders().size();
+    }
+
+    public int viewNotApprovedOrders() {
+        int count = 0;
+        for (Order order : orderContainer.getOrders())
+            if (order.getApproved() == 0) {
+                System.out.printf("Order ID: %d  Product ID: %d  Contractor ID: %d%n", order.getId(), order.getProductId(), order.getContractorId());
+                count++;
+            }
+        return count;
+    }
+
+    public boolean approveOrderById(int id) {
+        boolean approved = false;
+        for (Order order : orderContainer.getOrders())
+            if (order.getId() == id) {
+                order.setApproved(1);
+                approved = true;
+            }
+        return approved;
     }
 }

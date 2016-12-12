@@ -1,50 +1,70 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
-import com.teamSuperior.core.controlLayer.CustomerControl;
 
-import java.util.Scanner;
+import com.teamSuperior.tuiApp.controlLayer.CustomerController;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of customers.
  */
-public class MenuCustomers {
-    private boolean isRunning = true;
-    private Scanner sc = new Scanner(System.in);
-    private CustomerControl customerControl = new CustomerControl();
-    private String[] menuItems = {"Add a customer", "Modify a customer", "Remove a customer", "View customers", "Go back"};
+class MenuCustomers extends Menu {
+    private CustomerController customerController;
 
-    public void printCustomersMenu() {
-        int choice;
-        while (isRunning) {
-            System.out.println("Customers Menu");
-            int i = 1;
-            for (String item : menuItems) {
-                System.out.println(i + ". " + item);
-                i++;
-            }
-            System.out.println("Your option:");
-            choice = sc.nextInt();
-            switch (choice) {
-                case 1:
-                    System.out.println("add");
-                    break;
-                case 2:
-                    System.out.println("modify");
-                    break;
-                case 3:
-                    System.out.println("remove");
-                    break;
-                case 4:
-                    customerControl.viewCustomers();
-                    break;
-                case 5:
-                    isRunning = false;
-                    break;
-                default:
-                    System.out.println("Error, please try again");
-                    break;
-            }
+    MenuCustomers() {
+        customerController = new CustomerController();
+        menuItems = new String[]{"Add a customer", "Remove a customer", "View customers", "Go back"};
+        title = "Customers Menu";
+    }
 
+    @Override
+    protected void switchSubMenu() {
+        int id;
+        String name, surname, address, city, zip, phone, email;
+        switch (scanInt()) {
+            case 1:
+                System.out.println("ID: ");
+                id = scanInt();
+                System.out.println("Name: ");
+                name = scanString();
+                System.out.println("Surname: ");
+                surname = scanString();
+                System.out.println("Address: ");
+                address = scanString();
+                System.out.println("City: ");
+                city = scanString();
+                System.out.println("Zip: ");
+                zip = scanString();
+                System.out.println("Phone: ");
+                phone = scanString();
+                System.out.println("Email: ");
+                email = scanString();
+                customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
+                System.out.println("Customer successfully registered!");
+                break;
+            case 2:
+                if (customerController.listIdAndNames() != 0) {
+                    System.out.println("Select the ID of the customer you want to remove:");
+                    id = scanInt();
+                    if (customerController.foundCustomerById(id)) {
+                        System.out.println("Are you sure you want to remove this customer? (y/n)");
+                        String confirmation = scanString();
+                        if (confirmation.toLowerCase().equals("y"))
+                            if (customerController.removeCustomerById(id))
+                                System.out.println("Contractor successfully removed");
+                    } else
+                        System.out.println("Could not find customer by that ID");
+                } else
+                    System.out.println("There are no customers at this moment");
+                break;
+            case 3:
+                if (customerController.viewCustomers() == 0)
+                    System.out.println("No customers registered at this time");
+                break;
+            case 4:
+                isRunning = false;
+                break;
+            default:
+                System.out.println("Error, please try again");
+                break;
         }
 
     }

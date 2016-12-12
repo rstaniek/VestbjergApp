@@ -4,7 +4,7 @@ import com.teamSuperior.tuiApp.modelLayer.User;
 import com.teamSuperior.tuiApp.modelLayer.UserContainer;
 
 /**
- * Created by Smoothini on 08.12.2016.
+ * Login controller.
  */
 public class LoginController {
 
@@ -30,7 +30,7 @@ public class LoginController {
         return match;
     }
 
-    public int getAccessLevel(String user){
+    public int getAccessLevel(String user) {
         int level = 0;
         for (User u : userContainer.getUsers())
             if (u.getUser().equals(user))

@@ -89,6 +89,10 @@ public class Employee{
         return address;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getPosition() {
         return position;
     }

@@ -5,19 +5,19 @@ import com.teamSuperior.tuiApp.controlLayer.LoginController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 08.12.2016.
+ * Login provider.
  */
 public class Login {
 
     private Scanner sc = new Scanner(System.in);
     private LoginController loginController = new LoginController();
     private boolean isLogged = false;
-    private MainMenuEmployee mainMenuEmployee;
-    private MainMenuSalesman mainMenuSalesman;
-    private MainMenuManager mainMenuManager;
-    private MainMenuCeo mainMenuCeo;
+    private MainMenuEmployee mainMenuEmployee = new MainMenuEmployee();
+    private MainMenuSalesman mainMenuSalesman = new MainMenuSalesman();
+    private MainMenuManager mainMenuManager = new MainMenuManager();
+    private MainMenuCeo mainMenuCeo = new MainMenuCeo();
 
-    public Login() {
+    public void run() {
         while (!isLogged) {
             displayLoginScreen();
         }
@@ -33,18 +33,18 @@ public class Login {
             if (loginController.passwordMatches(user, pass)) {
                 System.out.println("You have successfully logged in!");
                 isLogged = true;
-                switch(loginController.getAccessLevel(user)){
+                switch (loginController.getAccessLevel(user)) {
                     case 0:
-                        mainMenuEmployee = new MainMenuEmployee();
+                        mainMenuEmployee.run();
                         break;
                     case 1:
-                        mainMenuSalesman = new MainMenuSalesman();
+                        mainMenuSalesman.run();
                         break;
                     case 2:
-                        mainMenuManager = new MainMenuManager();
+                        mainMenuManager.run();
                         break;
                     case 3:
-                        mainMenuCeo = new MainMenuCeo();
+                        mainMenuCeo.run();
                         break;
                 }
             } else
