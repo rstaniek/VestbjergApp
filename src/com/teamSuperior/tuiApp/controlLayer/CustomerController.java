@@ -6,7 +6,7 @@ import com.teamSuperior.tuiApp.modelLayer.CustomerContainer;
 import java.util.Iterator;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Customers controller.
  */
 
 public class CustomerController {

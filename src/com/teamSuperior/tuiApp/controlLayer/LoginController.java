@@ -4,7 +4,7 @@ import com.teamSuperior.tuiApp.modelLayer.User;
 import com.teamSuperior.tuiApp.modelLayer.UserContainer;
 
 /**
- * Created by Smoothini on 08.12.2016.
+ * Login controller.
  */
 public class LoginController {
 

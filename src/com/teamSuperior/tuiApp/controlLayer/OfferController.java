@@ -6,7 +6,7 @@ import com.teamSuperior.tuiApp.modelLayer.OfferContainer;
 import java.util.Iterator;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Offers controller.
  */
 public class OfferController {
 

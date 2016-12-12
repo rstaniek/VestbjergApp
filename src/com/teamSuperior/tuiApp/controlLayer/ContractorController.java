@@ -6,7 +6,7 @@ import com.teamSuperior.tuiApp.modelLayer.ContractorContainer;
 import java.util.Iterator;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Contractors controller.
  */
 public class ContractorController {
     private ContractorContainer contractorContainer;

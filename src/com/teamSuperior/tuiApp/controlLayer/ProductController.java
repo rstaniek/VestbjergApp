@@ -6,7 +6,7 @@ import com.teamSuperior.tuiApp.modelLayer.ProductContainer;
 import java.util.Iterator;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Products controller.
  */
 public class ProductController {
 
