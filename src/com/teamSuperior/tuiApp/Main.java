@@ -4,6 +4,7 @@ import com.teamSuperior.tuiApp.tuiLayer.Login;
 
 /**
  * Vestbjerg App TUI Version
+ *
  * @author Smoothini <katona.andrei@gmail.com>, cervm <marek.cervinka@gmail.com>
  */
 public class Main {
