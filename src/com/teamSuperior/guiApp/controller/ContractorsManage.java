@@ -83,7 +83,7 @@ public class ContractorsManage implements Initializable {
                         rs.getString("phone") != null &&
                         rs.getString("email") != null){
                     Contractor tmp = new Contractor(rs.getString("name"),
-                            rs.getString("adress"),
+                            rs.getString("address"),
                             rs.getString("city"),
                             rs.getString("zip"),
                             rs.getString("phone"),
