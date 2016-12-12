@@ -25,6 +25,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import static com.teamSuperior.core.connection.DBConnect.*;
+
 /**
  * Created by Domestos Maximus on 06-Dec-16.
  */
@@ -256,10 +258,5 @@ public class EmployeeManagement implements Initializable {
         }
         retrieveData();
         initTableColumns(loggedInUser.getAccessLevel());
-    }
-
-    private boolean validateField(TextField tf){
-        //TODO: should be implemented better but didn't have creativity to do it better
-        return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
     }
 }
