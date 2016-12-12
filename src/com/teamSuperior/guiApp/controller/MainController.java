@@ -67,7 +67,7 @@ public class MainController implements Initializable {
     @FXML
     public MenuItem menu_employees_statistics;
     @FXML
-    public MenuItem menu_employees_manage;
+    public MenuItem menu_employees_edit;
     @FXML
     public ImageView imgView_logo;
     @FXML
@@ -326,7 +326,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void menu_employees_manage_clicked(ActionEvent actionEvent) {
+    public void menu_employees_edit_clicked(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()) {
             if(LogInPopupController.getUser().getAccessLevel() >= 2){
                 wnd.inflate(WindowType.EMP_MANAGEMENT);
