@@ -3,7 +3,7 @@ package com.teamSuperior.tuiApp.modelLayer;
 import java.util.ArrayList;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Container of products.
  */
 public class ProductContainer {
     private static ProductContainer ourInstance = new ProductContainer();

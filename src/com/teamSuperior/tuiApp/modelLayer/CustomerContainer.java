@@ -3,7 +3,7 @@ package com.teamSuperior.tuiApp.modelLayer;
 import java.util.ArrayList;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Container of customers.
  */
 public class CustomerContainer {
     private static CustomerContainer ourInstance = new CustomerContainer();
@@ -22,7 +22,4 @@ public class CustomerContainer {
         return customers;
     }
 
-    public void setCustomer(ArrayList<Customer> customers) {
-        this.customers = customers;
-    }
 }

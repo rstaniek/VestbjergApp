@@ -1,7 +1,7 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Offer model class.
  */
 public class Offer {
     private int id, productId;
@@ -28,32 +28,8 @@ public class Offer {
         return productId;
     }
 
-    public void setProductId(int productId) {
-        this.productId = productId;
-    }
-
-    public String getDate() {
-        return date;
-    }
-
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public double getPrice() {
         return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public double getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(double discount) {
-        this.discount = discount;
     }
 
     @Override

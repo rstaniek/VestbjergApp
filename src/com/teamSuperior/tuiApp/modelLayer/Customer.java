@@ -1,11 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Customer model class.
  */
 public class Customer {
     private int id;
-    // to be made: enum field for customer type
+    // TODO: enum field for customer type
     private String name, surname, address, city, zip, phone, email;
 
     public Customer(int id, String name, String surname, String address, String city, String zip, String phone, String email) {

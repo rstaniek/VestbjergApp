@@ -1,7 +1,7 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 01.12.2016.
+ * Contractor model class.
  */
 public class Contractor {
     private int id;
