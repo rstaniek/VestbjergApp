@@ -77,7 +77,7 @@ public class ContractorsManage implements Initializable {
         try{
             while(rs.next()){
                 if(rs.getString("name") != null &&
-                        rs.getString("adress") != null &&
+                        rs.getString("address") != null &&
                         rs.getString("city") != null &&
                         rs.getString("zip") != null &&
                         rs.getString("phone") != null &&
