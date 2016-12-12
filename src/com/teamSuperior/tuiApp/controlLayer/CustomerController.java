@@ -22,23 +22,13 @@ public class CustomerController {
     }
 
     public int viewCustomers() {
-        for (Customer customer : customerContainer.getCustomer()) {
-            System.out.println("Id: " + customer.getId());
-            System.out.println("Name: " + customer.getName());
-            System.out.println("Surname: " + customer.getSurname());
-            System.out.println("Address: " + customer.getAddress());
-            System.out.println("City: " + customer.getCity());
-            System.out.println("Zip: " + customer.getZip());
-            System.out.println("Phone: " + customer.getPhone());
-            System.out.println("Email: " + customer.getEmail());
-            System.out.println();
-        }
+        customerContainer.getCustomer().forEach(System.out::print);
         return customerContainer.getCustomer().size();
     }
 
     public int listIdAndNames() {
         for (Customer customer : customerContainer.getCustomer())
-            System.out.println("ID: " + customer.getId() + "  Name: " + customer.getName() + " " + customer.getSurname());
+            System.out.printf("ID: %d  Name: %s %s%n", customer.getId(), customer.getName(), customer.getSurname());
         return customerContainer.getCustomer().size();
     }
 
@@ -64,6 +54,3 @@ public class CustomerController {
     }
 
 }
-
-
-//<3

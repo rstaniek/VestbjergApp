@@ -82,4 +82,12 @@ public class Customer {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nName: %s %s%nAddress: %s, %s %s%nPhone: %s%nEmail: %s%n%n",
+                id, name, surname, address, zip, city, phone, email
+        );
+    }
 }
