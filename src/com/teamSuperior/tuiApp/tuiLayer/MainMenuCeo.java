@@ -3,15 +3,10 @@ package com.teamSuperior.tuiApp.tuiLayer;
 
 import com.teamSuperior.tuiApp.controlLayer.StatsController;
 
-import java.util.Scanner;
-
 /**
  * Main menu for CEO.
  */
-class MainMenuCeo {
-    private boolean isRunning = true;
-    private Scanner sc = new Scanner(System.in);
-    private String[] menuItems = {"Products", "Offers", "Orders", "Customers", "Contractors", "Statistics", "Exit"};
+class MainMenuCeo extends Menu {
 
     private MenuOffers menuOffers = new MenuOffers();
     private MenuOrders menuOrders = new MenuOrders();
@@ -20,41 +15,28 @@ class MainMenuCeo {
     private MenuContractors menuContractors = new MenuContractors();
     private StatsController statsController = new StatsController();
 
-    void run() {
-        while (isRunning) {
-            printMenu();
-            chooseSubMenu();
-        }
+    MainMenuCeo() {
+        menuItems = new String[]{"Products", "Offers", "Orders", "Customers", "Contractors", "Statistics", "Exit"};
+        title = "Main Menu for big papa C.E.O.$$";
     }
 
-    private void printMenu() {
-        System.out.println("Main Menu for big papa C.E.O.$$");
-        int i = 1;
-        for (String item : menuItems) {
-            System.out.println(i + ". " + item);
-            i++;
-        }
-        System.out.println("Your option");
-    }
-
-    private void chooseSubMenu() {
-        int choice;
-        choice = sc.nextInt();
-        switch (choice) {
+    @Override
+    protected void switchSubMenu() {
+        switch (scanInt()) {
             case 1:
-                menuProducts.printProductsMenu();
+                menuProducts.run();
                 break;
             case 2:
-                menuOffers.printOffersMenu();
+                menuOffers.run();
                 break;
             case 3:
-                menuOrders.printOrdersMenu();
+                menuOrders.run();
                 break;
             case 4:
-                menuCustomers.printCustomersMenu();
+                menuCustomers.run();
                 break;
             case 5:
-                menuContractors.printContractorsMenu();
+                menuContractors.run();
                 break;
             case 6:
                 statsController.generateStats();
