@@ -7,23 +7,23 @@ import com.teamSuperior.tuiApp.controlLayer.ProductController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of orders.
  */
-public class MenuOrders {
-    private boolean isRunning = true;
+class MenuOrders {
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
     private ContractorController contractorController;
     private OrderController orderController;
     private String[] menuItems = {"Add an order", "Remove an order", "Approve an order", "View orders", "Go back"};
 
-    public MenuOrders() {
+    MenuOrders() {
         productController = new ProductController();
         contractorController = new ContractorController();
         orderController = new OrderController();
     }
 
-    public void printOrdersMenu() {
+    void printOrdersMenu() {
+        boolean isRunning = true;
         int choice, id, productId, contractorId, quantity;
         String department;
         while (isRunning) {
@@ -52,8 +52,6 @@ public class MenuOrders {
                                     department = sc.next();
                                     System.out.println("Order ID:");
                                     id = sc.nextInt();
-                                    //approved = 0;
-                                    //delivered = 0;
 
                                     orderController.addOrder(id, productId, contractorId, quantity, department, 0, 0);
                                 } else
@@ -89,7 +87,7 @@ public class MenuOrders {
                             String confirmation = sc.next();
                             if (confirmation.equals("y") || confirmation.equals("Y"))
                                 if (orderController.approveOrderById(id))
-                                    System.out.println("Order succesfuly approved");
+                                    System.out.println("Order successfully approved");
                         } else
                             System.out.println("No orders found by that ID");
                     } else

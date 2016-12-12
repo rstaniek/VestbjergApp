@@ -5,19 +5,19 @@ import com.teamSuperior.tuiApp.controlLayer.ProductController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of products.
  */
-public class MenuProducts {
-    private boolean isRunning = true;
+class MenuProducts {
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
     private String[] menuItems = {"Add a product", "Remove a product", "View products", "Go back"};
 
-    public MenuProducts() {
+    MenuProducts() {
         productController = new ProductController();
     }
 
-    public void printProductsMenu() {
+    void printProductsMenu() {
+        boolean isRunning = true;
         int choice, id, barcode, quantity, contractorId;
         double price;
         String name, subname, category, location;

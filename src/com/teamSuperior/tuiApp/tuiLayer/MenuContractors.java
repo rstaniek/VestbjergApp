@@ -5,19 +5,19 @@ import com.teamSuperior.tuiApp.controlLayer.ContractorController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of contractors.
  */
-public class MenuContractors {
+class MenuContractors {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private ContractorController contractorController;
     private String[] menuItems = {"Add a contractor", "Remove a contractor", "View contractors", "Go back"};
 
-    public MenuContractors() {
+    MenuContractors() {
         contractorController = new ContractorController();
     }
 
-    public void printContractorsMenu() {
+    void printContractorsMenu() {
         int choice, id;
         String name, address, city, zip, phone, email;
         while (isRunning) {

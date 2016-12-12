@@ -17,7 +17,7 @@ public class Login {
     private MainMenuManager mainMenuManager = new MainMenuManager();
     private MainMenuCeo mainMenuCeo = new MainMenuCeo();
 
-    public Login() {
+    public void run() {
         while (!isLogged) {
             displayLoginScreen();
         }

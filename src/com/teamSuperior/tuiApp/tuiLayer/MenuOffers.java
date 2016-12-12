@@ -9,23 +9,23 @@ import java.util.Date;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of offers.
  */
-public class MenuOffers {
-    private boolean isRunning = true;
+class MenuOffers {
     private Scanner sc = new Scanner(System.in);
     private ProductController productController;
     private OfferController offerController;
     private String[] menuItems = {"Create an offer", "Remove an offer", "View offers", "Go back"};
 
-    public MenuOffers() {
+    MenuOffers() {
         productController = new ProductController();
         offerController = new OfferController();
     }
 
-    public void printOffersMenu() {
+    void printOffersMenu() {
+        boolean isRunning = true;
         int choice, id, productId;
-        String date;
+        String dateFormatted;
         double price, discount;
 
         while (isRunning) {
@@ -52,10 +52,10 @@ public class MenuOffers {
                             discount = productController.calculateDiscount(productId, price);
                             System.out.println("Discount offered: " + discount + "$");
                             DateFormat df = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-                            Date dateobj = new Date();
-                            date = df.format(dateobj);
-                            System.out.println("The date assigned to this offer is: " + date);
-                            offerController.createOffer(id, productId, date, price, discount);
+                            Date date = new Date();
+                            dateFormatted = df.format(date);
+                            System.out.println("The date assigned to this offer is: " + dateFormatted);
+                            offerController.createOffer(id, productId, dateFormatted, price, discount);
                         } else
                             System.out.println("There are no products corresponding to that id");
                     } else

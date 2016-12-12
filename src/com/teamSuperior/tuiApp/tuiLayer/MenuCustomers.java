@@ -6,20 +6,19 @@ import com.teamSuperior.tuiApp.controlLayer.CustomerController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Menu for management of customers.
  */
-public class MenuCustomers {
-    private boolean isRunning = true;
+class MenuCustomers {
     private Scanner sc = new Scanner(System.in);
     private CustomerController customerController;
     private String[] menuItems = {"Add a customer", "Remove a customer", "View customers", "Go back"};
 
-    public MenuCustomers() {
+    MenuCustomers() {
         customerController = new CustomerController();
     }
 
-    public void printCustomersMenu() {
-        isRunning = true;
+    void printCustomersMenu() {
+        boolean isRunning = true;
         int choice, id;
         String name, surname, address, city, zip, phone, email;
         while (isRunning) {
@@ -39,7 +38,7 @@ public class MenuCustomers {
                     name = sc.next();
                     System.out.println("Surname: ");
                     surname = sc.next();
-                    System.out.println("Addresss: ");
+                    System.out.println("Address: ");
                     address = sc.next();
                     System.out.println("City: ");
                     city = sc.next();
@@ -50,7 +49,7 @@ public class MenuCustomers {
                     System.out.println("Email: ");
                     email = sc.next();
                     customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
-                    System.out.println("Customer successfuly registered!");
+                    System.out.println("Customer successfully registered!");
                     break;
                 case 2:
                     if (customerController.listIdAndNames() != 0) {
