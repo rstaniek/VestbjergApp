@@ -6,9 +6,9 @@ import com.teamSuperior.tuiApp.controlLayer.StatsController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Main menu for managers.
  */
-public class MainMenuManager {
+class MainMenuManager {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private String[] menuItems = {"Products", "Offers", "Orders", "Customers", "Display contractors", "Statistics", "Exit"};
@@ -20,14 +20,14 @@ public class MainMenuManager {
     private StatsController statsController = new StatsController();
     private ContractorController contractorController = new ContractorController();
 
-    public MainMenuManager() {
+    void run() {
         while (isRunning) {
             printMenu();
             chooseSubMenu();
         }
     }
 
-    public void printMenu() {
+    private void printMenu() {
         System.out.println("Main Menu for manager");
         int i = 1;
         for (String item : menuItems) {
@@ -37,7 +37,7 @@ public class MainMenuManager {
         System.out.println("Your option");
     }
 
-    public void chooseSubMenu() {
+    private void chooseSubMenu() {
         int choice;
         choice = sc.nextInt();
         switch (choice) {

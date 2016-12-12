@@ -15,7 +15,6 @@ public class MenuProducts {
 
     public MenuProducts() {
         productController = new ProductController();
-        productController.importFromFile();
     }
 
     public void printProductsMenu() {
@@ -76,7 +75,6 @@ public class MenuProducts {
                     break;
                 case 4:
                     isRunning = false;
-                    productController.exportToFile();
                     break;
                 default:
                     System.out.println("Error, please try again");

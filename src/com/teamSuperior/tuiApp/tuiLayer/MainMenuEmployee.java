@@ -6,9 +6,9 @@ import com.teamSuperior.tuiApp.controlLayer.ProductController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Main menu for employees.
  */
-public class MainMenuEmployee {
+class MainMenuEmployee {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private String[] menuItems = {"Display products", "Orders", "Register a customer", "Exit"};
@@ -17,14 +17,14 @@ public class MainMenuEmployee {
     private ProductController productController = new ProductController();
     private CustomerController customerController = new CustomerController();
 
-    public MainMenuEmployee() {
+    void run() {
         while (isRunning) {
             printMenu();
             chooseSubMenu();
         }
     }
 
-    public void printMenu() {
+    private void printMenu() {
         System.out.println("Main Menu for employees");
         int i = 1;
         for (String item : menuItems) {
@@ -34,7 +34,7 @@ public class MainMenuEmployee {
         System.out.println("Your option");
     }
 
-    public void chooseSubMenu() {
+    private void chooseSubMenu() {
         int choice;
         choice = sc.nextInt();
         switch (choice) {
@@ -54,7 +54,7 @@ public class MainMenuEmployee {
                 name = sc.next();
                 System.out.println("Surname: ");
                 surname = sc.next();
-                System.out.println("Addresss: ");
+                System.out.println("Address: ");
                 address = sc.next();
                 System.out.println("City: ");
                 city = sc.next();
@@ -65,7 +65,7 @@ public class MainMenuEmployee {
                 System.out.println("Email: ");
                 email = sc.next();
                 customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
-                System.out.println("Customer successfuly registered!");
+                System.out.println("Customer successfully registered!");
                 break;
             case 4:
                 System.out.println("Thank you for using our software");

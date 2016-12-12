@@ -7,9 +7,9 @@ import com.teamSuperior.tuiApp.controlLayer.StatsController;
 import java.util.Scanner;
 
 /**
- * Created by Smoothini on 28.11.2016.
+ * Main menu for salesmen.
  */
-public class MainMenuSalesman {
+class MainMenuSalesman {
     private boolean isRunning = true;
     private Scanner sc = new Scanner(System.in);
     private String[] menuItems = {"Display products", "Offers", "Orders", "Register a customer", "Statistics", "Exit"};
@@ -20,14 +20,14 @@ public class MainMenuSalesman {
     private CustomerController customerController = new CustomerController();
     private StatsController statsController = new StatsController();
 
-    public MainMenuSalesman() {
+    void run() {
         while (isRunning) {
             printMenu();
             chooseSubMenu();
         }
     }
 
-    public void printMenu() {
+    private void printMenu() {
         System.out.println("Main Menu for salesmen");
         int i = 1;
         for (String item : menuItems) {
@@ -37,7 +37,7 @@ public class MainMenuSalesman {
         System.out.println("Your option");
     }
 
-    public void chooseSubMenu() {
+    private void chooseSubMenu() {
         int choice;
         choice = sc.nextInt();
         switch (choice) {
@@ -60,7 +60,7 @@ public class MainMenuSalesman {
                 name = sc.next();
                 System.out.println("Surname: ");
                 surname = sc.next();
-                System.out.println("Addresss: ");
+                System.out.println("Address: ");
                 address = sc.next();
                 System.out.println("City: ");
                 city = sc.next();
@@ -71,7 +71,7 @@ public class MainMenuSalesman {
                 System.out.println("Email: ");
                 email = sc.next();
                 customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
-                System.out.println("Customer successfuly registered!");
+                System.out.println("Customer successfully registered!");
                 break;
             case 5:
                 statsController.generateStats();

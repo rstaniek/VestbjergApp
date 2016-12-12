@@ -19,6 +19,7 @@ public class MenuCustomers {
     }
 
     public void printCustomersMenu() {
+        isRunning = true;
         int choice, id;
         String name, surname, address, city, zip, phone, email;
         while (isRunning) {
