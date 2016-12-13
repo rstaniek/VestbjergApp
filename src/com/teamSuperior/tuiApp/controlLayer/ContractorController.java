@@ -9,14 +9,20 @@ import java.util.Iterator;
  * Contractors controller.
  */
 public class ContractorController {
+
     private ContractorContainer contractorContainer;
 
     public ContractorController() {
         contractorContainer = ContractorContainer.getInstance();
     }
 
-    public void addContractor(int id, String name, String address, String city, String zip, String phone, String email) {
+    public void create(int id, String name, String address, String city, String zip, String phone, String email) {
         contractorContainer.getContractors().add(new Contractor(id, name, address, city, zip, phone, email));
+    }
+
+    public int listAll() {
+        contractorContainer.getContractors().forEach(System.out::print);
+        return contractorContainer.getContractors().size();
     }
 
     public int listIdAndNames() {
@@ -44,10 +50,5 @@ public class ContractorController {
             }
         }
         return removed;
-    }
-
-    public int viewContractors() {
-        contractorContainer.getContractors().forEach(System.out::print);
-        return contractorContainer.getContractors().size();
     }
 }

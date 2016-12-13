@@ -8,7 +8,6 @@ import java.util.Iterator;
 /**
  * Customers controller.
  */
-
 public class CustomerController {
 
     private CustomerContainer customerContainer;
@@ -17,11 +16,11 @@ public class CustomerController {
         customerContainer = CustomerContainer.getInstance();
     }
 
-    public void addCustomer(int id, String name, String surname, String address, String city, String zip, String phone, String email) {
+    public void create(int id, String name, String surname, String address, String city, String zip, String phone, String email) {
         customerContainer.getCustomer().add(new Customer(id, name, surname, address, city, zip, phone, email));
     }
 
-    public int viewCustomers() {
+    public int listAll() {
         customerContainer.getCustomer().forEach(System.out::print);
         return customerContainer.getCustomer().size();
     }
