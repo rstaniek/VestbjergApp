@@ -86,6 +86,8 @@ public class MainController implements Initializable {
     public MenuItem menu_products_view;
     @FXML
     public MenuItem menu_employees_add;
+    @FXML
+    public MenuItem menu_help_about;
 
     private Stage settings;
     static Stage loginWindow;
@@ -464,6 +466,25 @@ public class MainController implements Initializable {
         }
         else {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        }
+    }
+
+    @FXML
+    public void menu_help_about_onClick(ActionEvent actionEvent) {
+        try{
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/aboutWindow.fxml"));
+            Stage window = new Stage();
+            window.setTitle("About");
+            window.setResizable(true);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        }
+        catch (IOException ioex){
+            AlertBox.display("IO Exception", ioex.getMessage());
+        }
+        catch (Exception ex){
+            AlertBox.display("Unexpected Exception", ex.getMessage());
         }
     }
 }
