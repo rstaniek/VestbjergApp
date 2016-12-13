@@ -14,7 +14,11 @@ public class LeaseMachineContainer {
 
     private ArrayList<LeaseMachine> leaseMachines;
 
-    private LeaseMachineContainer() { leaseMachines = new ArrayList<LeaseMachine>(); }
+    private LeaseMachineContainer() {
+        leaseMachines = new ArrayList<LeaseMachine>();
+    }
 
-    public ArrayList<LeaseMachine> getLeaseMachines() { return leaseMachines; }
+    public ArrayList<LeaseMachine> getLeaseMachines() {
+        return leaseMachines;
+    }
 }

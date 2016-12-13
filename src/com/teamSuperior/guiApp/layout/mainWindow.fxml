@@ -36,7 +36,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Products">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem fx:id="menu_products_view" mnemonicParsing="false" onAction="#menu_products_view_onClick" text="View" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Offers">
@@ -46,8 +46,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Employees">
                     <items>
+                        <MenuItem fx:id="menu_employees_add" mnemonicParsing="false" onAction="#menu_employees_add_onClick" text="Add" />
                         <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" onAction="#menu_employees_statistics_clicked" text="Statistics" />
-                        <MenuItem fx:id="menu_employees_manage" mnemonicParsing="false" onAction="#menu_employees_manage_clicked" text="Manage" />
+                        <MenuItem fx:id="menu_employees_edit" mnemonicParsing="false" onAction="#menu_employees_edit_clicked" text="Edit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Contractors">

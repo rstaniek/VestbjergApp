@@ -1,7 +1,7 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
 /**
- * Created by Smoothini on 12.12.2016.
+ * Lease model class.
  */
 public class Lease {
     private int id, leaseMachineId, customerId;

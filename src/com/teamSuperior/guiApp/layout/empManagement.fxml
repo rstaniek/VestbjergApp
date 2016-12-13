@@ -6,7 +6,7 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="570.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagement">
+<AnchorPane prefHeight="570.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagementController">
     <TableView fx:id="tableView_employees" onMouseClicked="#tableView_employees_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
     </TableView>
    <AnchorPane layoutY="400.0" prefHeight="170.0" prefWidth="1000.0">

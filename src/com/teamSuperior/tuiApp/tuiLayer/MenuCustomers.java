@@ -37,7 +37,7 @@ class MenuCustomers extends Menu {
                 phone = scanString();
                 System.out.println("Email: ");
                 email = scanString();
-                customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
+                customerController.create(id, name, surname, address, city, zip, phone, email);
                 System.out.println("Customer successfully registered!");
                 break;
             case 2:
@@ -56,7 +56,7 @@ class MenuCustomers extends Menu {
                     System.out.println("There are no customers at this moment");
                 break;
             case 3:
-                if (customerController.viewCustomers() == 0)
+                if (customerController.listAll() == 0)
                     System.out.println("No customers registered at this time");
                 break;
             case 4:

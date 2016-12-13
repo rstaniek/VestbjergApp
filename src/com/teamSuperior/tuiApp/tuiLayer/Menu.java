@@ -1,5 +1,6 @@
 package com.teamSuperior.tuiApp.tuiLayer;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 /**
@@ -21,17 +22,26 @@ public class Menu {
 
     private void printMenu() {
         System.out.println(title);
-        int i = 1;
+        int counter = 1;
         for (String item : menuItems) {
-            System.out.println(i + ". " + item);
-            i++;
+            System.out.printf("%d.)  %s %n", counter, item);
+            counter++;
         }
-        System.out.println("Your option");
+        System.out.print("Your choice:  ");
     }
 
-    //TODO: validate integer
     int scanInt() {
-        return sc.nextInt();
+        int i;
+        do {
+            try {
+                i = sc.nextInt();
+            } catch (InputMismatchException e) {
+                System.out.println("You must enter an integer.");
+                i = -1;
+                sc.next();
+            }
+        } while (i < 0);
+        return i;
     }
 
     String scanString() {
@@ -43,6 +53,5 @@ public class Menu {
     }
 
     protected void switchSubMenu() {
-
     }
 }

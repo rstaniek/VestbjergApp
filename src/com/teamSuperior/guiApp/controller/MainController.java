@@ -67,7 +67,7 @@ public class MainController implements Initializable {
     @FXML
     public MenuItem menu_employees_statistics;
     @FXML
-    public MenuItem menu_employees_manage;
+    public MenuItem menu_employees_edit;
     @FXML
     public ImageView imgView_logo;
     @FXML
@@ -82,6 +82,10 @@ public class MainController implements Initializable {
     public MenuItem menu_contractors_manage;
     @FXML
     public MenuItem menu_file_test;
+    @FXML
+    public MenuItem menu_products_view;
+    @FXML
+    public MenuItem menu_employees_add;
 
     private Stage settings;
     static Stage loginWindow;
@@ -324,7 +328,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void menu_employees_manage_clicked(ActionEvent actionEvent) {
+    public void menu_employees_edit_clicked(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()) {
             if(LogInPopupController.getUser().getAccessLevel() >= 2){
                 wnd.inflate(WindowType.EMP_MANAGEMENT);
@@ -409,5 +413,57 @@ public class MainController implements Initializable {
             AlertBox.display("IO Exception", ex.getMessage());
         }
 
+    }
+
+    @FXML
+    public void menu_products_view_onClick(ActionEvent actionEvent) {
+        if(LogInPopupController.isLogged()){
+            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+                try{
+                    Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
+                    Stage window = new Stage();
+                    window.setTitle("Products");
+                    window.setResizable(false);
+                    Scene scene = new Scene(root);
+                    window.setScene(scene);
+                    window.show();
+                }
+                catch (IOException ex){
+                    AlertBox.display("IO Exception", ex.getMessage());
+                }
+            }
+            else {
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }
+        else {
+            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        }
+    }
+
+    @FXML
+    public void menu_employees_add_onClick(ActionEvent actionEvent) {
+        if(LogInPopupController.isLogged()){
+            if(LogInPopupController.getUser().getAccessLevel() >= 3){
+                try{
+                    Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
+                    Stage window = new Stage();
+                    window.setTitle("Add a new employee");
+                    window.setResizable(false);
+                    Scene scene = new Scene(root);
+                    window.setScene(scene);
+                    window.show();
+                }
+                catch (IOException ex){
+                    AlertBox.display("IO Exception", ex.getMessage());
+                }
+            }
+            else {
+                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+            }
+        }
+        else {
+            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        }
     }
 }

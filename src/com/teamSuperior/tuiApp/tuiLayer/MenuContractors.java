@@ -37,7 +37,7 @@ class MenuContractors extends Menu {
                 System.out.println("Email:");
                 email = scanString();
 
-                contractorController.addContractor(id, name, address, city, zip, phone, email);
+                contractorController.create(id, name, address, city, zip, phone, email);
                 System.out.println("Contractor successfully added!");
                 break;
             case 2:
@@ -57,7 +57,7 @@ class MenuContractors extends Menu {
                 break;
             case 3:
                 System.out.println("Existing contractors:");
-                if (contractorController.viewContractors() == 0)
+                if (contractorController.listAll() == 0)
                     System.out.println("There are no contractors at this time");
                 break;
             case 4:

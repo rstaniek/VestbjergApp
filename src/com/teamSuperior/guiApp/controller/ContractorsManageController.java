@@ -23,10 +23,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
+import static com.teamSuperior.core.connection.DBConnect.validateField;
+
 /**
  * Created by Domestos Maximus on 09-Dec-16.
  */
-public class ContractorsManage implements Initializable {
+public class ContractorsManageController implements Initializable {
     @FXML
     public TableView tableView_contractors;
     @FXML
@@ -75,13 +77,13 @@ public class ContractorsManage implements Initializable {
         try{
             while(rs.next()){
                 if(rs.getString("name") != null &&
-                        rs.getString("adress") != null &&
+                        rs.getString("address") != null &&
                         rs.getString("city") != null &&
                         rs.getString("zip") != null &&
                         rs.getString("phone") != null &&
                         rs.getString("email") != null){
                     Contractor tmp = new Contractor(rs.getString("name"),
-                            rs.getString("adress"),
+                            rs.getString("address"),
                             rs.getString("city"),
                             rs.getString("zip"),
                             rs.getString("phone"),
@@ -149,7 +151,7 @@ public class ContractorsManage implements Initializable {
                     validateField(text_phone)){
                 conn = new DBConnect();
                 try{
-                    conn.upload(String.format("UPDATE contractors SET name='%2$s',adress='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
+                    conn.upload(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
                             selectedContractor.getEmail(),
                             text_name.getText(),
                             text_address.getText(),
@@ -184,11 +186,6 @@ public class ContractorsManage implements Initializable {
                 }
             }
         }
-    }
-
-    private boolean validateField(TextField tf){
-        //TODO: should be implemented better but didn't have creativity to do it better
-        return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
     }
 
     private void refreshTable(){

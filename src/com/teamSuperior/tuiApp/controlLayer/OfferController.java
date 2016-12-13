@@ -16,11 +16,11 @@ public class OfferController {
         offerContainer = OfferContainer.getInstance();
     }
 
-    public void createOffer(int id, int productId, String date, double price, double discount) {
+    public void create(int id, int productId, String date, double price, double discount) {
         offerContainer.getOffers().add(new Offer(id, productId, date, price, discount));
     }
 
-    public int viewOffers() {
+    public int listAll() {
         offerContainer.getOffers().forEach(System.out::print);
         return offerContainer.getOffers().size();
     }
