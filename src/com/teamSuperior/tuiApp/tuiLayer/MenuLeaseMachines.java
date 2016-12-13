@@ -9,6 +9,7 @@ class MenuLeaseMachines extends Menu {
     private LeaseMachineController leaseMachineController;
 
     MenuLeaseMachines(){
+        leaseMachineController = new LeaseMachineController();
         menuItems = new String[]{"Create a lease machine", "Remove a lease machine", "View lease machines", "Go back"};
         title = "Lease machines Menu";
     }
@@ -18,7 +19,6 @@ class MenuLeaseMachines extends Menu {
         int id;
         String name;
         double priceForDay;
-        boolean isLeased;
         switch (scanInt()) {
             case 1:
                 System.out.println("ID: ");
