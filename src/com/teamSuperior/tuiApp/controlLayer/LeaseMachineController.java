@@ -1,5 +1,6 @@
 package com.teamSuperior.tuiApp.controlLayer;
 
+import com.teamSuperior.tuiApp.modelLayer.Lease;
 import com.teamSuperior.tuiApp.modelLayer.LeaseMachine;
 import com.teamSuperior.tuiApp.modelLayer.LeaseMachineContainer;
 
@@ -56,5 +57,17 @@ public class LeaseMachineController {
                 System.out.println("Leased: No");
         }
         return leaseMachineContainer.getLeaseMachines().size();
+    }
+
+    public void markAsLeased(int id){
+        for(LeaseMachine leaseMachine : leaseMachineContainer.getLeaseMachines())
+            if(leaseMachine.getId() == id)
+                leaseMachine.setLeased(true);
+    }
+
+    public void markAsNotLeased(int id){
+        for(LeaseMachine leaseMachine : leaseMachineContainer.getLeaseMachines())
+            if(leaseMachine.getId() == id)
+                leaseMachine.setLeased(false);
     }
 }
