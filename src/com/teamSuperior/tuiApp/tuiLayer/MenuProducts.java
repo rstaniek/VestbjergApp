@@ -64,6 +64,7 @@ class MenuProducts extends Menu {
                 break;
             case 4:
                 isRunning = false;
+                productController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

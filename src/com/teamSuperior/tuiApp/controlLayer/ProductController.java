@@ -3,6 +3,8 @@ package com.teamSuperior.tuiApp.controlLayer;
 import com.teamSuperior.tuiApp.modelLayer.Product;
 import com.teamSuperior.tuiApp.modelLayer.ProductContainer;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -14,10 +16,43 @@ public class ProductController {
 
     public ProductController() {
         productContainer = ProductContainer.getInstance();
+        load();
     }
 
     public void create(int id, String name, String subname, int barcode, String category, double price, String location, int quantity, int contractorId) {
         productContainer.getProducts().add(new Product(id, name, subname, barcode, category, price, location, quantity, contractorId));
+    }
+
+    public void save() {
+        try (
+                FileOutputStream fos = new FileOutputStream("data/products.ser");
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(productContainer.getProducts());
+        } catch (IOException e) {
+            System.out.println("Problem saving products.");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void load() {
+        ArrayList<Product> products = null;
+        try {
+            FileInputStream fis = new FileInputStream("data/products.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            products = (ArrayList<Product>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (IOException ignored) {
+
+        } catch (ClassNotFoundException c) {
+            System.out.println("Error loading products");
+            c.printStackTrace();
+        }
+        if (products != null) {
+            productContainer.setProducts(products);
+        }
     }
 
     public int listAll() {
