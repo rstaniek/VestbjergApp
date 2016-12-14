@@ -64,4 +64,12 @@ public class Lease {
     public void setPrice(double price) {
         this.price = price;
     }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nLease Machine ID: %d%nCustomer ID: %d%nBorrow date: %s%nReturn date: %s%nPrice: $%.2f%n%n",
+                id, leaseMachineId, customerId, borrowDate, returnDate, price
+        );
+    }
 }

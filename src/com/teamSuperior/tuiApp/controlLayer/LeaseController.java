@@ -61,15 +61,7 @@ public class LeaseController {
     }
 
     public int listAll() {
-        for (Lease lease : leaseContainer.getLeases()) {
-            System.out.println("ID: " + lease.getId());
-            System.out.println("Lease Machine ID: " + lease.getLeaseMachineId());
-            System.out.println("Customer ID: " + lease.getCustomerId());
-            System.out.println("Borrow date: " + lease.getBorrowDate());
-            System.out.println("Return date: " + lease.getReturnDate());
-            System.out.println("Price: " + lease.getPrice());
-            System.out.println();
-        }
+        leaseContainer.getLeases().forEach(System.out::print);
         return leaseContainer.getLeases().size();
     }
 
