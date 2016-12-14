@@ -42,7 +42,7 @@ class MenuOrders extends Menu {
                                 System.out.println("Order ID:");
                                 id = scanInt();
 
-                                orderController.create(id, productId, contractorId, quantity, department, 0, 0);
+                                orderController.create(id, productId, contractorId, quantity, department, false, false);
                             } else
                                 System.out.println("No contractor found by that id");
                         } else

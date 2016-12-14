@@ -29,32 +29,8 @@ public class Lease {
         return leaseMachineId;
     }
 
-    public void setLeaseMachineId(int leaseMachineId) {
-        this.leaseMachineId = leaseMachineId;
-    }
-
     public int getCustomerId() {
         return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getBorrowDate() {
-        return borrowDate;
-    }
-
-    public void setBorrowDate(String borrowDate) {
-        this.borrowDate = borrowDate;
-    }
-
-    public String getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(String returnDate) {
-        this.returnDate = returnDate;
     }
 
     public double getPrice() {

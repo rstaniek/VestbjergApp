@@ -10,9 +10,9 @@ public class StatsController {
     public void generateStats() {
         int approvedOrders = 0, deliveredOrders = 0;
         for (Order order : OrderContainer.getInstance().getOrders()) {
-            if (order.getApproved() != 0)
+            if (order.isApproved())
                 approvedOrders++;
-            if (order.getDelivered() != 0)
+            if (order.isDelivered())
                 deliveredOrders++;
         }
         System.out.println("- Number of products: " + ProductContainer.getInstance().getProducts().size());

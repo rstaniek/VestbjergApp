@@ -4,10 +4,11 @@ package com.teamSuperior.tuiApp.modelLayer;
  * Order model class.
  */
 public class Order {
-    private int id, productId, contractorId, quantity, approved, delivered;
+    private int id, productId, contractorId, quantity;
+    private boolean approved, delivered;
     private String department;
 
-    public Order(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered) {
+    public Order(int id, int productId, int contractorId, int quantity, String department, boolean approved, boolean delivered) {
         this.id = id;
         this.productId = productId;
         this.contractorId = contractorId;
@@ -33,15 +34,15 @@ public class Order {
         return contractorId;
     }
 
-    public int getApproved() {
+    public boolean isApproved() {
         return approved;
     }
 
-    public void setApproved(int approved) {
-        this.approved = approved;
+    public void setApproved() {
+        this.approved = true;
     }
 
-    public int getDelivered() {
+    public boolean isDelivered() {
         return delivered;
     }
 
@@ -50,7 +51,7 @@ public class Order {
         String[] state = {"No", "Yes"};
         return String.format(
                 "ID: %d%nProduct ID: %d%nContractor ID: %d%nQuantity: %d%nDepartment: %s%nApproved: %s%nDelivered: %s%n%n",
-                id, productId, contractorId, quantity, department, state[approved], state[delivered]
+                id, productId, contractorId, quantity, department, state[approved ? 1 : 0], state[delivered ? 1 : 0]
         );
     }
 }

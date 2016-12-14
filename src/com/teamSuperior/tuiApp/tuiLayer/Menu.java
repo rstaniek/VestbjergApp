@@ -71,7 +71,7 @@ public class Menu {
                 sc.next();
             }
         } while (d < 0);
-        return sc.nextDouble();
+        return d;
     }
 
     protected void switchSubMenu() {

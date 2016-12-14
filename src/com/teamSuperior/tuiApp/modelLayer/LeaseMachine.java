@@ -32,14 +32,6 @@ public class LeaseMachine {
         this.name = name;
     }
 
-    public double getPriceForDay() {
-        return priceForDay;
-    }
-
-    public boolean isLeased() {
-        return leased;
-    }
-
     public void setLeased(boolean leased) {
         this.leased = leased;
     }
@@ -49,7 +41,7 @@ public class LeaseMachine {
         String[] state = {"No", "Yes"};
         return String.format(
                 "ID: %d%nName: %s%nPrice per day: $%.2f%nLeased: %s%n",
-                id, name, priceForDay, state[(leased) ? 1 : 0]
+                id, name, priceForDay, state[leased ? 1 : 0]
         );
     }
 }
