@@ -9,14 +9,20 @@ import java.util.Iterator;
  * Orders controller.
  */
 public class OrderController {
+
     private OrderContainer orderContainer;
 
     public OrderController() {
         orderContainer = OrderContainer.getInstance();
     }
 
-    public void addOrder(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered) {
+    public void create(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered) {
         orderContainer.getOrders().add(new Order(id, productId, contractorId, quantity, department, approved, delivered));
+    }
+
+    public int listAll() {
+        orderContainer.getOrders().forEach(System.out::print);
+        return orderContainer.getOrders().size();
     }
 
     public int viewSimpleOrders() {
@@ -44,11 +50,6 @@ public class OrderController {
             }
         }
         return removed;
-    }
-
-    public int viewOrders() {
-        orderContainer.getOrders().forEach(System.out::print);
-        return orderContainer.getOrders().size();
     }
 
     public int viewNotApprovedOrders() {

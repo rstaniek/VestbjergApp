@@ -42,7 +42,7 @@ class MenuOrders extends Menu {
                                 System.out.println("Order ID:");
                                 id = scanInt();
 
-                                orderController.addOrder(id, productId, contractorId, quantity, department, 0, 0);
+                                orderController.create(id, productId, contractorId, quantity, department, 0, 0);
                             } else
                                 System.out.println("No contractor found by that id");
                         } else
@@ -83,7 +83,7 @@ class MenuOrders extends Menu {
                     System.out.println("There are no orders waiting approval");
                 break;
             case 4:
-                if (orderController.viewOrders() == 0)
+                if (orderController.listAll() == 0)
                     System.out.println("There are no orders at the moment");
                 break;
             case 5:

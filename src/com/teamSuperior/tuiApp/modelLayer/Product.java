@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
  * Product model class.
  */
-public class Product {
+public class Product implements Serializable {
     private int id, barcode, quantity, contractorId;
     private double price;
     private String name, subname, category, location;

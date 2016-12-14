@@ -12,10 +12,6 @@ public class Login {
     private Scanner sc = new Scanner(System.in);
     private LoginController loginController = new LoginController();
     private boolean isLogged = false;
-    private MainMenuEmployee mainMenuEmployee = new MainMenuEmployee();
-    private MainMenuSalesman mainMenuSalesman = new MainMenuSalesman();
-    private MainMenuManager mainMenuManager = new MainMenuManager();
-    private MainMenuCeo mainMenuCeo = new MainMenuCeo();
 
     public void run() {
         while (!isLogged) {
@@ -35,16 +31,16 @@ public class Login {
                 isLogged = true;
                 switch (loginController.getAccessLevel(user)) {
                     case 0:
-                        mainMenuEmployee.run();
+                        new MainMenuEmployee().run();
                         break;
                     case 1:
-                        mainMenuSalesman.run();
+                        new MainMenuSalesman().run();
                         break;
                     case 2:
-                        mainMenuManager.run();
+                        new MainMenuManager().run();
                         break;
                     case 3:
-                        mainMenuCeo.run();
+                        new MainMenuCeo().run();
                         break;
                 }
             } else

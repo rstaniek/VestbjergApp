@@ -41,7 +41,7 @@ class MenuProducts extends Menu {
                 quantity = scanInt();
                 System.out.println("Contractor ID:");
                 contractorId = scanInt();
-                productController.addProduct(id, name, subname, barcode, category, price, location, quantity, contractorId);
+                productController.create(id, name, subname, barcode, category, price, location, quantity, contractorId);
                 break;
             case 2:
                 if (productController.listIdAndNameOfProducts() > 0) {
@@ -59,11 +59,12 @@ class MenuProducts extends Menu {
                     System.out.println("There are no products at this moment");
                 break;
             case 3:
-                if (productController.listAllProducts() == 0)
+                if (productController.listAll() == 0)
                     System.out.println("There are no products at this moment");
                 break;
             case 4:
                 isRunning = false;
+                productController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

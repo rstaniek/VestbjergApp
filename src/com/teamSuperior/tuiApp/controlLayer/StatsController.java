@@ -6,6 +6,7 @@ import com.teamSuperior.tuiApp.modelLayer.*;
  * Stats controller.
  */
 public class StatsController {
+
     public void generateStats() {
         int approvedOrders = 0, deliveredOrders = 0;
         for (Order order : OrderContainer.getInstance().getOrders()) {
@@ -22,4 +23,5 @@ public class StatsController {
         System.out.println("|-- Approved orders: " + approvedOrders);
         System.out.println("|-- Delivered orders: " + deliveredOrders);
     }
+
 }
