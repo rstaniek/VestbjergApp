@@ -2,4 +2,4 @@
 App for Silvan, Aalborg
 
 #Authors
-Rajmund staniek, Ondrej Soukup, Marek Cervinka, Kua Silva, Anrei Katona
+Marek Červinka, Andrei Katona, Jakub Slíva, Ondřej Soukup, Rajmund Dominik Bernard Staniek
