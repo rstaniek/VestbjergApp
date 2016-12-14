@@ -399,23 +399,6 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void menu_file_test_onClick(ActionEvent actionEvent) {
-        try{
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/pieChartTest.fxml"));
-            Stage window = new Stage();
-            window.setTitle("Test");
-            window.setResizable(false);
-            Scene scene = new Scene(root);
-            window.setScene(scene);
-            window.show();
-        }
-        catch (IOException ex){
-            AlertBox.display("IO Exception", ex.getMessage());
-        }
-
-    }
-
-    @FXML
     public void menu_products_view_onClick(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()){
             if(LogInPopupController.getUser().getAccessLevel() >= 2){
