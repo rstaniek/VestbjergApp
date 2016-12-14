@@ -11,10 +11,10 @@ import java.util.Scanner;
  */
 public class Menu {
     protected boolean isRunning;
-    private Scanner sc = new Scanner(System.in);
-    private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
     protected String[] menuItems;
     String title;
+    private Scanner sc = new Scanner(System.in);
+    private BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     void run() {
         isRunning = true;

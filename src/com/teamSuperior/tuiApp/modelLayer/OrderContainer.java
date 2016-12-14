@@ -7,15 +7,14 @@ import java.util.ArrayList;
  */
 public class OrderContainer {
     private static OrderContainer ourInstance = new OrderContainer();
-
-    public static OrderContainer getInstance() {
-        return ourInstance;
-    }
-
     private ArrayList<Order> orders;
 
     private OrderContainer() {
         orders = new ArrayList<>();
+    }
+
+    public static OrderContainer getInstance() {
+        return ourInstance;
     }
 
     public ArrayList<Order> getOrders() {

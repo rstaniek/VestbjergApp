@@ -7,15 +7,14 @@ import java.util.ArrayList;
  */
 public class LeaseContainer {
     private static LeaseContainer ourInstance = new LeaseContainer();
-
-    public static LeaseContainer getInstance() {
-        return ourInstance;
-    }
-
     private ArrayList<Lease> leases;
 
     private LeaseContainer() {
         leases = new ArrayList<>();
+    }
+
+    public static LeaseContainer getInstance() {
+        return ourInstance;
     }
 
     public ArrayList<Lease> getLeases() {
