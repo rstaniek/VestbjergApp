@@ -40,7 +40,7 @@ public class Menu {
             try {
                 i = sc.nextInt();
             } catch (InputMismatchException e) {
-                System.out.println("You must enter an integer.");
+                System.out.println("You must enter a valid number.");
                 i = -1;
                 sc.next();
             }

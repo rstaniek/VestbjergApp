@@ -47,7 +47,7 @@ public class ProductController {
         } catch (IOException ignored) {
 
         } catch (ClassNotFoundException c) {
-            System.out.println("Error loading products");
+            System.out.println("Error loading products.");
             c.printStackTrace();
         }
         if (products != null) {

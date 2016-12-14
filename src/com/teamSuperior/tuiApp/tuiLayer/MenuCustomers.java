@@ -61,6 +61,7 @@ class MenuCustomers extends Menu {
                 break;
             case 4:
                 isRunning = false;
+                customerController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

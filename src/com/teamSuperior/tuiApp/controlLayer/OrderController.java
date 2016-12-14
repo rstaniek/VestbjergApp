@@ -3,6 +3,8 @@ package com.teamSuperior.tuiApp.controlLayer;
 import com.teamSuperior.tuiApp.modelLayer.Order;
 import com.teamSuperior.tuiApp.modelLayer.OrderContainer;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -14,10 +16,43 @@ public class OrderController {
 
     public OrderController() {
         orderContainer = OrderContainer.getInstance();
+        load();
     }
 
     public void create(int id, int productId, int contractorId, int quantity, String department, int approved, int delivered) {
         orderContainer.getOrders().add(new Order(id, productId, contractorId, quantity, department, approved, delivered));
+    }
+
+    public void save() {
+        try (
+                FileOutputStream fos = new FileOutputStream("data/orders.ser");
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(orderContainer.getOrders());
+        } catch (IOException e) {
+            System.out.println("Problem saving orders.");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void load() {
+        ArrayList<Order> orders = null;
+        try {
+            FileInputStream fis = new FileInputStream("data/orders.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            orders = (ArrayList<Order>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (IOException ignored) {
+
+        } catch (ClassNotFoundException c) {
+            System.out.println("Error loading orders.");
+            c.printStackTrace();
+        }
+        if (orders != null) {
+            orderContainer.setOrders(orders);
+        }
     }
 
     public int listAll() {

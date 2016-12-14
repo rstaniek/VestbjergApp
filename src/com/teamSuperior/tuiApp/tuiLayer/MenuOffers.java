@@ -73,6 +73,7 @@ class MenuOffers extends Menu {
                 break;
             case 4:
                 isRunning = false;
+                offerController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

@@ -3,12 +3,12 @@ package com.teamSuperior.tuiApp.tuiLayer;
 import com.teamSuperior.tuiApp.controlLayer.LeaseMachineController;
 
 /**
- * Created by Smoothini on 12.12.2016.
+ * Menu for management of lease machines.
  */
 class MenuLeaseMachines extends Menu {
     private LeaseMachineController leaseMachineController;
 
-    MenuLeaseMachines(){
+    MenuLeaseMachines() {
         leaseMachineController = new LeaseMachineController();
         menuItems = new String[]{"Create a lease machine", "Remove a lease machine", "View lease machines", "Go back"};
         title = "Lease machines Menu";
@@ -27,7 +27,7 @@ class MenuLeaseMachines extends Menu {
                 name = scanString();
                 System.out.println("Price for a day: ");
                 priceForDay = scanDouble();
-                leaseMachineController.addLeaseMachine(id,name,priceForDay);
+                leaseMachineController.create(id, name, priceForDay);
                 System.out.println("Lease machine successfully created!");
                 break;
             case 2:
@@ -46,11 +46,12 @@ class MenuLeaseMachines extends Menu {
                     System.out.println("There are no lease machines at this moment");
                 break;
             case 3:
-                if (leaseMachineController.viewLeaseMachines() == 0)
+                if (leaseMachineController.listAll() == 0)
                     System.out.println("No lease machines available at this time");
                 break;
             case 4:
                 isRunning = false;
+                leaseMachineController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

@@ -3,6 +3,8 @@ package com.teamSuperior.tuiApp.controlLayer;
 import com.teamSuperior.tuiApp.modelLayer.Contractor;
 import com.teamSuperior.tuiApp.modelLayer.ContractorContainer;
 
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
@@ -14,10 +16,43 @@ public class ContractorController {
 
     public ContractorController() {
         contractorContainer = ContractorContainer.getInstance();
+        load();
     }
 
     public void create(int id, String name, String address, String city, String zip, String phone, String email) {
         contractorContainer.getContractors().add(new Contractor(id, name, address, city, zip, phone, email));
+    }
+
+    public void save() {
+        try (
+                FileOutputStream fos = new FileOutputStream("data/contractors.ser");
+                ObjectOutputStream oos = new ObjectOutputStream(fos)
+        ) {
+            oos.writeObject(contractorContainer.getContractors());
+        } catch (IOException e) {
+            System.out.println("Problem saving contractors.");
+            e.printStackTrace();
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    private void load() {
+        ArrayList<Contractor> contractors = null;
+        try {
+            FileInputStream fis = new FileInputStream("data/contractors.ser");
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            contractors = (ArrayList<Contractor>) ois.readObject();
+            ois.close();
+            fis.close();
+        } catch (IOException ignored) {
+
+        } catch (ClassNotFoundException c) {
+            System.out.println("Error loading contractors.");
+            c.printStackTrace();
+        }
+        if (contractors != null) {
+            contractorContainer.setContractors(contractors);
+        }
     }
 
     public int listAll() {

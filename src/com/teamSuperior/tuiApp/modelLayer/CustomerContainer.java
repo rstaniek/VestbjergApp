@@ -18,8 +18,11 @@ public class CustomerContainer {
         customers = new ArrayList<>();
     }
 
-    public ArrayList<Customer> getCustomer() {
+    public ArrayList<Customer> getCustomers() {
         return customers;
     }
 
+    public void setCustomers(ArrayList<Customer> customers) {
+        this.customers = customers;
+    }
 }

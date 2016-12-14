@@ -22,4 +22,7 @@ public class OfferContainer {
         return offers;
     }
 
+    public void setOffers(ArrayList<Offer> offers) {
+        this.offers = offers;
+    }
 }

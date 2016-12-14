@@ -22,4 +22,7 @@ public class ContractorContainer {
         return contractors;
     }
 
+    public void setContractors(ArrayList<Contractor> contractors) {
+        this.contractors = contractors;
+    }
 }

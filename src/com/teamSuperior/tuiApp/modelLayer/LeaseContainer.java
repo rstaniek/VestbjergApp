@@ -21,4 +21,8 @@ public class LeaseContainer {
     public ArrayList<Lease> getLeases() {
         return leases;
     }
+
+    public void setLeases(ArrayList<Lease> leases) {
+        this.leases = leases;
+    }
 }

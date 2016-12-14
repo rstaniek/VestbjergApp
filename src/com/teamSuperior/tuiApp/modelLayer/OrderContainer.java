@@ -22,4 +22,7 @@ public class OrderContainer {
         return orders;
     }
 
+    public void setOrders(ArrayList<Order> orders) {
+        this.orders = orders;
+    }
 }

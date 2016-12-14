@@ -88,6 +88,7 @@ class MenuOrders extends Menu {
                 break;
             case 5:
                 isRunning = false;
+                orderController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

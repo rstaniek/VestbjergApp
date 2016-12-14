@@ -62,6 +62,7 @@ class MenuContractors extends Menu {
                 break;
             case 4:
                 isRunning = false;
+                contractorController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

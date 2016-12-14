@@ -3,7 +3,7 @@ package com.teamSuperior.tuiApp.modelLayer;
 import java.util.ArrayList;
 
 /**
- * Created by Smoothini on 12.12.2016.
+ * Container of lease machines.
  */
 public class LeaseMachineContainer {
     private static LeaseMachineContainer ourInstance = new LeaseMachineContainer();
@@ -15,10 +15,14 @@ public class LeaseMachineContainer {
     private ArrayList<LeaseMachine> leaseMachines;
 
     private LeaseMachineContainer() {
-        leaseMachines = new ArrayList<LeaseMachine>();
+        leaseMachines = new ArrayList<>();
     }
 
     public ArrayList<LeaseMachine> getLeaseMachines() {
         return leaseMachines;
+    }
+
+    public void setLeaseMachines(ArrayList<LeaseMachine> leaseMachines) {
+        this.leaseMachines = leaseMachines;
     }
 }

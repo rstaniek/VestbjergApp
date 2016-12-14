@@ -5,14 +5,14 @@ import com.teamSuperior.tuiApp.controlLayer.LeaseController;
 import com.teamSuperior.tuiApp.controlLayer.LeaseMachineController;
 
 /**
- * Created by Smoothini on 13.12.2016.
+ * Menu for management of leases.
  */
 public class MenuLeases extends Menu {
     private LeaseController leaseController;
     private LeaseMachineController leaseMachineController;
     private CustomerController customerController;
 
-    public  MenuLeases(){
+    MenuLeases() {
         leaseController = new LeaseController();
         leaseMachineController = new LeaseMachineController();
         customerController = new CustomerController();
@@ -27,33 +27,30 @@ public class MenuLeases extends Menu {
         double price;
         switch (scanInt()) {
             case 1:
-                if(leaseController.canLease()){
+                if (leaseController.canLease()) {
                     System.out.println("ID:");
                     id = scanInt();
                     leaseMachineController.listIdAndNames();
                     System.out.println("Lease Machine ID:");
                     leaseMachineId = scanInt();
-                    if(leaseMachineController.foundMachineById(leaseMachineId)){
+                    if (leaseMachineController.foundMachineById(leaseMachineId)) {
                         customerController.listIdAndNames();
                         System.out.println("Customer ID:");
                         customerId = scanInt();
-                        if(customerController.foundCustomerById(customerId)){
+                        if (customerController.foundCustomerById(customerId)) {
                             System.out.println("Borrow date: ");
                             borrowDate = scanString();
                             System.out.println("Return date: ");
                             returnDate = scanString();
                             System.out.println("Price: ");
                             price = scanDouble();
-                            leaseController.addLease(id, leaseMachineId, customerId, borrowDate, returnDate, price);
+                            leaseController.create(id, leaseMachineId, customerId, borrowDate, returnDate, price);
                             leaseMachineController.markAsLeased(leaseMachineId);
-                        }
-                        else
+                        } else
                             System.out.println("No customer found by that ID");
-                    }
-                    else
+                    } else
                         System.out.println("No machine found by that ID");
-                }
-                else
+                } else
                     System.out.println("There are no lease machines or customers at this moment");
                 break;
             case 2:
@@ -64,7 +61,7 @@ public class MenuLeases extends Menu {
                         System.out.println("Are you sure you want to return this lease? (y/n)");
                         String confirmation = scanString();
                         if (confirmation.toLowerCase().equals("y"))
-                            if (leaseController.removeLeaseById(id)){
+                            if (leaseController.removeLeaseById(id)) {
                                 System.out.println("Lease successfully returned");
                                 leaseMachineController.markAsNotLeased(leaseController.getMachineId(id));
                             }
@@ -74,11 +71,12 @@ public class MenuLeases extends Menu {
                     System.out.println("There are no leases at this moment");
                 break;
             case 3:
-                if (leaseController.viewLeases() == 0)
+                if (leaseController.listAll() == 0)
                     System.out.println("No leases available at this time");
                 break;
             case 4:
                 isRunning = false;
+                leaseController.save();
                 break;
             default:
                 System.out.println("Error, please try again");
