@@ -4,6 +4,7 @@ import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.fxml.Initializable;
+import javafx.scene.control.TextField;
 
 import java.net.URL;
 import java.sql.*;
@@ -79,6 +80,10 @@ public class DBConnect {
         return rs;
     }
 
+    /***
+     * Uploads data stated in the query to the database (UNSAFE)
+     * @param query an SQL query string
+     */
     public void upload(String query) {
         Connection con = connect(url, username, password);
         boolean isExecuted = false;
@@ -93,6 +98,10 @@ public class DBConnect {
         if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
     }
 
+    /***
+     * Uploads data stated in the query to the database (SAFE)
+     * @param stmt preparedStatement object with protection against SQLi
+     */
     public void uploadSafe(PreparedStatement stmt) {
         Connection con = connect(url, username, password);
         boolean isExecuted = false;
@@ -104,5 +113,15 @@ public class DBConnect {
             AlertBox.display("Connection Error", ex.getMessage());
         }
         if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+    }
+
+    /***
+     *Checks the textField for illegal characters
+     * @param tf a TextField object
+     * @return true when the TextField object doesn't contain any illegal characters. False otherwise
+     */
+    public static boolean validateField(TextField tf){
+        //TODO: should be implemented better but didn't have creativity to do it better
+        return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
     }
 }

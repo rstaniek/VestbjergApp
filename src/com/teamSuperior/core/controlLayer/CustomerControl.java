@@ -12,7 +12,7 @@ import static com.teamSuperior.core.connection.DBConnect.*;
 public class CustomerControl {
     private DBConnect db;
 
-    /*public void addCustomer(String name, String surname, String street, String city, String zip, String email, String phone, String password){
+    /*public void create(String name, String surname, String street, String city, String zip, String email, String phone, String password){
         try{
             String query = "INSERT INTO employees ("
         }

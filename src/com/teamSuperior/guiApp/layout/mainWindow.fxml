@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <menus>
@@ -19,7 +19,6 @@
                     <items>
                         <MenuItem fx:id="menu_close" mnemonicParsing="false" onAction="#menu_close_clicked" text="Close" />
                         <MenuItem fx:id="menu_settings" mnemonicParsing="false" onAction="#menu_settings_clicked" text="Settings" />
-                  <MenuItem fx:id="menu_file_test" mnemonicParsing="false" onAction="#menu_file_test_onClick" text="Test" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Edit">
@@ -36,7 +35,7 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Products">
                     <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
+                        <MenuItem fx:id="menu_products_view" mnemonicParsing="false" onAction="#menu_products_view_onClick" text="View" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Offers">
@@ -46,8 +45,9 @@
                 </Menu>
                 <Menu mnemonicParsing="false" text="Employees">
                     <items>
+                        <MenuItem fx:id="menu_employees_add" mnemonicParsing="false" onAction="#menu_employees_add_onClick" text="Add" />
                         <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" onAction="#menu_employees_statistics_clicked" text="Statistics" />
-                        <MenuItem fx:id="menu_employees_manage" mnemonicParsing="false" onAction="#menu_employees_manage_clicked" text="Manage" />
+                        <MenuItem fx:id="menu_employees_edit" mnemonicParsing="false" onAction="#menu_employees_edit_clicked" text="Edit" />
                     </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Contractors">

@@ -7,15 +7,14 @@ import java.util.ArrayList;
  */
 public class ProductContainer {
     private static ProductContainer ourInstance = new ProductContainer();
-
-    public static ProductContainer getInstance() {
-        return ourInstance;
-    }
-
     private ArrayList<Product> products;
 
     private ProductContainer() {
         products = new ArrayList<>();
+    }
+
+    public static ProductContainer getInstance() {
+        return ourInstance;
     }
 
     public ArrayList<Product> getProducts() {
