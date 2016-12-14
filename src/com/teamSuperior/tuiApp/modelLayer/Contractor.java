@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
  * Contractor model class.
  */
-public class Contractor {
+public class Contractor implements Serializable {
     private int id;
     private String name, address, city, zip, phone, email;
 

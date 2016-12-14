@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
  * Offer model class.
  */
-public class Offer {
+public class Offer implements Serializable {
     private int id, productId;
     private String date;
     private double price, discount;

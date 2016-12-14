@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
  * Order model class.
  */
-public class Order {
+public class Order implements Serializable {
     private int id, productId, contractorId, quantity;
     private boolean approved, delivered;
     private String department;

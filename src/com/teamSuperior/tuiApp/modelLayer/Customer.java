@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
  * Customer model class.
  */
-public class Customer {
+public class Customer implements Serializable {
     private int id;
     // TODO: enum field for customer type
     private String name, surname, address, city, zip, phone, email;

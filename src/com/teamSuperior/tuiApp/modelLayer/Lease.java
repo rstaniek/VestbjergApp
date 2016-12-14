@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
  * Lease model class.
  */
-public class Lease {
+public class Lease implements Serializable {
     private int id, leaseMachineId, customerId;
     private String borrowDate, returnDate;
     private double price;
