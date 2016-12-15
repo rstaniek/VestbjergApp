@@ -1,7 +1,11 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.Position;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +20,10 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
+import java.util.stream.Collectors;
 
 import static com.teamSuperior.core.connection.DBConnect.*;
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
@@ -54,10 +61,29 @@ public class EmployeeAddController implements Initializable {
     public Button btn_clear;
 
     private DBConnect conn;
+    private ObservableList<Position> positions;
+
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
+        positions = FXCollections.observableArrayList();
+        conn = new DBConnect();
+        ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
+        try {
+            while (rs.next()) {
+                if (!rs.getString("name").isEmpty() && rs.getInt("id") != 0) {
+                    positions.add(new Position(rs.getInt("id"), rs.getInt("accessLevel"), rs.getString("name")));
+                }
+            }
+            System.out.print(positions.toString());
+        } catch (SQLException ex) {
+            AlertBox.display("SQL Exception", ex.getMessage());
+        } catch (Exception exception) {
+            AlertBox.display("Unexpected Exception", exception.getMessage());
+        } finally {
+            choiceBox_position.getItems().addAll(positions.stream().map(Position::getName).collect(Collectors.toList()));
+            choiceBox_position.getSelectionModel().selectFirst();
+        }
     }
 
     @FXML
@@ -72,9 +98,21 @@ public class EmployeeAddController implements Initializable {
                 validateField(text_password)){
             try{
                 conn = new DBConnect();
-                //TODO: finish implementation
-                //conn.upload(String.format("INSERT INTO employees (name,surname,address,city,zip,email,phone,position,password) VALUES(/*add values*/)"));
-                displayError(NOT_IMPLEMENTED);
+                Position selectedPosition = (Position) choiceBox_position.getSelectionModel().getSelectedItem();
+                //TODO: finish  and fix the issue with String casting
+                String emailSafe = org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_email.getText());
+                String passwordSafe = org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_password.getText());
+                conn.upload(String.format("INSERT INTO employees (name,surname,address,city,zip,email,phone,position,password,accessLevel) VALUES('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s','%8$s','%9$s','%10$s')",
+                        text_name.getText(),
+                        text_surname.getText(),
+                        text_address.getText(),
+                        text_city.getText(),
+                        text_zip.getText(),
+                        emailSafe,
+                        text_phone.getText(),
+                        selectedPosition.getName(),
+                        passwordSafe,
+                        selectedPosition.getAccessLevel()));
             }
             catch (Exception ex){
                 AlertBox.display("Unexpected exception", ex.getMessage());
