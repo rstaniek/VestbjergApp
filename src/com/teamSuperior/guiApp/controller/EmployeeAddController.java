@@ -98,7 +98,12 @@ public class EmployeeAddController implements Initializable {
                 validateField(text_password)){
             try{
                 conn = new DBConnect();
-                Position selectedPosition = (Position) choiceBox_position.getSelectionModel().getSelectedItem();
+                Position selectedPosition = null;
+                for (Position position : positions) {
+                    if (position.getName().equals((String) choiceBox_position.getSelectionModel().getSelectedItem())) {
+                        selectedPosition = position;
+                    }
+                }
                 //TODO: finish  and fix the issue with String casting
                 String emailSafe = org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_email.getText());
                 String passwordSafe = org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_password.getText());
