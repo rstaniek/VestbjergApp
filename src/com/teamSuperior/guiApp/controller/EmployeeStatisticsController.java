@@ -53,7 +53,7 @@ public class EmployeeStatisticsController implements Initializable {
         ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
         try{
             while (rs.next()){
-                if(rs.getInt("id") != 0 && rs.getString("name") != null
+                if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null
                         && rs.getString("address") != null
                         && rs.getString("city") != null

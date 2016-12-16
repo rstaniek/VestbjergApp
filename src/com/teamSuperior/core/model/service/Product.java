@@ -4,7 +4,7 @@ package com.teamSuperior.core.model.service;
  * Created by Domestos Maximus on 24-Nov-16.
  */
 public class Product {
-    private int id, quantity;
+    private int id, quantity, contractorId;
     private String barcode, name, subname, category, warehouseLocation;
     private float price;
 
@@ -17,6 +17,18 @@ public class Product {
         this.category = category;
         this.warehouseLocation = warehouseLocation;
         this.price = price;
+    }
+
+    public Product(int id, int quantity, String barcode, String name, String subname, String category, String warehouseLocation, float price, int contractorId) {
+        this.id = id;
+        this.quantity = quantity;
+        this.barcode = barcode;
+        this.name = name;
+        this.subname = subname;
+        this.category = category;
+        this.warehouseLocation = warehouseLocation;
+        this.price = price;
+        this.contractorId = contractorId;
     }
 
     public int getId() {
@@ -49,5 +61,9 @@ public class Product {
 
     public float getPrice() {
         return price;
+    }
+
+    public int getContractorId() {
+        return contractorId;
     }
 }
