@@ -16,6 +16,7 @@ public enum ErrorCode {
     NOT_IMPLEMENTED("Sorry", "This functionality is not yet implemented."),
     USER_ALREADY_LOGGED_OUT("Warning", "You are already logged out"),
     DATABASE_UPLOAD_ERROR("Upload ERROR", "Couldn't upload changes to the database!"),
+    WAREHOUSE_LOW_AMOUNT_OF_PRODUCT("WARNING", "Low supply of the current product. Please consider restocking the supplies"),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty"),
     LOGIN_USERNAME_EMPTY("User validation error", "Employee ID cannot be empty"),
     LOGIN_PASSWORD_EMPTY("User validation error", "The password field cannot be empty");

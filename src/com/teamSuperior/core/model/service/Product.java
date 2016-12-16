@@ -66,4 +66,9 @@ public class Product {
     public int getContractorId() {
         return contractorId;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Product: name=%1$s, q=%2$d", name, quantity);
+    }
 }

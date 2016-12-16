@@ -4,29 +4,44 @@ import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.ConfirmBox;
+import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.chart.PieChart;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 /**
  * Created by Domestos on 16.12.12.
  */
 public class ProductsController implements Initializable {
+
+    private int maxCap = 250;
+
     @FXML
     public TableView tableView_products;
+    @FXML
+    public PieChart chart_storageCap;
 
     private DBConnect conn;
     private ObservableList<Product> products;
     private Employee loggedInUser;
+    private Product selectedProduct;
+    private ArrayList<Product> almostEmptyStorages;
+
+    private ObservableList<PieChart.Data> quantityChartData;
 
     //table columns
     private TableColumn<Product, Integer> idCol;
@@ -44,10 +59,43 @@ public class ProductsController implements Initializable {
         conn = new DBConnect();
         products = FXCollections.observableArrayList();
         loggedInUser = LogInPopupController.getUser();
+        almostEmptyStorages = new ArrayList<>();
 
         //init columns ad stuff
         retrieveData();
         updateColumns();
+        //-------------
+        tableView_products.getSelectionModel().selectFirst();
+        selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
+        updateStats();
+        runWarehouseCheck(true);
+    }
+
+    private void runWarehouseCheck(boolean runForAllItems) {
+        if (runForAllItems) {
+            int numberOfWarnings = 0;
+            for (Product p : products) {
+                if (p.getQuantity() < 15) {
+                    numberOfWarnings += 1;
+                    almostEmptyStorages.add(p);
+                }
+            }
+            if (numberOfWarnings != 0) {
+                boolean result = ConfirmBox.display("Empty storages detected",
+                        String.format("There were %1$d almost empty storages found during the checkup. Do you want to intervene?", numberOfWarnings));
+                if (result) {
+                    Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+                }
+            }
+        } else {
+            if (selectedProduct.getQuantity() < 15) {
+                Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
+            }
+        }
+    }
+
+    private float calculateCapRatio(Product p, int maxCapacity) {
+        return ((float) p.getQuantity() / (float) maxCapacity) * (float) 100;
     }
 
     private void retrieveData() {
@@ -96,7 +144,7 @@ public class ProductsController implements Initializable {
         subnameCol.setCellValueFactory(new PropertyValueFactory<Product, String>("subname"));
 
         barcodeCol = new TableColumn<>("Barcode");
-        barcodeCol.setMinWidth(150);
+        barcodeCol.setMinWidth(60);
         barcodeCol.setCellValueFactory(new PropertyValueFactory<Product, String>("barcode"));
 
         categoryCol = new TableColumn<>("Category");
@@ -108,7 +156,7 @@ public class ProductsController implements Initializable {
         priceCol.setCellValueFactory(new PropertyValueFactory<Product, Float>("price"));
 
         locationCol = new TableColumn<>("Warehouse location");
-        locationCol.setMinWidth(150);
+        locationCol.setMinWidth(220);
         locationCol.setCellValueFactory(new PropertyValueFactory<Product, String>("warehouseLocation"));
 
         quantityCol = new TableColumn<>("Q");
@@ -121,5 +169,21 @@ public class ProductsController implements Initializable {
 
         tableView_products.setItems(products);
         tableView_products.getColumns().addAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
+    }
+
+    private void updateStats() {
+        chart_storageCap.getData().clear();
+        quantityChartData = FXCollections.observableArrayList();
+        quantityChartData.addAll(new PieChart.Data("Amount of items", calculateCapRatio(selectedProduct, maxCap)),
+                new PieChart.Data("Space available", 100 - calculateCapRatio(selectedProduct, maxCap)));
+        chart_storageCap.getData().addAll(quantityChartData);
+    }
+
+    @FXML
+    public void tableView_products_onClick(MouseEvent mouseEvent) {
+        selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
+        System.out.println(selectedProduct.toString());
+        updateStats();
+        runWarehouseCheck(false);
     }
 }
