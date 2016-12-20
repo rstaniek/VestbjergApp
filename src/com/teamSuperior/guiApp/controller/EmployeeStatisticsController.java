@@ -169,7 +169,7 @@ public class EmployeeStatisticsController implements Initializable {
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
             contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
+            /*if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
                 numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
             } else {
                 numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
@@ -178,12 +178,12 @@ public class EmployeeStatisticsController implements Initializable {
                 revenueBar.getNode().getStyleClass().add("less-than-avg");
             } else {
                 revenueBar.getNode().getStyleClass().add("greater-than-avg");
-            }
+            }*/
         }else{
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
             contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
+            /*if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
                 numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
             } else {
                 numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
@@ -192,7 +192,7 @@ public class EmployeeStatisticsController implements Initializable {
                 revenueBar.getNode().getStyleClass().add("less-than-avg");
             } else {
                 revenueBar.getNode().getStyleClass().add("greater-than-avg");
-            }
+            }*/
         }
 
         sales.getData().addAll(numOfSalesBar, new XYChart.Data<>("Average", calculateAvgSales()));

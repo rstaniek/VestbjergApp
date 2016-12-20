@@ -1,19 +1,25 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.mysql.jdbc.StringUtils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import com.teamSuperior.guiApp.Utils;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
@@ -28,12 +34,16 @@ import java.util.ResourceBundle;
  */
 public class ProductsController implements Initializable {
 
-    private int maxCap = 250;
-
+    @FXML
+    public TextField text_amountToRequest;
+    @FXML
+    public Button btn_requestResupply;
     @FXML
     public TableView tableView_products;
     @FXML
     public PieChart chart_storageCap;
+
+    private int maxCap = 250;
 
     private DBConnect conn;
     private ObservableList<Product> products;
@@ -179,11 +189,33 @@ public class ProductsController implements Initializable {
         chart_storageCap.getData().addAll(quantityChartData);
     }
 
+    private void updateTable() {
+        products.removeAll();
+        products = null;
+        products = FXCollections.observableArrayList();
+        tableView_products.getColumns().removeAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
+        retrieveData();
+        updateColumns();
+        updateStats();
+    }
+
     @FXML
     public void tableView_products_onClick(MouseEvent mouseEvent) {
         selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
         System.out.println(selectedProduct.toString());
         updateStats();
         runWarehouseCheck(false);
+    }
+
+    @FXML
+    public void btn_requestResupply_onClick(ActionEvent actionEvent) {
+        if(Utils.isNumeric(text_amountToRequest.getText())){
+            WaitingBox.display("Creating request", 6000);
+            int itemsTotal = selectedProduct.getQuantity() + Integer.parseInt(text_amountToRequest.getText());
+            conn = new DBConnect();
+            conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));
+            updateTable();
+            text_amountToRequest.clear();
+        }else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
     }
 }
