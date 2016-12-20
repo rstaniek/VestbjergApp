@@ -37,7 +37,6 @@ public class WaitingBox {
         window.setScene(scene);
         window.setResizable(false);
         window.setAlwaysOnTop(true);
-        window.show();
 
         Task waitForTime = new Task<Void>() {
             @Override
@@ -51,5 +50,7 @@ public class WaitingBox {
         Thread wait = new Thread(waitForTime);
         wait.setDaemon(true);
         wait.start();
+
+        window.showAndWait();
     }
 }
