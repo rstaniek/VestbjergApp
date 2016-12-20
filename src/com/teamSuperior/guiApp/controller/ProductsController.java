@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.prefs.Preferences;
 
 /**
  * Created by Domestos on 16.12.12.
@@ -82,6 +83,7 @@ public class ProductsController implements Initializable {
     }
 
     private void runWarehouseCheck(boolean runForAllItems) {
+        Preferences reg = Preferences.userRoot();
         if (runForAllItems) {
             int numberOfWarnings = 0;
             for (Product p : products) {
@@ -100,6 +102,10 @@ public class ProductsController implements Initializable {
         } else {
             if (selectedProduct.getQuantity() < 15) {
                 Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
+                //TODO: implement this shit
+                /*if(reg.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false)){
+                    AlertBox.display("WARNING","Low amount of product, resupply is advised.","SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS");
+                }*/
             }
         }
     }

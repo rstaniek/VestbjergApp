@@ -9,10 +9,7 @@ import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
@@ -56,6 +53,8 @@ public class SettingsController implements Initializable {
     public ImageView img_testMeme;
     @FXML
     public Tab tab_discounts;
+    @FXML
+    public CheckBox checkBox_showNotifications_lowAmountOfProducts;
 
 
     private Preferences registry; //application settings
@@ -95,6 +94,9 @@ public class SettingsController implements Initializable {
     }
 
     private void save() {
+        //general
+        registry.putBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", checkBox_showNotifications_lowAmountOfProducts.isSelected());
+
         //connection
         registry.put("DATABASE_HOSTNAME", text_settings_connection_hostname.getText());
         registry.put("DATABASE_USER", text_settings_connection_username.getText());
@@ -138,6 +140,9 @@ public class SettingsController implements Initializable {
         }else if(loggedUser.getAccessLevel() < 2){
             tab_discounts.setDisable(true);
         }
+
+        //general
+        checkBox_showNotifications_lowAmountOfProducts.setSelected(registry.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false));
 
         //connection
         text_settings_connection_hostname.setText(registry.get("DATABASE_HOSTNAME", ""));
