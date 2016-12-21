@@ -400,7 +400,7 @@ public class MainController implements Initializable {
     @FXML
     public void menu_products_view_onClick(ActionEvent actionEvent) {
         if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+            if(LogInPopupController.getUser().getAccessLevel() >= 1){
                 try{
                     Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
                     Stage window = new Stage();

@@ -91,6 +91,12 @@ public class ProductsController implements Initializable {
         //-------------
         tableView_products.getSelectionModel().selectFirst();
         selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
+
+        if(loggedInUser.getAccessLevel() < 2){
+            btn_requestResupply.setDisable(true);
+            text_amountToRequest.setDisable(true);
+        }
+
         updateStats();
         runWarehouseCheck(true);
         initWarehouseCheckDone = true;
