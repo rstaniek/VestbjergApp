@@ -43,6 +43,8 @@ public class ProductsController implements Initializable {
     public TableView tableView_products;
     @FXML
     public PieChart chart_storageCap;
+    @FXML
+    public Button btn_showLowQuantity;
 
     private int maxCap = 250;
 
@@ -50,7 +52,8 @@ public class ProductsController implements Initializable {
     private ObservableList<Product> products;
     private Employee loggedInUser;
     private Product selectedProduct;
-    private ArrayList<Product> almostEmptyStorages;
+    private ObservableList<Product> almostEmptyStorages;
+    private boolean showsAll, initWarehouseCheckDone;
 
     private ObservableList<PieChart.Data> quantityChartData;
 
@@ -70,20 +73,24 @@ public class ProductsController implements Initializable {
         conn = new DBConnect();
         products = FXCollections.observableArrayList();
         loggedInUser = LogInPopupController.getUser();
-        almostEmptyStorages = new ArrayList<>();
+        showsAll = true;
+        initWarehouseCheckDone = false;
 
         //init columns ad stuff
         retrieveData();
-        updateColumns();
+        updateColumns(showsAll);
         //-------------
         tableView_products.getSelectionModel().selectFirst();
         selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
         updateStats();
         runWarehouseCheck(true);
+        initWarehouseCheckDone = true;
     }
 
     private void runWarehouseCheck(boolean runForAllItems) {
         Preferences reg = Preferences.userRoot();
+        almostEmptyStorages = null;
+        almostEmptyStorages = FXCollections.observableArrayList();
         if (runForAllItems) {
             int numberOfWarnings = 0;
             for (Product p : products) {
@@ -92,16 +99,20 @@ public class ProductsController implements Initializable {
                     almostEmptyStorages.add(p);
                 }
             }
-            if (numberOfWarnings != 0) {
+            if (numberOfWarnings != 0 && !initWarehouseCheckDone) {
+                //TODO: alert box looping, needs fix
                 boolean result = ConfirmBox.display("Empty storages detected",
                         String.format("There were %1$d almost empty storages found during the checkup. Do you want to intervene?", numberOfWarnings));
                 if (result) {
-                    Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+                    //Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+                    showsAll = false;
+                    updateTable(showsAll);
+                    btn_showLowQuantity.setText("Show All products");
                 }
             }
         } else {
             if (selectedProduct.getQuantity() < 15) {
-                Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
+                if(showsAll) Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
                 //TODO: implement this shit
                 /*if(reg.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false)){
                     AlertBox.display("WARNING","Low amount of product, resupply is advised.","SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS");
@@ -146,7 +157,7 @@ public class ProductsController implements Initializable {
         }
     }
 
-    private void updateColumns() {
+    private void updateColumns(boolean showAll) {
         idCol = new TableColumn<>("ID");
         idCol.setMinWidth(50);
         idCol.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
@@ -183,7 +194,12 @@ public class ProductsController implements Initializable {
         contractorIdCol.setMinWidth(50);
         contractorIdCol.setCellValueFactory(new PropertyValueFactory<Product, Integer>("contractorId"));
 
-        tableView_products.setItems(products);
+        if(showAll){
+            tableView_products.setItems(products);
+        }else{
+            tableView_products.setItems(almostEmptyStorages);
+        }
+
         tableView_products.getColumns().addAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
     }
 
@@ -195,13 +211,14 @@ public class ProductsController implements Initializable {
         chart_storageCap.getData().addAll(quantityChartData);
     }
 
-    private void updateTable() {
+    private void updateTable(boolean showAll) {
         products.removeAll();
         products = null;
         products = FXCollections.observableArrayList();
         tableView_products.getColumns().removeAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
         retrieveData();
-        updateColumns();
+        runWarehouseCheck(true);
+        updateColumns(showAll);
         updateStats();
     }
 
@@ -218,10 +235,27 @@ public class ProductsController implements Initializable {
         if(Utils.isNumeric(text_amountToRequest.getText())){
             WaitingBox.display("Creating request", 6000);
             int itemsTotal = selectedProduct.getQuantity() + Integer.parseInt(text_amountToRequest.getText());
+            if(itemsTotal > maxCap){
+                itemsTotal = maxCap;
+                AlertBox.display("Capacity error", String.format("Ordering %1$s new items would cause overfill. Ordering %2$d items instead.", text_amountToRequest.getText(), maxCap - selectedProduct.getQuantity()));
+            }
             conn = new DBConnect();
             conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));
-            updateTable();
+            updateTable(true);
             text_amountToRequest.clear();
         }else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
+    }
+
+    @FXML
+    public void btn_showLowQuantity_onClick(ActionEvent actionEvent) {
+        if(showsAll){
+            showsAll = false;
+            updateTable(showsAll);
+            btn_showLowQuantity.setText("Show All products");
+        }else{
+            showsAll = true;
+            updateTable(showsAll);
+            btn_showLowQuantity.setText("Show only low quantity");
+        }
     }
 }
