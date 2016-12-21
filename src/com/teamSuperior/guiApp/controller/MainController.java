@@ -223,7 +223,6 @@ public class MainController implements Initializable {
     }
 
     private void settingsWndClose() {
-        //TODO: handle seving the settings before closing
         settings.close();
     }
 

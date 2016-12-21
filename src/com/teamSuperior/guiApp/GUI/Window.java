@@ -13,7 +13,6 @@ import java.io.IOException;
  */
 public class Window {
     public void inflate(WindowType wnd) {
-        //TODO: inflate window
         try {
             Parent root = FXMLLoader.load(getClass().getResource(wnd.getLayoutPath()));
             Stage window = new Stage();
