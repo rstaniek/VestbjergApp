@@ -2,11 +2,11 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
+import com.teamSuperior.core.enums.Currency;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Window;
 import com.teamSuperior.guiApp.enums.Drawables;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -124,7 +124,7 @@ public class MainController implements Initializable {
         // generating array list and users
         employees = new ArrayList<>();
         if (credentialsSaved()) {
-            connectClient();
+            //connectClient();
         } else {
             displayError(CONNECTION_REG_EMPTY);
         }
@@ -148,8 +148,8 @@ public class MainController implements Initializable {
             @Override
             protected Void call() throws Exception {
                 while (true) {
-                    String ratioUSD = WebsiteCrawler.getExchangeRatio("https://finance.yahoo.com/quote/USDDKK=X?ltr=1");
-                    String ratioEUR = WebsiteCrawler.getExchangeRatio("https://finance.yahoo.com/quote/EURDKK=X?ltr=1");
+                    String ratioUSD = WebsiteCrawler.getExchangeRatioBloomberg(Currency.USDDKK);
+                    String ratioEUR = WebsiteCrawler.getExchangeRatioBloomberg(Currency.EURDKK);
                     Platform.runLater(() -> {
                         label_ratioUSDDKK.setText(ratioUSD);
                         label_ratioEURDKK.setText(ratioEUR);
@@ -268,6 +268,7 @@ public class MainController implements Initializable {
     @FXML
     public void btn_logIn_clicked(ActionEvent actionEvent) {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
+            if(employees.size() < 1) connectClient();
             try {
                 Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
                 loginWindow = new Stage();
