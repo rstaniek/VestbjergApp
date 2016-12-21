@@ -16,12 +16,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -45,8 +43,19 @@ public class ProductsController implements Initializable {
     public PieChart chart_storageCap;
     @FXML
     public Button btn_showLowQuantity;
+    @FXML
+    public Label label_name;
+    @FXML
+    public Label label_subname;
+    @FXML
+    public Label label_category;
+    @FXML
+    public Label label_quantity;
+    @FXML
+    public Label label_price;
 
-    private int maxCap = 250;
+    private static final int maxCap = 250;
+    private static final int capTreshold = 15;
 
     private DBConnect conn;
     private ObservableList<Product> products;
@@ -94,7 +103,7 @@ public class ProductsController implements Initializable {
         if (runForAllItems) {
             int numberOfWarnings = 0;
             for (Product p : products) {
-                if (p.getQuantity() < 15) {
+                if (p.getQuantity() < capTreshold) {
                     numberOfWarnings += 1;
                     almostEmptyStorages.add(p);
                 }
@@ -111,7 +120,7 @@ public class ProductsController implements Initializable {
                 }
             }
         } else {
-            if (selectedProduct.getQuantity() < 15) {
+            if (selectedProduct.getQuantity() < capTreshold) {
                 if(showsAll) Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
                 //TODO: implement this shit
                 /*if(reg.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false)){
@@ -209,6 +218,15 @@ public class ProductsController implements Initializable {
         quantityChartData.addAll(new PieChart.Data("Amount of items", calculateCapRatio(selectedProduct, maxCap)),
                 new PieChart.Data("Space available", 100 - calculateCapRatio(selectedProduct, maxCap)));
         chart_storageCap.getData().addAll(quantityChartData);
+
+        //labels
+        label_name.setText(selectedProduct.getName());
+        label_subname.setText(selectedProduct.getSubname());
+        label_category.setText(selectedProduct.getCategory());
+        label_quantity.setText(String.format("Q: %1$d", selectedProduct.getQuantity()));
+        label_price.setText(String.format("Price: %1$.2fkr.", selectedProduct.getPrice()));
+        if(selectedProduct.getQuantity() < capTreshold) label_quantity.setTextFill(Color.RED);
+        else label_quantity.setTextFill(Color.BLACK);
     }
 
     private void updateTable(boolean showAll) {
