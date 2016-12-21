@@ -104,7 +104,6 @@ public class EmployeeAddController implements Initializable {
                         selectedPosition = position;
                     }
                 }
-                //TODO: finish  and fix the issue with String casting
                 String emailSafe = org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_email.getText());
                 String passwordSafe = org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_password.getText());
                 conn.upload(String.format("INSERT INTO employees (name,surname,address,city,zip,email,phone,position,password,accessLevel) VALUES('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s','%8$s','%9$s','%10$s')",

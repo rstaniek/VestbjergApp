@@ -3,6 +3,7 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,21 +30,27 @@ public class LogInPopupController {
 
     @FXML
     public void btn_logIn_click(ActionEvent actionEvent) {
-        //TODO: write an enum for error codes
-        //removeRed(txt_empID);
-        //removeRed(txt_empPassw);
+        removeRed(txt_empID);
+        removeRed(txt_empPassw);
 
         //validating user input
-        //TODO: changing textField outline doesn't work
         validateInput(txt_empID, txt_empPassw);
 
         //handling the input
-        //TODO: log in the user
         boolean isValid = validateUser(txt_empID.getText(), txt_empPassw.getText());
         if (isValid) {
             MainController.loginWindow.close();
+            WaitingBox.display("Logging in", 3000);
         } else {
             AlertBox.display("Wrong credentials!", "Wrong e-mail/password, please try again.");
+        }
+    }
+
+    private void removeRed(TextField tf) {
+        ObservableList<String> styleClass = tf.getStyleClass();
+
+        if (styleClass.contains("tferror")) {
+            styleClass.remove("tferror");
         }
     }
 
@@ -60,9 +67,11 @@ public class LogInPopupController {
             return false;
         } else if (user.getText().isEmpty()) {
             displayError(LOGIN_USERNAME_EMPTY);
+            setRed(user);
             return false;
         } else if (pass.getText().isEmpty()) {
             displayError(LOGIN_PASSWORD_EMPTY);
+            setRed(pass);
             return false;
         } else return true;
     }
@@ -99,6 +108,8 @@ public class LogInPopupController {
                 loggedUser = new Employee(rs.getInt("id"), rs.getString("name"), rs.getString("surname"), rs.getString("address"), rs.getString("city"), rs.getString("zip"), rs.getString("email"), rs.getString("phone"), rs.getString("password"), rs.getString("position"), rs.getInt("numberOfSales"), rs.getDouble("totalRevenue"), rs.getInt("accessLevel"));
                 ret = true;
                 loggedFinal = true;
+                removeRed(txt_empID);
+                removeRed(txt_empPassw);
             } else {
                 ret = false;
                 loggedFinal = true;
@@ -109,7 +120,6 @@ public class LogInPopupController {
             // Throws an exception if you input wrong login credentials, TODO: fix this, obviously
             // AlertBox.display("Connection Error", ex.getMessage());
         }
-
         return ret;
     }
 
