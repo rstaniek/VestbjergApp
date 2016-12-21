@@ -110,11 +110,12 @@ public class SettingsController implements Initializable {
         registry.putFloat("DISCOUNT_MAX", Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
 
         conn = new DBConnect();
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 1", registry.getFloat("DISCOUNT_REGISTERED", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 2", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 3", registry.getFloat("DISCOUNT_QUANTITY", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 4", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 5", registry.getFloat("DISCOUNT_MAX", 0)));
+        //TODO: Sth fucked up here: dear SQL gods, halp plox
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=1;", registry.getFloat("DISCOUNT_REGISTERED", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=2;", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=3;", registry.getFloat("DISCOUNT_QUANTITY", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=4;", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=5;", registry.getFloat("DISCOUNT_MAX", 0)));
     }
 
     @FXML
@@ -124,6 +125,11 @@ public class SettingsController implements Initializable {
                 validateDiscount(text_settings_discounts_quantity) &&
                 validateDiscount(text_settings_discounts_selfPickUp) &&
                 validateDiscount(text_settings_discounts_maxTreshold)) {
+            System.out.println(Float.parseFloat(text_settings_discounts_registered.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_craftsman.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_selfPickUp.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_quantity.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
             save();
         }
     }
