@@ -28,7 +28,6 @@ public class MainWindow extends Application {
         });
 
         Scene scene = new Scene(root);
-        scene.getStylesheets().add(this.getClass().getResource("/style/mainWindow.css").toString());
         primaryStage.setScene(scene);
         primaryStage.show();
     }
