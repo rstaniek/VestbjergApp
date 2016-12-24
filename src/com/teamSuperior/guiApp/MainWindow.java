@@ -8,7 +8,9 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Created by Domestos on 16.11.26.
+ * Vestbjerg App GUI Version
+ *
+ * @author Team Superiør
  */
 public class MainWindow extends Application {
     private Stage window;

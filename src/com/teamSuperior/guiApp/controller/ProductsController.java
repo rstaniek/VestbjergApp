@@ -1,6 +1,5 @@
 package com.teamSuperior.guiApp.controller;
 
-import com.mysql.jdbc.StringUtils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
@@ -24,7 +23,6 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -92,7 +90,7 @@ public class ProductsController implements Initializable {
         tableView_products.getSelectionModel().selectFirst();
         selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
 
-        if(loggedInUser.getAccessLevel() < 2){
+        if (loggedInUser.getAccessLevel() < 2) {
             btn_requestResupply.setDisable(true);
             text_amountToRequest.setDisable(true);
         }
@@ -127,7 +125,7 @@ public class ProductsController implements Initializable {
             }
         } else {
             if (selectedProduct.getQuantity() < capTreshold) {
-                if(showsAll) Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
+                if (showsAll) Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
                 //TODO: implement this shit
                 /*if(reg.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false)){
                     AlertBox.display("WARNING","Low amount of product, resupply is advised.","SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS");
@@ -209,9 +207,9 @@ public class ProductsController implements Initializable {
         contractorIdCol.setMinWidth(50);
         contractorIdCol.setCellValueFactory(new PropertyValueFactory<Product, Integer>("contractorId"));
 
-        if(showAll){
+        if (showAll) {
             tableView_products.setItems(products);
-        }else{
+        } else {
             tableView_products.setItems(almostEmptyStorages);
         }
 
@@ -231,7 +229,7 @@ public class ProductsController implements Initializable {
         label_category.setText(selectedProduct.getCategory());
         label_quantity.setText(String.format("Q: %1$d", selectedProduct.getQuantity()));
         label_price.setText(String.format("Price: %1$.2fkr.", selectedProduct.getPrice()));
-        if(selectedProduct.getQuantity() < capTreshold) label_quantity.setTextFill(Color.RED);
+        if (selectedProduct.getQuantity() < capTreshold) label_quantity.setTextFill(Color.RED);
         else label_quantity.setTextFill(Color.BLACK);
     }
 
@@ -256,10 +254,10 @@ public class ProductsController implements Initializable {
 
     @FXML
     public void btn_requestResupply_onClick(ActionEvent actionEvent) {
-        if(Utils.isNumeric(text_amountToRequest.getText())){
+        if (Utils.isNumeric(text_amountToRequest.getText())) {
             WaitingBox.display("Creating request", 6000);
             int itemsTotal = selectedProduct.getQuantity() + Integer.parseInt(text_amountToRequest.getText());
-            if(itemsTotal > maxCap){
+            if (itemsTotal > maxCap) {
                 itemsTotal = maxCap;
                 AlertBox.display("Capacity error", String.format("Ordering %1$s new items would cause overfill. Ordering %2$d items instead.", text_amountToRequest.getText(), maxCap - selectedProduct.getQuantity()));
             }
@@ -267,16 +265,16 @@ public class ProductsController implements Initializable {
             conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));
             updateTable(true);
             text_amountToRequest.clear();
-        }else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
+        } else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
     }
 
     @FXML
     public void btn_showLowQuantity_onClick(ActionEvent actionEvent) {
-        if(showsAll){
+        if (showsAll) {
             showsAll = false;
             updateTable(showsAll);
             btn_showLowQuantity.setText("Show All products");
-        }else{
+        } else {
             showsAll = true;
             updateTable(showsAll);
             btn_showLowQuantity.setText("Show only low quantity");
