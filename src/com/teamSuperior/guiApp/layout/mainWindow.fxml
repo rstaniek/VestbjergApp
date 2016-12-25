@@ -42,25 +42,22 @@
         </MenuBar>
     </top>
     <center>
-        <AnchorPane fx:id="anchorPane_center" styleClass="backgroundBlue" BorderPane.alignment="CENTER">
+        <AnchorPane styleClass="backgroundBlue" BorderPane.alignment="CENTER">
             <ImageView fitHeight="150.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
                 <Image url="/silvan_logo_rectangle.png"/>
             </ImageView>
-            <Label fx:id="label_ratioUSDDKK" styleClass="label-ratio" layoutX="14.0" layoutY="186.0"
-                   text="please wait"/>
-            <Label fx:id="label_ratioDesc1" styleClass="label-ratio" layoutX="14.0" layoutY="150.0" text="USD/DKK"/>
-            <Label fx:id="label_ratioDesc2" styleClass="label-ratio" layoutX="191.0" layoutY="150.0"
-                   text="EUR/DKK"/>
-            <Label fx:id="label_ratioEURDKK" styleClass="label-ratio" layoutX="191.0" layoutY="186.0"
-                   text="please wait"/>
+            <Label styleClass="label-ratio" layoutX="14.0" layoutY="186.0" text="${controller.USDRatio}"/>
+            <Label styleClass="label-ratio" layoutX="14.0" layoutY="150.0" text="USD/DKK"/>
+            <Label styleClass="label-ratio" layoutX="191.0" layoutY="150.0" text="EUR/DKK"/>
+            <Label styleClass="label-ratio" layoutX="191.0" layoutY="186.0" text="${controller.EURRatio}"/>
         </AnchorPane>
     </center>
     <bottom>
         <AnchorPane prefHeight="60.0" prefWidth="809.0" BorderPane.alignment="CENTER">
             <Button fx:id="btn_logIn" layoutX="737.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleLogIn"
                     text="Log In"/>
-            <Label fx:id="label_date" layoutY="36.0" text="Label"/>
-            <Label fx:id="label_name_welcome" text="Please log in first"/>
+            <Label styleClass="current-date-time" layoutY="36.0" text="${controller.currentDateTime}"/>
+            <Label styleClass="welcome-message" text="${controller.welcomeMessage}"/>
         </AnchorPane>
     </bottom>
 </BorderPane>

@@ -9,6 +9,8 @@ import com.teamSuperior.guiApp.GUI.Window;
 import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +18,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -42,40 +43,38 @@ import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 public class MainController implements Initializable {
 
     @FXML
-    public Label label_name_welcome;
-    @FXML
-    public Label label_date;
-    @FXML
-    public Label label_ratioUSDDKK;
-    @FXML
-    public Label label_ratioEURDKK;
-    @FXML
     public Button btn_logIn;
-    @FXML
-    public AnchorPane anchorPane_center;
-    @FXML
-    public Label label_ratioDesc1;
-    @FXML
-    public Label label_ratioDesc2;
 
     private Stage settings;
     static Stage loginWindow;
-    private Window wnd;
+    private Window window;
+
+    private StringProperty welcomeMessage;
+    private StringProperty currentDateTime;
+    private StringProperty USDRatio;
+    private StringProperty EURRatio;
 
     private Preferences registry;
     private boolean isLoggedIn;
 
     // just database things
-    DBConnect conn;
-    private Employee emp;
+    private DBConnect conn;
+    private Employee employee;
     private ArrayList<Employee> employees;
+
+    public MainController() {
+        welcomeMessage = new SimpleStringProperty("Please log in first.");
+        currentDateTime = new SimpleStringProperty();
+        USDRatio = new SimpleStringProperty("Please wait");
+        EURRatio = new SimpleStringProperty("Please wait");
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         displayXmasWnd();
         registry = Preferences.userRoot();
         isLoggedIn = false;
-        wnd = new Window();
+        window = new Window();
 
         conn = new DBConnect();
         // generating array list and users
@@ -86,19 +85,17 @@ public class MainController implements Initializable {
             displayError(CONNECTION_REG_EMPTY);
         }
 
-
         Task getDateTime = new Task<Void>() {
             @Override
             public Void call() throws Exception {
                 while (true) {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                     LocalDateTime now = LocalDateTime.now();
-                    Platform.runLater(() -> label_date.setText(dtf.format(now)));
+                    Platform.runLater(() -> setCurrentDateTime(dtf.format(now)));
                     Thread.sleep(1000);
                 }
             }
         };
-
 
         //Currency exchange update
         Task getCurrencyRatios = new Task<Void>() {
@@ -108,8 +105,8 @@ public class MainController implements Initializable {
                     String ratioUSD = WebsiteCrawler.getExchangeRatioBloomberg(Currency.USDDKK);
                     String ratioEUR = WebsiteCrawler.getExchangeRatioBloomberg(Currency.EURDKK);
                     Platform.runLater(() -> {
-                        label_ratioUSDDKK.setText(ratioUSD);
-                        label_ratioEURDKK.setText(ratioEUR);
+                        setUSDRatio(ratioUSD);
+                        setEURRatio(ratioEUR);
                     });
                     Thread.sleep(2000);
                 }
@@ -141,6 +138,54 @@ public class MainController implements Initializable {
         th3.start();
     }
 
+    public String getWelcomeMessage() {
+        return welcomeMessage.get();
+    }
+
+    private void setWelcomeMessage(String welcomeMessage) {
+        this.welcomeMessage.set(welcomeMessage);
+    }
+
+    public StringProperty welcomeMessageProperty() {
+        return welcomeMessage;
+    }
+
+    public String getCurrentDateTime() {
+        return currentDateTime.get();
+    }
+
+    public StringProperty currentDateTimeProperty() {
+        return currentDateTime;
+    }
+
+    private void setCurrentDateTime(String currentDateTime) {
+        this.currentDateTime.set(currentDateTime);
+    }
+
+    public String getUSDRatio() {
+        return USDRatio.get();
+    }
+
+    public StringProperty USDRatioProperty() {
+        return USDRatio;
+    }
+
+    private void setUSDRatio(String USDRatio) {
+        this.USDRatio.set(USDRatio);
+    }
+
+    public String getEURRatio() {
+        return EURRatio.get();
+    }
+
+    public StringProperty EURRatioProperty() {
+        return EURRatio;
+    }
+
+    private void setEURRatio(String EURRatio) {
+        this.EURRatio.set(EURRatio);
+    }
+
     private void connectClient() {
         try {
             ResultSet rsCount = conn.getFromDataBase("SELECT COUNT(*) FROM employees");
@@ -163,8 +208,8 @@ public class MainController implements Initializable {
                     int numberOfSales = rs.getInt("numberOfSales");
                     double totalRevenue = rs.getDouble("totalRevenue");
                     int accessLevel = rs.getInt("accessLevel");
-                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
-                    employees.add(emp);
+                    employee = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
+                    employees.add(employee);
                 }
             }
         } catch (SQLException ex) {
@@ -184,15 +229,13 @@ public class MainController implements Initializable {
     }
 
     private boolean welcome() {
-        boolean ret = false;
         if (LogInPopupController.isLogged()) {
-            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
+            Platform.runLater(() -> setWelcomeMessage(String.format("Welcome %s %s!", LogInPopupController.getUser().getName(), LogInPopupController.getUser().getSurname())));
             Platform.runLater(() -> btn_logIn.setDisable(true));
-            ret = true;
+            return true;
         } else {
-            ret = false;
+            return false;
         }
-        return ret;
     }
 
     //Menu strip handling
@@ -236,8 +279,6 @@ public class MainController implements Initializable {
                 scene.getStylesheets().add(this.getClass().getResource("/style/textField-error.css").toString());
                 loginWindow.setScene(scene);
                 loginWindow.show();
-
-
             } catch (Exception ex) {
                 AlertBox.display("Unexpected exception", ex.getMessage());
             }
@@ -251,13 +292,14 @@ public class MainController implements Initializable {
         connectClient();
     }
 
-
     @FXML
     public void handleLogOut() {
         if (LogInPopupController.logOut()) {
-            label_name_welcome.setText("Please log in first");
+            setWelcomeMessage("Please log in first.");
             btn_logIn.setDisable(false);
-        } else displayError(USER_ALREADY_LOGGED_OUT);
+        } else {
+            displayError(USER_ALREADY_LOGGED_OUT);
+        }
     }
 
     @FXML
@@ -284,7 +326,7 @@ public class MainController implements Initializable {
     public void handleEmployeesEdit() {
         if (LogInPopupController.isLogged()) {
             if (LogInPopupController.getUser().getAccessLevel() >= 2) {
-                wnd.inflate(WindowType.EMP_MANAGEMENT);
+                window.inflate(WindowType.EMP_MANAGEMENT);
             } else {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }

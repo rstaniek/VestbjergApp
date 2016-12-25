@@ -15,11 +15,11 @@
     -fx-padding: 0 5 5 10;
 }
 
-#label_date {
+.current-date-time {
     -fx-padding: 0 0 5 10;
 }
 
-#label_name_welcome {
+.welcome-message {
     -fx-font-size: 24;
     -fx-padding: 0 0 0 10;
 }
