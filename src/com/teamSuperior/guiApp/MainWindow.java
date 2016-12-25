@@ -1,11 +1,15 @@
 package com.teamSuperior.guiApp;
 
-import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
+import java.util.Optional;
 
 /**
  * Vestbjerg App GUI Version
@@ -32,9 +36,16 @@ public class MainWindow extends Application {
     }
 
     private void closeProgram() {
-        boolean answer = ConfirmBox.display("Closing the program", "There might be unsaved changes. Are you sure you want to close the application?");
-        if (answer) {
-            window.close();
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Confirm Exit");
+        a.setContentText("There might be unsaved changes. Are you sure you want to close the application?");
+        Button exitButton = (Button) a.getDialogPane().lookupButton(ButtonType.OK);
+        exitButton.setText("Exit");
+        Optional<ButtonType> closeResponse = a.showAndWait();
+        if (closeResponse.isPresent()) {
+            if (ButtonType.OK.equals(closeResponse.get())) {
+                window.close();
+            }
         }
     }
 

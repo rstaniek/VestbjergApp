@@ -18,12 +18,16 @@ import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 /**
- * Created by Domestos Maximus on 28-Nov-16.
+ * Login Popup Controller.
  */
 public class LogInPopupController {
+    @FXML
     public Button btn_logIn;
+    @FXML
     public Button btn_cancel;
+    @FXML
     public PasswordField txt_empPassw;
+    @FXML
     public TextField txt_empID;
     private static Employee loggedUser;
     public static boolean loggedFinal = false;
@@ -131,11 +135,11 @@ public class LogInPopupController {
         return loggedFinal;
     }
 
-    public static boolean logOut(){
-        if(loggedUser != null && loggedFinal == true){
+    public static boolean logOut() {
+        if (loggedUser != null && loggedFinal == true) {
             loggedUser = null;
             loggedFinal = false;
             return true;
-        }else return false;
+        } else return false;
     }
 }

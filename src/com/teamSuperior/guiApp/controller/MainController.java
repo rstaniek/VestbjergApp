@@ -55,11 +55,9 @@ public class MainController implements Initializable {
     private StringProperty EURRatio;
 
     private Preferences registry;
-    private boolean isLoggedIn;
 
     // just database things
     private DBConnect conn;
-    private Employee employee;
     private ArrayList<Employee> employees;
 
     public MainController() {
@@ -73,7 +71,6 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         displayXmasWnd();
         registry = Preferences.userRoot();
-        isLoggedIn = false;
         window = new Window();
 
         conn = new DBConnect();
@@ -208,7 +205,7 @@ public class MainController implements Initializable {
                     int numberOfSales = rs.getInt("numberOfSales");
                     double totalRevenue = rs.getDouble("totalRevenue");
                     int accessLevel = rs.getInt("accessLevel");
-                    employee = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
+                    Employee employee = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
                     employees.add(employee);
                 }
             }
