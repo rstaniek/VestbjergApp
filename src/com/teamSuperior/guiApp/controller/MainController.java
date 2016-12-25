@@ -10,7 +10,6 @@ import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -18,10 +17,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -35,12 +32,12 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 
 /**
- * Created by Domestos on 16.11.26.
+ * Main controller.
  */
 public class MainController implements Initializable {
 
@@ -53,39 +50,13 @@ public class MainController implements Initializable {
     @FXML
     public Label label_ratioEURDKK;
     @FXML
-    public MenuItem menu_close;
-    @FXML
-    public MenuItem menu_settings;
-    @FXML
     public Button btn_logIn;
-    @FXML
-    public MenuItem menu_connection_connect;
-    @FXML
-    public MenuItem menu_connection_logIn;
-    @FXML
-    public MenuItem menu_connection_logOut;
-    @FXML
-    public MenuItem menu_employees_statistics;
-    @FXML
-    public MenuItem menu_employees_edit;
-    @FXML
-    public ImageView imgView_logo;
     @FXML
     public AnchorPane anchorPane_center;
     @FXML
     public Label label_ratioDesc1;
     @FXML
     public Label label_ratioDesc2;
-    @FXML
-    public MenuItem menu_contractors_add;
-    @FXML
-    public MenuItem menu_contractors_manage;
-    @FXML
-    public MenuItem menu_file_test;
-    @FXML
-    public MenuItem menu_products_view;
-    @FXML
-    public MenuItem menu_employees_add;
 
     private Stage settings;
     static Stage loginWindow;
@@ -93,8 +64,6 @@ public class MainController implements Initializable {
 
     private Preferences registry;
     private boolean isLoggedIn;
-
-    private Employee em;
 
     // just database things
     DBConnect conn;
@@ -107,19 +76,6 @@ public class MainController implements Initializable {
         registry = Preferences.userRoot();
         isLoggedIn = false;
         wnd = new Window();
-
-        /*label_ratioEURDKK.getStyleClass().add("fontWhite");
-        label_ratioUSDDKK.getStyleClass().add("fontWhite");
-        label_ratioDesc1.getStyleClass().add("fontWhite");
-        label_ratioDesc2.getStyleClass().add("fontWhite");*/ //doesn't fucking work
-        Color white = Color.web("#eeeeee");
-        label_ratioEURDKK.setTextFill(white);
-        label_ratioUSDDKK.setTextFill(white);
-        label_ratioDesc1.setTextFill(white);
-        label_ratioDesc2.setTextFill(white);
-        anchorPane_center.getStyleClass().add("backgroundBlue");
-
-        imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
 
         conn = new DBConnect();
         // generating array list and users
@@ -227,7 +183,7 @@ public class MainController implements Initializable {
         settings.close();
     }
 
-    public boolean welcome() {
+    private boolean welcome() {
         boolean ret = false;
         if (LogInPopupController.isLogged()) {
             Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
@@ -241,12 +197,12 @@ public class MainController implements Initializable {
 
     //Menu strip handling
     @FXML
-    public void menu_close_clicked(ActionEvent actionEvent) {
+    public void handleExit() {
         Platform.exit();
     }
 
     @FXML
-    public void menu_settings_clicked(ActionEvent actionEvent) {
+    public void handleSettings() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
             Stage settingsWnd = new Stage();
@@ -267,9 +223,9 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void btn_logIn_clicked(ActionEvent actionEvent) {
+    public void handleLogIn() {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
-            if(employees.size() < 1) connectClient();
+            if (employees.size() < 1) connectClient();
             try {
                 Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
                 loginWindow = new Stage();
@@ -291,26 +247,22 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void menu_connection_connect_clicked(ActionEvent actionEvent) {
+    public void handleConnect() {
         connectClient();
     }
 
-    @FXML
-    public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
-        btn_logIn_clicked(actionEvent);
-    }
 
     @FXML
-    public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
-        if(LogInPopupController.logOut()){
+    public void handleLogOut() {
+        if (LogInPopupController.logOut()) {
             label_name_welcome.setText("Please log in first");
             btn_logIn.setDisable(false);
-        }else displayError(USER_ALREADY_LOGGED_OUT);
+        } else displayError(USER_ALREADY_LOGGED_OUT);
     }
 
     @FXML
-    public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
+    public void handleEmployeesStatistics() {
+        if (LogInPopupController.isLogged()) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
                 Stage window = new Stage();
@@ -325,25 +277,25 @@ public class MainController implements Initializable {
             } catch (Exception ex2) {
                 AlertBox.display("Unexpected exception", ex2.getMessage());
             }
-        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        } else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
     @FXML
-    public void menu_employees_edit_clicked(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()) {
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
+    public void handleEmployeesEdit() {
+        if (LogInPopupController.isLogged()) {
+            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
                 wnd.inflate(WindowType.EMP_MANAGEMENT);
-            }else{
+            } else {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
-        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        } else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
     @FXML
-    public void menu_contractors_add_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
-                try{
+    public void handleContractorsAdd() {
+        if (LogInPopupController.isLogged()) {
+            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
+                try {
                     Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
                     Stage window = new Stage();
                     window.setTitle("Add a new contractor");
@@ -352,28 +304,24 @@ public class MainController implements Initializable {
                     //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
                     window.setScene(scene);
                     window.show();
-                }
-                catch (IOException ioex){
+                } catch (IOException ioex) {
                     AlertBox.display("IO Exception", ioex.getMessage());
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     AlertBox.display("Unexpected Exception", ex.getMessage());
                 }
-            }
-            else{
+            } else {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
-        }
-        else{
+        } else {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
-    public void menu_contractors_manage_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
-                try{
+    public void handleContractorsManage() {
+        if (LogInPopupController.isLogged()) {
+            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
+                try {
                     Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
                     Stage window = new Stage();
                     window.setTitle("Manage contractors");
@@ -382,28 +330,24 @@ public class MainController implements Initializable {
                     //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
                     window.setScene(scene);
                     window.show();
-                }
-                catch (IOException ioex){
+                } catch (IOException ioex) {
                     AlertBox.display("IO Exception", ioex.getMessage());
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     AlertBox.display("Unexpected Exception", ex.getMessage());
                 }
-            }
-            else{
+            } else {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
-        }
-        else{
+        } else {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
-    public void menu_products_view_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 1){
-                try{
+    public void handleProductsView() {
+        if (LogInPopupController.isLogged()) {
+            if (LogInPopupController.getUser().getAccessLevel() >= 1) {
+                try {
                     Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
                     Stage window = new Stage();
                     window.setTitle("Products");
@@ -411,25 +355,22 @@ public class MainController implements Initializable {
                     Scene scene = new Scene(root);
                     window.setScene(scene);
                     window.show();
-                }
-                catch (IOException ex){
+                } catch (IOException ex) {
                     AlertBox.display("IO Exception", ex.getMessage());
                 }
-            }
-            else {
+            } else {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
-        }
-        else {
+        } else {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
-    public void menu_employees_add_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 3){
-                try{
+    public void handleEmployeesAdd() {
+        if (LogInPopupController.isLogged()) {
+            if (LogInPopupController.getUser().getAccessLevel() >= 3) {
+                try {
                     Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
                     Stage window = new Stage();
                     window.setTitle("Add a new employee");
@@ -437,16 +378,13 @@ public class MainController implements Initializable {
                     Scene scene = new Scene(root);
                     window.setScene(scene);
                     window.show();
-                }
-                catch (IOException ex){
+                } catch (IOException ex) {
                     AlertBox.display("IO Exception", ex.getMessage());
                 }
-            }
-            else {
+            } else {
                 displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
             }
-        }
-        else {
+        } else {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }

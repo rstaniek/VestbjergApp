@@ -27,8 +27,7 @@ public class MainWindow extends Application {
             closeProgram();
         });
 
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+        primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 

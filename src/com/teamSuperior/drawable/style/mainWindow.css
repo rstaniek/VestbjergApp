@@ -3,5 +3,23 @@
 }
 
 .fontWhite {
-    -fx-fill: #EEEEEE;
+    -fx-text-fill: #eee;
+}
+
+.label-ratio {
+    -fx-text-fill: #eeeeee;
+    -fx-font-size: 25;
+}
+
+#btn_logIn {
+    -fx-padding: 0 5 5 10;
+}
+
+#label_date {
+    -fx-padding: 0 0 5 10;
+}
+
+#label_name_welcome {
+    -fx-font-size: 24;
+    -fx-padding: 0 0 0 10;
 }

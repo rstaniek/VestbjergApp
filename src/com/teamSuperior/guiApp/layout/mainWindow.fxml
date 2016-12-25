@@ -1,118 +1,66 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.text.Font?>
-
-<BorderPane stylesheets="/style/mainWindow.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
+<?import javafx.scene.layout.*?>
+<BorderPane stylesheets="/style/mainWindow.css" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+            minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112-ea"
+            xmlns:fx="http://javafx.com/fxml" fx:controller="com.teamSuperior.guiApp.controller.MainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
-            <menus>
-                <Menu mnemonicParsing="false" text="File">
-                    <items>
-                        <MenuItem fx:id="menu_close" mnemonicParsing="false" onAction="#menu_close_clicked" text="Close" />
-                        <MenuItem fx:id="menu_settings" mnemonicParsing="false" onAction="#menu_settings_clicked" text="Settings" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Edit">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Delete" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Connection">
-                    <items>
-                        <MenuItem fx:id="menu_connection_connect" mnemonicParsing="false" onAction="#menu_connection_connect_clicked" text="Connect" />
-                        <MenuItem fx:id="menu_connection_logIn" mnemonicParsing="false" onAction="#menu_connection_logIn_clicked" text="Log in" />
-                        <MenuItem fx:id="menu_connection_logOut" mnemonicParsing="false" onAction="#menu_connection_logOut_clicked" text="Log out" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Products">
-                    <items>
-                        <MenuItem fx:id="menu_products_view" mnemonicParsing="false" onAction="#menu_products_view_onClick" text="View" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Offers">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="Action 1" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Employees">
-                    <items>
-                        <MenuItem fx:id="menu_employees_add" mnemonicParsing="false" onAction="#menu_employees_add_onClick" text="Add" />
-                        <MenuItem fx:id="menu_employees_statistics" mnemonicParsing="false" onAction="#menu_employees_statistics_clicked" text="Statistics" />
-                        <MenuItem fx:id="menu_employees_edit" mnemonicParsing="false" onAction="#menu_employees_edit_clicked" text="Edit" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Contractors">
-                    <items>
-                        <MenuItem fx:id="menu_contractors_add" mnemonicParsing="false" onAction="#menu_contractors_add_onClick" text="Add" />
-                        <MenuItem fx:id="menu_contractors_manage" mnemonicParsing="false" onAction="#menu_contractors_manage_onClick" text="Manage" />
-                    </items>
-                </Menu>
-                <Menu mnemonicParsing="false" text="Help">
-                    <items>
-                        <MenuItem mnemonicParsing="false" text="About" />
-                    </items>
-                </Menu>
-            </menus>
+            <Menu mnemonicParsing="false" text="File">
+                <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Settings"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Edit">
+                <MenuItem mnemonicParsing="false" text="Delete"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Connection">
+                <MenuItem mnemonicParsing="false" onAction="#handleConnect" text="Connect"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleLogIn" text="Log in"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Products">
+                <MenuItem mnemonicParsing="false" onAction="#handleProductsView" text="View"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Offers">
+                <MenuItem mnemonicParsing="false" text="Action 1"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Employees">
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Edit"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Contractors">
+                <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleContractorsManage" text="Manage"/>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Help">
+                <MenuItem mnemonicParsing="false" text="About"/>
+            </Menu>
         </MenuBar>
     </top>
     <center>
-        <AnchorPane fx:id="anchorPane_center" BorderPane.alignment="CENTER">
-            <children>
-                <ImageView fx:id="imgView_logo" fitHeight="150.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true" />
-                <Label fx:id="label_ratioUSDDKK" layoutX="14.0" layoutY="186.0" text="please wait">
-                    <font>
-                        <Font name="System Bold" size="25.0" />
-                    </font>
-                </Label>
-                <Label fx:id="label_ratioDesc1" layoutX="14.0" layoutY="150.0" text="USD/DKK">
-                    <font>
-                        <Font name="System Bold" size="25.0" />
-                    </font>
-                </Label>
-                <Label fx:id="label_ratioDesc2" layoutX="191.0" layoutY="150.0" text="EUR/DKK">
-                    <font>
-                        <Font name="System Bold" size="25.0" />
-                    </font>
-                </Label>
-                <Label fx:id="label_ratioEURDKK" layoutX="191.0" layoutY="186.0" text="please wait">
-                    <font>
-                        <Font name="System Bold" size="25.0" />
-                    </font>
-                </Label>
-            </children>
+        <AnchorPane fx:id="anchorPane_center" styleClass="backgroundBlue" BorderPane.alignment="CENTER">
+            <ImageView fitHeight="150.0" fitWidth="800.0" pickOnBounds="true" preserveRatio="true">
+                <Image url="/silvan_logo_rectangle.png"/>
+            </ImageView>
+            <Label fx:id="label_ratioUSDDKK" styleClass="label-ratio" layoutX="14.0" layoutY="186.0"
+                   text="please wait"/>
+            <Label fx:id="label_ratioDesc1" styleClass="label-ratio" layoutX="14.0" layoutY="150.0" text="USD/DKK"/>
+            <Label fx:id="label_ratioDesc2" styleClass="label-ratio" layoutX="191.0" layoutY="150.0"
+                   text="EUR/DKK"/>
+            <Label fx:id="label_ratioEURDKK" styleClass="label-ratio" layoutX="191.0" layoutY="186.0"
+                   text="please wait"/>
         </AnchorPane>
     </center>
     <bottom>
         <AnchorPane prefHeight="60.0" prefWidth="809.0" BorderPane.alignment="CENTER">
-            <children>
-                <Button fx:id="btn_logIn" layoutX="737.0" layoutY="25.0" mnemonicParsing="false" onAction="#btn_logIn_clicked" text="Log In">
-                    <padding>
-                        <Insets bottom="5.0" left="10.0" right="5.0" />
-                    </padding>
-                </Button>
-                <Label fx:id="label_date" layoutY="36.0" text="Label">
-                    <padding>
-                        <Insets bottom="5.0" left="10.0" />
-                    </padding>
-                </Label>
-                <Label fx:id="label_name_welcome" text="Please log in first">
-                    <padding>
-                        <Insets left="10.0" />
-                    </padding>
-                    <font>
-                        <Font name="System Bold" size="24.0" />
-                    </font>
-                </Label>
-            </children>
+            <Button fx:id="btn_logIn" layoutX="737.0" layoutY="25.0" mnemonicParsing="false" onAction="#handleLogIn"
+                    text="Log In"/>
+            <Label fx:id="label_date" layoutY="36.0" text="Label"/>
+            <Label fx:id="label_name_welcome" text="Please log in first"/>
         </AnchorPane>
     </bottom>
 </BorderPane>
