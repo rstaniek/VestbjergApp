@@ -15,7 +15,6 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -140,10 +139,10 @@ public class SettingsController implements Initializable {
         img_testMeme.setImage(Drawable.getImage(this.getClass(), Drawables.TEST_MEME));
 
         registry = Preferences.userRoot();
-        loggedUser = LogInPopupController.getUser();
-        if(!LogInPopupController.isLogged()){
+        loggedUser = UserController.getUser();
+        if (!UserController.isLoggedIn()) {
             tab_discounts.setDisable(true);
-        }else if(loggedUser.getAccessLevel() < 2){
+        } else if (loggedUser.getAccessLevel() < 2) {
             tab_discounts.setDisable(true);
         }
 
@@ -155,10 +154,10 @@ public class SettingsController implements Initializable {
         text_settings_connection_username.setText(registry.get("DATABASE_USER", ""));
         text_settings_connection_password.setText(registry.get("DATABASE_PASS", ""));
 
-        if(LogInPopupController.isLogged() && !registry.get("DATABASE_HOSTNAME", "").isEmpty()){
+        if (UserController.isLoggedIn() && !registry.get("DATABASE_HOSTNAME", "").isEmpty()) {
             conn = new DBConnect();
             ResultSet rs;
-            try{
+            try {
                 rs = conn.getFromDataBase("SELECT * FROM discounts");
                 rs.next();
                 registry.putFloat("DISCOUNT_REGISTERED", rs.getFloat("value"));
@@ -171,13 +170,12 @@ public class SettingsController implements Initializable {
                 rs.next();
                 registry.putFloat("DISCOUNT_MAX", rs.getFloat("value"));
 
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 AlertBox.display("SQL Exception", ex.getMessage());
             }
 
             //CEO only features
-            if(loggedUser.getAccessLevel() < 3){
+            if (loggedUser.getAccessLevel() < 3) {
                 text_settings_discounts_maxTreshold.setDisable(true);
             }
         }

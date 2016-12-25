@@ -14,7 +14,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.FloatMap;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
@@ -49,10 +48,10 @@ public class EmployeeStatisticsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
         conn = new DBConnect();
-        loggedInUser = LogInPopupController.getUser();
+        loggedInUser = UserController.getUser();
         ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-        try{
-            while (rs.next()){
+        try {
+            while (rs.next()) {
                 if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null
                         && rs.getString("address") != null
@@ -63,7 +62,7 @@ public class EmployeeStatisticsController implements Initializable {
                         && rs.getString("password") != null
                         && rs.getString("position") != null
                         && rs.getInt("accessLevel") >= 1
-                        ){
+                        ) {
                     employees.add(new Employee(rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("surname"),
@@ -79,11 +78,9 @@ public class EmployeeStatisticsController implements Initializable {
                             rs.getInt("accessLevel")));
                 }
             }
-        }
-        catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             AlertBox.display("SQL exception", sqlException.getMessage());
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             AlertBox.display("Unexpected exception", ex.getMessage());
         }
 
@@ -95,8 +92,8 @@ public class EmployeeStatisticsController implements Initializable {
         updateLabels();
     }
 
-    private void initTableColumns(int accessLevel){
-        if(accessLevel >= 1){
+    private void initTableColumns(int accessLevel) {
+        if (accessLevel >= 1) {
             TableColumn<Employee, String> nameColumn = new TableColumn<>("Name");
             nameColumn.setMinWidth(90);
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -115,7 +112,8 @@ public class EmployeeStatisticsController implements Initializable {
 
             tableView_employees.setItems(employees);
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn);
-        }if(accessLevel >= 2){
+        }
+        if (accessLevel >= 2) {
             TableColumn<Employee, String> numOfSalesColumn = new TableColumn<>("Number of sales");
             numOfSalesColumn.setMinWidth(80);
             numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("numberOfSales_str"));
@@ -129,7 +127,8 @@ public class EmployeeStatisticsController implements Initializable {
             accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
             tableView_employees.getColumns().addAll(numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
-        }if(accessLevel >= 3){
+        }
+        if (accessLevel >= 3) {
             //stuff
             TableColumn<Employee, String> addressColumn = new TableColumn<>("Address");
             addressColumn.setMinWidth(120);
@@ -155,7 +154,7 @@ public class EmployeeStatisticsController implements Initializable {
         System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
     }
 
-    private void updateStatsView(){
+    private void updateStatsView() {
         //TODO: add colors to the bars depending on their value (from empStats.css) for some reason it doesn't work
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
@@ -165,7 +164,7 @@ public class EmployeeStatisticsController implements Initializable {
         ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
         XYChart.Data numOfSalesBar;
         XYChart.Data revenueBar;
-        if(loggedInUser.getAccessLevel() == 1){
+        if (loggedInUser.getAccessLevel() == 1) {
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
             contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
@@ -179,7 +178,7 @@ public class EmployeeStatisticsController implements Initializable {
             } else {
                 revenueBar.getNode().getStyleClass().add("greater-than-avg");
             }*/
-        }else{
+        } else {
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
             contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
@@ -202,21 +201,19 @@ public class EmployeeStatisticsController implements Initializable {
         chart_contribution.getData().addAll(contributionData);
     }
 
-    private void updateLabels(){
+    private void updateLabels() {
         String productivity, efficiency;
-        if(loggedInUser.getAccessLevel() == 1){
-            if(loggedInUser.getNumberOfSales() >= calculateAvgSales()){
+        if (loggedInUser.getAccessLevel() == 1) {
+            if (loggedInUser.getNumberOfSales() >= calculateAvgSales()) {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s better than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
-            }
-            else{
+            } else {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s worse than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
             }
             efficiency = String.format("Efficiency of %1$s is %2$.2f DKK/sale", loggedInUser.getName(), getEfficiency(loggedInUser));
-        }else{
-            if(selectedEmployee.getNumberOfSales() >= calculateAvgSales()){
+        } else {
+            if (selectedEmployee.getNumberOfSales() >= calculateAvgSales()) {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s better than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
-            }
-            else{
+            } else {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s worse than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
             }
             efficiency = String.format("Efficiency of %1$s is %2$.2f DKK/sale", selectedEmployee.getName(), getEfficiency(selectedEmployee));
@@ -225,26 +222,26 @@ public class EmployeeStatisticsController implements Initializable {
         label_efficiency.setText(efficiency);
     }
 
-    private float getProductivityPercentage(Employee e, float avg){
+    private float getProductivityPercentage(Employee e, float avg) {
         return (Math.abs(e.getNumberOfSales() - avg) / avg) * 100;
     }
 
-    private double getEfficiency(Employee e){
+    private double getEfficiency(Employee e) {
         return e.getTotalRevenue() / e.getNumberOfSales();
     }
 
-    private float calculateAvgSales(){
+    private float calculateAvgSales() {
         float avg = 0;
-        for(Employee e : employees){
+        for (Employee e : employees) {
             avg += e.getNumberOfSales();
         }
         avg /= employees.size();
         return avg;
     }
 
-    private float calculateAvgRevenue(){
+    private float calculateAvgRevenue() {
         float avg = 0;
-        for(Employee e : employees){
+        for (Employee e : employees) {
             avg += e.getTotalRevenue();
         }
         avg /= employees.size();

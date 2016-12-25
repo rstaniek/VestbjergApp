@@ -18,7 +18,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
@@ -64,7 +63,7 @@ public class ContractorsManageController implements Initializable {
         System.out.println("Initialized");
         contractors = FXCollections.observableArrayList();
         conn = new DBConnect();
-        loggedInUser = LogInPopupController.getUser();
+        loggedInUser = UserController.getUser();
 
         retrieveData();
         //init table
@@ -72,16 +71,16 @@ public class ContractorsManageController implements Initializable {
         selectedContractor = (Contractor) tableView_contractors.getFocusModel().getFocusedItem();
     }
 
-    private void retrieveData(){
+    private void retrieveData() {
         ResultSet rs = conn.getFromDataBase("SELECT * FROM contractors");
-        try{
-            while(rs.next()){
-                if(rs.getString("name") != null &&
+        try {
+            while (rs.next()) {
+                if (rs.getString("name") != null &&
                         rs.getString("address") != null &&
                         rs.getString("city") != null &&
                         rs.getString("zip") != null &&
                         rs.getString("phone") != null &&
-                        rs.getString("email") != null){
+                        rs.getString("email") != null) {
                     Contractor tmp = new Contractor(rs.getString("name"),
                             rs.getString("address"),
                             rs.getString("city"),
@@ -92,16 +91,14 @@ public class ContractorsManageController implements Initializable {
                     contractors.add(tmp);
                 }
             }
-        }
-        catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             AlertBox.display("SQL exception", sqlException.getMessage());
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             AlertBox.display("Unexpected exception", ex.getMessage());
         }
     }
 
-    private void initTableColumns(){
+    private void initTableColumns() {
         nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(80);
         nameCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("name"));
@@ -131,7 +128,7 @@ public class ContractorsManageController implements Initializable {
     }
 
     @FXML
-    public void tableView_contractors_onMouseClicked(MouseEvent mouseEvent) {
+    public void tableView_contractors_onMouseClicked() {
         selectedContractor = (Contractor) tableView_contractors.getFocusModel().getFocusedItem();
         text_name.setText(selectedContractor.getName());
         text_address.setText(selectedContractor.getAddress());
@@ -141,16 +138,16 @@ public class ContractorsManageController implements Initializable {
     }
 
     @FXML
-    public void btn_save_onClick(ActionEvent actionEvent) throws SQLException {
+    public void btn_save_onClick() throws SQLException {
         boolean result = ConfirmBox.display("Update info confirmation", String.format("Are you sure you want to update information about %1$s contractor?", selectedContractor.getName()));
-        if(result){
-            if(validateField(text_name) &&
+        if (result) {
+            if (validateField(text_name) &&
                     validateField(text_address) &&
                     validateField(text_city) &&
                     validateField(text_zip) &&
-                    validateField(text_phone)){
+                    validateField(text_phone)) {
                 conn = new DBConnect();
-                try{
+                try {
                     conn.upload(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
                             selectedContractor.getEmail(),
                             text_name.getText(),
@@ -158,11 +155,9 @@ public class ContractorsManageController implements Initializable {
                             text_city.getText(),
                             text_zip.getText(),
                             text_phone.getText()));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     AlertBox.display("Unexpected exception", ex.getMessage());
-                }
-                finally {
+                } finally {
                     refreshTable();
                 }
             }
@@ -170,25 +165,23 @@ public class ContractorsManageController implements Initializable {
     }
 
     @FXML
-    public void btn_delete_onClick(ActionEvent actionEvent) {
+    public void btn_delete_onClick() {
         boolean result = ConfirmBox.display("Delete contractor", String.format("Are you sure you want to delete %1$s from the contractors list?", selectedContractor.getName()));
-        if(result){
-            if(ConfirmBox.display("Confirmation", "There is no way to take back this operation. Are you fully aware of that?")){
+        if (result) {
+            if (ConfirmBox.display("Confirmation", "There is no way to take back this operation. Are you fully aware of that?")) {
                 conn = new DBConnect();
-                try{
+                try {
                     conn.upload(String.format("DELETE FROM contractors WHERE email='%1$s'", selectedContractor.getEmail()));
-                }
-                catch (Exception ex){
+                } catch (Exception ex) {
                     AlertBox.display("Unexpected exception", ex.getMessage());
-                }
-                finally {
+                } finally {
                     refreshTable();
                 }
             }
         }
     }
 
-    private void refreshTable(){
+    private void refreshTable() {
         contractors.removeAll();
         contractors = null;
         contractors = FXCollections.observableArrayList();

@@ -1,18 +1,23 @@
 package com.teamSuperior.guiApp.GUI;
 
 import com.teamSuperior.guiApp.enums.ErrorCode;
+import javafx.scene.control.Alert;
 
 /**
- * Created by Domestos Maximus on 29-Nov-16.
+ * Error Render
  */
 public class Error {
     public static void displayError(ErrorCode code) {
-        String errMsg = code.getErrorMessage();
-        String errTtl = code.getErrorTitle();
+        String errorTitle = code.getErrorTitle();
+        String errorMessage = code.getErrorMessage();
         if (code.getErrorMessage().isEmpty() || code.getErrorMessage() == null) {
-            errMsg = "Unknown Error";
-            errTtl = "ALERT!";
+            errorTitle = "Unknown Error";
+            errorMessage = "An unknown error occurred.";
         }
-        AlertBox.display(errTtl, errMsg);
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setHeaderText(errorTitle);
+        alert.setContentText(errorMessage);
+
+        alert.showAndWait();
     }
 }

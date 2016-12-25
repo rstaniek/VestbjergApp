@@ -11,7 +11,6 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -25,7 +24,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import static com.teamSuperior.core.connection.DBConnect.*;
+import static com.teamSuperior.core.connection.DBConnect.validateField;
 
 /**
  * Created by Domestos Maximus on 06-Dec-16.
@@ -75,18 +74,18 @@ public class EmployeeManagementController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
         conn = new DBConnect();
-        loggedInUser = LogInPopupController.getUser();
+        loggedInUser = UserController.getUser();
 
         retrieveData();
         //fill the table with data
         initTableColumns(loggedInUser.getAccessLevel());
-        selectedEmployee = (Employee)tableView_employees.getFocusModel().getFocusedItem();
+        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
     }
 
-    private void retrieveData(){
+    private void retrieveData() {
         ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-        try{
-            while (rs.next()){
+        try {
+            while (rs.next()) {
                 if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null
                         && rs.getString("address") != null
@@ -97,7 +96,7 @@ public class EmployeeManagementController implements Initializable {
                         && rs.getString("password") != null
                         && rs.getString("position") != null
                         && rs.getInt("accessLevel") >= 1
-                        ){
+                        ) {
                     employees.add(new Employee(rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("surname"),
@@ -113,17 +112,15 @@ public class EmployeeManagementController implements Initializable {
                             rs.getInt("accessLevel")));
                 }
             }
-        }
-        catch (SQLException sqlException){
+        } catch (SQLException sqlException) {
             AlertBox.display("SQL exception", sqlException.getMessage());
-        }
-        catch (Exception ex){
+        } catch (Exception ex) {
             AlertBox.display("Unexpected exception", ex.getMessage());
         }
     }
 
-    private void initTableColumns(int accessLevel){
-        if(accessLevel >= 2){
+    private void initTableColumns(int accessLevel) {
+        if (accessLevel >= 2) {
             nameColumn = new TableColumn<>("Name");
             nameColumn.setMinWidth(90);
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -154,7 +151,8 @@ public class EmployeeManagementController implements Initializable {
 
             tableView_employees.setItems(employees);
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn, numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
-        }if(accessLevel >= 3){
+        }
+        if (accessLevel >= 3) {
             //stuff
             addressColumn = new TableColumn<>("Address");
             addressColumn.setMinWidth(120);
@@ -202,18 +200,18 @@ public class EmployeeManagementController implements Initializable {
         window.close();
     }
 
-    private void saveChanges(Employee e){
+    private void saveChanges(Employee e) {
         boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about" + selectedEmployee.getName() + "?");
-        if(result &&
+        if (result &&
                 validateField(text_name) &&
                 validateField(text_surname) &&
                 validateField(text_email) &&
                 validateField(text_position) &&
                 validateField(text_address) &&
                 validateField(text_city) &&
-                validateField(text_zip)){
+                validateField(text_zip)) {
             conn = new DBConnect();
-            try{
+            try {
                 conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s' WHERE id='%8$d'",
                         text_name.getText(),
                         text_surname.getText(),
@@ -223,19 +221,18 @@ public class EmployeeManagementController implements Initializable {
                         text_position.getText(),
                         text_email.getText(),
                         e.getId()));
-            }
-            catch (Exception ex){
+            } catch (Exception ex) {
                 AlertBox.display("Unexpected exception", ex.getMessage());
             }
-        } else if(result) Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        } else if (result) Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
         refreshTable();
     }
 
-    private void refreshTable(){
+    private void refreshTable() {
         employees.removeAll();
         employees = null;
         employees = FXCollections.observableArrayList();
-        if(loggedInUser.getAccessLevel() < 3){
+        if (loggedInUser.getAccessLevel() < 3) {
             tableView_employees.getColumns().removeAll(nameColumn,
                     surnameColumn,
                     emailColumn,
@@ -243,8 +240,7 @@ public class EmployeeManagementController implements Initializable {
                     numOfSalesColumn,
                     totalRevenueColumn,
                     accessLevelColumn);
-        }
-        else{
+        } else {
             tableView_employees.getColumns().removeAll(nameColumn,
                     surnameColumn,
                     emailColumn,

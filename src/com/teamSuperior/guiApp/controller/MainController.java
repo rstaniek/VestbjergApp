@@ -226,8 +226,8 @@ public class MainController implements Initializable {
     }
 
     private boolean welcome() {
-        if (LogInPopupController.isLogged()) {
-            Platform.runLater(() -> setWelcomeMessage(String.format("Welcome %s %s!", LogInPopupController.getUser().getName(), LogInPopupController.getUser().getSurname())));
+        if (UserController.isLoggedIn()) {
+            Platform.runLater(() -> setWelcomeMessage(String.format("Welcome %s %s!", UserController.getUser().getName(), UserController.getUser().getSurname())));
             Platform.runLater(() -> btn_logIn.setDisable(true));
             return true;
         } else {
@@ -291,7 +291,7 @@ public class MainController implements Initializable {
 
     @FXML
     public void handleLogOut() {
-        if (LogInPopupController.logOut()) {
+        if (UserController.logout()) {
             setWelcomeMessage("Please log in first.");
             btn_logIn.setDisable(false);
         } else {
@@ -301,7 +301,7 @@ public class MainController implements Initializable {
 
     @FXML
     public void handleEmployeesStatistics() {
-        if (LogInPopupController.isLogged()) {
+        if (UserController.isLoggedIn()) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
                 Stage window = new Stage();
@@ -321,110 +321,80 @@ public class MainController implements Initializable {
 
     @FXML
     public void handleEmployeesEdit() {
-        if (LogInPopupController.isLogged()) {
-            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
-                window.inflate(WindowType.EMP_MANAGEMENT);
-            } else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
-            }
-        } else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        if (UserController.isAllowed(2)) {
+            window.inflate(WindowType.EMP_MANAGEMENT);
+        }
     }
 
     @FXML
     public void handleContractorsAdd() {
-        if (LogInPopupController.isLogged()) {
-            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Add a new contractor");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
-                    window.setScene(scene);
-                    window.show();
-                } catch (IOException ioex) {
-                    AlertBox.display("IO Exception", ioex.getMessage());
-                } catch (Exception ex) {
-                    AlertBox.display("Unexpected Exception", ex.getMessage());
-                }
-            } else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new contractor");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ioex) {
+                AlertBox.display("IO Exception", ioex.getMessage());
+            } catch (Exception ex) {
+                AlertBox.display("Unexpected Exception", ex.getMessage());
             }
-        } else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
     public void handleContractorsManage() {
-        if (LogInPopupController.isLogged()) {
-            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Manage contractors");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
-                    window.setScene(scene);
-                    window.show();
-                } catch (IOException ioex) {
-                    AlertBox.display("IO Exception", ioex.getMessage());
-                } catch (Exception ex) {
-                    AlertBox.display("Unexpected Exception", ex.getMessage());
-                }
-            } else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage contractors");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ioex) {
+                AlertBox.display("IO Exception", ioex.getMessage());
+            } catch (Exception ex) {
+                AlertBox.display("Unexpected Exception", ex.getMessage());
             }
-        } else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
     public void handleProductsView() {
-        if (LogInPopupController.isLogged()) {
-            if (LogInPopupController.getUser().getAccessLevel() >= 1) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Products");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    window.setScene(scene);
-                    window.show();
-                } catch (IOException ex) {
-                    AlertBox.display("IO Exception", ex.getMessage());
-                }
-            } else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Products");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                AlertBox.display("IO Exception", ex.getMessage());
             }
-        } else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
     public void handleEmployeesAdd() {
-        if (LogInPopupController.isLogged()) {
-            if (LogInPopupController.getUser().getAccessLevel() >= 3) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Add a new employee");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    window.setScene(scene);
-                    window.show();
-                } catch (IOException ex) {
-                    AlertBox.display("IO Exception", ex.getMessage());
-                }
-            } else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+        if (UserController.isAllowed(3)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new employee");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                AlertBox.display("IO Exception", ex.getMessage());
             }
-        } else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 

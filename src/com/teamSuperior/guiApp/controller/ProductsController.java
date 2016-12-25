@@ -79,7 +79,7 @@ public class ProductsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         conn = new DBConnect();
         products = FXCollections.observableArrayList();
-        loggedInUser = LogInPopupController.getUser();
+        loggedInUser = UserController.getUser();
         showsAll = true;
         initWarehouseCheckDone = false;
 

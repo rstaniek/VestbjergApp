@@ -25,9 +25,6 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
-import static com.teamSuperior.guiApp.GUI.Error.displayError;
-import static com.teamSuperior.guiApp.enums.ErrorCode.ACCESS_DENIED_INSUFFICIENT_PERMISSIONS;
-import static com.teamSuperior.guiApp.enums.ErrorCode.ACCESS_DENIED_NOT_LOGGED_IN;
 
 /**
  * Created by Domestos on 16.12.12.
@@ -130,26 +127,20 @@ public class EmployeeAddController implements Initializable {
 
     @FXML
     public void btn_editEmployees_onClick(ActionEvent actionEvent) {
-        if (LogInPopupController.isLogged()) {
-            if (LogInPopupController.getUser().getAccessLevel() >= 2) {
-                try {
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/empManagement.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Manage Employees");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    window.setScene(scene);
-                    window.show();
-                } catch (IOException ioex) {
-                    AlertBox.display("IO Exception", ioex.getMessage());
-                } catch (Exception ex) {
-                    AlertBox.display("Unexpected Exception", ex.getMessage());
-                }
-            } else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/empManagement.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage Employees");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ioex) {
+                AlertBox.display("IO Exception", ioex.getMessage());
+            } catch (Exception ex) {
+                AlertBox.display("Unexpected Exception", ex.getMessage());
             }
-        } else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 

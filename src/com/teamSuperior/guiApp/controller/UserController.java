@@ -18,9 +18,9 @@ import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 
 /**
- * Login Popup Controller.
+ * Login Controller.
  */
-public class LogInPopupController {
+public class UserController {
     @FXML
     public Button btn_logIn;
     @FXML
@@ -29,8 +29,9 @@ public class LogInPopupController {
     public PasswordField txt_empPassw;
     @FXML
     public TextField txt_empID;
+
     private static Employee loggedUser;
-    public static boolean loggedFinal = false;
+    private static boolean loggedFinal = false;
 
     @FXML
     public void btn_logIn_click(ActionEvent actionEvent) {
@@ -127,16 +128,27 @@ public class LogInPopupController {
         return ret;
     }
 
-    public static Employee getUser() {
+    static Employee getUser() {
         return loggedUser;
     }
 
-    public static boolean isLogged() {
+    static boolean isLoggedIn() {
         return loggedFinal;
     }
 
-    public static boolean logOut() {
-        if (loggedUser != null && loggedFinal == true) {
+    static boolean isAllowed(int minAccessLevel) {
+        if (loggedFinal && loggedUser.getAccessLevel() >= minAccessLevel) {
+            return true;
+        } else if (!loggedFinal){
+            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        } else {
+            displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
+        }
+        return false;
+    }
+
+    static boolean logout() {
+        if (loggedUser != null && loggedFinal) {
             loggedUser = null;
             loggedFinal = false;
             return true;
