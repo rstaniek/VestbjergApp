@@ -14,14 +14,15 @@ public class Error {
         if (t == null) {
             t = Alert.AlertType.WARNING;
         }
-        if (code.getErrorMessage().isEmpty() || code.getErrorMessage() == null) {
-            errorTitle = "Unknown Error";
-            errorMessage = "An unknown error occurred.";
-        }
         Alert alert = new Alert(t);
-        alert.setHeaderText(errorTitle);
-        alert.setContentText(errorMessage);
 
-        alert.showAndWait();
+        if (code.getErrorMessage().isEmpty() || code.getErrorMessage() == null) {
+            alert.setHeaderText(errorTitle);
+            alert.showAndWait();
+        } else {
+            alert.setHeaderText(errorTitle);
+            alert.setContentText(errorMessage);
+            alert.showAndWait();
+        }
     }
 }
