@@ -69,7 +69,8 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        displayXmasWnd();
+        //christmas easter egg only
+        //displayXmasWnd();
         registry = Preferences.userRoot();
         window = new Window();
 

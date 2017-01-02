@@ -10,11 +10,15 @@ public class Error {
     public static void displayError(ErrorCode code) {
         String errorTitle = code.getErrorTitle();
         String errorMessage = code.getErrorMessage();
+        Alert.AlertType t = code.getT();
+        if (t == null) {
+            t = Alert.AlertType.WARNING;
+        }
         if (code.getErrorMessage().isEmpty() || code.getErrorMessage() == null) {
             errorTitle = "Unknown Error";
             errorMessage = "An unknown error occurred.";
         }
-        Alert alert = new Alert(Alert.AlertType.ERROR);
+        Alert alert = new Alert(t);
         alert.setHeaderText(errorTitle);
         alert.setContentText(errorMessage);
 
