@@ -2,7 +2,6 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.Position;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -25,6 +24,8 @@ import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos on 16.12.12.
@@ -72,9 +73,9 @@ public class EmployeeAddController implements Initializable {
             }
             System.out.print(positions.toString());
         } catch (SQLException ex) {
-            AlertBox.display("SQL Exception", ex.getMessage());
+            displayMessage(ERROR, "SQL connection error", ex.getMessage());
         } catch (Exception exception) {
-            AlertBox.display("Unexpected Exception", exception.getMessage());
+            displayMessage(ERROR, exception.getMessage());
         } finally {
             choiceBox_position.getItems().addAll(positions.stream().map(Position::getName).collect(Collectors.toList()));
             choiceBox_position.getSelectionModel().selectFirst();
@@ -113,7 +114,7 @@ public class EmployeeAddController implements Initializable {
                         passwordSafe,
                         selectedPosition.getAccessLevel()));
             } catch (Exception ex) {
-                AlertBox.display("Unexpected exception", ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             } finally {
                 resetTextFields();
             }
@@ -137,9 +138,9 @@ public class EmployeeAddController implements Initializable {
                 window.setScene(scene);
                 window.show();
             } catch (IOException ioex) {
-                AlertBox.display("IO Exception", ioex.getMessage());
+                displayMessage(ERROR, "This page couldn't be loaded!", ioex.getMessage());
             } catch (Exception ex) {
-                AlertBox.display("Unexpected Exception", ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             }
         }
     }

@@ -1,8 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.guiApp.GUI.AlertBox;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -14,6 +12,8 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos Maximus on 09-Dec-16.
@@ -58,7 +58,7 @@ public class ContractorsAddController {
                         text_phone.getText(),
                         text_email.getText()));
             } catch (Exception ex) {
-                AlertBox.display("Unexpected exception", ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             } finally {
                 resetTextFields();
             }
@@ -82,9 +82,9 @@ public class ContractorsAddController {
                 window.setScene(scene);
                 window.show();
             } catch (IOException ioex) {
-                AlertBox.display("IO Exception", ioex.getMessage());
+                displayMessage(ERROR, "This page couldn't be loaded", ioex.getMessage());
             } catch (Exception ex) {
-                AlertBox.display("Unexpected Exception", ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             }
         }
     }

@@ -3,7 +3,6 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
@@ -117,7 +116,7 @@ public class ProductsController implements Initializable {
                 boolean result = ConfirmBox.display("Empty storages detected",
                         String.format("There were %1$d almost empty storages found during the checkup. Do you want to intervene?", numberOfWarnings));
                 if (result) {
-                    //Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+                    //Error.displayMessage(ErrorCode.NOT_IMPLEMENTED);
                     showsAll = false;
                     updateTable(showsAll);
                     btn_showLowQuantity.setText("Show All products");
@@ -164,9 +163,9 @@ public class ProductsController implements Initializable {
                 }
             }
         } catch (SQLException sqlex) {
-            AlertBox.display("SQL Exception", sqlex.getMessage());
+            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
         } catch (Exception ex) {
-            AlertBox.display("Unexpected Exception", ex.getMessage());
+            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
         }
     }
 
@@ -259,7 +258,7 @@ public class ProductsController implements Initializable {
             int itemsTotal = selectedProduct.getQuantity() + Integer.parseInt(text_amountToRequest.getText());
             if (itemsTotal > maxCap) {
                 itemsTotal = maxCap;
-                AlertBox.display("Capacity error", String.format("Ordering %1$s new items would cause overfill. Ordering %2$d items instead.", text_amountToRequest.getText(), maxCap - selectedProduct.getQuantity()));
+                Error.displayMessage(Alert.AlertType.WARNING, "Warehouse overfill alert!", String.format("Ordering %1$s new items would cause overfill. Ordering %2$d items instead.", text_amountToRequest.getText(), maxCap - selectedProduct.getQuantity()));
             }
             conn = new DBConnect();
             conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));

@@ -5,6 +5,7 @@ import com.teamSuperior.core.controlLayer.WebsiteCrawler;
 import com.teamSuperior.core.enums.Currency;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.Window;
 import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.WindowType;
@@ -35,6 +36,7 @@ import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 
 /**
@@ -358,9 +360,9 @@ public class MainController implements Initializable {
                 window.setScene(scene);
                 window.show();
             } catch (IOException ioex) {
-                AlertBox.display("IO Exception", ioex.getMessage());
+                Error.displayMessage(ERROR, "This page couldn't be loaded", ioex.getMessage());
             } catch (Exception ex) {
-                AlertBox.display("Unexpected Exception", ex.getMessage());
+                Error.displayMessage(ERROR, ex.getMessage());
             }
         }
     }
@@ -377,7 +379,7 @@ public class MainController implements Initializable {
                 window.setScene(scene);
                 window.show();
             } catch (IOException ex) {
-                AlertBox.display("IO Exception", ex.getMessage());
+                Error.displayMessage(ERROR, ex.getMessage());
             }
         }
     }
@@ -394,7 +396,7 @@ public class MainController implements Initializable {
                 window.setScene(scene);
                 window.show();
             } catch (IOException ex) {
-                AlertBox.display("IO Exception", ex.getMessage());
+                Error.displayMessage(ERROR, ex.getMessage());
             }
         }
     }

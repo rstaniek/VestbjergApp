@@ -2,7 +2,6 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,9 +44,9 @@ public class UserController {
         boolean isValid = validateUser(txt_empID.getText(), txt_empPassw.getText());
         if (isValid) {
             MainController.loginWindow.close();
-            WaitingBox.display("Logging in", 3000);
+            WaitingBox.display("Logging in", 1500);
         } else {
-            AlertBox.display("Wrong credentials!", "Wrong e-mail/password, please try again.");
+            displayError(LOGIN_INCORRECT_CREDENTIALS);
         }
     }
 

@@ -2,10 +2,8 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -19,6 +17,10 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 /**
  * Created by Domestos on 16.11.30.
@@ -64,30 +66,30 @@ public class SettingsController implements Initializable {
     public void btn_settings_connection_testConn_clicked(ActionEvent actionEvent) {
         if (validateDatabaseCredentials()) {
             if (DBConnect.testConnection(text_settings_connection_hostname.getText(), text_settings_connection_username.getText(), text_settings_connection_password.getText())) {
-                AlertBox.display("Connection test", "Operation successful");
-            } else Error.displayError(ErrorCode.CONNECTION_TEST_FAILED);
+                Error.displayMessage(INFORMATION, "Connection test finished successfully", String.format("Connection with the server %1$s is established. Now you can log in", text_settings_connection_hostname.getText()));
+            } else displayError(CONNECTION_TEST_FAILED);
         }
     }
 
     private boolean validateDatabaseCredentials() {
         if (text_settings_connection_hostname.getText().isEmpty()) {
-            displayError(ErrorCode.CONNECTION_HOSTNAME_EMPTY);
+            displayError(CONNECTION_HOSTNAME_EMPTY);
             return false;
         } else if (text_settings_connection_username.getText().isEmpty()) {
-            displayError(ErrorCode.CONNECTION_USERNAME_EMPTY);
+            displayError(CONNECTION_USERNAME_EMPTY);
             return false;
         } else if (text_settings_connection_password.getText().isEmpty()) {
-            displayError(ErrorCode.CONNECTION_PASSWORD_EMPTY);
+            displayError(CONNECTION_PASSWORD_EMPTY);
             return false;
         } else return true;
     }
 
     private boolean validateDiscount(TextField tf) {
         if (tf.getText().isEmpty()) {
-            Error.displayError(ErrorCode.VALIDATION_FIELD_EMPTY);
+            displayError(VALIDATION_FIELD_EMPTY);
             return false;
         } else if (tf.getText().contains("[a-zA-Z]+")) {
-            Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+            displayError(VALIDATION_ILLEGAL_CHARS);
             return false;
         } else return true;
     }
@@ -171,7 +173,7 @@ public class SettingsController implements Initializable {
                 registry.putFloat("DISCOUNT_MAX", rs.getFloat("value"));
 
             } catch (Exception ex) {
-                AlertBox.display("SQL Exception", ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             }
 
             //CEO only features

@@ -3,11 +3,9 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Contractor;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -15,7 +13,6 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.MouseEvent;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -23,6 +20,8 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos Maximus on 09-Dec-16.
@@ -92,9 +91,9 @@ public class ContractorsManageController implements Initializable {
                 }
             }
         } catch (SQLException sqlException) {
-            AlertBox.display("SQL exception", sqlException.getMessage());
+            displayMessage(ERROR, "SQL connection error", sqlException.getMessage());
         } catch (Exception ex) {
-            AlertBox.display("Unexpected exception", ex.getMessage());
+            displayMessage(ERROR, ex.getMessage());
         }
     }
 
@@ -156,7 +155,7 @@ public class ContractorsManageController implements Initializable {
                             text_zip.getText(),
                             text_phone.getText()));
                 } catch (Exception ex) {
-                    AlertBox.display("Unexpected exception", ex.getMessage());
+                    displayMessage(ERROR, ex.getMessage());
                 } finally {
                     refreshTable();
                 }
@@ -173,7 +172,7 @@ public class ContractorsManageController implements Initializable {
                 try {
                     conn.upload(String.format("DELETE FROM contractors WHERE email='%1$s'", selectedContractor.getEmail()));
                 } catch (Exception ex) {
-                    AlertBox.display("Unexpected exception", ex.getMessage());
+                    displayMessage(ERROR, ex.getMessage());
                 } finally {
                     refreshTable();
                 }

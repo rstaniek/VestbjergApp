@@ -25,4 +25,17 @@ public class Error {
             alert.showAndWait();
         }
     }
+
+    public static void displayMessage(Alert.AlertType type, String title, String message) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(title);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void displayMessage(Alert.AlertType type, String message) {
+        Alert alert = new Alert(type);
+        alert.setHeaderText(message);
+        alert.showAndWait();
+    }
 }

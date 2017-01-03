@@ -2,7 +2,7 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +20,8 @@ import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos Maximus on 06-Dec-16.
@@ -79,9 +81,9 @@ public class EmployeeStatisticsController implements Initializable {
                 }
             }
         } catch (SQLException sqlException) {
-            AlertBox.display("SQL exception", sqlException.getMessage());
+            Error.displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
         } catch (Exception ex) {
-            AlertBox.display("Unexpected exception", ex.getMessage());
+            Error.displayMessage(ERROR, ex.getMessage());
         }
 
         //fill the table with data

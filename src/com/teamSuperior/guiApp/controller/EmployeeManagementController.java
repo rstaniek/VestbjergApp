@@ -2,9 +2,7 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
-import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,6 +23,9 @@ import java.sql.SQLException;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos Maximus on 06-Dec-16.
@@ -113,9 +114,9 @@ public class EmployeeManagementController implements Initializable {
                 }
             }
         } catch (SQLException sqlException) {
-            AlertBox.display("SQL exception", sqlException.getMessage());
+            displayMessage(ERROR, "Server connection error.", sqlException.getMessage());
         } catch (Exception ex) {
-            AlertBox.display("Unexpected exception", ex.getMessage());
+            displayMessage(ERROR, ex.getMessage());
         }
     }
 
@@ -222,9 +223,9 @@ public class EmployeeManagementController implements Initializable {
                         text_email.getText(),
                         e.getId()));
             } catch (Exception ex) {
-                AlertBox.display("Unexpected exception", ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             }
-        } else if (result) Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        } else if (result) displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
         refreshTable();
     }
 
