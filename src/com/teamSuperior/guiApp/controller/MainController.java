@@ -281,7 +281,7 @@ public class MainController implements Initializable {
                 AlertBox.display("Unexpected exception", ex.getMessage());
             }
         } else {
-            AlertBox.display("Log in ERROR", "Please set up the configuration first!");
+            displayError(CONNECTION_REG_EMPTY);
         }
     }
 
