@@ -420,7 +420,7 @@ public class MainController implements Initializable {
 
     @FXML
     public void handleAddOffer(ActionEvent actionEvent) {
-        if (UserController.isAllowed(1)) {
+        if (UserController.isAllowed(2)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../layout/offerAdd.fxml"));
                 Stage window = new Stage();
@@ -437,6 +437,18 @@ public class MainController implements Initializable {
 
     @FXML
     public void handleViewOffers(ActionEvent actionEvent) {
-        //TODO: to be implemented
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/offersManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("manage Offers");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
     }
 }

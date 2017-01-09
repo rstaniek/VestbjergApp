@@ -12,6 +12,7 @@ public enum ErrorCode {
     CONNECTION_PASSWORD_EMPTY("Database connection ERROR", "Password cannot be empty", ERROR),
     CONNECTION_TEST_FAILED("Database connection ERROR", "Test Failed", WARNING),
     CONNECTION_REG_EMPTY("Couldn't connect to the server.", "In order to connect please fill out the configuration first!", WARNING),
+    DATABASE_PRODUCTS_NOT_FOUND("Product with such ID doesn't exist", "Please check the warehouse of validity of typed ID", ERROR),
     VALIDATION_FIELD_EMPTY("All fields must be filled properly", ERROR),
     VALIDATION_ILLEGAL_CHARS("Illegal characters spotted in th input", ERROR),
     ACCESS_DENIED_NOT_LOGGED_IN("Access denied", "You need to be logged in to access this function!", INFORMATION),

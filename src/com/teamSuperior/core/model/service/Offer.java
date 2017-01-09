@@ -1,78 +1,46 @@
 package com.teamSuperior.core.model.service;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
 
 /**
- * Created by Domestos Maximus on 24-Nov-16.
+ * Created by rajmu on 17.01.09.
  */
 public class Offer {
-    private int id;
     private Date date;
-    private ArrayList<Product> products;
-    private float totalPrice, discount;
-    private int customerID;
-    private boolean isAccepted;
+    private int id, productID;
+    private double price, discount;
+    private String productName;
 
-    public Offer(int id, Date date, ArrayList<Product> products, float totalPrice, float discount, int customerID, boolean isAccepted) {
-        this.id = id;
+    public Offer(Date date, int id, int productID, double price, double discount, String productName) {
         this.date = date;
-        this.products = products;
-        this.totalPrice = totalPrice;
+        this.id = id;
+        this.productID = productID;
+        this.price = price;
         this.discount = discount;
-        this.customerID = customerID;
-        this.isAccepted = isAccepted;
-    }
-
-    public int getId() {
-        return id;
+        this.productName = productName;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
-        this.date = date;
+    public int getId() {
+        return id;
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
+    public int getProductID() {
+        return productID;
     }
 
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
+    public double getPrice() {
+        return price;
     }
 
-    public float getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(float totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public float getDiscount() {
+    public double getDiscount() {
         return discount;
     }
 
-    public void setDiscount(float discount) {
-        this.discount = discount;
-    }
-
-    public int getCustomerID() {
-        return customerID;
-    }
-
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public boolean isAccepted() {
-        return isAccepted;
-    }
-
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
+    public String getProductName() {
+        return productName;
     }
 }
