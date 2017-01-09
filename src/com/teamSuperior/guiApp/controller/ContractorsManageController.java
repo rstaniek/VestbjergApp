@@ -6,6 +6,7 @@ import com.teamSuperior.core.model.service.Contractor;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -13,6 +14,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -43,8 +46,15 @@ public class ContractorsManageController implements Initializable {
     public Button btn_save;
     @FXML
     public Button btn_delete;
+    @FXML
+    public Button btn_search_clear;
+    @FXML
+    public TextField text_search_query;
+    @FXML
+    public CheckComboBox<String> checkComboBox_search_criteria;
 
     private ObservableList<Contractor> contractors;
+    private ObservableList<Contractor> searchResults;
     private static Employee loggedInUser;
     private Contractor selectedContractor;
     private DBConnect conn;
@@ -59,14 +69,15 @@ public class ContractorsManageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        System.out.println("Initialized");
+        searchResults = FXCollections.observableArrayList();
         contractors = FXCollections.observableArrayList();
+        checkComboBox_search_criteria.getItems().addAll("Name", "Address", "City", "ZIP", "Phone", "Email");
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
 
         retrieveData();
         //init table
-        initTableColumns();
+        initTableColumns(contractors);
         selectedContractor = (Contractor) tableView_contractors.getFocusModel().getFocusedItem();
     }
 
@@ -97,7 +108,7 @@ public class ContractorsManageController implements Initializable {
         }
     }
 
-    private void initTableColumns() {
+    private void initTableColumns(ObservableList<Contractor> source) {
         nameCol = new TableColumn<>("Name");
         nameCol.setMinWidth(80);
         nameCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("name"));
@@ -122,7 +133,7 @@ public class ContractorsManageController implements Initializable {
         emailCol.setMinWidth(150);
         emailCol.setCellValueFactory(new PropertyValueFactory<Contractor, String>("email"));
 
-        tableView_contractors.setItems(contractors);
+        tableView_contractors.setItems(source);
         tableView_contractors.getColumns().addAll(nameCol, addressCol, cityCol, zipCol, phoneCol, emailCol);
     }
 
@@ -191,6 +202,71 @@ public class ContractorsManageController implements Initializable {
                 phoneCol,
                 emailCol);
         retrieveData();
-        initTableColumns();
+        initTableColumns(contractors);
+    }
+
+    @FXML
+    public void btn_search_clear_onClick(ActionEvent actionEvent) {
+        text_search_query.clear();
+        initTableColumns(contractors);
+    }
+
+    @FXML
+    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+        searchResults = null;
+        searchResults = performSearch(text_search_query.getText());
+        tableView_contractors.getColumns().removeAll(nameCol,
+                addressCol,
+                cityCol,
+                zipCol,
+                phoneCol,
+                emailCol);
+        initTableColumns(searchResults);
+    }
+
+    private ObservableList<Contractor> performSearch(String query) {
+        ObservableList<Contractor> results = FXCollections.observableArrayList();
+        if (query.isEmpty()) {
+            return contractors;
+        }
+        for (Contractor contractor : contractors) {
+            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+                switch (criteria) {
+                    case "Name":
+                        if (contractor.getName().contains(query)) {
+                            results.add(contractor);
+                        }
+                        break;
+                    case "Address":
+                        if (contractor.getAddress().contains(query)) {
+                            results.add(contractor);
+                        }
+                        break;
+                    case "City":
+                        if (contractor.getCity().contains(query)) {
+                            results.add(contractor);
+                        }
+                        break;
+                    case "ZIP":
+                        if (contractor.getZip().contains(query)) {
+                            results.add(contractor);
+                        }
+                        break;
+                    case "Phone":
+                        if (contractor.getPhone().contains(query)) {
+                            results.add(contractor);
+                        }
+                        break;
+                    case "Email":
+                        if (contractor.getEmail().contains(query)) {
+                            results.add(contractor);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return results;
     }
 }

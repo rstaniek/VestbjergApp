@@ -16,8 +16,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -50,6 +52,12 @@ public class ProductsController implements Initializable {
     public Label label_quantity;
     @FXML
     public Label label_price;
+    @FXML
+    public Button btn_search_clear;
+    @FXML
+    public TextField text_search_query;
+    @FXML
+    public CheckComboBox<String> checkComboBox_search_criteria;
 
     private static final int maxCap = 250;
     private static final int capTreshold = 15;
@@ -60,6 +68,7 @@ public class ProductsController implements Initializable {
     private Product selectedProduct;
     private ObservableList<Product> almostEmptyStorages;
     private boolean showsAll, initWarehouseCheckDone;
+    private ObservableList<Product> searchResults;
 
     private ObservableList<PieChart.Data> quantityChartData;
 
@@ -78,13 +87,20 @@ public class ProductsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         conn = new DBConnect();
         products = FXCollections.observableArrayList();
+        searchResults = FXCollections.observableArrayList();
+        checkComboBox_search_criteria.getItems().addAll("ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID");
         loggedInUser = UserController.getUser();
         showsAll = true;
         initWarehouseCheckDone = false;
 
         //init columns ad stuff
         retrieveData();
-        updateColumns(showsAll);
+        if (showsAll) {
+            updateColumns(products);
+        } else {
+            updateColumns(almostEmptyStorages);
+        }
+
         //-------------
         tableView_products.getSelectionModel().selectFirst();
         selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
@@ -169,7 +185,7 @@ public class ProductsController implements Initializable {
         }
     }
 
-    private void updateColumns(boolean showAll) {
+    private void updateColumns(ObservableList<Product> source) {
         idCol = new TableColumn<>("ID");
         idCol.setMinWidth(50);
         idCol.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
@@ -206,12 +222,7 @@ public class ProductsController implements Initializable {
         contractorIdCol.setMinWidth(50);
         contractorIdCol.setCellValueFactory(new PropertyValueFactory<Product, Integer>("contractorId"));
 
-        if (showAll) {
-            tableView_products.setItems(products);
-        } else {
-            tableView_products.setItems(almostEmptyStorages);
-        }
-
+        tableView_products.setItems(source);
         tableView_products.getColumns().addAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
     }
 
@@ -239,7 +250,11 @@ public class ProductsController implements Initializable {
         tableView_products.getColumns().removeAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
         retrieveData();
         runWarehouseCheck(true);
-        updateColumns(showAll);
+        if (showsAll) {
+            updateColumns(products);
+        } else {
+            updateColumns(almostEmptyStorages);
+        }
         updateStats();
     }
 
@@ -278,5 +293,82 @@ public class ProductsController implements Initializable {
             updateTable(showsAll);
             btn_showLowQuantity.setText("Show only low quantity");
         }
+    }
+
+    @FXML
+    public void btn_search_clear_onClick(ActionEvent actionEvent) {
+        text_search_query.clear();
+        if (showsAll) {
+            updateColumns(products);
+        } else {
+            updateColumns(almostEmptyStorages);
+        }
+    }
+
+    @FXML
+    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+        searchResults = null;
+        searchResults = performSearch(text_search_query.getText());
+        tableView_products.getColumns().removeAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
+        updateColumns(searchResults);
+    }
+
+    private ObservableList<Product> performSearch(String query) {
+        ObservableList<Product> results = FXCollections.observableArrayList();
+        ObservableList<Product> source = FXCollections.observableArrayList();
+        if (showsAll) source = products;
+        else source = almostEmptyStorages;
+        if (query.isEmpty()) {
+            return source;
+        }
+        for (Product product : source) {
+            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+                switch (criteria) {
+                    case "ID":
+                        if (String.valueOf(product.getId()).contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Barcode":
+                        if (product.getBarcode().contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Name":
+                        if (product.getName().contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Subname":
+                        if (product.getSubname().contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Category":
+                        if (product.getCategory().contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Location":
+                        if (product.getWarehouseLocation().contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Price":
+                        if (String.valueOf(product.getPrice()).contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Contractor ID":
+                        if (String.valueOf(product.getContractorId()).contains(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return results;
     }
 }

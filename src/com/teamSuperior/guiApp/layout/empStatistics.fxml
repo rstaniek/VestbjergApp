@@ -13,7 +13,8 @@
                <Button fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
                        onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" text="X"/>
                <TextField fx:id="text_search_query" layoutX="49.0" layoutY="13.0"
-                          onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0"/>
+                          onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0"
+                          promptText="Search..."/>
                <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="838.0" layoutY="13.0" prefHeight="25"
                               prefWidth="150.0"/>
            </children>

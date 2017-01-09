@@ -14,8 +14,10 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.ResultSet;
@@ -53,8 +55,15 @@ public class EmployeeManagementController implements Initializable {
     public Button btn_saveQuit;
     @FXML
     public Button btn_quit;
+    @FXML
+    public Button btn_search_clear;
+    @FXML
+    public TextField text_search_query;
+    @FXML
+    public CheckComboBox<String> checkComboBox_search_criteria;
 
     private ObservableList<Employee> employees;
+    private ObservableList<Employee> searchResults;
     private static Employee loggedInUser;
     private Employee selectedEmployee;
     private DBConnect conn;
@@ -74,12 +83,14 @@ public class EmployeeManagementController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
+        searchResults = FXCollections.observableArrayList();
+        checkComboBox_search_criteria.getItems().addAll("Name", "Surname", "Address", "City", "ZIP", "Phone", "Position");
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
 
         retrieveData();
         //fill the table with data
-        initTableColumns(loggedInUser.getAccessLevel());
+        initTableColumns(loggedInUser.getAccessLevel(), employees);
         selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
     }
 
@@ -120,7 +131,7 @@ public class EmployeeManagementController implements Initializable {
         }
     }
 
-    private void initTableColumns(int accessLevel) {
+    private void initTableColumns(int accessLevel, ObservableList<Employee> source) {
         if (accessLevel >= 2) {
             nameColumn = new TableColumn<>("Name");
             nameColumn.setMinWidth(90);
@@ -150,7 +161,7 @@ public class EmployeeManagementController implements Initializable {
             accessLevelColumn.setMinWidth(80);
             accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
-            tableView_employees.setItems(employees);
+            tableView_employees.setItems(source);
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn, numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
         }
         if (accessLevel >= 3) {
@@ -254,6 +265,101 @@ public class EmployeeManagementController implements Initializable {
                     zipColumn);
         }
         retrieveData();
-        initTableColumns(loggedInUser.getAccessLevel());
+        initTableColumns(loggedInUser.getAccessLevel(), employees);
+    }
+
+    //search bar
+    @FXML
+    public void btn_search_clear_onClick(ActionEvent actionEvent) {
+        text_search_query.clear();
+        printQueryLog("clear_onClick");
+        initTableColumns(loggedInUser.getAccessLevel(), employees);
+    }
+
+    @FXML
+    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+        printQueryLog("onKeyReleased");
+        searchResults = null;
+        searchResults = performSearch(text_search_query.getText());
+        if (loggedInUser.getAccessLevel() < 3) {
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn);
+        } else {
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn,
+                    addressColumn,
+                    cityColumn,
+                    zipColumn);
+        }
+        initTableColumns(loggedInUser.getAccessLevel(), searchResults);
+    }
+
+    private void printQueryLog(String sender) {
+        String c = "";
+        for (String s : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+            c += s + ", ";
+        }
+        System.out.printf("%s@[%s]: %s%n", sender, c, text_search_query.getText());
+    }
+
+    private ObservableList<Employee> performSearch(String query) {
+        ObservableList<Employee> results = FXCollections.observableArrayList();
+        if (query.isEmpty()) {
+            return employees;
+        }
+        for (Employee employee : employees) {
+            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+                switch (criteria) {
+                    case "Name":
+                        if (employee.getName().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Surname":
+                        if (employee.getSurname().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Address":
+                        if (employee.getAddress().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "City":
+                        if (employee.getCity().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "ZIP":
+                        if (employee.getZip().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Phone":
+                        if (employee.getPhone().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Position":
+                        if (employee.getPosition().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return results;
     }
 }
