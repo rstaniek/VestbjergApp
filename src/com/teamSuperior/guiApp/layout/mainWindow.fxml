@@ -27,9 +27,6 @@
                 <MenuItem mnemonicParsing="false" onAction="#handleAddOffer" text="Add Offer"/>
                 <MenuItem mnemonicParsing="false" onAction="#handleViewOffers" text="View Offers"/>
             </Menu>
-            <Menu mnemonicParsing="false" text="Offers">
-                <MenuItem mnemonicParsing="false" text="Action 1"/>
-            </Menu>
             <Menu mnemonicParsing="false" text="Employees">
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add"/>
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics"/>
