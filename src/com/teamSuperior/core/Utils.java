@@ -1,4 +1,4 @@
-package com.teamSuperior.guiApp;
+package com.teamSuperior.core;
 
 /**
  * Created by Domestos on 16.12.20.

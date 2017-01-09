@@ -6,7 +6,7 @@ import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
-import com.teamSuperior.guiApp.Utils;
+import com.teamSuperior.core.Utils;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
