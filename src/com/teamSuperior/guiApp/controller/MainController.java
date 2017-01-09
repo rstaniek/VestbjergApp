@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -415,5 +416,27 @@ public class MainController implements Initializable {
         Scene scene = new Scene(anchorPane);
         window.setScene(scene);
         window.showAndWait();
+    }
+
+    @FXML
+    public void handleAddOffer(ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/offerAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new offer");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleViewOffers(ActionEvent actionEvent) {
+        //TODO: to be implemented
     }
 }
