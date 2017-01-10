@@ -3,8 +3,6 @@ package com.teamSuperior.tuiApp.tuiLayer;
 import com.teamSuperior.tuiApp.controlLayer.CustomerController;
 import com.teamSuperior.tuiApp.controlLayer.ProductController;
 
-import java.util.Scanner;
-
 /**
  * Main menu for employees.
  */
@@ -23,7 +21,7 @@ class MainMenuEmployee extends Menu {
     protected void switchSubMenu() {
         switch (scanInt()) {
             case 1:
-                if (productController.listAllProducts() == 0)
+                if (productController.listAll() == 0)
                     System.out.println("There are no products at this moment");
                 break;
             case 2:
@@ -48,7 +46,7 @@ class MainMenuEmployee extends Menu {
                 phone = scanString();
                 System.out.println("Email: ");
                 email = scanString();
-                customerController.addCustomer(id, name, surname, address, city, zip, phone, email);
+                customerController.create(id, name, surname, address, city, zip, phone, email);
                 System.out.println("Customer successfully registered!");
                 break;
             case 4:

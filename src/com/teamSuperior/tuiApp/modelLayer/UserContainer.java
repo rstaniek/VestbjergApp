@@ -7,11 +7,6 @@ import java.util.ArrayList;
  */
 public class UserContainer {
     private static UserContainer ourInstance = new UserContainer();
-
-    public static UserContainer getInstance() {
-        return ourInstance;
-    }
-
     private ArrayList<User> users;
 
     private UserContainer() {
@@ -20,6 +15,10 @@ public class UserContainer {
         users.add(new User("salesman", "pass", 1));
         users.add(new User("manager", "pass", 2));
         users.add(new User("ceo", "pass", 3));
+    }
+
+    public static UserContainer getInstance() {
+        return ourInstance;
     }
 
     public ArrayList<User> getUsers() {

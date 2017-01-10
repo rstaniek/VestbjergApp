@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
- * Created by Smoothini on 12.12.2016.
+ * Lease model class.
  */
-public class Lease {
+public class Lease implements Serializable {
     private int id, leaseMachineId, customerId;
     private String borrowDate, returnDate;
     private double price;
@@ -29,32 +31,8 @@ public class Lease {
         return leaseMachineId;
     }
 
-    public void setLeaseMachineId(int leaseMachineId) {
-        this.leaseMachineId = leaseMachineId;
-    }
-
     public int getCustomerId() {
         return customerId;
-    }
-
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
-
-    public String getBorrowDate() {
-        return borrowDate;
-    }
-
-    public void setBorrowDate(String borrowDate) {
-        this.borrowDate = borrowDate;
-    }
-
-    public String getReturnDate() {
-        return returnDate;
-    }
-
-    public void setReturnDate(String returnDate) {
-        this.returnDate = returnDate;
     }
 
     public double getPrice() {
@@ -63,5 +41,13 @@ public class Lease {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                "ID: %d%nLease Machine ID: %d%nCustomer ID: %d%nBorrow date: %s%nReturn date: %s%nPrice: $%.2f%n%n",
+                id, leaseMachineId, customerId, borrowDate, returnDate, price
+        );
     }
 }

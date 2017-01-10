@@ -7,8 +7,8 @@ package com.teamSuperior.guiApp.enums;
  */
 public enum Drawables {
     TEST_MEME("/i_want_to_believe.jpg"),
-    TEAM_LOGO("/team_logo.png"),
-    APP_LOGO("/silvan_logo_rectangle.png");
+    APP_LOGO("/silvan_logo_rectangle.png"),
+    X_MAS_IMAGE("/post-8868-Have-a-fucking-weekend-and-don-YeZz.jpeg");
 
     private String path;
 

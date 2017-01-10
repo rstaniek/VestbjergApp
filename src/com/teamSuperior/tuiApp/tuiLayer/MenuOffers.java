@@ -45,7 +45,7 @@ class MenuOffers extends Menu {
                         Date date = new Date();
                         dateFormatted = df.format(date);
                         System.out.println("The date assigned to this offer is: " + dateFormatted);
-                        offerController.createOffer(id, productId, dateFormatted, price, discount);
+                        offerController.create(id, productId, dateFormatted, price, discount);
                     } else
                         System.out.println("There are no products corresponding to that id");
                 } else
@@ -68,11 +68,12 @@ class MenuOffers extends Menu {
                 break;
             case 3:
                 System.out.println("Existing offers:");
-                if (offerController.viewOffers() == 0)
+                if (offerController.listAll() == 0)
                     System.out.println("There are no offers at this time!");
                 break;
             case 4:
                 isRunning = false;
+                offerController.save();
                 break;
             default:
                 System.out.println("Error, please try again");

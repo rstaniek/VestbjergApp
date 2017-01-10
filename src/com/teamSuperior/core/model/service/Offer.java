@@ -1,78 +1,82 @@
 package com.teamSuperior.core.model.service;
 
-import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Time;
+import java.time.LocalDateTime;
 
 /**
- * Created by Domestos Maximus on 24-Nov-16.
+ * Created by rajmu on 17.01.09.
  */
 public class Offer {
-    private int id;
     private Date date;
-    private ArrayList<Product> products;
-    private float totalPrice, discount;
-    private int customerID;
-    private boolean isAccepted;
+    private int id, productID;
+    private double price, discount;
+    private String productName;
+    private Time time;
 
-    public Offer(int id, Date date, ArrayList<Product> products, float totalPrice, float discount, int customerID, boolean isAccepted) {
-        this.id = id;
+    public Offer(Date date, int id, int productID, double price, double discount, String productName, Time time) {
         this.date = date;
-        this.products = products;
-        this.totalPrice = totalPrice;
+        this.id = id;
+        this.productID = productID;
+        this.price = price;
         this.discount = discount;
-        this.customerID = customerID;
-        this.isAccepted = isAccepted;
-    }
-
-    public int getId() {
-        return id;
+        this.productName = productName;
+        this.time = time;
     }
 
     public Date getDate() {
         return date;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public int getProductID() {
+        return productID;
+    }
+
+    public double getPrice() {
+        return price;
+    }
+
+    public double getDiscount() {
+        return discount;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public Time getTime() {
+        return time;
+    }
+
     public void setDate(Date date) {
         this.date = date;
     }
 
-    public ArrayList<Product> getProducts() {
-        return products;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public void setProducts(ArrayList<Product> products) {
-        this.products = products;
+    public void setProductID(int productID) {
+        this.productID = productID;
     }
 
-    public float getTotalPrice() {
-        return totalPrice;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public void setTotalPrice(float totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-    public float getDiscount() {
-        return discount;
-    }
-
-    public void setDiscount(float discount) {
+    public void setDiscount(double discount) {
         this.discount = discount;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public void setProductName(String productName) {
+        this.productName = productName;
     }
 
-    public void setCustomerID(int customerID) {
-        this.customerID = customerID;
-    }
-
-    public boolean isAccepted() {
-        return isAccepted;
-    }
-
-    public void setAccepted(boolean accepted) {
-        isAccepted = accepted;
+    public void setTime(Time time) {
+        this.time = time;
     }
 }

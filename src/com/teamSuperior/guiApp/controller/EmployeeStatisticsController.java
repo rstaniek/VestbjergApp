@@ -2,25 +2,27 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.effect.FloatMap;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
+
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos Maximus on 06-Dec-16.
@@ -39,8 +41,26 @@ public class EmployeeStatisticsController implements Initializable {
     public PieChart chart_contribution;
     @FXML
     public Label label_efficiency;
+    @FXML
+    public TextField text_search_query;
+    @FXML
+    public Button btn_search_clear;
+    @FXML
+    public CheckComboBox<String> checkComboBox_search_criteria;
+
+    private TableColumn<Employee, String> nameColumn;
+    private TableColumn<Employee, String> surnameColumn;
+    private TableColumn<Employee, String> emailColumn;
+    private TableColumn<Employee, String> positionColumn;
+    private TableColumn<Employee, String> numOfSalesColumn;
+    private TableColumn<Employee, String> totalRevenueColumn;
+    private TableColumn<Employee, String> accessLevelColumn;
+    private TableColumn<Employee, String> addressColumn;
+    private TableColumn<Employee, String> cityColumn;
+    private TableColumn<Employee, String> zipColumn;
 
     private ObservableList<Employee> employees;
+    private ObservableList<Employee> searchResults;
     private static Employee loggedInUser;
     private Employee selectedEmployee;
     private DBConnect conn;
@@ -48,12 +68,14 @@ public class EmployeeStatisticsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
+        searchResults = FXCollections.observableArrayList();
+        checkComboBox_search_criteria.getItems().addAll("Name", "Surname", "Address", "City", "ZIP", "Phone", "Position");
         conn = new DBConnect();
-        loggedInUser = LogInPopupController.getUser();
+        loggedInUser = UserController.getUser();
         ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-        try{
-            while (rs.next()){
-                if(rs.getInt("id") != 0 && rs.getString("name") != null
+        try {
+            while (rs.next()) {
+                if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null
                         && rs.getString("address") != null
                         && rs.getString("city") != null
@@ -63,7 +85,7 @@ public class EmployeeStatisticsController implements Initializable {
                         && rs.getString("password") != null
                         && rs.getString("position") != null
                         && rs.getInt("accessLevel") >= 1
-                        ){
+                        ) {
                     employees.add(new Employee(rs.getInt("id"),
                             rs.getString("name"),
                             rs.getString("surname"),
@@ -79,67 +101,66 @@ public class EmployeeStatisticsController implements Initializable {
                             rs.getInt("accessLevel")));
                 }
             }
-        }
-        catch (SQLException sqlException){
-            AlertBox.display("SQL exception", sqlException.getMessage());
-        }
-        catch (Exception ex){
-            AlertBox.display("Unexpected exception", ex.getMessage());
+        } catch (SQLException sqlException) {
+            Error.displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
+        } catch (Exception ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
         }
 
         //fill the table with data
-        initTableColumns(loggedInUser.getAccessLevel());
+        initTableColumns(loggedInUser.getAccessLevel(), employees);
         selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
         System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
         updateStatsView();
         updateLabels();
     }
 
-    private void initTableColumns(int accessLevel){
-        if(accessLevel >= 1){
-            TableColumn<Employee, String> nameColumn = new TableColumn<>("Name");
+    private void initTableColumns(int accessLevel, ObservableList<Employee> source) {
+        if (accessLevel >= 1) {
+            nameColumn = new TableColumn<>("Name");
             nameColumn.setMinWidth(90);
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 
-            TableColumn<Employee, String> surnameColumn = new TableColumn<>("Surname");
+            surnameColumn = new TableColumn<>("Surname");
             surnameColumn.setMinWidth(90);
             surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
 
-            TableColumn<Employee, String> emailColumn = new TableColumn<>("Email");
+            emailColumn = new TableColumn<>("Email");
             emailColumn.setMinWidth(150);
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
 
-            TableColumn<Employee, String> positionColumn = new TableColumn<>("Position");
+            positionColumn = new TableColumn<>("Position");
             positionColumn.setMinWidth(90);
             positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
 
-            tableView_employees.setItems(employees);
+            tableView_employees.setItems(source);
             tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn);
-        }if(accessLevel >= 2){
-            TableColumn<Employee, String> numOfSalesColumn = new TableColumn<>("Number of sales");
+        }
+        if (accessLevel >= 2) {
+            numOfSalesColumn = new TableColumn<>("Number of sales");
             numOfSalesColumn.setMinWidth(80);
             numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("numberOfSales_str"));
 
-            TableColumn<Employee, String> totalRevenueColumn = new TableColumn<>("Total revenue");
+            totalRevenueColumn = new TableColumn<>("Total revenue");
             totalRevenueColumn.setMinWidth(80);
             totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("totalRevenue_str"));
 
-            TableColumn<Employee, String> accessLevelColumn = new TableColumn<>("Access level");
+            accessLevelColumn = new TableColumn<>("Access level");
             accessLevelColumn.setMinWidth(80);
             accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
 
             tableView_employees.getColumns().addAll(numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
-        }if(accessLevel >= 3){
-            //stuff
-            TableColumn<Employee, String> addressColumn = new TableColumn<>("Address");
+        }
+        if (accessLevel >= 3) {
+            addressColumn = new TableColumn<>("Address");
             addressColumn.setMinWidth(120);
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
 
-            TableColumn<Employee, String> cityColumn = new TableColumn<>("City");
+            cityColumn = new TableColumn<>("City");
             cityColumn.setMinWidth(100);
             cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
 
-            TableColumn<Employee, String> zipColumn = new TableColumn<>("ZIP code");
+            zipColumn = new TableColumn<>("ZIP code");
             zipColumn.setMinWidth(80);
             zipColumn.setCellValueFactory(new PropertyValueFactory<>("zip"));
 
@@ -155,7 +176,7 @@ public class EmployeeStatisticsController implements Initializable {
         System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
     }
 
-    private void updateStatsView(){
+    private void updateStatsView() {
         //TODO: add colors to the bars depending on their value (from empStats.css) for some reason it doesn't work
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
@@ -165,22 +186,34 @@ public class EmployeeStatisticsController implements Initializable {
         ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
         XYChart.Data numOfSalesBar;
         XYChart.Data revenueBar;
-        if(loggedInUser.getAccessLevel() == 1){
+        if (loggedInUser.getAccessLevel() == 1) {
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
             contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            /*if(loggedInUser.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
-            else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
-            if(loggedInUser.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
-            else revenueBar.getNode().getStyleClass().add("greater-than-avg");*/
-        }else{
+            /*if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
+                numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
+            } else {
+                numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
+            }
+            if (loggedInUser.getTotalRevenue() < calculateAvgRevenue()) {
+                revenueBar.getNode().getStyleClass().add("less-than-avg");
+            } else {
+                revenueBar.getNode().getStyleClass().add("greater-than-avg");
+            }*/
+        } else {
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
             contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            /*if(selectedEmployee.getNumberOfSales() < calculateAvgSales()) numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
-            else numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
-            if(selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) revenueBar.getNode().getStyleClass().add("less-than-avg");
-            else revenueBar.getNode().getStyleClass().add("greater-than-avg");*/
+            /*if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
+                numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
+            } else {
+                numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
+            }
+            if (selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) {
+                revenueBar.getNode().getStyleClass().add("less-than-avg");
+            } else {
+                revenueBar.getNode().getStyleClass().add("greater-than-avg");
+            }*/
         }
 
         sales.getData().addAll(numOfSalesBar, new XYChart.Data<>("Average", calculateAvgSales()));
@@ -190,21 +223,19 @@ public class EmployeeStatisticsController implements Initializable {
         chart_contribution.getData().addAll(contributionData);
     }
 
-    private void updateLabels(){
+    private void updateLabels() {
         String productivity, efficiency;
-        if(loggedInUser.getAccessLevel() == 1){
-            if(loggedInUser.getNumberOfSales() >= calculateAvgSales()){
+        if (loggedInUser.getAccessLevel() == 1) {
+            if (loggedInUser.getNumberOfSales() >= calculateAvgSales()) {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s better than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
-            }
-            else{
+            } else {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s worse than the average.", loggedInUser.getName(), getProductivityPercentage(loggedInUser, calculateAvgSales()), "%");
             }
             efficiency = String.format("Efficiency of %1$s is %2$.2f DKK/sale", loggedInUser.getName(), getEfficiency(loggedInUser));
-        }else{
-            if(selectedEmployee.getNumberOfSales() >= calculateAvgSales()){
+        } else {
+            if (selectedEmployee.getNumberOfSales() >= calculateAvgSales()) {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s better than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
-            }
-            else{
+            } else {
                 productivity = String.format("The productivity of %1$s is %2$.1f%3$s worse than the average.", selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()), "%");
             }
             efficiency = String.format("Efficiency of %1$s is %2$.2f DKK/sale", selectedEmployee.getName(), getEfficiency(selectedEmployee));
@@ -213,29 +244,124 @@ public class EmployeeStatisticsController implements Initializable {
         label_efficiency.setText(efficiency);
     }
 
-    private float getProductivityPercentage(Employee e, float avg){
+    private float getProductivityPercentage(Employee e, float avg) {
         return (Math.abs(e.getNumberOfSales() - avg) / avg) * 100;
     }
 
-    private double getEfficiency(Employee e){
+    private double getEfficiency(Employee e) {
         return e.getTotalRevenue() / e.getNumberOfSales();
     }
 
-    private float calculateAvgSales(){
+    private float calculateAvgSales() {
         float avg = 0;
-        for(Employee e : employees){
+        for (Employee e : employees) {
             avg += e.getNumberOfSales();
         }
         avg /= employees.size();
         return avg;
     }
 
-    private float calculateAvgRevenue(){
+    private float calculateAvgRevenue() {
         float avg = 0;
-        for(Employee e : employees){
+        for (Employee e : employees) {
             avg += e.getTotalRevenue();
         }
         avg /= employees.size();
         return avg;
+    }
+
+    //searching component
+    @FXML
+    public void btn_search_clear_onClick(ActionEvent actionEvent) {
+        text_search_query.clear();
+        printQueryLog("clear_onClick");
+        initTableColumns(loggedInUser.getAccessLevel(), employees);
+    }
+
+    @FXML
+    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+        printQueryLog("onKeyReleased");
+        searchResults = null;
+        searchResults = performSearch(text_search_query.getText());
+        if (loggedInUser.getAccessLevel() < 3) {
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn);
+        } else {
+            tableView_employees.getColumns().removeAll(nameColumn,
+                    surnameColumn,
+                    emailColumn,
+                    positionColumn,
+                    numOfSalesColumn,
+                    totalRevenueColumn,
+                    accessLevelColumn,
+                    addressColumn,
+                    cityColumn,
+                    zipColumn);
+        }
+        initTableColumns(loggedInUser.getAccessLevel(), searchResults);
+    }
+
+    private void printQueryLog(String sender) {
+        String c = "";
+        for (String s : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+            c += s + ", ";
+        }
+        System.out.printf("%s@[%s]: %s%n", sender, c, text_search_query.getText());
+    }
+
+    private ObservableList<Employee> performSearch(String query) {
+        ObservableList<Employee> results = FXCollections.observableArrayList();
+        if (query.isEmpty()) {
+            return employees;
+        }
+        for (Employee employee : employees) {
+            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+                switch (criteria) {
+                    case "Name":
+                        if (employee.getName().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Surname":
+                        if (employee.getSurname().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Address":
+                        if (employee.getAddress().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "City":
+                        if (employee.getCity().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "ZIP":
+                        if (employee.getZip().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Phone":
+                        if (employee.getPhone().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    case "Position":
+                        if (employee.getPosition().contains(query)) {
+                            results.add(employee);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        return results;
     }
 }

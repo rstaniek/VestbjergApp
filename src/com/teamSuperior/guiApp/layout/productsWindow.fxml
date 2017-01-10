@@ -1,7 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.PieChart?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
-
-
-<AnchorPane prefWidth="400.0" prefHeight="400.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ProductsController">
+<?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.CheckComboBox?>
+<AnchorPane prefHeight="850.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.102"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ProductsController">
+    <children>
+        <AnchorPane prefHeight="50.0" prefWidth="1000.0">
+            <children>
+                <Button fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
+                        onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" text="X"/>
+                <TextField fx:id="text_search_query" layoutX="49.0" layoutY="13.0"
+                           onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0"
+                           promptText="Search..."/>
+                <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="838.0" layoutY="13.0" prefHeight="25"
+                               prefWidth="150.0"/>
+            </children>
+        </AnchorPane>
+        <TableView layoutY="50.0" fx:id="tableView_products" onMouseClicked="#tableView_products_onClick"
+                   prefHeight="400.0" prefWidth="1000.0">
+        </TableView>
+        <PieChart fx:id="chart_storageCap" layoutY="450.0" prefHeight="400.0" prefWidth="400.0"
+                  title="Storage Capacity"/>
+        <Label layoutX="415.0" layoutY="455.0" text="Product overview">
+         <font>
+            <Font name="System Bold" size="18.0" />
+         </font></Label>
+        <Label layoutX="415.0" layoutY="573.0" text="Request new items"/>
+        <TextField fx:id="text_amountToRequest" layoutX="415.0" layoutY="590.0" prefHeight="25.0" prefWidth="100.0"
+                   promptText="Amount"/>
+        <Button fx:id="btn_requestResupply" layoutX="527.0" layoutY="590.0" mnemonicParsing="false"
+                onAction="#btn_requestResupply_onClick" text="Request"/>
+        <Button fx:id="btn_showLowQuantity" layoutX="586.0" layoutY="456.0" mnemonicParsing="false"
+                onAction="#btn_showLowQuantity_onClick" text="Show only low quantity"/>
+        <Label fx:id="label_name" layoutX="415.0" layoutY="482.0" text="Name">
+         <font>
+            <Font size="25.0" />
+         </font>
+      </Label>
+        <Label fx:id="label_subname" layoutX="415.0" layoutY="518.0" text="Subname">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Label>
+        <Label fx:id="label_category" layoutX="415.0" layoutY="539.0" text="category"/>
+        <Label fx:id="label_quantity" layoutX="415.0" layoutY="556.0" text="Q:"/>
+        <Label fx:id="label_price" layoutX="464.0" layoutY="556.0" text="Price:"/>
+    </children>
 </AnchorPane>

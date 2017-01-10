@@ -2,27 +2,25 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.Tab;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 /**
  * Created by Domestos on 16.11.30.
@@ -56,6 +54,8 @@ public class SettingsController implements Initializable {
     public ImageView img_testMeme;
     @FXML
     public Tab tab_discounts;
+    @FXML
+    public CheckBox checkBox_showNotifications_lowAmountOfProducts;
 
 
     private Preferences registry; //application settings
@@ -66,35 +66,38 @@ public class SettingsController implements Initializable {
     public void btn_settings_connection_testConn_clicked(ActionEvent actionEvent) {
         if (validateDatabaseCredentials()) {
             if (DBConnect.testConnection(text_settings_connection_hostname.getText(), text_settings_connection_username.getText(), text_settings_connection_password.getText())) {
-                AlertBox.display("Connection test", "Operation successful");
-            } else Error.displayError(ErrorCode.CONNECTION_TEST_FAILED);
+                Error.displayMessage(INFORMATION, "Connection test finished successfully", String.format("Connection with the server %1$s is established. Now you can log in", text_settings_connection_hostname.getText()));
+            } else displayError(CONNECTION_TEST_FAILED);
         }
     }
 
     private boolean validateDatabaseCredentials() {
         if (text_settings_connection_hostname.getText().isEmpty()) {
-            displayError(ErrorCode.CONNECTION_HOSTNAME_EMPTY);
+            displayError(CONNECTION_HOSTNAME_EMPTY);
             return false;
         } else if (text_settings_connection_username.getText().isEmpty()) {
-            displayError(ErrorCode.CONNECTION_USERNAME_EMPTY);
+            displayError(CONNECTION_USERNAME_EMPTY);
             return false;
         } else if (text_settings_connection_password.getText().isEmpty()) {
-            displayError(ErrorCode.CONNECTION_PASSWORD_EMPTY);
+            displayError(CONNECTION_PASSWORD_EMPTY);
             return false;
         } else return true;
     }
 
     private boolean validateDiscount(TextField tf) {
         if (tf.getText().isEmpty()) {
-            Error.displayError(ErrorCode.VALIDATION_FIELD_EMPTY);
+            displayError(VALIDATION_FIELD_EMPTY);
             return false;
         } else if (tf.getText().contains("[a-zA-Z]+")) {
-            Error.displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+            displayError(VALIDATION_ILLEGAL_CHARS);
             return false;
         } else return true;
     }
 
     private void save() {
+        //general
+        registry.putBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", checkBox_showNotifications_lowAmountOfProducts.isSelected());
+
         //connection
         registry.put("DATABASE_HOSTNAME", text_settings_connection_hostname.getText());
         registry.put("DATABASE_USER", text_settings_connection_username.getText());
@@ -108,11 +111,12 @@ public class SettingsController implements Initializable {
         registry.putFloat("DISCOUNT_MAX", Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
 
         conn = new DBConnect();
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 1", registry.getFloat("DISCOUNT_REGISTERED", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 2", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 3", registry.getFloat("DISCOUNT_QUANTITY", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 4", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
-        conn.upload(String.format("UPDATE discounts SET value = %1$f WHERE id = 5", registry.getFloat("DISCOUNT_MAX", 0)));
+        //TODO: Sth fucked up here: dear SQL gods, halp plox
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=1;", registry.getFloat("DISCOUNT_REGISTERED", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=2;", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=3;", registry.getFloat("DISCOUNT_QUANTITY", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=4;", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
+        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=5;", registry.getFloat("DISCOUNT_MAX", 0)));
     }
 
     @FXML
@@ -122,6 +126,11 @@ public class SettingsController implements Initializable {
                 validateDiscount(text_settings_discounts_quantity) &&
                 validateDiscount(text_settings_discounts_selfPickUp) &&
                 validateDiscount(text_settings_discounts_maxTreshold)) {
+            System.out.println(Float.parseFloat(text_settings_discounts_registered.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_craftsman.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_selfPickUp.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_quantity.getText()));
+            System.out.println(Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
             save();
         }
     }
@@ -132,22 +141,25 @@ public class SettingsController implements Initializable {
         img_testMeme.setImage(Drawable.getImage(this.getClass(), Drawables.TEST_MEME));
 
         registry = Preferences.userRoot();
-        loggedUser = LogInPopupController.getUser();
-        if(!LogInPopupController.isLogged()){
+        loggedUser = UserController.getUser();
+        if (!UserController.isLoggedIn()) {
             tab_discounts.setDisable(true);
-        }else if(loggedUser.getAccessLevel() < 2){
+        } else if (loggedUser.getAccessLevel() < 2) {
             tab_discounts.setDisable(true);
         }
+
+        //general
+        checkBox_showNotifications_lowAmountOfProducts.setSelected(registry.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false));
 
         //connection
         text_settings_connection_hostname.setText(registry.get("DATABASE_HOSTNAME", ""));
         text_settings_connection_username.setText(registry.get("DATABASE_USER", ""));
         text_settings_connection_password.setText(registry.get("DATABASE_PASS", ""));
 
-        if(LogInPopupController.isLogged() && !registry.get("DATABASE_HOSTNAME", "").isEmpty()){
+        if (UserController.isLoggedIn() && !registry.get("DATABASE_HOSTNAME", "").isEmpty()) {
             conn = new DBConnect();
             ResultSet rs;
-            try{
+            try {
                 rs = conn.getFromDataBase("SELECT * FROM discounts");
                 rs.next();
                 registry.putFloat("DISCOUNT_REGISTERED", rs.getFloat("value"));
@@ -160,13 +172,12 @@ public class SettingsController implements Initializable {
                 rs.next();
                 registry.putFloat("DISCOUNT_MAX", rs.getFloat("value"));
 
-            }
-            catch (Exception ex){
-                AlertBox.display("SQL Exception", ex.getMessage());
+            } catch (Exception ex) {
+                displayMessage(ERROR, ex.getMessage());
             }
 
             //CEO only features
-            if(loggedUser.getAccessLevel() < 3){
+            if (loggedUser.getAccessLevel() < 3) {
                 text_settings_discounts_maxTreshold.setDisable(true);
             }
         }

@@ -2,13 +2,16 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.controlLayer.WebsiteCrawler;
+import com.teamSuperior.core.enums.Currency;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
+import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.Window;
 import com.teamSuperior.guiApp.enums.Drawables;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -17,11 +20,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.MenuItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -35,102 +35,56 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 
 /**
- * Created by Domestos on 16.11.26.
+ * Main controller.
  */
 public class MainController implements Initializable {
 
     @FXML
-    public Label label_name_welcome;
-    @FXML
-    public Label label_date;
-    @FXML
-    public Label label_ratioUSDDKK;
-    @FXML
-    public Label label_ratioEURDKK;
-    @FXML
-    public MenuItem menu_close;
-    @FXML
-    public MenuItem menu_settings;
-    @FXML
     public Button btn_logIn;
-    @FXML
-    public MenuItem menu_connection_connect;
-    @FXML
-    public MenuItem menu_connection_logIn;
-    @FXML
-    public MenuItem menu_connection_logOut;
-    @FXML
-    public MenuItem menu_employees_statistics;
-    @FXML
-    public MenuItem menu_employees_edit;
-    @FXML
-    public ImageView imgView_logo;
-    @FXML
-    public AnchorPane anchorPane_center;
-    @FXML
-    public Label label_ratioDesc1;
-    @FXML
-    public Label label_ratioDesc2;
-    @FXML
-    public MenuItem menu_contractors_add;
-    @FXML
-    public MenuItem menu_contractors_manage;
-    @FXML
-    public MenuItem menu_file_test;
-    @FXML
-    public MenuItem menu_products_view;
-    @FXML
-    public MenuItem menu_employees_add;
-    @FXML
-    public MenuItem menu_help_about;
 
     private Stage settings;
     static Stage loginWindow;
-    private Window wnd;
+    private Window window;
+
+    private StringProperty welcomeMessage;
+    private StringProperty currentDateTime;
+    private StringProperty USDRatio;
+    private StringProperty EURRatio;
 
     private Preferences registry;
-    private boolean isLoggedIn;
-
-    private Employee em;
 
     // just database things
-    DBConnect conn;
-    private Employee emp;
+    private DBConnect conn;
     private ArrayList<Employee> employees;
+
+    public MainController() {
+        welcomeMessage = new SimpleStringProperty("Please log in first.");
+        currentDateTime = new SimpleStringProperty();
+        USDRatio = new SimpleStringProperty("Please wait");
+        EURRatio = new SimpleStringProperty("Please wait");
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        //christmas easter egg only
+        //displayXmasWnd();
         registry = Preferences.userRoot();
-        isLoggedIn = false;
-        wnd = new Window();
-
-        /*label_ratioEURDKK.getStyleClass().add("fontWhite");
-        label_ratioUSDDKK.getStyleClass().add("fontWhite");
-        label_ratioDesc1.getStyleClass().add("fontWhite");
-        label_ratioDesc2.getStyleClass().add("fontWhite");*/ //doesn't fucking work
-        Color white = Color.web("#eeeeee");
-        label_ratioEURDKK.setTextFill(white);
-        label_ratioUSDDKK.setTextFill(white);
-        label_ratioDesc1.setTextFill(white);
-        label_ratioDesc2.setTextFill(white);
-        anchorPane_center.getStyleClass().add("backgroundBlue");
-
-        imgView_logo.setImage(Drawable.getImage(this.getClass(), Drawables.APP_LOGO));
+        window = new Window();
 
         conn = new DBConnect();
         // generating array list and users
         employees = new ArrayList<>();
         if (credentialsSaved()) {
-            connectClient();
+            //connectClient();
         } else {
             displayError(CONNECTION_REG_EMPTY);
         }
-
 
         Task getDateTime = new Task<Void>() {
             @Override
@@ -138,23 +92,22 @@ public class MainController implements Initializable {
                 while (true) {
                     DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
                     LocalDateTime now = LocalDateTime.now();
-                    Platform.runLater(() -> label_date.setText(dtf.format(now)));
+                    Platform.runLater(() -> setCurrentDateTime(dtf.format(now)));
                     Thread.sleep(1000);
                 }
             }
         };
-
 
         //Currency exchange update
         Task getCurrencyRatios = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 while (true) {
-                    String ratioUSD = WebsiteCrawler.getExchangeRatio("https://finance.yahoo.com/quote/USDDKK=X?ltr=1");
-                    String ratioEUR = WebsiteCrawler.getExchangeRatio("https://finance.yahoo.com/quote/EURDKK=X?ltr=1");
+                    String ratioUSD = WebsiteCrawler.getExchangeRatioBloomberg(Currency.USDDKK);
+                    String ratioEUR = WebsiteCrawler.getExchangeRatioBloomberg(Currency.EURDKK);
                     Platform.runLater(() -> {
-                        label_ratioUSDDKK.setText(ratioUSD);
-                        label_ratioEURDKK.setText(ratioEUR);
+                        setUSDRatio(ratioUSD);
+                        setEURRatio(ratioEUR);
                     });
                     Thread.sleep(2000);
                 }
@@ -186,6 +139,54 @@ public class MainController implements Initializable {
         th3.start();
     }
 
+    public String getWelcomeMessage() {
+        return welcomeMessage.get();
+    }
+
+    private void setWelcomeMessage(String welcomeMessage) {
+        this.welcomeMessage.set(welcomeMessage);
+    }
+
+    public StringProperty welcomeMessageProperty() {
+        return welcomeMessage;
+    }
+
+    public String getCurrentDateTime() {
+        return currentDateTime.get();
+    }
+
+    public StringProperty currentDateTimeProperty() {
+        return currentDateTime;
+    }
+
+    private void setCurrentDateTime(String currentDateTime) {
+        this.currentDateTime.set(currentDateTime);
+    }
+
+    public String getUSDRatio() {
+        return USDRatio.get();
+    }
+
+    public StringProperty USDRatioProperty() {
+        return USDRatio;
+    }
+
+    private void setUSDRatio(String USDRatio) {
+        this.USDRatio.set(USDRatio);
+    }
+
+    public String getEURRatio() {
+        return EURRatio.get();
+    }
+
+    public StringProperty EURRatioProperty() {
+        return EURRatio;
+    }
+
+    private void setEURRatio(String EURRatio) {
+        this.EURRatio.set(EURRatio);
+    }
+
     private void connectClient() {
         try {
             ResultSet rsCount = conn.getFromDataBase("SELECT COUNT(*) FROM employees");
@@ -208,8 +209,8 @@ public class MainController implements Initializable {
                     int numberOfSales = rs.getInt("numberOfSales");
                     double totalRevenue = rs.getDouble("totalRevenue");
                     int accessLevel = rs.getInt("accessLevel");
-                    emp = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
-                    employees.add(emp);
+                    Employee employee = new Employee(id, name, surname, address, city, zip, email, phone, password, position, numberOfSales, totalRevenue, accessLevel);
+                    employees.add(employee);
                 }
             }
         } catch (SQLException ex) {
@@ -225,30 +226,27 @@ public class MainController implements Initializable {
     }
 
     private void settingsWndClose() {
-        //TODO: handle seving the settings before closing
         settings.close();
     }
 
-    public boolean welcome() {
-        boolean ret = false;
-        if (LogInPopupController.isLogged()) {
-            Platform.runLater(() -> label_name_welcome.setText("Welcome " + LogInPopupController.getUser().getName() + " " + LogInPopupController.getUser().getSurname() + "!"));
+    private boolean welcome() {
+        if (UserController.isLoggedIn()) {
+            Platform.runLater(() -> setWelcomeMessage(String.format("Welcome %s %s!", UserController.getUser().getName(), UserController.getUser().getSurname())));
             Platform.runLater(() -> btn_logIn.setDisable(true));
-            ret = true;
+            return true;
         } else {
-            ret = false;
+            return false;
         }
-        return ret;
     }
 
     //Menu strip handling
     @FXML
-    public void menu_close_clicked(ActionEvent actionEvent) {
+    public void handleExit() {
         Platform.exit();
     }
 
     @FXML
-    public void menu_settings_clicked(ActionEvent actionEvent) {
+    public void handleSettings() {
         try {
             Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
             Stage settingsWnd = new Stage();
@@ -269,8 +267,9 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void btn_logIn_clicked(ActionEvent actionEvent) {
+    public void handleLogIn() {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
+            if (employees.size() < 1) connectClient();
             try {
                 Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
                 loginWindow = new Stage();
@@ -281,37 +280,32 @@ public class MainController implements Initializable {
                 scene.getStylesheets().add(this.getClass().getResource("/style/textField-error.css").toString());
                 loginWindow.setScene(scene);
                 loginWindow.show();
-
-
             } catch (Exception ex) {
                 AlertBox.display("Unexpected exception", ex.getMessage());
             }
         } else {
-            AlertBox.display("Log in ERROR", "Please set up the configuration first!");
+            displayError(CONNECTION_REG_EMPTY);
         }
     }
 
     @FXML
-    public void menu_connection_connect_clicked(ActionEvent actionEvent) {
+    public void handleConnect() {
         connectClient();
     }
 
     @FXML
-    public void menu_connection_logIn_clicked(ActionEvent actionEvent) {
-        btn_logIn_clicked(actionEvent);
-    }
-
-    @FXML
-    public void menu_connection_logOut_clicked(ActionEvent actionEvent) {
-        if(LogInPopupController.logOut()){
-            label_name_welcome.setText("Please log in first");
+    public void handleLogOut() {
+        if (UserController.logout()) {
+            setWelcomeMessage("Please log in first.");
             btn_logIn.setDisable(false);
-        }else displayError(USER_ALREADY_LOGGED_OUT);
+        } else {
+            displayError(USER_ALREADY_LOGGED_OUT);
+        }
     }
 
     @FXML
-    public void menu_employees_statistics_clicked(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
+    public void handleEmployeesStatistics() {
+        if (UserController.isLoggedIn()) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
                 Stage window = new Stage();
@@ -326,165 +320,135 @@ public class MainController implements Initializable {
             } catch (Exception ex2) {
                 AlertBox.display("Unexpected exception", ex2.getMessage());
             }
-        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+        } else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
     }
 
     @FXML
-    public void menu_employees_edit_clicked(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()) {
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
-                wnd.inflate(WindowType.EMP_MANAGEMENT);
-            }else{
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
-            }
-        }else displayError(ACCESS_DENIED_NOT_LOGGED_IN);
-    }
-
-    @FXML
-    public void menu_contractors_add_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
-                try{
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Add a new contractor");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
-                    window.setScene(scene);
-                    window.show();
-                }
-                catch (IOException ioex){
-                    AlertBox.display("IO Exception", ioex.getMessage());
-                }
-                catch (Exception ex){
-                    AlertBox.display("Unexpected Exception", ex.getMessage());
-                }
-            }
-            else{
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
-            }
-        }
-        else{
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
+    public void handleEmployeesEdit() {
+        if (UserController.isAllowed(2)) {
+            window.inflate(WindowType.EMP_MANAGEMENT);
         }
     }
 
     @FXML
-    public void menu_contractors_manage_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
-                try{
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Manage contractors");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    //scene.getStylesheets().add(this.getClass().getResource("/path/to/css").toString());
-                    window.setScene(scene);
-                    window.show();
-                }
-                catch (IOException ioex){
-                    AlertBox.display("IO Exception", ioex.getMessage());
-                }
-                catch (Exception ex){
-                    AlertBox.display("Unexpected Exception", ex.getMessage());
-                }
+    public void handleContractorsAdd() {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new contractor");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ioex) {
+                AlertBox.display("IO Exception", ioex.getMessage());
+            } catch (Exception ex) {
+                AlertBox.display("Unexpected Exception", ex.getMessage());
             }
-            else{
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
-            }
-        }
-        else{
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
-    public void menu_file_test_onClick(ActionEvent actionEvent) {
-        try{
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/pieChartTest.fxml"));
-            Stage window = new Stage();
-            window.setTitle("Test");
-            window.setResizable(false);
-            Scene scene = new Scene(root);
-            window.setScene(scene);
-            window.show();
-        }
-        catch (IOException ex){
-            AlertBox.display("IO Exception", ex.getMessage());
-        }
-
-    }
-
-    @FXML
-    public void menu_products_view_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 2){
-                try{
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Products");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    window.setScene(scene);
-                    window.show();
-                }
-                catch (IOException ex){
-                    AlertBox.display("IO Exception", ex.getMessage());
-                }
+    public void handleContractorsManage() {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage contractors");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ioex) {
+                Error.displayMessage(ERROR, "This page couldn't be loaded", ioex.getMessage());
+            } catch (Exception ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
             }
-            else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
-            }
-        }
-        else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
-    public void menu_employees_add_onClick(ActionEvent actionEvent) {
-        if(LogInPopupController.isLogged()){
-            if(LogInPopupController.getUser().getAccessLevel() >= 3){
-                try{
-                    Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
-                    Stage window = new Stage();
-                    window.setTitle("Add a new employee");
-                    window.setResizable(false);
-                    Scene scene = new Scene(root);
-                    window.setScene(scene);
-                    window.show();
-                }
-                catch (IOException ex){
-                    AlertBox.display("IO Exception", ex.getMessage());
-                }
+    public void handleProductsView() {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Products");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
             }
-            else {
-                displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
-            }
-        }
-        else {
-            displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         }
     }
 
     @FXML
-    public void menu_help_about_onClick(ActionEvent actionEvent) {
-        try{
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/aboutWindow.fxml"));
-            Stage window = new Stage();
-            window.setTitle("About");
-            window.setResizable(true);
-            Scene scene = new Scene(root);
-            window.setScene(scene);
-            window.show();
+    public void handleEmployeesAdd() {
+        if (UserController.isAllowed(3)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new employee");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
         }
-        catch (IOException ioex){
-            AlertBox.display("IO Exception", ioex.getMessage());
+    }
+
+    private void displayXmasWnd() {
+        Stage window = new Stage();
+        window.initModality(Modality.APPLICATION_MODAL);
+        window.setMinWidth(666);
+        window.setMinHeight(563);
+        window.setResizable(false);
+        window.setTitle("Merry X-mas mofos");
+        AnchorPane anchorPane = new AnchorPane();
+        ImageView imageView = new ImageView();
+        anchorPane.getChildren().addAll(imageView);
+        imageView.setImage(Drawable.getImage(this.getClass(), Drawables.X_MAS_IMAGE));
+        Scene scene = new Scene(anchorPane);
+        window.setScene(scene);
+        window.showAndWait();
+    }
+
+    @FXML
+    public void handleAddOffer(ActionEvent actionEvent) {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/offerAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new offer");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
         }
-        catch (Exception ex){
-            AlertBox.display("Unexpected Exception", ex.getMessage());
+    }
+
+    @FXML
+    public void handleViewOffers(ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/offersManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("manage Offers");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
         }
     }
 }

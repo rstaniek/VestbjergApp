@@ -1,9 +1,11 @@
 package com.teamSuperior.tuiApp.modelLayer;
 
+import java.io.Serializable;
+
 /**
- * Created by Smoothini on 12.12.2016.
+ * Lease machine model class.
  */
-public class LeaseMachine {
+public class LeaseMachine implements Serializable {
     private int id;
     private String name;
     private double priceForDay;
@@ -32,19 +34,16 @@ public class LeaseMachine {
         this.name = name;
     }
 
-    public double getPriceForDay() {
-        return priceForDay;
-    }
-
-    public void setPriceForDay(double priceForDay) {
-        this.priceForDay = priceForDay;
-    }
-
-    public boolean isLeased() {
-        return leased;
-    }
-
     public void setLeased(boolean leased) {
         this.leased = leased;
+    }
+
+    @Override
+    public String toString() {
+        String[] state = {"No", "Yes"};
+        return String.format(
+                "ID: %d%nName: %s%nPrice per day: $%.2f%nLeased: %s%n",
+                id, name, priceForDay, state[leased ? 1 : 0]
+        );
     }
 }

@@ -1,8 +1,5 @@
 package com.teamSuperior.core.model.entity;
 
-import com.teamSuperior.core.model.permission.Level1;
-import com.teamSuperior.core.model.permission.Level2;
-import com.teamSuperior.core.model.permission.Level3;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -12,9 +9,6 @@ import java.util.Locale;
  */
 public class Employee{
 
-    private Level1 accessLevel1;
-    private Level2 accessLevel2;
-    private Level3 accessLevel3;
     private int id;
     private String name;
     private String surname;
@@ -52,9 +46,6 @@ public class Employee{
         numberOfSales_str = String.valueOf(numberOfSales);
         totalRevenue_str = String.valueOf("kr " + formatter.format(totalRevenue));
         accessLevel_str = String.valueOf(accessLevel);
-        accessLevel1 = new Level1();
-        accessLevel2 = new Level2();
-        accessLevel3 = new Level3();
     }
 
     public String getNumberOfSales_str() {

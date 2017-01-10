@@ -3,18 +3,25 @@ package com.teamSuperior.tuiApp.modelLayer;
 import java.util.ArrayList;
 
 /**
- * Created by Smoothini on 12.12.2016.
+ * Container of leases.
  */
 public class LeaseContainer {
     private static LeaseContainer ourInstance = new LeaseContainer();
+    private ArrayList<Lease> leases;
+
+    private LeaseContainer() {
+        leases = new ArrayList<>();
+    }
 
     public static LeaseContainer getInstance() {
         return ourInstance;
     }
 
-    private ArrayList<Lease> leases;
+    public ArrayList<Lease> getLeases() {
+        return leases;
+    }
 
-    private LeaseContainer() { leases = new ArrayList<Lease>(); }
-
-    public ArrayList<Lease> getLeases() { return leases; }
+    public void setLeases(ArrayList<Lease> leases) {
+        this.leases = leases;
+    }
 }

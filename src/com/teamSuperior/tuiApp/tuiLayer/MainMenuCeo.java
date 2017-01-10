@@ -13,10 +13,12 @@ class MainMenuCeo extends Menu {
     private MenuProducts menuProducts = new MenuProducts();
     private MenuCustomers menuCustomers = new MenuCustomers();
     private MenuContractors menuContractors = new MenuContractors();
+    private MenuLeaseMachines menuLeaseMachines = new MenuLeaseMachines();
+    private MenuLeases menuLeases = new MenuLeases();
     private StatsController statsController = new StatsController();
 
     MainMenuCeo() {
-        menuItems = new String[]{"Products", "Offers", "Orders", "Customers", "Contractors", "Statistics", "Exit"};
+        menuItems = new String[]{"Products", "Offers", "Orders", "Customers", "Contractors", "Lease Machines", "Leases", "Statistics", "Exit"};
         title = "Main Menu for big papa C.E.O.$$";
     }
 
@@ -39,9 +41,15 @@ class MainMenuCeo extends Menu {
                 menuContractors.run();
                 break;
             case 6:
-                statsController.generateStats();
+                menuLeaseMachines.run();
                 break;
             case 7:
+                menuLeases.run();
+                break;
+            case 8:
+                statsController.generateStats();
+                break;
+            case 9:
                 System.out.println("Thank you for using our software");
                 isRunning = false;
                 break;
