@@ -304,7 +304,7 @@ public class OffersManageController implements Initializable {
                 if(Double.parseDouble(text_newPrice.getText()) > 0){
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION);
                     a.setHeaderText("You are about to edit the existing element.");
-                    a.setContentText("Do you wand to perform this action?");
+                    a.setContentText("Do you want to perform this action?");
                     Button btnYes = (Button)a.getDialogPane().lookupButton(ButtonType.OK);
                     Optional<ButtonType> yesResponse = a.showAndWait();
                     if(yesResponse.isPresent()){
