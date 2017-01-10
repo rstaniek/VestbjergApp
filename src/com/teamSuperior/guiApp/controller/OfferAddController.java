@@ -68,7 +68,8 @@ public class OfferAddController implements Initializable {
 
     @FXML
     public void btn_ok_onClick(ActionEvent actionEvent) {
-        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+        DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         if (validateField(text_discount) &&
                 validateField(text_price) &&
@@ -78,11 +79,12 @@ public class OfferAddController implements Initializable {
                 isNumeric(text_product.getText())) {
             conn = new DBConnect();
             if(products.containsKey(Integer.parseInt(text_product.getText()))){
-                conn.upload(String.format("INSERT INTO offers (productIDs,discount,price,date) VALUES ('%1$s','%2$s','%3$s','%4$s')",
+                conn.upload(String.format("INSERT INTO offers (productIDs,discount,price,date,time) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s')",
                         text_product.getText(),
                         text_discount.getText(),
                         text_price.getText(),
-                        dtf.format(now)));
+                        dtf_date.format(now),
+                        dtf_time.format(now)));
                 btn_clear_onClick(null);
                 displayMessage(INFORMATION, "Offer added successfully");
             }

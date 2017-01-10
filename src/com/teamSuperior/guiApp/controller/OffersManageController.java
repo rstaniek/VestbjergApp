@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +19,8 @@ import java.net.URL;
 import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Time;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -39,11 +38,13 @@ public class OffersManageController implements Initializable {
     @FXML
     public TableView tableView_offers;
 
+    private TableColumn<Offer, Integer> idColumn;
     private TableColumn<Offer, String> nameColumn;
     private TableColumn<Offer, Integer> productIdColumn;
     private TableColumn<Offer, Double> priceColumn;
-    private TableColumn<Offer, Date> dateColumn;
+    private TableColumn<Offer, LocalDateTime> dateColumn;
     private TableColumn<Offer, Double> discountColumn;
+    private TableColumn<Offer, Time> timeColumn;
 
     private ObservableList<Offer> offers;
     private ObservableList<Offer> searchResults;
@@ -70,7 +71,7 @@ public class OffersManageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         offers = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("Name", "Product ID", "Price", "Discount", "Date");
+        checkComboBox_search_criteria.getItems().addAll("Name", "Product ID", "Price", "Discount", "Date", "Time");
         conn = new DBConnect();
         loggedUser = UserController.getUser();
 
@@ -82,7 +83,7 @@ public class OffersManageController implements Initializable {
     private void retrieveData(){
         offers = FXCollections.observableArrayList();
         conn = new DBConnect();
-        ResultSet rs = conn.getFromDataBase("SELECT offers.id,offers.date,offers.productIDs,offers.price,offers.discount,products.name FROM offers,products WHERE offers.id = products.id");
+        ResultSet rs = conn.getFromDataBase("SELECT offers.id,offers.date,offers.time,offers.productIDs,offers.price,offers.discount,products.name FROM offers,products WHERE offers.productIDs = products.id");
         try{
             while (rs.next()){
                 if(rs.getInt("offers.id") != -1){
@@ -91,7 +92,8 @@ public class OffersManageController implements Initializable {
                             rs.getInt("offers.productIDs"),
                             rs.getDouble("offers.price"),
                             rs.getDouble("offers.discount"),
-                            rs.getString("products.name")));
+                            rs.getString("products.name"),
+                            rs.getTime("offers.time")));
                 }
             }
         } catch (SQLException sqlException) {
@@ -102,13 +104,17 @@ public class OffersManageController implements Initializable {
     }
 
     private void initTableColumns(ObservableList<Offer> source){
+        idColumn = new TableColumn<>("ID");
+        idColumn.setMinWidth(30);
+        idColumn.setCellValueFactory(new PropertyValueFactory<Offer, Integer>("id"));
+
         nameColumn = new TableColumn<>("Product name");
         nameColumn.setMinWidth(100);
         nameColumn.setCellValueFactory(new PropertyValueFactory<Offer, String>("productName"));
 
         dateColumn = new TableColumn<>("Date");
-        dateColumn.setMinWidth(150);
-        dateColumn.setCellValueFactory(new PropertyValueFactory<Offer, Date>("date"));
+        dateColumn.setMinWidth(100);
+        dateColumn.setCellValueFactory(new PropertyValueFactory<Offer, LocalDateTime>("date"));
 
         discountColumn = new TableColumn<>("Discount");
         discountColumn.setMinWidth(60);
@@ -122,8 +128,12 @@ public class OffersManageController implements Initializable {
         productIdColumn.setMinWidth(80);
         productIdColumn.setCellValueFactory(new PropertyValueFactory<Offer, Integer>("productID"));
 
+        timeColumn = new TableColumn<>("Time");
+        timeColumn.setMinWidth(100);
+        timeColumn.setCellValueFactory(new PropertyValueFactory<Offer, Time>("time"));
+
         tableView_offers.setItems(source);
-        tableView_offers.getColumns().addAll(nameColumn, productIdColumn, priceColumn, discountColumn, dateColumn);
+        tableView_offers.getColumns().addAll(idColumn, nameColumn, productIdColumn, priceColumn, discountColumn, dateColumn, timeColumn);
     }
 
     //TODO: refreshing, editing, all the shit
