@@ -8,13 +8,14 @@ import java.time.LocalDateTime;
  * Created by rajmu on 17.01.09.
  */
 public class Offer {
-    private Date date;
+    private Date date, expiresDate;
     private int id, productID;
     private double price, discount;
     private String productName;
-    private Time time;
+    private Time time, expiresTime;
+    private String status, discount_str;
 
-    public Offer(Date date, int id, int productID, double price, double discount, String productName, Time time) {
+    public Offer(Date date, int id, int productID, double price, double discount, String productName, Time time, Date expiresDate, Time expiresTime, String status) {
         this.date = date;
         this.id = id;
         this.productID = productID;
@@ -22,6 +23,40 @@ public class Offer {
         this.discount = discount;
         this.productName = productName;
         this.time = time;
+        this.expiresDate = expiresDate;
+        this.expiresTime = expiresTime;
+        this.status = status;
+        discount_str = discount + "%";
+
+    }
+
+    public String getDiscount_str() {
+        return discount_str;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public void setExpiresDate(Date expiresDate) {
+        this.expiresDate = expiresDate;
+    }
+
+    public void setExpiresTime(Time expiresTime) {
+        this.expiresTime = expiresTime;
+    }
+
+    public Date getExpiresDate() {
+
+        return expiresDate;
+    }
+
+    public Time getExpiresTime() {
+        return expiresTime;
     }
 
     public Date getDate() {

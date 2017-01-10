@@ -15,6 +15,8 @@ public enum ErrorCode {
     DATABASE_PRODUCTS_NOT_FOUND("Product with such ID doesn't exist", "Please check the warehouse of validity of typed ID", ERROR),
     VALIDATION_FIELD_EMPTY("All fields must be filled properly", ERROR),
     VALIDATION_ILLEGAL_CHARS("Illegal characters spotted in th input", ERROR),
+    VALUE_LESS_THAN_ZERO("This value cannot be lower than 0", ERROR),
+    OFFER_DISCOUNT_OUT_OF_BOUND("Illegal discount value!", "Discount cannot be greater than 100% unless you will personally pay for the company losses", WARNING),
     ACCESS_DENIED_NOT_LOGGED_IN("Access denied", "You need to be logged in to access this function!", INFORMATION),
     ACCESS_DENIED_INSUFFICIENT_PERMISSIONS("Access denied", "You don't have permission to access this function!", INFORMATION),
     NOT_IMPLEMENTED("Sorry", "This functionality is not yet implemented."),
