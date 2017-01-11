@@ -4,6 +4,7 @@ import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -11,6 +12,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+
+import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static javafx.scene.control.Alert.*;
+import static javafx.scene.control.Alert.AlertType.*;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
@@ -39,7 +45,7 @@ public class DBConnect {
             con = DriverManager.getConnection(hostname, user, pass);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
+            displayMessage(ERROR, "Connection Error", ex.getMessage());
         }
         return con;
     }
@@ -75,7 +81,7 @@ public class DBConnect {
             rs = statement.executeQuery(query);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
+            displayMessage(ERROR, "Connection Error", ex.getMessage());
         }
         return rs;
     }
@@ -93,9 +99,9 @@ public class DBConnect {
             con.close();
             isExecuted = true;
         } catch (SQLException ex) {
-            AlertBox.display("Connection Error", ex.getMessage());
+            displayMessage(ERROR, "Connection Error", ex.getMessage());
         }
-        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+        if(!isExecuted) displayError(DATABASE_UPLOAD_ERROR);
     }
 
     /***
@@ -110,9 +116,9 @@ public class DBConnect {
             con.close();
             isExecuted = true;
         } catch (SQLException ex) {
-            AlertBox.display("Connection Error", ex.getMessage());
+            displayMessage(ERROR, "Connection Error", ex.getMessage());
         }
-        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+        if(!isExecuted) displayError(DATABASE_UPLOAD_ERROR);
     }
 
     /***

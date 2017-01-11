@@ -2,16 +2,12 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.guiApp.GUI.Error;
-import com.teamSuperior.guiApp.enums.ErrorCode;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyEvent;
 import javafx.util.Callback;
-import javafx.util.Pair;
 import javafx.util.StringConverter;
 
 import java.net.URL;
@@ -26,7 +22,6 @@ import static com.teamSuperior.core.Utils.isNumeric;
 import static com.teamSuperior.core.connection.DBConnect.validateField;
 import static com.teamSuperior.guiApp.GUI.Error.*;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
-import static javafx.scene.control.Alert.*;
 import static javafx.scene.control.Alert.AlertType.*;
 
 /**
