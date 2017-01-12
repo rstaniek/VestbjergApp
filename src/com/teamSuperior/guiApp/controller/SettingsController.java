@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -112,11 +114,17 @@ public class SettingsController implements Initializable {
 
         conn = new DBConnect();
         //TODO: Sth fucked up here: dear SQL gods, halp plox
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=1;", registry.getFloat("DISCOUNT_REGISTERED", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=2;", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=3;", registry.getFloat("DISCOUNT_QUANTITY", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=4;", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=5;", registry.getFloat("DISCOUNT_MAX", 0)));
+        try{
+            conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=1;", registry.getFloat("DISCOUNT_REGISTERED", 0)));
+            conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=2;", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
+            conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=3;", registry.getFloat("DISCOUNT_QUANTITY", 0)));
+            conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=4;", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
+            conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=5;", registry.getFloat("DISCOUNT_MAX", 0)));
+        } catch (SQLException sqlEx){
+            displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+        } catch (ConnectionException connEx){
+            displayError(DATABASE_UPLOAD_ERROR);
+        }
     }
 
     @FXML

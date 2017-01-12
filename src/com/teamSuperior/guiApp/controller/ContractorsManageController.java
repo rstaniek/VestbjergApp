@@ -82,8 +82,8 @@ public class ContractorsManageController implements Initializable {
     }
 
     private void retrieveData() {
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM contractors");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM contractors");
             while (rs.next()) {
                 if (rs.getString("name") != null &&
                         rs.getString("address") != null &&

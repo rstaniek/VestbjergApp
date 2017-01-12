@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.guiApp.GUI.Error;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -52,8 +53,8 @@ public class OfferAddController implements Initializable {
         products = new HashMap<>();
         conn = new DBConnect();
         label_productName.setText("");
-        ResultSet rs = conn.getFromDataBase("SELECT id,name FROM products");
         try{
+            ResultSet rs = conn.getFromDataBase("SELECT id,name FROM products");
             while (rs.next()){
                 products.put(rs.getInt("id"), rs.getString("name"));
             }
@@ -120,13 +121,19 @@ public class OfferAddController implements Initializable {
             conn = new DBConnect();
             if(Double.parseDouble(text_discount.getText()) < 100.0){
                 if(products.containsKey(Integer.parseInt(text_product.getText()))){
-                    conn.upload(String.format("INSERT INTO offers (productIDs,discount,price,date,time,expiresDate,expiresTime) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','23:59:59')",
-                            text_product.getText(),
-                            text_discount.getText(),
-                            text_price.getText(),
-                            dtf_date.format(now),
-                            dtf_time.format(now),
-                            datePicker_expires.getValue().format(DateTimeFormatter.ofPattern(datePattern))));
+                    try {
+                        conn.upload(String.format("INSERT INTO offers (productIDs,discount,price,date,time,expiresDate,expiresTime) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','23:59:59')",
+                                text_product.getText(),
+                                text_discount.getText(),
+                                text_price.getText(),
+                                dtf_date.format(now),
+                                dtf_time.format(now),
+                                datePicker_expires.getValue().format(DateTimeFormatter.ofPattern(datePattern))));
+                    } catch (SQLException sqlEx){
+                        displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+                    } catch (ConnectionException connEx){
+                        displayError(DATABASE_UPLOAD_ERROR);
+                    }
                     btn_clear_onClick(null);
                     displayMessage(INFORMATION, "Offer added successfully");
                 }

@@ -64,8 +64,8 @@ public class EmployeeAddController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         positions = FXCollections.observableArrayList();
         conn = new DBConnect();
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
             while (rs.next()) {
                 if (!rs.getString("name").isEmpty() && rs.getInt("id") != 0) {
                     positions.add(new Position(rs.getInt("id"), rs.getInt("accessLevel"), rs.getString("name")));

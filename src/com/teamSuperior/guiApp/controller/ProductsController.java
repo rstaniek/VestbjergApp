@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
@@ -154,8 +155,8 @@ public class ProductsController implements Initializable {
     }
 
     private void retrieveData() {
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM products");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM products");
             while (rs.next()) {
                 if (rs.getInt("id") != 0 &&
                         rs.getInt("quantity") != -1 &&
@@ -276,8 +277,15 @@ public class ProductsController implements Initializable {
                 Error.displayMessage(Alert.AlertType.WARNING, "Warehouse overfill alert!", String.format("Ordering %1$s new items would cause overfill. Ordering %2$d items instead.", text_amountToRequest.getText(), maxCap - selectedProduct.getQuantity()));
             }
             conn = new DBConnect();
-            conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));
-            updateTable(true);
+            try{
+                conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));
+            } catch (SQLException sqlEx){
+                Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlEx.getMessage());
+            } catch (ConnectionException connEx){
+                Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+            } finally {
+                updateTable(true);
+            }
             text_amountToRequest.clear();
         } else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
     }

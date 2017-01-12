@@ -95,8 +95,8 @@ public class UserController {
         boolean ret = false;
         String safeUsername = org.apache.commons.codec.digest.DigestUtils.sha256Hex(username);
         String safePassword = org.apache.commons.codec.digest.DigestUtils.sha256Hex(password);
-        rs = conn.getFromDataBase("SELECT * FROM employees WHERE email ='" + safeUsername + "' AND password = '" + safePassword + "'");
         try {
+            rs = conn.getFromDataBase("SELECT * FROM employees WHERE email ='" + safeUsername + "' AND password = '" + safePassword + "'");
             rs.next();
             if (rs.getInt("id") != 0 && rs.getString("name") != null
                     && rs.getString("surname") != null

@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Offer;
 import javafx.collections.FXCollections;
@@ -167,8 +168,8 @@ public class OffersManageController implements Initializable {
         offers = null;
         offers = FXCollections.observableArrayList();
         conn = new DBConnect();
-        ResultSet rs = conn.getFromDataBase("SELECT offers.id,offers.date,offers.time,offers.productIDs,offers.price,offers.discount,offers.expiresDate,offers.expiresTime,products.name FROM offers,products WHERE offers.productIDs = products.id");
         try{
+            ResultSet rs = conn.getFromDataBase("SELECT offers.id,offers.date,offers.time,offers.productIDs,offers.price,offers.discount,offers.expiresDate,offers.expiresTime,products.name FROM offers,products WHERE offers.productIDs = products.id");
             while (rs.next()){
                 if(rs.getInt("offers.id") != -1){
                     offers.add(new Offer(rs.getDate("offers.date"),
@@ -304,10 +305,16 @@ public class OffersManageController implements Initializable {
                     if(yesResponse.isPresent()){
                         if(ButtonType.OK.equals(yesResponse.get())){
                             conn = new DBConnect();
-                            conn.upload(String.format("UPDATE offers SET price='%1$s',discount='%2$s' WHERE id=%3$d",
-                                    text_newPrice.getText(),
-                                    text_newDiscount.getText(),
-                                    selectedOffer.getId()));
+                            try {
+                                conn.upload(String.format("UPDATE offers SET price='%1$s',discount='%2$s' WHERE id=%3$d",
+                                        text_newPrice.getText(),
+                                        text_newDiscount.getText(),
+                                        selectedOffer.getId()));
+                            } catch (SQLException sqlEx){
+                                displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+                            } catch (ConnectionException connEx){
+                                displayError(DATABASE_UPLOAD_ERROR);
+                            }
                             refreshWindow();
                         }
                     }
@@ -332,7 +339,13 @@ public class OffersManageController implements Initializable {
         if(deleteResponse.isPresent()){
             if(ButtonType.OK.equals(deleteResponse.get())){
                 conn = new DBConnect();
-                conn.upload(String.format("DELETE FROM offers WHERE id=%1$d", selectedOffer.getId()));
+                try {
+                    conn.upload(String.format("DELETE FROM offers WHERE id=%1$d", selectedOffer.getId()));
+                } catch (SQLException sqlEx){
+                    displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+                } catch (ConnectionException connEx){
+                    displayError(DATABASE_UPLOAD_ERROR);
+                }
                 refreshWindow();
             }
         }

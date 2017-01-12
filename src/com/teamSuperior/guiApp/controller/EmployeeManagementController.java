@@ -95,8 +95,8 @@ public class EmployeeManagementController implements Initializable {
     }
 
     private void retrieveData() {
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
             while (rs.next()) {
                 if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null

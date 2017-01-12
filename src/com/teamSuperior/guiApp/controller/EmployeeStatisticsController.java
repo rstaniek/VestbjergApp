@@ -72,8 +72,8 @@ public class EmployeeStatisticsController implements Initializable {
         checkComboBox_search_criteria.getItems().addAll("Name", "Surname", "Address", "City", "ZIP", "Phone", "Position");
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
             while (rs.next()) {
                 if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null

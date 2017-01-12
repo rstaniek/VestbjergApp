@@ -97,8 +97,8 @@ public class TransactionsViewController implements Initializable {
 
     private void retrieveData(){
         conn = new DBConnect();
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM transactions");
         try{
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM transactions");
             while (rs.next()){
                 if(rs.getInt("id") != 0){
                     ArrayList<Integer> productIDs = stringToArray(rs.getString("productIDs"));
@@ -171,8 +171,8 @@ public class TransactionsViewController implements Initializable {
         products = null;
         products = FXCollections.observableArrayList();
 
-        ResultSet rs = conn.getFromDataBase(String.format("SELECT * FROM products WHERE id IN (%1$s)", t.getProductIDs_str()));
         try{
+            ResultSet rs = conn.getFromDataBase(String.format("SELECT * FROM products WHERE id IN (%1$s)", t.getProductIDs_str()));
             while (rs.next()){
                 Product p = new Product(rs.getInt("id"),
                         rs.getInt("quantity"),
