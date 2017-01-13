@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import org.controlsfx.control.CheckComboBox?>
+
+<AnchorPane prefHeight="620.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.CustomersManageController">
+    <AnchorPane prefHeight="50.0" prefWidth="1000.0">
+        <children>
+            <Button fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" text="X" />
+            <TextField fx:id="text_search_query" layoutX="49.0" layoutY="13.0" onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0" promptText="Search..." />
+            <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="838.0" layoutY="13.0" prefHeight="25" prefWidth="150.0" />
+        </children>
+    </AnchorPane>
+    <TableView fx:id="tableView_customers" layoutY="50.0" onMouseClicked="#tableView_customers_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
+    </TableView>
+    <AnchorPane layoutY="450.0" prefHeight="170.0" prefWidth="1000.0">
+        <children>
+            <TextField fx:id="text_name" layoutX="14.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
+            <TextField fx:id="text_surname" layoutX="14.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="Surname" />
+            <TextField fx:id="text_email" layoutX="14.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" />
+            <Label layoutX="225.0" layoutY="19.0" text="- Name" />
+            <Label layoutX="225.0" layoutY="59.0" text="- Surname" />
+            <Label layoutX="225.0" layoutY="99.0" text="- Email" />
+            <TextField fx:id="text_address" layoutX="514.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
+            <TextField fx:id="text_city" layoutX="514.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
+            <TextField fx:id="text_zip" layoutX="514.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
+            <Label layoutX="725.0" layoutY="19.0" text=" - Address" />
+            <Label layoutX="725.0" layoutY="59.0" text=" - City" />
+            <Label layoutX="725.0" layoutY="99.0" text=" - ZIP code" />
+            <Button fx:id="btn_save" layoutX="567.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_save_onClick" text="Save" />
+            <Button fx:id="btn_saveQuit" layoutX="623.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_saveQuit_onClick" text="Save &amp; Quit" />
+            <Button fx:id="btn_delete" layoutX="718.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_delete_onClick" text="Delete" />
+         <Button fx:id="btn_add" layoutX="514.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
+         <TextField fx:id="text_phone" layoutX="14.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" promptText="Phone" />
+         <Label layoutX="225.0" layoutY="139.0" text="- Phone" />
+        </children>
+    </AnchorPane>
+</AnchorPane>

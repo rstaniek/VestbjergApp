@@ -25,8 +25,8 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Transactions">
             <items>
-               <MenuItem mnemonicParsing="false" text="New" onAction="#handleNewTransaction" />
-               <MenuItem mnemonicParsing="false" text="View" onAction="#handleViewTransactions" />
+               <MenuItem mnemonicParsing="false" onAction="#handleNewTransaction" text="New" />
+               <MenuItem mnemonicParsing="false" onAction="#handleViewTransactions" text="View" />
             </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Products">
@@ -44,6 +44,10 @@
                 <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add" />
                 <MenuItem mnemonicParsing="false" onAction="#handleContractorsManage" text="Manage" />
             </Menu>
+         <Menu mnemonicParsing="false" text="Customers">
+            <items>
+               <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit" />
+            </items></Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem mnemonicParsing="false" text="About" />
             </Menu>

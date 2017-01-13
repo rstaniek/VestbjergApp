@@ -20,6 +20,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Menu;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -464,6 +465,23 @@ public class MainController implements Initializable {
                 Parent root = FXMLLoader.load(getClass().getResource("../layout/transactionsView.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Transactions");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleCustomers(ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/customersManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("View Customers");
                 window.setResizable(false);
                 Scene scene = new Scene(root);
                 window.setScene(scene);
