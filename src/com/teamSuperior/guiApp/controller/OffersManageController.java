@@ -312,8 +312,6 @@ public class OffersManageController implements Initializable {
                                         selectedOffer.getId()));
                             } catch (SQLException sqlEx){
                                 displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
-                            } catch (ConnectionException connEx){
-                                displayError(DATABASE_UPLOAD_ERROR);
                             }
                             refreshWindow();
                         }
@@ -343,8 +341,6 @@ public class OffersManageController implements Initializable {
                     conn.upload(String.format("DELETE FROM offers WHERE id=%1$d", selectedOffer.getId()));
                 } catch (SQLException sqlEx){
                     displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
-                } catch (ConnectionException connEx){
-                    displayError(DATABASE_UPLOAD_ERROR);
                 }
                 refreshWindow();
             }

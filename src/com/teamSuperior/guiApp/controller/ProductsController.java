@@ -281,8 +281,6 @@ public class ProductsController implements Initializable {
                 conn.upload(String.format("UPDATE products SET quantity='%1$d' WHERE id='%2$d'", itemsTotal, selectedProduct.getId()));
             } catch (SQLException sqlEx){
                 Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlEx.getMessage());
-            } catch (ConnectionException connEx){
-                Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
             } finally {
                 updateTable(true);
             }

@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -22,6 +19,7 @@ import org.controlsfx.control.CheckComboBox;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
@@ -61,6 +59,8 @@ public class EmployeeManagementController implements Initializable {
     public TextField text_search_query;
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
+    @FXML
+    public Button btn_delete;
 
     private ObservableList<Employee> employees;
     private ObservableList<Employee> searchResults;
@@ -361,5 +361,27 @@ public class EmployeeManagementController implements Initializable {
             }
         }
         return results;
+    }
+
+    @FXML
+    public void btn_delete_onClick(ActionEvent actionEvent) {
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("You are about to perform an non-revertable action!");
+        alert.setContentText(String.format("Are you sure you want to delete %1$s from the employees list?", selectedEmployee.getName()));
+        Button deleteButton = (Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        deleteButton.setText("Delete");
+        Optional<ButtonType> deleteResponse = alert.showAndWait();
+        if(deleteResponse.isPresent()){
+            if(ButtonType.OK.equals(deleteResponse.get())){
+                conn = new DBConnect();
+                try{
+                    conn.upload(String.format("DELETE FROM employees WHERE id='%1$s'", selectedEmployee.getId()));
+                } catch (SQLException sqlEx){
+                    displayMessage(ERROR, "SQL connection error", sqlEx.getMessage());
+                } finally {
+                    refreshTable();
+                }
+            }
+        }
     }
 }

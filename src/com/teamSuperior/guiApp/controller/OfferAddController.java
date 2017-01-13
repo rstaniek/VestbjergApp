@@ -131,8 +131,6 @@ public class OfferAddController implements Initializable {
                                 datePicker_expires.getValue().format(DateTimeFormatter.ofPattern(datePattern))));
                     } catch (SQLException sqlEx){
                         displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
-                    } catch (ConnectionException connEx){
-                        displayError(DATABASE_UPLOAD_ERROR);
                     }
                     btn_clear_onClick(null);
                     displayMessage(INFORMATION, "Offer added successfully");

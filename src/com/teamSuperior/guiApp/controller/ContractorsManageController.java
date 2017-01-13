@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import org.controlsfx.control.CheckComboBox;
@@ -20,6 +17,7 @@ import org.controlsfx.control.CheckComboBox;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
@@ -176,16 +174,29 @@ public class ContractorsManageController implements Initializable {
 
     @FXML
     public void btn_delete_onClick() {
-        boolean result = ConfirmBox.display("Delete contractor", String.format("Are you sure you want to delete %1$s from the contractors list?", selectedContractor.getName()));
-        if (result) {
-            if (ConfirmBox.display("Confirmation", "There is no way to take back this operation. Are you fully aware of that?")) {
-                conn = new DBConnect();
-                try {
-                    conn.upload(String.format("DELETE FROM contractors WHERE email='%1$s'", selectedContractor.getEmail()));
-                } catch (Exception ex) {
-                    displayMessage(ERROR, ex.getMessage());
-                } finally {
-                    refreshTable();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("You are about to perform an non-revertable action!");
+        alert.setContentText(String.format("Are you sure you want to delete %1$s from the contractors list?", selectedContractor.getName()));
+        Button deleteButton = (Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        deleteButton.setText("Delete");
+        Optional<ButtonType> deleteResponse = alert.showAndWait();
+        Alert alertFinal = new Alert(Alert.AlertType.CONFIRMATION);
+        alertFinal.setHeaderText("Are you sure?");
+        alertFinal.setContentText("There is no way to take back this operation. Are you fully aware of that?");
+        if(deleteResponse.isPresent()){
+            if(ButtonType.OK.equals(deleteResponse.get())){
+                Optional<ButtonType> deleteFinal = alertFinal.showAndWait();
+                if(deleteFinal.isPresent()){
+                    if(ButtonType.OK.equals(deleteFinal.get())){
+                        conn = new DBConnect();
+                        try {
+                            conn.upload(String.format("DELETE FROM contractors WHERE email='%1$s'", selectedContractor.getEmail()));
+                        } catch (Exception ex) {
+                            displayMessage(ERROR, ex.getMessage());
+                        } finally {
+                            refreshTable();
+                        }
+                    }
                 }
             }
         }

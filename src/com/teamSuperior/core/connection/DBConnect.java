@@ -86,13 +86,11 @@ public class DBConnect {
      * Uploads data stated in the query to the database (UNSAFE)
      * @param query an SQL query string
      */
-    public void upload(String query) throws SQLException, ConnectionException {
+    public void upload(String query) throws SQLException {
         Connection con = connect(url, username, password);
-        boolean isExecuted = false;
         Statement statement = con.createStatement();
-        isExecuted = statement.execute(query);
+        statement.execute(query);
         con.close();
-        if(!isExecuted) throw new ConnectionException();
     }
 
     /***
