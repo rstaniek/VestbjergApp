@@ -1,13 +1,21 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.jmx.MXNodeAlgorithm;
+import com.sun.javafx.jmx.MXNodeAlgorithmContext;
+import com.sun.javafx.sg.prism.NGNode;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
@@ -189,31 +197,64 @@ public class EmployeeStatisticsController implements Initializable {
         if (loggedInUser.getAccessLevel() == 1) {
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
+            numOfSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
+                    System.out.println("change invoked at: numOfSalesBar");
+                    if(newNode != null){
+                        System.out.println(oldNode.toString());
+                        if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
+                            newNode.setStyle("-fx-bar-fill: #ff0000;");
+                        } else {
+                            newNode.setStyle("-fx-bar-fill: #00ff00;");
+                        }
+                    }
+                }
+            });
+            revenueBar.nodeProperty().addListener(new ChangeListener<Node>(){
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode){
+                    System.out.println("change invoked at: revenueBar");
+                    if(newNode != null){
+                        if (loggedInUser.getTotalRevenue() < calculateAvgRevenue()) {
+                            newNode.setStyle("-fx-bar-fill: #ff0000;");
+                        } else {
+                            newNode.setStyle("-fx-bar-fill: #00ff00;");
+                        }
+                    }
+                }
+            });
             contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            /*if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
-                numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
-            }
-            if (loggedInUser.getTotalRevenue() < calculateAvgRevenue()) {
-                revenueBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                revenueBar.getNode().getStyleClass().add("greater-than-avg");
-            }*/
         } else {
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
             contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            /*if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
-                numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
-            }
-            if (selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) {
-                revenueBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                revenueBar.getNode().getStyleClass().add("greater-than-avg");
-            }*/
+            numOfSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
+                    System.out.println("change invoked at: numOfSalesBar");
+                    if(newNode != null){
+                        if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
+            revenueBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
+                    if(newNode != null){
+                        System.out.println("change invoked at: revenueBar");
+                        if (selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
         }
 
         sales.getData().addAll(numOfSalesBar, new XYChart.Data<>("Average", calculateAvgSales()));

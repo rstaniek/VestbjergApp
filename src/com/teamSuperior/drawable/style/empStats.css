@@ -1,7 +1,22 @@
 .greater-than-avg {
-    -fx-bar-fill: #42f445;
+    -fx-bar-fill: #47d05f;
 }
 
 .less-than-avg {
     -fx-bar-fill: #f44b42;
+}
+
+.avg-value {
+    -fx-bar-fill: #5897ee;
+}
+
+.root {
+    -fx-not-achieved: #f44b42;
+    -fx-achieved: #47d05f;
+    -fx-default-bar-color: #5897ee;
+}
+
+.level-legend {
+    -fx-padding: 10;
+    -fx-background-color: #9d9291;
 }
