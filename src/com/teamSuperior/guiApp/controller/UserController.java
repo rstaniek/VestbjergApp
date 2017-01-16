@@ -120,9 +120,6 @@ public class UserController {
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-
-            // Throws an exception if you input wrong login credentials, TODO: fix this, obviously
-            // AlertBox.display("Connection Error", ex.getMessage());
         }
         return ret;
     }
