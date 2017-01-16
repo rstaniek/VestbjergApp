@@ -165,7 +165,6 @@ public class TransactionsViewController implements Initializable {
     }
 
     private void initProductsTableColumns(Transaction t){
-        //TODO: sometimes this method throws NullPrtException. Investigation needed
         tableView_products.getColumns().removeAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
         conn = new DBConnect();
         products = null;
