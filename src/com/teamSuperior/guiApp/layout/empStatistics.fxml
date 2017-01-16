@@ -26,7 +26,7 @@
         <content>
           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="900.0" prefWidth="1000.0">
                <children>
-                  <BarChart fx:id="chart_numberOfSales" prefHeight="400.0" prefWidth="250.0" title="Number of sales">
+                  <BarChart fx:id="chart_numberOfSales" prefHeight="400.0" prefWidth="330.0" title="Number of sales">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -34,7 +34,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <BarChart fx:id="chart_revenue" layoutX="250.0" prefHeight="400.0" prefWidth="250.0" title="Revenue">
+                  <BarChart fx:id="chart_revenue" layoutX="330.0" prefHeight="400.0" prefWidth="330.0" title="Revenue">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -42,15 +42,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                   <BarChart fx:id="chart_productivity" layoutX="500.0" prefHeight="400.0" prefWidth="250.0" title="Productivity">
-                       <xAxis>
-                           <CategoryAxis side="BOTTOM" />
-                       </xAxis>
-                       <yAxis>
-                           <NumberAxis side="LEFT" />
-                       </yAxis>
-                   </BarChart>
-                   <BarChart fx:id="chart_efficiency" layoutX="750.0" prefHeight="400.0" prefWidth="250.0" title="Efficiency">
+                   <BarChart fx:id="chart_efficiency" layoutX="660.0" prefHeight="400.0" prefWidth="330.0" title="Efficiency">
                        <xAxis>
                            <CategoryAxis side="BOTTOM" />
                        </xAxis>

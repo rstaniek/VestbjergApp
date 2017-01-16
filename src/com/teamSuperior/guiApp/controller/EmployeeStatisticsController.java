@@ -56,8 +56,6 @@ public class EmployeeStatisticsController implements Initializable {
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
     @FXML
-    public BarChart chart_productivity;
-    @FXML
     public BarChart chart_efficiency;
 
     private TableColumn<Employee, String> nameColumn;
@@ -194,21 +192,17 @@ public class EmployeeStatisticsController implements Initializable {
         chart_revenue.getData().clear();
         chart_contribution.getData().clear();
         chart_efficiency.getData().clear();
-        chart_productivity.getData().clear();
         XYChart.Series sales = new XYChart.Series<>();
         XYChart.Series revenue = new XYChart.Series<>();
         XYChart.Series efficiency = new XYChart.Series();
-        XYChart.Series productivity = new XYChart.Series();
         ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
         XYChart.Data numOfSalesBar;
         XYChart.Data revenueBar;
         XYChart.Data efficiencyBar;
-        XYChart.Data productivityBar;
         if (loggedInUser.getAccessLevel() == 1) {
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
             efficiencyBar = new XYChart.Data<>("You", getProductivityPercentage(loggedInUser, calculateAvgSales()));
-            productivityBar = new XYChart.Data<>("You", getEfficiency(loggedInUser));
             numOfSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
                 @Override
                 public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
@@ -245,24 +239,11 @@ public class EmployeeStatisticsController implements Initializable {
                     }
                 }
             });
-            productivityBar.nodeProperty().addListener(new ChangeListener<Node>(){
-                @Override
-                public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
-                    if(newNode != null){
-                        if(getProductivityPercentage(loggedInUser, calculateAvgSales()) < calculateAvgProductivityPercentage()){
-                            newNode.getStyleClass().add("less-than-avg");
-                        } else {
-                            newNode.getStyleClass().add("greater-than-avg");
-                        }
-                    }
-                }
-            });
             contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
         } else {
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
             efficiencyBar = new XYChart.Data<>(selectedEmployee.getName(), getEfficiency(selectedEmployee));
-            productivityBar = new XYChart.Data<>(selectedEmployee.getName(), getProductivityPercentage(selectedEmployee, calculateAvgSales()));
             contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
             numOfSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
                 @Override
@@ -300,28 +281,42 @@ public class EmployeeStatisticsController implements Initializable {
                     }
                 }
             });
-            productivityBar.nodeProperty().addListener(new ChangeListener<Node>(){
-                @Override
-                public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
-                    if(newNode != null){
-                        if(getProductivityPercentage(selectedEmployee, calculateAvgSales()) < calculateAvgProductivityPercentage()){
-                            newNode.getStyleClass().add("less-than-avg");
-                        } else {
-                            newNode.getStyleClass().add("greater-than-avg");
-                        }
-                    }
-                }
-            });
         }
 
-        sales.getData().addAll(numOfSalesBar, new XYChart.Data<>("Average", calculateAvgSales()));
-        revenue.getData().addAll(revenueBar, new XYChart.Data<>("Average", calculateAvgRevenue()));
-        efficiency.getData().addAll(efficiencyBar, new XYChart.Data<>("Average", calculateAvgEfficiency()));
-        productivity.getData().addAll(productivityBar, new XYChart.Data<>("Average", calculateAvgProductivityPercentage()));
+        XYChart.Data avgSalesBar = new XYChart.Data<>("Average", calculateAvgSales());
+        XYChart.Data avgRevenueBar = new XYChart.Data<>("Average", calculateAvgRevenue());
+        XYChart.Data avgEfficiencyBar = new XYChart.Data<>("Average", calculateAvgEfficiency());
+        avgSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                if(newNode != null){
+                    newNode.getStyleClass().add("avg-value");
+                }
+            }
+        });
+        avgRevenueBar.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                if(newNode != null){
+                    newNode.getStyleClass().add("avg-value");
+                }
+            }
+        });
+        avgEfficiencyBar.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                if(newNode != null){
+                    newNode.getStyleClass().add("avg-value");
+                }
+            }
+        });
+
+        sales.getData().addAll(numOfSalesBar, avgSalesBar);
+        revenue.getData().addAll(revenueBar, avgRevenueBar);
+        efficiency.getData().addAll(efficiencyBar, avgEfficiencyBar);
         chart_numberOfSales.getData().addAll(sales);
         chart_revenue.getData().addAll(revenue);
         chart_efficiency.getData().addAll(efficiency);
-        chart_productivity.getData().addAll(productivity);
         chart_contribution.getData().addAll(contributionData);
     }
 
