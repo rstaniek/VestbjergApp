@@ -39,6 +39,7 @@
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add" />
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics" />
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Edit" />
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesShowRevenueTracker" text="Revenue tracker" />
             </Menu>
             <Menu mnemonicParsing="false" text="Contractors">
                 <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add" />

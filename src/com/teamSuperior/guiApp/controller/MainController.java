@@ -491,4 +491,20 @@ public class MainController implements Initializable {
             }
         }
     }
+
+    public void handleEmployeesShowRevenueTracker(ActionEvent actionEvent) {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/revenueTrackingView.fxml"));
+                Stage window = new Stage();
+                window.setTitle("View Revenues");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
 }
