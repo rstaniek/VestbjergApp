@@ -19,6 +19,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.image.ImageView;
@@ -48,13 +50,20 @@ public class MainController implements Initializable {
 
     @FXML
     public Button btn_logIn;
+    @FXML
+    public LineChart efficiency;
+    @FXML
+    public NumberAxis xAxis;
+    @FXML
+    public NumberAxis yAxis;
 
     private Stage settings;
     static Stage loginWindow;
     private Window window;
 
     private StringProperty welcomeMessage;
-    private StringProperty currentDateTime;
+    private StringProperty currentTime;
+    private StringProperty currentDate;
     private StringProperty USDRatio;
     private StringProperty EURRatio;
 
@@ -65,10 +74,11 @@ public class MainController implements Initializable {
     private ArrayList<Employee> employees;
 
     public MainController() {
-        welcomeMessage = new SimpleStringProperty("Please log in first.");
-        currentDateTime = new SimpleStringProperty();
-        USDRatio = new SimpleStringProperty("Please wait");
-        EURRatio = new SimpleStringProperty("Please wait");
+        welcomeMessage = new SimpleStringProperty("");
+        currentTime = new SimpleStringProperty();
+        currentDate = new SimpleStringProperty();
+        USDRatio = new SimpleStringProperty("Loading");
+        EURRatio = new SimpleStringProperty("Loading");
     }
 
     @Override
@@ -91,9 +101,10 @@ public class MainController implements Initializable {
             @Override
             public Void call() throws Exception {
                 while (true) {
-                    DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
+                    DateTimeFormatter timeFormat = DateTimeFormatter.ofPattern("HH:mm");
+                    DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("dd/MM/YYYY");
                     LocalDateTime now = LocalDateTime.now();
-                    Platform.runLater(() -> setCurrentDateTime(dtf.format(now)));
+                    Platform.runLater(() -> setCurrentDateTime(timeFormat.format(now), dateFormat.format(now)));
                     Thread.sleep(1000);
                 }
             }
@@ -152,16 +163,20 @@ public class MainController implements Initializable {
         return welcomeMessage;
     }
 
-    public String getCurrentDateTime() {
-        return currentDateTime.get();
+    public void setCurrentDateTime(String currentTime, String currentDate)
+    {
+        this.currentTime.set(currentTime);
+        this.currentDate.set(currentDate);
     }
 
-    public StringProperty currentDateTimeProperty() {
-        return currentDateTime;
-    }
+    public String getCurrentTime() { return currentTime.get(); }
 
-    private void setCurrentDateTime(String currentDateTime) {
-        this.currentDateTime.set(currentDateTime);
+    public String getCurrentDate() { return currentDate.get(); }
+
+    public StringProperty currentDateProperty() { return currentDate; }
+
+    public StringProperty currentTimeProperty()  {
+        return currentTime;
     }
 
     public String getUSDRatio() {
@@ -232,7 +247,7 @@ public class MainController implements Initializable {
 
     private boolean welcome() {
         if (UserController.isLoggedIn()) {
-            Platform.runLater(() -> setWelcomeMessage(String.format("Welcome %s %s!", UserController.getUser().getName(), UserController.getUser().getSurname())));
+            Platform.runLater(() -> setWelcomeMessage(String.format("%s %s!", UserController.getUser().getName(), UserController.getUser().getSurname())));
             Platform.runLater(() -> btn_logIn.setDisable(true));
             return true;
         } else {

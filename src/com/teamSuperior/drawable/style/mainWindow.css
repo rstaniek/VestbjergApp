@@ -1,5 +1,5 @@
-.backgroundBlue {
-    -fx-background-color: #385ba4;
+.backgroundGray {
+    -fx-background-color: #a5adb0;
 }
 
 .fontWhite {
@@ -15,11 +15,43 @@
     -fx-padding: 0 5 5 10;
 }
 
-.current-date-time {
-    -fx-padding: 0 0 5 10;
+.current-time{
+     -fx-font-size:65;
+     -fx-text-fill:#000000;
+     -fx-font-smoothing-type: lcd;
+     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
+ }
+
+.current-date{
+    -fx-font-size:25;
+    -fx-text-fill:#000000;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
 
-.welcome-message {
-    -fx-font-size: 24;
-    -fx-padding: 0 0 0 10;
+.loggedEmployee {
+    -fx-font-size:27;
+    -fx-text-fill:#000000;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
+}
+
+.heading2 {
+    -fx-font-size:40;
+    -fx-text-fill:#000000;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
+}
+
+.logo{
+    -webkit-fx-border-width: 0;
+    -moz-fx-border-width: 0;
+    -ms-fx-border-width: 0;
+    -o-fx-border-width: 0;
+    -fx-border-width: 0;
+
+}
+
+.bottom{
+    -fx-background-color: #385BA4;
 }
