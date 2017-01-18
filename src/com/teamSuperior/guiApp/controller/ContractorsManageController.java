@@ -50,6 +50,8 @@ public class ContractorsManageController implements Initializable {
     public TextField text_search_query;
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
+    @FXML
+    public TextField text_email;
 
     private ObservableList<Contractor> contractors;
     private ObservableList<Contractor> searchResults;
@@ -89,7 +91,8 @@ public class ContractorsManageController implements Initializable {
                         rs.getString("zip") != null &&
                         rs.getString("phone") != null &&
                         rs.getString("email") != null) {
-                    Contractor tmp = new Contractor(rs.getString("name"),
+                    Contractor tmp = new Contractor(rs.getInt("id"),
+                            rs.getString("name"),
                             rs.getString("address"),
                             rs.getString("city"),
                             rs.getString("zip"),
@@ -143,26 +146,43 @@ public class ContractorsManageController implements Initializable {
         text_city.setText(selectedContractor.getCity());
         text_zip.setText(selectedContractor.getZip());
         text_phone.setText(selectedContractor.getPhone());
+        text_email.setText(selectedContractor.getEmail());
+        System.out.println(selectedContractor.toString());
     }
 
     @FXML
     public void btn_save_onClick() throws SQLException {
-        boolean result = ConfirmBox.display("Update info confirmation", String.format("Are you sure you want to update information about %1$s contractor?", selectedContractor.getName()));
-        if (result) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Update info confirmation");
+        a.setContentText(String.format("Are you sure you want to update information about %1$s contractor?", selectedContractor.getName()));
+        Button yesButton = (Button)a.getDialogPane().lookupButton(ButtonType.OK);
+        yesButton.setText("Yes");
+        Optional<ButtonType> yesResponse = a.showAndWait();
+        if(yesResponse.isPresent() && ButtonType.OK.equals(yesResponse.get())){
             if (validateField(text_name) &&
                     validateField(text_address) &&
                     validateField(text_city) &&
                     validateField(text_zip) &&
                     validateField(text_phone)) {
+                System.out.println("Validation passed");
                 conn = new DBConnect();
                 try {
-                    conn.upload(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
-                            selectedContractor.getEmail(),
+                    System.out.println(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s', email='%1$s' WHERE id='%7$d'",
+                            text_email.getText(),
                             text_name.getText(),
                             text_address.getText(),
                             text_city.getText(),
                             text_zip.getText(),
-                            text_phone.getText()));
+                            text_phone.getText(),
+                            selectedContractor.getId()));
+                    conn.upload(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s', email='%1$s' WHERE id='%7$d'",
+                            text_email.getText(),
+                            text_name.getText(),
+                            text_address.getText(),
+                            text_city.getText(),
+                            text_zip.getText(),
+                            text_phone.getText(),
+                            selectedContractor.getId()));
                 } catch (Exception ex) {
                     displayMessage(ERROR, ex.getMessage());
                 } finally {
