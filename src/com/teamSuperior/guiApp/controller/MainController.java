@@ -22,10 +22,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.AreaChart;
-import javafx.scene.chart.LineChart;
-import javafx.scene.chart.ScatterChart;
-import javafx.scene.chart.XYChart;
+import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -57,6 +54,11 @@ public class MainController implements Initializable {
     public Button btn_logIn;
     @FXML
     public AreaChart efficiency;
+    @FXML
+    public NumberAxis xAxis;
+    @FXML
+    public NumberAxis yAxis;
+
 
     private Stage settings;
     static Stage loginWindow;
@@ -146,10 +148,7 @@ public class MainController implements Initializable {
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
         Thread th3 = new Thread(waitForLogin);
-        if(!effChartInitialized)
-        {
-            displayEfficiencyChart();
-        }
+        displayEfficiencyChart();
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
@@ -462,7 +461,12 @@ public class MainController implements Initializable {
         for(int i = 0; i < employeeEff.size(); i++) {
             effSeries.getData().add(new XYChart.Data(i, employeeEff.get(i)));
         }
-        effSeries.setName("ser");
+        efficiency.setCreateSymbols(false);
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(100);
+        xAxis.setTickUnit(25);
+        yAxis.setAutoRanging(true);
         efficiency.getData().addAll(effSeries);
         effChartInitialized = true;
     }

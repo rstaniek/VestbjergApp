@@ -1,5 +1,5 @@
 .backgroundGray {
-    -fx-background-color: #a5adb0;
+    -fx-background-color: #C3C3C3;
 }
 
 .fontWhite {
@@ -58,9 +58,29 @@
     -fx-background-color: #385BA4;
 }
 
+.axis{
+    -fx-font-size: 2em;
+    -fx-tick-label-fill: #000;
+    -fx-stroke:#000;
+    -fx-fill: #000000;
+}
+
+.blk{
+    -fx-stroke:#000;
+}
+
+.axis-tick-mark {
+    -fx-stroke: #000;
+    -fx-stroke-width: 1;
+}
+.axis-minor-tick-mark {
+    -fx-stroke: #000;
+    -fx-stroke-width:0;
+}
 .chart{
-    -fx-background-color: #a5adb0;
-    -fx-border-color: #a5adb0;
+    -fx-background-color: #C3C3C3;
+    -fx-fill:#C3C3C3;
+    -fx-border-color: #C3C3C3;
     -fx-border-width: 0;
     -fx-horizontal-grid-lines-visible: false;
     -fx-vertical-grid-lines-visible: false;
@@ -68,20 +88,26 @@
     -fx-tooltip-visible: false;
 }
 
-.chart-series-line {
+.chart-series-area-line{
     -fx-stroke-width: 2px;
-    -fx-effect: null;
 }
 
-/* THIS SIMPLY DOES NOT WORK, EVEN THO THEY USE THIS IN THE DOCUMENTATION */
-.chart-series-line {
-    -fx-stroke-width: 2px;
-    -fx-effect: null;
+.default-color0.chart-series-area-line{
+    -fx-stroke:#385BA4;
 }
 
-.default-color0.chart-series-line { -fx-stroke: #e9967a; }
-.default-color1.chart-series-line { -fx-stroke: #f0e68c; }
-.default-color2.chart-series-line { -fx-stroke: #dda0dd; }
+.default-color0.chart-series-area-fill {
+    -fx-fill: #385BA4;
+}
+
+.chart-plot-background{
+    -fx-background-color:#C3C3C3;
+}
+
+.chart-vertical-zero-line{
+    -fx-stroke: #C3C3C3;
+}
+
 
 
 

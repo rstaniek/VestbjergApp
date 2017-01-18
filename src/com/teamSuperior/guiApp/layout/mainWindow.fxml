@@ -60,12 +60,12 @@
             <Label layoutX="815.0" layoutY="25.0" styleClass="current-time" text="${controller.currentTime}" />
             <Label layoutX="830.0" layoutY="110.0" styleClass="current-date" text="${controller.currentDate}" />
             <children>
-            <AreaChart fx:id="efficiency" layoutX="25.0" layoutY="160.0" prefHeight="270.0" prefWidth="950.0" >
+            <AreaChart fx:id="efficiency" layoutX="25.0" layoutY="180.0" prefHeight="280.0" prefWidth="950.0" >
                 <xAxis>
-                    <NumberAxis side="BOTTOM"/>
+                    <NumberAxis side="BOTTOM" fx:id="xAxis" styleClass="blk"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis side="RIGHT"/>
+                    <NumberAxis side="RIGHT" fx:id="yAxis" styleClass="blk"/>
                 </yAxis>
             </AreaChart>
             </children>
