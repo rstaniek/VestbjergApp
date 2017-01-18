@@ -2,7 +2,10 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.exception.ConnectionException;
+import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.Error;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -45,18 +48,22 @@ public class OfferAddController implements Initializable {
     public DatePicker datePicker_expires;
 
     private DBConnect conn;
-    private Map<Integer, String> products;
+    private ObservableList<Product> products;
     private final String datePattern = "yyyy-MM-dd";
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        products = new HashMap<>();
+        products = FXCollections.observableArrayList();
         conn = new DBConnect();
         label_productName.setText("");
         try{
-            ResultSet rs = conn.getFromDataBase("SELECT id,name FROM products");
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM products");
             while (rs.next()){
-                products.put(rs.getInt("id"), rs.getString("name"));
+                Product p = new Product(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        (float) rs.getDouble("price"));
+                products.add(p);
             }
         } catch (SQLException sqlException) {
             Error.displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
@@ -120,7 +127,7 @@ public class OfferAddController implements Initializable {
                 isNumeric(text_product.getText())) {
             conn = new DBConnect();
             if(Double.parseDouble(text_discount.getText()) < 100.0){
-                if(products.containsKey(Integer.parseInt(text_product.getText()))){
+                if(findProduct(Integer.parseInt(text_product.getText())) != null){
                     try {
                         conn.upload(String.format("INSERT INTO offers (productIDs,discount,price,date,time,expiresDate,expiresTime) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','23:59:59')",
                                 text_product.getText(),
@@ -138,7 +145,7 @@ public class OfferAddController implements Initializable {
                 else {
                     displayError(DATABASE_PRODUCTS_NOT_FOUND);
                 }
-            }else{
+            }else {
                 displayError(OFFER_DISCOUNT_OUT_OF_BOUND);
             }
         }
@@ -155,12 +162,38 @@ public class OfferAddController implements Initializable {
     @FXML
     public void text_product_onKeyReleased(KeyEvent keyEvent) {
         if(isNumeric(text_product.getText())){
-            if(products.containsKey(Integer.parseInt(text_product.getText()))){
-                label_productName.setText(products.get(Integer.parseInt(text_product.getText())));
+            if(findProduct(Integer.parseInt(text_product.getText())) != null){
+                label_productName.setText(findProduct(Integer.parseInt(text_product.getText())).getName());
+                text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
             }
-            else{
+            else {
                 displayError(DATABASE_PRODUCTS_NOT_FOUND);
             }
         }
+    }
+
+    @FXML
+    public void text_discount_onKeyReleased(KeyEvent keyEvent) {
+        if(isNumeric(text_discount.getText())){
+            float currentPrice = findProduct(Integer.parseInt(text_product.getText())).getPrice();
+            float currentDiscount = Float.parseFloat(text_discount.getText());
+            float newPrice = currentPrice/100 * (100-currentDiscount);
+            text_price.setText(Float.toString(newPrice));
+            }
+        }
+
+    @FXML
+    public void text_price_onKeyReleased(KeyEvent keyEvent) {
+        if(isNumeric(text_price.getText())){
+            float originalPrice = findProduct(Integer.parseInt(text_product.getText())).getPrice();
+            float currentPrice = Float.parseFloat(text_price.getText());
+            text_discount.setText(Float.toString(100-currentPrice/originalPrice*100));
+        }
+    }
+
+    private Product findProduct(int id) {
+        Product foundProduct = null;
+        for (Product p : products) { if (p.getId() == id) foundProduct = p; }
+        return foundProduct;
     }
 }
