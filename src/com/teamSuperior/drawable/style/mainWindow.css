@@ -6,6 +6,12 @@
     -fx-text-fill: #eee;
 }
 
+.label-rating {
+    -fx-text-fill: #eee;
+    -fx-font-style: System Bold;
+    -fx-font-size: 18;
+}
+
 .label-ratio {
     -fx-text-fill: #eeeeee;
     -fx-font-size: 25;
