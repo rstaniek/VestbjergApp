@@ -174,20 +174,53 @@ public class OfferAddController implements Initializable {
 
     @FXML
     public void text_discount_onKeyReleased(KeyEvent keyEvent) {
+        if (text_discount.getText().isEmpty()) { //after the last character is deleted, it resets the price
+            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+        }
         if(isNumeric(text_discount.getText())){
             float currentPrice = findProduct(Integer.parseInt(text_product.getText())).getPrice();
             float currentDiscount = Float.parseFloat(text_discount.getText());
             float newPrice = currentPrice/100 * (100-currentDiscount);
-            text_price.setText(Float.toString(newPrice));
+            if (newPrice >= 0){ //checks that the price never goes under 0 (discount doesn't go higher than 100)
+                text_price.setText(Float.toString(newPrice));
+            }
+            else { //should the price go under 0, error pops up, discount field is cleared and price is updated to original value
+                text_discount.clear();
+                text_price.setText(Float.toString(currentPrice));
+                displayError(OFFER_DISCOUNT_OUT_OF_BOUND);
             }
         }
+        else { //same as in previous case, only different error pops up
+            text_discount.clear();
+            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+            displayError(TEXT_FIELD_NON_NUMERIC);
+        }
+
+    }
 
     @FXML
     public void text_price_onKeyReleased(KeyEvent keyEvent) {
+        if (text_price.getText().isEmpty()) text_discount.clear();
         if(isNumeric(text_price.getText())){
             float originalPrice = findProduct(Integer.parseInt(text_product.getText())).getPrice();
             float currentPrice = Float.parseFloat(text_price.getText());
-            text_discount.setText(Float.toString(100-currentPrice/originalPrice*100));
+            float newDiscount = 100-currentPrice/originalPrice*100;
+            if (newDiscount <= 100 && newDiscount >= 0) text_discount.setText(Float.toString(newDiscount)+"%");
+            else if (newDiscount <= 100) {
+                text_discount.clear();
+                text_price.setText(Float.toString(originalPrice));
+                displayError(OFFER_DISCOUNT_LESS_THEN_ZERO);
+            }
+            else {
+                text_discount.clear();
+                text_price.setText(Float.toString(originalPrice));
+                displayError(VALUE_LESS_THAN_ZERO);
+            }
+        }
+        else {
+            text_discount.clear();
+            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+            displayError(TEXT_FIELD_NON_NUMERIC);
         }
     }
 

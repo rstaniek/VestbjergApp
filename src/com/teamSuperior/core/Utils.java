@@ -7,11 +7,12 @@ import java.util.ArrayList;
  */
 public class Utils {
     public static boolean isNumeric(String s){
-        try{
-            double d = Double.parseDouble(s);
-        }
-        catch (NumberFormatException nfe){
-            return false;
+        if (!s.isEmpty()) {
+            try {
+                double d = Double.parseDouble(s);
+            } catch (NumberFormatException nfe) {
+                return false;
+            }
         }
         return true;
     }
