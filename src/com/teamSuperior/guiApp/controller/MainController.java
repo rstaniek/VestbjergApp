@@ -201,7 +201,7 @@ public class MainController implements Initializable {
                         label_ratingValue.getText(),
                         dtf_date.format(now),
                         dtf_time.format(now)));
-                displayMessage(INFORMATION, "Thank you for rating our app.", "Every vote matters!");
+                displayMessage(INFORMATION, String.format("Thank you for rating our app (%1$s).", label_ratingValue.getText()), "Because every vote matters!");
             } catch (Exception ex){
                 ex.printStackTrace();
             }
