@@ -210,7 +210,7 @@ public class ContractorsManageController implements Initializable {
                     if(ButtonType.OK.equals(deleteFinal.get())){
                         conn = new DBConnect();
                         try {
-                            conn.upload(String.format("DELETE FROM contractors WHERE email='%1$s'", selectedContractor.getEmail()));
+                            conn.upload(String.format("DELETE FROM contractors WHERE id='%1$d'", selectedContractor.getId()));
                         } catch (Exception ex) {
                             displayMessage(ERROR, ex.getMessage());
                         } finally {

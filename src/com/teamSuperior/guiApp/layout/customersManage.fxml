@@ -32,9 +32,8 @@
             <Label layoutX="725.0" layoutY="59.0" text=" - City" />
             <Label layoutX="725.0" layoutY="99.0" text=" - ZIP code" />
             <Button fx:id="btn_save" layoutX="567.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_save_onClick" text="Save" />
-            <Button fx:id="btn_saveQuit" layoutX="623.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_saveQuit_onClick" text="Save &amp; Quit" />
-            <Button fx:id="btn_delete" layoutX="718.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_delete_onClick" text="Delete" />
-         <Button fx:id="btn_add" layoutX="514.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
+            <Button fx:id="btn_delete" layoutX="623.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_delete_onClick" text="Delete" />
+         <Button fx:id="btn_add" layoutX="514.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="New" />
          <TextField fx:id="text_phone" layoutX="14.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" promptText="Phone" />
          <Label layoutX="225.0" layoutY="139.0" text="- Phone" />
         </children>

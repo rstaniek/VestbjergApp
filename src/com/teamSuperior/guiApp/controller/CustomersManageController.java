@@ -8,18 +8,25 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.teamSuperior.core.connection.DBConnect.*;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
@@ -49,8 +56,6 @@ public class CustomersManageController implements Initializable {
     public TextField text_zip;
     @FXML
     public Button btn_save;
-    @FXML
-    public Button btn_saveQuit;
     @FXML
     public Button btn_delete;
     @FXML
@@ -228,25 +233,88 @@ public class CustomersManageController implements Initializable {
 
     @FXML
     public void btn_save_onClick(ActionEvent actionEvent) {
-        //TODO: to be implemented
-        Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Update info confirmation");
+        a.setContentText(String.format("Are you sure you want to update information about the customer: %1$s %2$s?", selectedCustomer.getName(), selectedCustomer.getSurname()));
+        Button yesButton = (Button)a.getDialogPane().lookupButton(ButtonType.OK);
+        yesButton.setText("Yes");
+        Optional<ButtonType> yesResponse = a.showAndWait();
+        if(yesResponse.isPresent()){
+            if(ButtonType.OK.equals(yesResponse.get())){
+                if(validateField(text_address) &&
+                        validateField(text_city) &&
+                        validateField(text_email) &&
+                        validateField(text_name) &&
+                        validateField(text_phone) &&
+                        validateField(text_surname) &&
+                        validateField(text_zip)){
+                    try{
+                        conn = new DBConnect();
+                        conn.upload(String.format("UPDATE customers SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',email='%6$s',phone='%7$s' WHERE id='%8$d'",
+                                text_name.getText(),
+                                text_surname.getText(),
+                                text_address.getText(),
+                                text_city.getText(),
+                                text_zip.getText(),
+                                text_email.getText(),
+                                text_phone.getText(),
+                                selectedCustomer.getId()));
+                    } catch (Exception ex) {
+                        displayMessage(ERROR, ex.getMessage());
+                    } finally {
+                        refreshTable();
+                    }
+                }
+            }
+        }
     }
 
-    @FXML
-    public void btn_saveQuit_onClick(ActionEvent actionEvent) {
-        //TODO: to be implemented
-        Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+    private void refreshTable(){
+        customers.removeAll();
+        customers = null;
+        customers = FXCollections.observableArrayList();
+        retrieveData();
+        initTableColumns(customers);
     }
 
     @FXML
     public void btn_delete_onClick(ActionEvent actionEvent) {
-        //TODO: to be implemented
-        Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("You are about to perform an non-revertable action!");
+        alert.setContentText(String.format("Are you sure you want to delete %1$s from the customers list?", selectedCustomer.getName()));
+        Button deleteButton = (Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        deleteButton.setText("Delete");
+        Optional<ButtonType> deleteResponse = alert.showAndWait();
+        Alert alertFinal = new Alert(Alert.AlertType.CONFIRMATION);
+        alertFinal.setHeaderText("Are you sure?");
+        alertFinal.setContentText("There is no way to take back this operation. Are you fully aware of that?");
+        if(deleteResponse.isPresent() && ButtonType.OK.equals(deleteResponse.get())){
+            Optional<ButtonType> deleteFinal = alertFinal.showAndWait();
+            if(deleteFinal.isPresent() && ButtonType.OK.equals(deleteFinal.get())){
+                conn = new DBConnect();
+                try {
+                    conn.upload(String.format("DELETE FROM customers WHERE id='%1$d'", selectedCustomer.getId()));
+                } catch (Exception ex) {
+                    displayMessage(ERROR, ex.getMessage());
+                } finally {
+                    refreshTable();
+                }
+            }
+        }
     }
 
     @FXML
     public void btn_add_onClick(ActionEvent actionEvent) {
-        //TODO: to be implemented
-        Error.displayError(ErrorCode.NOT_IMPLEMENTED);
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/customerAdd.fxml"));
+            Stage window = new Stage();
+            window.setTitle("Add new customer");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
+        }
     }
 }
