@@ -507,4 +507,19 @@ public class MainController implements Initializable {
             }
         }
     }
+
+    @FXML
+    public void handleAboutWindow(ActionEvent actionEvent) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/about.fxml"));
+            Stage window = new Stage();
+            window.setTitle("About");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
+        }
+    }
 }
