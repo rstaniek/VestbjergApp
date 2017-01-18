@@ -50,7 +50,7 @@
                <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit" />
             </items></Menu>
             <Menu mnemonicParsing="false" text="Help">
-                <MenuItem mnemonicParsing="false" text="About" />
+                <MenuItem mnemonicParsing="false" text="About" onAction="#handleAboutWindow" />
             </Menu>
         </MenuBar>
     </top>
