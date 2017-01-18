@@ -12,6 +12,8 @@ import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,6 +23,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.PieChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Menu;
 import javafx.scene.image.ImageView;
@@ -35,6 +39,7 @@ import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -52,10 +57,6 @@ public class MainController implements Initializable {
     public Button btn_logIn;
     @FXML
     public LineChart efficiency;
-    @FXML
-    public NumberAxis xAxis;
-    @FXML
-    public NumberAxis yAxis;
 
     private Stage settings;
     static Stage loginWindow;
@@ -432,6 +433,32 @@ public class MainController implements Initializable {
         Scene scene = new Scene(anchorPane);
         window.setScene(scene);
         window.showAndWait();
+    }
+
+    @FXML
+    public void displayEfficiencyChart(){
+        XYChart.Series effSeries = new XYChart.Series();
+        XYChart.Data efficiencyData;
+        ResultSet rs;
+        ArrayList<Double> employeeEff = new ArrayList<>();
+        try{
+            rs = conn.getFromDataBase("SELECT * FROM employees");
+            while(rs.next()){
+                int sales = rs.getInt("numberOfSales");
+                double revenue = rs.getDouble("totalRevenue");
+                double eff = revenue/sales;
+                employeeEff.add(eff);
+            }
+        }
+        catch(SQLException ex) {
+            System.out.println("err");
+        }
+        Collections.sort(employeeEff);
+        for(int i = 0; i < employeeEff.size(); i++) {
+            effSeries.getData().add(new XYChart.Data(i, employeeEff.get(i)));
+        }
+
+        efficiency.getData().addAll(effSeries);
     }
 
     @FXML

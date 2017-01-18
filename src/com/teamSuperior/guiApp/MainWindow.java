@@ -28,17 +28,13 @@ import static java.lang.Math.round;
  */
 public class MainWindow extends Application {
     private Stage window;
-    @FXML
-    public LineChart<Number, Number> efficiency;
-    private DBConnect conn;
-    private ArrayList<Double> empEfficiency;
     @Override
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
         Parent root = FXMLLoader.load(getClass().getResource("layout/mainWindow.fxml"));
         primaryStage.setTitle("Team Superior - representing Silvan Inc.");
         primaryStage.setResizable(false);
-        loadEfficiencyChart();
+
         primaryStage.setOnCloseRequest(e -> {
             e.consume();
             closeProgram();
@@ -62,9 +58,7 @@ public class MainWindow extends Application {
     }
 
     private void loadEfficiencyChart(){
-        NumberAxis xAxis = new NumberAxis(0, 110, 10);
-        NumberAxis yAxis = new NumberAxis(0, 10000, 500);
-        efficiency = new LineChart<>(xAxis, yAxis);
+        /**
         XYChart.Series series = new XYChart.Series();
         conn = new DBConnect();
         empEfficiency = new ArrayList();
@@ -81,7 +75,6 @@ public class MainWindow extends Application {
             Collections.sort(empEfficiency);
             for(int i = 0; i < empEfficiency.size(); i++)
             {
-                series.getData().add(new XYChart.Data(empEfficiency.get(i), i));
                 System.out.println(empEfficiency.get(i));
             }
         }
@@ -89,7 +82,12 @@ public class MainWindow extends Application {
         {
             System.out.println("err");
         }
+        series.getData().add(new XYChart.Data(1,2));
+        series.getData().add(new XYChart.Data(2,2));
+        series.getData().add(new XYChart.Data(3,2));
+        series.getData().add(new XYChart.Data(4,2));
         efficiency.getData().add(series);
+         **/
     }
 
     public static void main(String[] args) {
