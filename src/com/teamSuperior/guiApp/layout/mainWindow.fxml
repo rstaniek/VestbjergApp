@@ -60,15 +60,14 @@
             <Label layoutX="815.0" layoutY="25.0" styleClass="current-time" text="${controller.currentTime}" />
             <Label layoutX="830.0" layoutY="110.0" styleClass="current-date" text="${controller.currentDate}" />
             <children>
-            <LineChart fx:id="efficiency" layoutX="25.0" layoutY="160.0" prefHeight="270.0" prefWidth="950.0">
+            <AreaChart fx:id="efficiency" layoutX="25.0" layoutY="160.0" prefHeight="270.0" prefWidth="950.0" >
                 <xAxis>
                     <NumberAxis side="BOTTOM"/>
                 </xAxis>
                 <yAxis>
                     <NumberAxis side="RIGHT"/>
                 </yAxis>
-            </LineChart>
-                <Button fx:id="btn_display" layoutX="911.0" layoutY="39.0" mnemonicParsing="false" onAction="#displayEfficiencyChart" text="Log In" />
+            </AreaChart>
             </children>
             <Label layoutX="50.0" layoutY="500.0" styleClass="label-ratio" text="${controller.USDRatio}" />
             <Label layoutX="50.0" layoutY="530.0" styleClass="label-ratio" text="USD/DKK" />

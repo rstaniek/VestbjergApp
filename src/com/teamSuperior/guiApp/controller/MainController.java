@@ -19,14 +19,14 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.AreaChart;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.PieChart;
+import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
-import javafx.scene.control.Menu;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
@@ -56,7 +56,7 @@ public class MainController implements Initializable {
     @FXML
     public Button btn_logIn;
     @FXML
-    public LineChart efficiency;
+    public AreaChart efficiency;
 
     private Stage settings;
     static Stage loginWindow;
@@ -73,6 +73,7 @@ public class MainController implements Initializable {
     // just database things
     private DBConnect conn;
     private ArrayList<Employee> employees;
+    private boolean effChartInitialized;
 
     public MainController() {
         welcomeMessage = new SimpleStringProperty("");
@@ -80,6 +81,7 @@ public class MainController implements Initializable {
         currentDate = new SimpleStringProperty();
         USDRatio = new SimpleStringProperty("Loading");
         EURRatio = new SimpleStringProperty("Loading");
+        effChartInitialized = false;
     }
 
     @Override
@@ -144,6 +146,10 @@ public class MainController implements Initializable {
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
         Thread th3 = new Thread(waitForLogin);
+        if(!effChartInitialized)
+        {
+            displayEfficiencyChart();
+        }
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
@@ -436,9 +442,8 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void displayEfficiencyChart(){
+    private void displayEfficiencyChart(){
         XYChart.Series effSeries = new XYChart.Series();
-        XYChart.Data efficiencyData;
         ResultSet rs;
         ArrayList<Double> employeeEff = new ArrayList<>();
         try{
@@ -457,8 +462,9 @@ public class MainController implements Initializable {
         for(int i = 0; i < employeeEff.size(); i++) {
             effSeries.getData().add(new XYChart.Data(i, employeeEff.get(i)));
         }
-
+        effSeries.setName("ser");
         efficiency.getData().addAll(effSeries);
+        effChartInitialized = true;
     }
 
     @FXML

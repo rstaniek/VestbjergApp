@@ -57,3 +57,31 @@
 .bottom{
     -fx-background-color: #385BA4;
 }
+
+.chart{
+    -fx-background-color: #a5adb0;
+    -fx-border-color: #a5adb0;
+    -fx-border-width: 0;
+    -fx-horizontal-grid-lines-visible: false;
+    -fx-vertical-grid-lines-visible: false;
+    -fx-legend-visible: false;
+    -fx-tooltip-visible: false;
+}
+
+.chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}
+
+/* THIS SIMPLY DOES NOT WORK, EVEN THO THEY USE THIS IN THE DOCUMENTATION */
+.chart-series-line {
+    -fx-stroke-width: 2px;
+    -fx-effect: null;
+}
+
+.default-color0.chart-series-line { -fx-stroke: #e9967a; }
+.default-color1.chart-series-line { -fx-stroke: #f0e68c; }
+.default-color2.chart-series-line { -fx-stroke: #dda0dd; }
+
+
+
