@@ -541,6 +541,17 @@ public class MainController implements Initializable {
     @FXML
     public void handleNewTransaction(ActionEvent actionEvent) {
         //TODO: to be implemented
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/testBasket.fxml"));
+            Stage window = new Stage();
+            window.setTitle("Basket");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
+        }
     }
 
     @FXML
