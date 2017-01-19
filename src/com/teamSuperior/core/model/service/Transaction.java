@@ -1,5 +1,7 @@
 package com.teamSuperior.core.model.service;
 
+import com.teamSuperior.core.connection.DBConnect;
+
 import java.sql.Date;
 import java.sql.Time;
 import java.util.ArrayList;
@@ -17,6 +19,7 @@ public class Transaction {
     private double price;
     private Date date;
     private Time time;
+    private DBConnect conn;
 
     public Transaction(int id, int employeeID, ArrayList<Integer> productIDs, ArrayList<Integer> discountIDs, double price, String description, Date date, Time time) {
         this.id = id;
@@ -70,4 +73,5 @@ public class Transaction {
     public double getPrice() {
         return price;
     }
+
 }

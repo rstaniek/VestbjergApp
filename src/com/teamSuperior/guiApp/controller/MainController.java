@@ -189,14 +189,7 @@ public class MainController implements Initializable {
             conn = new DBConnect();
             ResultSet rs;
             try {
-                //TODO: dunno what this loooong sql query doesn't work even tho it should using another one instead but this would be more correct ;__;
-                /*System.out.println(String.format("IF EXISTS (SELECT * FROM userRating WHERE employeeID='%1$d');\nBEGIN;\nUPDATE userRating SET rating='%2$s',date='%3$s',time='%4$s' WHERE employeeID='%1$d';\nEND;\nELSE;\nBEGIN;\nINSERT INTO userRating (employeeID,rating,date,time) VALUES ('%1$d','%2$s','%3$s','%4$s');\nEND;",
-                        UserController.getUser().getId(),
-                        label_ratingValue.getText(),
-                        dtf_date.format(now),
-                        dtf_time.format(now)));*/
-                conn.upload(String.format("DELETE FROM userRating WHERE employeeID='%1$d'", UserController.getUser().getId()));
-                conn.upload(String.format("INSERT INTO userRating (employeeID,rating,date,time) VALUES ('%1$d','%2$s','%3$s','%4$s')",
+                conn.upload(String.format("INSERT INTO userRating (employeeID,rating,date,time) VALUES('%1$d','%2$s','%3$s','%4$s') ON DUPLICATE KEY UPDATE rating='%2$s', date='%3$s', time='%4$s';",
                         UserController.getUser().getId(),
                         label_ratingValue.getText(),
                         dtf_date.format(now),
