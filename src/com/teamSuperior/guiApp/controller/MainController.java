@@ -12,8 +12,6 @@ import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,22 +19,17 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.Menu;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import org.controlsfx.control.Rating;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -44,10 +37,8 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
-import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 import static javafx.scene.control.Alert.AlertType.ERROR;
-import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 
 /**
@@ -57,10 +48,6 @@ public class MainController implements Initializable {
 
     @FXML
     public Button btn_logIn;
-    @FXML
-    public Rating ratingBox;
-    @FXML
-    public Label label_ratingValue;
 
     private Stage settings;
     static Stage loginWindow;
@@ -76,7 +63,6 @@ public class MainController implements Initializable {
     // just database things
     private DBConnect conn;
     private ArrayList<Employee> employees;
-    private boolean ratingFetchedOnLogin;
 
     public MainController() {
         welcomeMessage = new SimpleStringProperty("Please log in first.");
@@ -90,7 +76,6 @@ public class MainController implements Initializable {
         //christmas easter egg only
         //displayXmasWnd();
         registry = Preferences.userRoot();
-        ratingFetchedOnLogin = false;
         window = new Window();
 
         conn = new DBConnect();
@@ -153,68 +138,6 @@ public class MainController implements Initializable {
         th.start();
         th2.start();
         th3.start();
-
-        ratingBox.setPartialRating(true);
-        ratingBox.setUpdateOnHover(true);
-        ratingBox.setRating(0.0);
-        label_ratingValue.setText("0.0");
-        ratingBox.ratingProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                if(newValue.doubleValue() >= 0.0){
-                    if(newValue.doubleValue() > 6){
-                        label_ratingValue.setText("6.0");
-                    } else {
-                        label_ratingValue.setText(String.format("%1$.1f", newValue.doubleValue()).replace(",", "."));
-                    }
-                }
-            }
-        });
-
-        welcomeMessage.addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                if(newValue != null && UserController.isLoggedIn()){
-                    getRatingOnLogin();
-                }
-            }
-        });
-    }
-
-    public void ratingBox_onMouseClicked(MouseEvent mouseEvent) {
-        if(UserController.isAllowed(0)){
-            DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
-            LocalDateTime now = LocalDateTime.now();
-            conn = new DBConnect();
-            ResultSet rs;
-            try {
-                conn.upload(String.format("INSERT INTO userRating (employeeID,rating,date,time) VALUES('%1$d','%2$s','%3$s','%4$s') ON DUPLICATE KEY UPDATE rating='%2$s', date='%3$s', time='%4$s';",
-                        UserController.getUser().getId(),
-                        label_ratingValue.getText(),
-                        dtf_date.format(now),
-                        dtf_time.format(now)));
-                displayMessage(INFORMATION, String.format("Thank you for rating our app (%1$s).", label_ratingValue.getText()), "Because every vote matters!");
-            } catch (Exception ex){
-                ex.printStackTrace();
-            }
-        } else {
-            ratingBox.setRating(0.0);
-        }
-    }
-
-    private void getRatingOnLogin() {
-        ratingFetchedOnLogin = true;
-        conn = new DBConnect();
-        ResultSet rs;
-        try {
-            System.out.println(String.format("SELECT * FROM userRating WHERE employeeID='%1$d'", UserController.getUser().getId()));
-            rs = conn.getFromDataBase(String.format("SELECT * FROM userRating WHERE employeeID='%1$d'", UserController.getUser().getId()));
-            rs.next();
-            ratingBox.setRating(rs.getDouble("rating"));
-        } catch (SQLException e) {
-            ratingBox.setRating(0.0);
-        }
     }
 
     public String getWelcomeMessage() {
@@ -376,7 +299,6 @@ public class MainController implements Initializable {
         if (UserController.logout()) {
             setWelcomeMessage("Please log in first.");
             btn_logIn.setDisable(false);
-            ratingBox.setRating(0.0);
         } else {
             displayError(USER_ALREADY_LOGGED_OUT);
         }
@@ -567,37 +489,6 @@ public class MainController implements Initializable {
             } catch (IOException ex) {
                 Error.displayMessage(ERROR, ex.getMessage());
             }
-        }
-    }
-
-    public void handleEmployeesShowRevenueTracker(ActionEvent actionEvent) {
-        if (UserController.isAllowed(2)) {
-            try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/revenueTrackingView.fxml"));
-                Stage window = new Stage();
-                window.setTitle("View Revenues");
-                window.setResizable(false);
-                Scene scene = new Scene(root);
-                window.setScene(scene);
-                window.show();
-            } catch (IOException ex) {
-                Error.displayMessage(ERROR, ex.getMessage());
-            }
-        }
-    }
-
-    @FXML
-    public void handleAboutWindow(ActionEvent actionEvent) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/about.fxml"));
-            Stage window = new Stage();
-            window.setTitle("About");
-            window.setResizable(false);
-            Scene scene = new Scene(root);
-            window.setScene(scene);
-            window.show();
-        } catch (IOException ex) {
-            Error.displayMessage(ERROR, ex.getMessage());
         }
     }
 }

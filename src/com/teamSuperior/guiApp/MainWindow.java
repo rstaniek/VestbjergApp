@@ -1,5 +1,4 @@
 package com.teamSuperior.guiApp;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -8,7 +7,6 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-
 import java.util.Optional;
 
 /**
@@ -18,7 +16,6 @@ import java.util.Optional;
  */
 public class MainWindow extends Application {
     private Stage window;
-
     @Override
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
@@ -30,7 +27,6 @@ public class MainWindow extends Application {
             e.consume();
             closeProgram();
         });
-
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
@@ -47,6 +43,39 @@ public class MainWindow extends Application {
                 window.close();
             }
         }
+    }
+
+    private void loadEfficiencyChart(){
+        /**
+        XYChart.Series series = new XYChart.Series();
+        conn = new DBConnect();
+        empEfficiency = new ArrayList();
+        try
+        {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
+            while(rs.next())
+            {
+                int sales = rs.getInt("numberOfSales");
+                double revenue = rs.getDouble("totalRevenue");
+                double eff = revenue/sales;
+                empEfficiency.add(eff);
+            }
+            Collections.sort(empEfficiency);
+            for(int i = 0; i < empEfficiency.size(); i++)
+            {
+                System.out.println(empEfficiency.get(i));
+            }
+        }
+        catch(SQLException ex)
+        {
+            System.out.println("err");
+        }
+        series.getData().add(new XYChart.Data(1,2));
+        series.getData().add(new XYChart.Data(2,2));
+        series.getData().add(new XYChart.Data(3,2));
+        series.getData().add(new XYChart.Data(4,2));
+        efficiency.getData().add(series);
+         **/
     }
 
     public static void main(String[] args) {

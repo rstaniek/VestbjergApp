@@ -1,5 +1,9 @@
-.backgroundBlue {
-    -fx-background-color: #385ba4;
+.root {
+    -fx-font-black: #323232;
+}
+
+.backgroundGray {
+    -fx-background-color: #C3C3C3;
 }
 
 .fontWhite {
@@ -13,19 +17,121 @@
 }
 
 .label-ratio {
-    -fx-text-fill: #eeeeee;
+    -fx-text-fill: -fx-font-black;
     -fx-font-size: 25;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
 
 #btn_logIn {
     -fx-padding: 0 5 5 10;
 }
 
-.current-date-time {
-    -fx-padding: 0 0 5 10;
+.current-time{
+     -fx-font-size:65;
+     -fx-text-fill:-fx-font-black;
+     -fx-font-smoothing-type: lcd;
+     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
+ }
+
+.current-date{
+    -fx-font-size:25;
+    -fx-text-fill:-fx-font-black;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
 
-.welcome-message {
-    -fx-font-size: 24;
-    -fx-padding: 0 0 0 10;
+.loggedEmployee {
+    -fx-font-size:27;
+    -fx-text-fill:-fx-font-black;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
+
+.heading2 {
+    -fx-font-size:40;
+    -fx-text-fill:-fx-font-black;
+    -fx-font-smoothing-type: lcd;
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
+}
+
+.logo{
+    -webkit-fx-border-width: 0;
+    -moz-fx-border-width: 0;
+    -ms-fx-border-width: 0;
+    -o-fx-border-width: 0;
+    -fx-border-width: 0;
+
+}
+
+.bottom{
+    -fx-background-color: #385BA4;
+}
+
+.axis{
+    -fx-font-size: 2em;
+    -fx-tick-label-fill: #000;
+    -fx-stroke:#000;
+    -fx-fill: #000000;
+}
+
+.blk{
+    -fx-stroke:#000;
+}
+
+.axis-tick-mark {
+    -fx-stroke: #000;
+    -fx-stroke-width: 1;
+}
+.axis-minor-tick-mark {
+    -fx-stroke: #000;
+    -fx-stroke-width:0;
+}
+.chart{
+    -fx-background-color: #C3C3C3;
+    -fx-fill:#C3C3C3;
+    -fx-border-color: #C3C3C3;
+    -fx-border-width: 0;
+    -fx-horizontal-grid-lines-visible: false;
+    -fx-vertical-grid-lines-visible: false;
+    -fx-legend-visible: false;
+    -fx-tooltip-visible: false;
+}
+
+.chart-series-area-line{
+    -fx-stroke-width: 2px;
+}
+
+.default-color0.chart-series-area-line {
+    -fx-stroke:#00ff00;
+}
+
+.default-color0.chart-series-area-fill {
+    -fx-fill: #00ff00;
+}
+
+.default-color1.chart-series-area-line {
+    -fx-stroke:#ff2020;
+}
+
+.default-color1.chart-series-area-fill {
+    -fx-fill: #ff2020;
+}
+
+
+.personalito{
+    -fx-stroke:#ff0000;
+    -fx-fill: #ff0000;
+}
+
+.chart-plot-background{
+    -fx-background-color:#C3C3C3;
+}
+
+.chart-vertical-zero-line{
+    -fx-stroke: #C3C3C3;
+}
+
+
+
+

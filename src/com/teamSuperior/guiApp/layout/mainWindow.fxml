@@ -10,7 +10,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import org.controlsfx.control.Rating?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0" stylesheets="/style/mainWindow.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
     <top>
@@ -40,7 +39,6 @@
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add" />
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics" />
                 <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Edit" />
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesShowRevenueTracker" text="Revenue tracker" />
             </Menu>
             <Menu mnemonicParsing="false" text="Contractors">
                 <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add" />
@@ -51,7 +49,7 @@
                <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit" />
             </items></Menu>
             <Menu mnemonicParsing="false" text="Help">
-                <MenuItem mnemonicParsing="false" onAction="#handleAboutWindow" text="About" />
+                <MenuItem mnemonicParsing="false" text="About" />
             </Menu>
         </MenuBar>
     </top>
@@ -64,8 +62,6 @@
             <Label layoutX="14.0" layoutY="150.0" styleClass="label-ratio" text="USD/DKK" />
             <Label layoutX="191.0" layoutY="150.0" styleClass="label-ratio" text="EUR/DKK" />
             <Label layoutX="191.0" layoutY="186.0" styleClass="label-ratio" text="${controller.EURRatio}" />
-         <Rating fx:id="ratingBox" layoutX="14.0" layoutY="469.0" max="6" onMouseClicked="#ratingBox_onMouseClicked" prefHeight="32.0" prefWidth="129.0" />
-         <Label fx:id="label_ratingValue" layoutX="240.0" layoutY="477.0" text="Label" styleClass="label-rating" />
         </AnchorPane>
     </center>
     <bottom>
