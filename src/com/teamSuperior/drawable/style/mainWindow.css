@@ -92,12 +92,26 @@
     -fx-stroke-width: 2px;
 }
 
-.default-color0.chart-series-area-line{
-    -fx-stroke:#385BA4;
+.default-color0.chart-series-area-line {
+    -fx-stroke:#00ff00;
 }
 
 .default-color0.chart-series-area-fill {
-    -fx-fill: #385BA4;
+    -fx-fill: #00ff00;
+}
+
+.default-color1.chart-series-area-line {
+    -fx-stroke:#ff2020;
+}
+
+.default-color1.chart-series-area-fill {
+    -fx-fill: #ff2020;
+}
+
+
+.personalito{
+    -fx-stroke:#ff0000;
+    -fx-fill: #ff0000;
 }
 
 .chart-plot-background{

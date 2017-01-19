@@ -12,6 +12,8 @@ import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -19,6 +21,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -26,6 +29,7 @@ import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Path;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -125,6 +129,10 @@ public class MainController implements Initializable {
                     Platform.runLater(() -> {
                         setUSDRatio(ratioUSD);
                         setEURRatio(ratioEUR);
+                        if(!effChartInitialized)
+                        {
+                            displayEfficiencyChart();
+                        }
                     });
                     Thread.sleep(2000);
                 }
@@ -148,7 +156,6 @@ public class MainController implements Initializable {
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
         Thread th3 = new Thread(waitForLogin);
-        displayEfficiencyChart();
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
@@ -442,33 +449,28 @@ public class MainController implements Initializable {
 
     @FXML
     private void displayEfficiencyChart(){
-        XYChart.Series effSeries = new XYChart.Series();
-        ResultSet rs;
-        ArrayList<Double> employeeEff = new ArrayList<>();
-        try{
-            rs = conn.getFromDataBase("SELECT * FROM employees");
-            while(rs.next()){
-                int sales = rs.getInt("numberOfSales");
-                double revenue = rs.getDouble("totalRevenue");
-                double eff = revenue/sales;
-                employeeEff.add(eff);
+        if(UserController.isLoggedIn()){
+            XYChart.Series effSeries = new XYChart.Series();
+            XYChart.Series effSeriesPersonal = new XYChart.Series();
+            effSeriesPersonal.setName("personal");
+            for(int i = 0; i < employees.size(); i++) {
+                if (employees.get(i).getId() == UserController.getUser().getId()) {
+                    double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
+                    effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
+                } else {
+                    double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
+                    effSeries.getData().add(new XYChart.Data(i, eff));
+                }
             }
+            efficiency.setCreateSymbols(false);
+            xAxis.setAutoRanging(false);
+            xAxis.setLowerBound(0);
+            xAxis.setUpperBound(100);
+            xAxis.setTickUnit(25);
+            yAxis.setAutoRanging(true);
+            efficiency.getData().addAll(effSeries, effSeriesPersonal);
+            effChartInitialized = true;
         }
-        catch(SQLException ex) {
-            System.out.println("err");
-        }
-        Collections.sort(employeeEff);
-        for(int i = 0; i < employeeEff.size(); i++) {
-            effSeries.getData().add(new XYChart.Data(i, employeeEff.get(i)));
-        }
-        efficiency.setCreateSymbols(false);
-        xAxis.setAutoRanging(false);
-        xAxis.setLowerBound(0);
-        xAxis.setUpperBound(100);
-        xAxis.setTickUnit(25);
-        yAxis.setAutoRanging(true);
-        efficiency.getData().addAll(effSeries);
-        effChartInitialized = true;
     }
 
     @FXML
