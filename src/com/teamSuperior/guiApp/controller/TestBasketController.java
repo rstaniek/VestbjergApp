@@ -34,7 +34,8 @@ public class TestBasketController implements Initializable {
         basketItems.addAll(
                 new BasketItem("Ketchup", "hot AF", 21.37),
                 new BasketItem("Tuna", "Fish", 12.49),
-                new BasketItem("Big black cock", "Livestock", 96.0)
+                new BasketItem("Big white chicken", "Livestock", 96.0),
+                new BasketItem("Tomato", "Vegetable", 5.99)
         );
         //TODO: instead of this dummy content this list will consist of selected products
 
