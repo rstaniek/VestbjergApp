@@ -41,6 +41,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -545,4 +546,14 @@ public class MainController implements Initializable {
             }
         }
     }
+
+    //sorting stuff
+    public void sortEmployees(){
+        Collections.sort(employees, new Comparator<Employee>() {
+            public int compare(Employee e1, Employee e2) {
+                return Double.compare(e1.getTotalRevenue() / e1.getNumberOfSales(), e2.getTotalRevenue() / e2.getNumberOfSales());
+            }
+        });
+    }
+
 }
