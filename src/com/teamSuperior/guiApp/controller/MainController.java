@@ -132,6 +132,7 @@ public class MainController implements Initializable {
                         setEURRatio(ratioEUR);
                         if(!effChartInitialized)
                         {
+                            sortEmployees();
                             displayEfficiencyChart();
                         }
                     });
