@@ -1,3 +1,7 @@
+.root {
+    -fx-font-black: #323232;
+}
+
 .backgroundGray {
     -fx-background-color: #C3C3C3;
 }
@@ -7,7 +11,7 @@
 }
 
 .label-ratio {
-    -fx-text-fill: #000000;
+    -fx-text-fill: -fx-font-black;
     -fx-font-size: 25;
     -fx-font-smoothing-type: lcd;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
@@ -19,28 +23,28 @@
 
 .current-time{
      -fx-font-size:65;
-     -fx-text-fill:#000000;
+     -fx-text-fill:-fx-font-black;
      -fx-font-smoothing-type: lcd;
      -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
  }
 
 .current-date{
     -fx-font-size:25;
-    -fx-text-fill:#000000;
+    -fx-text-fill:-fx-font-black;
     -fx-font-smoothing-type: lcd;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
 
 .loggedEmployee {
     -fx-font-size:27;
-    -fx-text-fill:#000000;
+    -fx-text-fill:-fx-font-black;
     -fx-font-smoothing-type: lcd;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
 
 .heading2 {
     -fx-font-size:40;
-    -fx-text-fill:#000000;
+    -fx-text-fill:-fx-font-black;
     -fx-font-smoothing-type: lcd;
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.5) , 0,0,0,1);
 }
