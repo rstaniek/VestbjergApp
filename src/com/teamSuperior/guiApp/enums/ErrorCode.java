@@ -15,6 +15,9 @@ public enum ErrorCode {
     DATABASE_PRODUCTS_NOT_FOUND("Product with such ID doesn't exist", "Please check the warehouse of validity of typed ID", ERROR),
     VALIDATION_FIELD_EMPTY("All fields must be filled properly", ERROR),
     VALIDATION_ILLEGAL_CHARS("Illegal characters spotted in th input", ERROR),
+    VALUE_LESS_THAN_ZERO("This value cannot be lower than 0", ERROR),
+    OFFER_DISCOUNT_OUT_OF_BOUND("Illegal discount value!", "Discount cannot be greater than 100% unless you will personally pay for the company losses", WARNING),
+    OFFER_DISCOUNT_LESS_THEN_ZERO("Illegal discount value!", "The discount can not be lower than 0%.", WARNING),
     ACCESS_DENIED_NOT_LOGGED_IN("Access denied", "You need to be logged in to access this function!", INFORMATION),
     ACCESS_DENIED_INSUFFICIENT_PERMISSIONS("Access denied", "You don't have permission to access this function!", INFORMATION),
     NOT_IMPLEMENTED("Sorry", "This functionality is not yet implemented."),
@@ -26,6 +29,7 @@ public enum ErrorCode {
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty", ERROR),
     LOGIN_USERNAME_EMPTY("User validation error", "Employee ID cannot be empty", WARNING),
     LOGIN_PASSWORD_EMPTY("User validation error", "The password field cannot be empty", WARNING);
+
 
 
     private String errorTitle;

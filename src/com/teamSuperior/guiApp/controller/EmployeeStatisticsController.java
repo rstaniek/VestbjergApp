@@ -1,13 +1,21 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.sun.javafx.geom.BaseBounds;
+import com.sun.javafx.geom.transform.BaseTransform;
+import com.sun.javafx.jmx.MXNodeAlgorithm;
+import com.sun.javafx.jmx.MXNodeAlgorithmContext;
+import com.sun.javafx.sg.prism.NGNode;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
@@ -47,6 +55,8 @@ public class EmployeeStatisticsController implements Initializable {
     public Button btn_search_clear;
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
+    @FXML
+    public BarChart chart_efficiency;
 
     private TableColumn<Employee, String> nameColumn;
     private TableColumn<Employee, String> surnameColumn;
@@ -72,8 +82,8 @@ public class EmployeeStatisticsController implements Initializable {
         checkComboBox_search_criteria.getItems().addAll("Name", "Surname", "Address", "City", "ZIP", "Phone", "Position");
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
             while (rs.next()) {
                 if (rs.getInt("id") != -1 && rs.getString("name") != null
                         && rs.getString("surname") != null
@@ -181,45 +191,132 @@ public class EmployeeStatisticsController implements Initializable {
         chart_numberOfSales.getData().clear();
         chart_revenue.getData().clear();
         chart_contribution.getData().clear();
+        chart_efficiency.getData().clear();
         XYChart.Series sales = new XYChart.Series<>();
         XYChart.Series revenue = new XYChart.Series<>();
+        XYChart.Series efficiency = new XYChart.Series();
         ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
         XYChart.Data numOfSalesBar;
         XYChart.Data revenueBar;
+        XYChart.Data efficiencyBar;
         if (loggedInUser.getAccessLevel() == 1) {
             numOfSalesBar = new XYChart.Data<>("You", loggedInUser.getNumberOfSales());
             revenueBar = new XYChart.Data<>("You", loggedInUser.getTotalRevenue());
+            efficiencyBar = new XYChart.Data<>("You", getProductivityPercentage(loggedInUser, calculateAvgSales()));
+            numOfSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
+                    if(newNode != null){
+                        if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
+            revenueBar.nodeProperty().addListener(new ChangeListener<Node>(){
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode){
+                    if(newNode != null){
+                        if (loggedInUser.getTotalRevenue() < calculateAvgRevenue()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
+            efficiencyBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                    if(newNode != null){
+                        if(getEfficiency(loggedInUser) < calculateAvgEfficiency()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
             contributionData.addAll(new PieChart.Data("You", loggedInUser.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            /*if (loggedInUser.getNumberOfSales() < calculateAvgSales()) {
-                numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
-            }
-            if (loggedInUser.getTotalRevenue() < calculateAvgRevenue()) {
-                revenueBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                revenueBar.getNode().getStyleClass().add("greater-than-avg");
-            }*/
         } else {
             numOfSalesBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getNumberOfSales());
             revenueBar = new XYChart.Data<>(selectedEmployee.getName(), selectedEmployee.getTotalRevenue());
+            efficiencyBar = new XYChart.Data<>(selectedEmployee.getName(), getEfficiency(selectedEmployee));
             contributionData.addAll(new PieChart.Data(selectedEmployee.getName(), selectedEmployee.getTotalRevenue()), new PieChart.Data("Total company revenue", calculateAvgRevenue() * employees.size()));
-            /*if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
-                numOfSalesBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                numOfSalesBar.getNode().getStyleClass().add("greater-than-avg");
-            }
-            if (selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) {
-                revenueBar.getNode().getStyleClass().add("less-than-avg");
-            } else {
-                revenueBar.getNode().getStyleClass().add("greater-than-avg");
-            }*/
+            numOfSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
+                    if(newNode != null){
+                        if (selectedEmployee.getNumberOfSales() < calculateAvgSales()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
+            revenueBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> ov, Node oldNode, final Node newNode) {
+                    if(newNode != null){
+                        if (selectedEmployee.getTotalRevenue() < calculateAvgRevenue()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
+            efficiencyBar.nodeProperty().addListener(new ChangeListener<Node>() {
+                @Override
+                public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                    if(newNode != null){
+                        if(getEfficiency(selectedEmployee) < calculateAvgEfficiency()) {
+                            newNode.getStyleClass().add("less-than-avg");
+                        } else {
+                            newNode.getStyleClass().add("greater-than-avg");
+                        }
+                    }
+                }
+            });
         }
 
-        sales.getData().addAll(numOfSalesBar, new XYChart.Data<>("Average", calculateAvgSales()));
-        revenue.getData().addAll(revenueBar, new XYChart.Data<>("Average", calculateAvgRevenue()));
+        XYChart.Data avgSalesBar = new XYChart.Data<>("Average", calculateAvgSales());
+        XYChart.Data avgRevenueBar = new XYChart.Data<>("Average", calculateAvgRevenue());
+        XYChart.Data avgEfficiencyBar = new XYChart.Data<>("Average", calculateAvgEfficiency());
+        avgSalesBar.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                if(newNode != null){
+                    newNode.getStyleClass().add("avg-value");
+                }
+            }
+        });
+        avgRevenueBar.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                if(newNode != null){
+                    newNode.getStyleClass().add("avg-value");
+                }
+            }
+        });
+        avgEfficiencyBar.nodeProperty().addListener(new ChangeListener<Node>() {
+            @Override
+            public void changed(ObservableValue<? extends Node> observable, Node oldNode, Node newNode) {
+                if(newNode != null){
+                    newNode.getStyleClass().add("avg-value");
+                }
+            }
+        });
+
+        sales.getData().addAll(numOfSalesBar, avgSalesBar);
+        revenue.getData().addAll(revenueBar, avgRevenueBar);
+        efficiency.getData().addAll(efficiencyBar, avgEfficiencyBar);
         chart_numberOfSales.getData().addAll(sales);
         chart_revenue.getData().addAll(revenue);
+        chart_efficiency.getData().addAll(efficiency);
         chart_contribution.getData().addAll(contributionData);
     }
 
@@ -250,6 +347,25 @@ public class EmployeeStatisticsController implements Initializable {
 
     private double getEfficiency(Employee e) {
         return e.getTotalRevenue() / e.getNumberOfSales();
+    }
+
+    private double calculateAvgEfficiency(){
+        double avg = 0;
+        for (Employee e : employees){
+            avg += getEfficiency(e);
+        }
+        avg /= employees.size();
+        return avg;
+    }
+
+    private double calculateAvgProductivityPercentage(){
+        float avgSales = calculateAvgSales();
+        double avg = 0;
+        for (Employee e : employees){
+            avg += getProductivityPercentage(e, avgSales);
+        }
+        avg /= employees.size();
+        return avg;
     }
 
     private float calculateAvgSales() {

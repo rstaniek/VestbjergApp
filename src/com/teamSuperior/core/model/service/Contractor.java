@@ -8,10 +8,11 @@ import java.sql.ResultSet;
  */
 
 public class Contractor {
-    private static int id;
+    private int id;
     private String name, address, city, zip, phone, email;
 
-    public Contractor(String name, String address, String city, String zip, String phone, String email) {
+    public Contractor(int id, String name, String address, String city, String zip, String phone, String email) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.city = city;
@@ -20,12 +21,12 @@ public class Contractor {
         this.email = email;
     }
 
-    public static int getId() {
+    public int getId() {
         return id;
     }
 
-    public static void setId(int id) {
-        Contractor.id = id;
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -79,6 +80,7 @@ public class Contractor {
     @Override
     public String toString() {
         return "Contractor{" +
+                "id='" + id + '\'' +
                 "name='" + name + '\'' +
                 ", address='" + address + '\'' +
                 ", city='" + city + '\'' +

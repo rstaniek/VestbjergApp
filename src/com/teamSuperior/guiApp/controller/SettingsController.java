@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
@@ -13,6 +14,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
@@ -104,19 +106,22 @@ public class SettingsController implements Initializable {
         registry.put("DATABASE_PASS", text_settings_connection_password.getText());
 
         //discounts
-        registry.putFloat("DISCOUNT_REGISTERED", Float.parseFloat(text_settings_discounts_registered.getText()));
-        registry.putFloat("DISCOUNT_CRAFTSMAN", Float.parseFloat(text_settings_discounts_craftsman.getText()));
-        registry.putFloat("DISCOUNT_SELF_PICKUP", Float.parseFloat(text_settings_discounts_selfPickUp.getText()));
-        registry.putFloat("DISCOUNT_QUANTITY", Float.parseFloat(text_settings_discounts_quantity.getText()));
-        registry.putFloat("DISCOUNT_MAX", Float.parseFloat(text_settings_discounts_maxTreshold.getText()));
+        registry.putDouble("DISCOUNT_REGISTERED", Double.parseDouble(text_settings_discounts_registered.getText()));
+        registry.putDouble("DISCOUNT_CRAFTSMAN", Double.parseDouble(text_settings_discounts_craftsman.getText()));
+        registry.putDouble("DISCOUNT_SELF_PICKUP", Double.parseDouble(text_settings_discounts_selfPickUp.getText()));
+        registry.putDouble("DISCOUNT_QUANTITY", Double.parseDouble(text_settings_discounts_quantity.getText()));
+        registry.putDouble("DISCOUNT_MAX", Double.parseDouble(text_settings_discounts_maxTreshold.getText()));
 
         conn = new DBConnect();
-        //TODO: Sth fucked up here: dear SQL gods, halp plox
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=1;", registry.getFloat("DISCOUNT_REGISTERED", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=2;", registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=3;", registry.getFloat("DISCOUNT_QUANTITY", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=4;", registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
-        conn.upload(String.format("UPDATE discounts SET value='%1$.2f' WHERE id=5;", registry.getFloat("DISCOUNT_MAX", 0)));
+        try{
+            conn.upload(String.format("UPDATE discounts SET value='%1$s' WHERE id=1;", text_settings_discounts_registered.getText()));
+            conn.upload(String.format("UPDATE discounts SET value='%1$s' WHERE id=2;", text_settings_discounts_craftsman.getText()));
+            conn.upload(String.format("UPDATE discounts SET value='%1$s' WHERE id=3;", text_settings_discounts_selfPickUp.getText()));
+            conn.upload(String.format("UPDATE discounts SET value='%1$s' WHERE id=4;", text_settings_discounts_quantity.getText()));
+            conn.upload(String.format("UPDATE discounts SET value='%1$s' WHERE id=5;", text_settings_discounts_maxTreshold.getText()));
+        } catch (SQLException sqlEx){
+            displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+        }
     }
 
     @FXML
@@ -162,15 +167,15 @@ public class SettingsController implements Initializable {
             try {
                 rs = conn.getFromDataBase("SELECT * FROM discounts");
                 rs.next();
-                registry.putFloat("DISCOUNT_REGISTERED", rs.getFloat("value"));
+                registry.putDouble("DISCOUNT_REGISTERED", rs.getDouble("value"));
                 rs.next();
-                registry.putFloat("DISCOUNT_CRAFTSMAN", rs.getFloat("value"));
+                registry.putDouble("DISCOUNT_CRAFTSMAN", rs.getDouble("value"));
                 rs.next();
-                registry.putFloat("DISCOUNT_QUANTITY", rs.getFloat("value"));
+                registry.putDouble("DISCOUNT_QUANTITY", rs.getDouble("value"));
                 rs.next();
-                registry.putFloat("DISCOUNT_SELF_PICKUP", rs.getFloat("value"));
+                registry.putDouble("DISCOUNT_SELF_PICKUP", rs.getDouble("value"));
                 rs.next();
-                registry.putFloat("DISCOUNT_MAX", rs.getFloat("value"));
+                registry.putDouble("DISCOUNT_MAX", rs.getDouble("value"));
 
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
@@ -184,11 +189,11 @@ public class SettingsController implements Initializable {
 
 
         //discounts
-        text_settings_discounts_registered.setText(String.valueOf(registry.getFloat("DISCOUNT_REGISTERED", 0)));
-        text_settings_discounts_craftsman.setText(String.valueOf(registry.getFloat("DISCOUNT_CRAFTSMAN", 0)));
-        text_settings_discounts_quantity.setText(String.valueOf(registry.getFloat("DISCOUNT_QUANTITY", 0)));
-        text_settings_discounts_selfPickUp.setText(String.valueOf(registry.getFloat("DISCOUNT_SELF_PICKUP", 0)));
-        text_settings_discounts_maxTreshold.setText(String.valueOf(registry.getFloat("DISCOUNT_MAX", 0)));
+        text_settings_discounts_registered.setText(String.valueOf(registry.getDouble("DISCOUNT_REGISTERED", 0)));
+        text_settings_discounts_craftsman.setText(String.valueOf(registry.getDouble("DISCOUNT_CRAFTSMAN", 0)));
+        text_settings_discounts_quantity.setText(String.valueOf(registry.getDouble("DISCOUNT_QUANTITY", 0)));
+        text_settings_discounts_selfPickUp.setText(String.valueOf(registry.getDouble("DISCOUNT_SELF_PICKUP", 0)));
+        text_settings_discounts_maxTreshold.setText(String.valueOf(registry.getDouble("DISCOUNT_MAX", 0)));
     }
 
     @FXML

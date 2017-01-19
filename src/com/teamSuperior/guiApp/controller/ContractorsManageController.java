@@ -9,10 +9,7 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import org.controlsfx.control.CheckComboBox;
@@ -20,6 +17,7 @@ import org.controlsfx.control.CheckComboBox;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.connection.DBConnect.validateField;
@@ -52,6 +50,8 @@ public class ContractorsManageController implements Initializable {
     public TextField text_search_query;
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
+    @FXML
+    public TextField text_email;
 
     private ObservableList<Contractor> contractors;
     private ObservableList<Contractor> searchResults;
@@ -82,8 +82,8 @@ public class ContractorsManageController implements Initializable {
     }
 
     private void retrieveData() {
-        ResultSet rs = conn.getFromDataBase("SELECT * FROM contractors");
         try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM contractors");
             while (rs.next()) {
                 if (rs.getString("name") != null &&
                         rs.getString("address") != null &&
@@ -91,7 +91,8 @@ public class ContractorsManageController implements Initializable {
                         rs.getString("zip") != null &&
                         rs.getString("phone") != null &&
                         rs.getString("email") != null) {
-                    Contractor tmp = new Contractor(rs.getString("name"),
+                    Contractor tmp = new Contractor(rs.getInt("id"),
+                            rs.getString("name"),
                             rs.getString("address"),
                             rs.getString("city"),
                             rs.getString("zip"),
@@ -145,26 +146,43 @@ public class ContractorsManageController implements Initializable {
         text_city.setText(selectedContractor.getCity());
         text_zip.setText(selectedContractor.getZip());
         text_phone.setText(selectedContractor.getPhone());
+        text_email.setText(selectedContractor.getEmail());
+        System.out.println(selectedContractor.toString());
     }
 
     @FXML
     public void btn_save_onClick() throws SQLException {
-        boolean result = ConfirmBox.display("Update info confirmation", String.format("Are you sure you want to update information about %1$s contractor?", selectedContractor.getName()));
-        if (result) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Update info confirmation");
+        a.setContentText(String.format("Are you sure you want to update information about %1$s contractor?", selectedContractor.getName()));
+        Button yesButton = (Button)a.getDialogPane().lookupButton(ButtonType.OK);
+        yesButton.setText("Yes");
+        Optional<ButtonType> yesResponse = a.showAndWait();
+        if(yesResponse.isPresent() && ButtonType.OK.equals(yesResponse.get())){
             if (validateField(text_name) &&
                     validateField(text_address) &&
                     validateField(text_city) &&
                     validateField(text_zip) &&
                     validateField(text_phone)) {
+                System.out.println("Validation passed");
                 conn = new DBConnect();
                 try {
-                    conn.upload(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s' WHERE email='%1$s'",
-                            selectedContractor.getEmail(),
+                    System.out.println(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s', email='%1$s' WHERE id='%7$d'",
+                            text_email.getText(),
                             text_name.getText(),
                             text_address.getText(),
                             text_city.getText(),
                             text_zip.getText(),
-                            text_phone.getText()));
+                            text_phone.getText(),
+                            selectedContractor.getId()));
+                    conn.upload(String.format("UPDATE contractors SET name='%2$s',address='%3$s',city='%4$s',zip='%5$s',phone='%6$s', email='%1$s' WHERE id='%7$d'",
+                            text_email.getText(),
+                            text_name.getText(),
+                            text_address.getText(),
+                            text_city.getText(),
+                            text_zip.getText(),
+                            text_phone.getText(),
+                            selectedContractor.getId()));
                 } catch (Exception ex) {
                     displayMessage(ERROR, ex.getMessage());
                 } finally {
@@ -176,16 +194,29 @@ public class ContractorsManageController implements Initializable {
 
     @FXML
     public void btn_delete_onClick() {
-        boolean result = ConfirmBox.display("Delete contractor", String.format("Are you sure you want to delete %1$s from the contractors list?", selectedContractor.getName()));
-        if (result) {
-            if (ConfirmBox.display("Confirmation", "There is no way to take back this operation. Are you fully aware of that?")) {
-                conn = new DBConnect();
-                try {
-                    conn.upload(String.format("DELETE FROM contractors WHERE email='%1$s'", selectedContractor.getEmail()));
-                } catch (Exception ex) {
-                    displayMessage(ERROR, ex.getMessage());
-                } finally {
-                    refreshTable();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setHeaderText("You are about to perform an non-revertable action!");
+        alert.setContentText(String.format("Are you sure you want to delete %1$s from the contractors list?", selectedContractor.getName()));
+        Button deleteButton = (Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        deleteButton.setText("Delete");
+        Optional<ButtonType> deleteResponse = alert.showAndWait();
+        Alert alertFinal = new Alert(Alert.AlertType.CONFIRMATION);
+        alertFinal.setHeaderText("Are you sure?");
+        alertFinal.setContentText("There is no way to take back this operation. Are you fully aware of that?");
+        if(deleteResponse.isPresent()){
+            if(ButtonType.OK.equals(deleteResponse.get())){
+                Optional<ButtonType> deleteFinal = alertFinal.showAndWait();
+                if(deleteFinal.isPresent()){
+                    if(ButtonType.OK.equals(deleteFinal.get())){
+                        conn = new DBConnect();
+                        try {
+                            conn.upload(String.format("DELETE FROM contractors WHERE id='%1$d'", selectedContractor.getId()));
+                        } catch (Exception ex) {
+                            displayMessage(ERROR, ex.getMessage());
+                        } finally {
+                            refreshTable();
+                        }
+                    }
                 }
             }
         }

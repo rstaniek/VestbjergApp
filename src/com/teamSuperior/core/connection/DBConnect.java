@@ -1,9 +1,11 @@
 package com.teamSuperior.core.connection;
 
+import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
 import java.net.URL;
@@ -11,6 +13,11 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
+
+import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static javafx.scene.control.Alert.*;
+import static javafx.scene.control.Alert.AlertType.*;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
@@ -39,7 +46,7 @@ public class DBConnect {
             con = DriverManager.getConnection(hostname, user, pass);
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
+            displayMessage(ERROR, "Connection Error", ex.getMessage());
         }
         return con;
     }
@@ -67,16 +74,11 @@ public class DBConnect {
     /***
      * Executes specified SQL query and returns the data from the table
      */
-    public ResultSet getFromDataBase(String query) {
+    public ResultSet getFromDataBase(String query) throws SQLException {
         Connection con = connect(url, username, password);
         ResultSet rs = null;
-        try {
-            Statement statement = con.createStatement();
-            rs = statement.executeQuery(query);
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-            AlertBox.display("Connection Error", ex.getMessage());
-        }
+        Statement statement = con.createStatement();
+        rs = statement.executeQuery(query);
         return rs;
     }
 
@@ -84,25 +86,18 @@ public class DBConnect {
      * Uploads data stated in the query to the database (UNSAFE)
      * @param query an SQL query string
      */
-    public void upload(String query) {
+    public void upload(String query) throws SQLException {
         Connection con = connect(url, username, password);
-        boolean isExecuted = false;
-        try {
-            Statement statement = con.createStatement();
-            isExecuted = statement.execute(query);
-            con.close();
-            isExecuted = true;
-        } catch (SQLException ex) {
-            AlertBox.display("Connection Error", ex.getMessage());
-        }
-        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+        Statement statement = con.createStatement();
+        statement.execute(query);
+        con.close();
     }
 
     /***
      * Uploads data stated in the query to the database (SAFE)
      * @param stmt preparedStatement object with protection against SQLi
      */
-    public void uploadSafe(PreparedStatement stmt) {
+    public void uploadSafe(PreparedStatement stmt) throws SQLException, ConnectionException {
         Connection con = connect(url, username, password);
         boolean isExecuted = false;
         try {
@@ -110,9 +105,9 @@ public class DBConnect {
             con.close();
             isExecuted = true;
         } catch (SQLException ex) {
-            AlertBox.display("Connection Error", ex.getMessage());
+            throw new SQLException(ex.getMessage(), ex.getSQLState(), ex.getCause());
         }
-        if(!isExecuted) Error.displayError(ErrorCode.DATABASE_UPLOAD_ERROR);
+        if(!isExecuted) throw new ConnectionException();
     }
 
     /***

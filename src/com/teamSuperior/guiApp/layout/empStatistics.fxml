@@ -20,13 +20,13 @@
            </children>
        </AnchorPane>
        <TableView fx:id="tableView_employees" layoutY="50" onMouseClicked="#tableView_employees_onMouseClicked"
-                  prefHeight="400.0" prefWidth="1000.0">
+                  prefHeight="200.0" prefWidth="1000.0">
       </TableView>
-       <ScrollPane layoutY="450.0" prefHeight="400.0" prefWidth="1000.0">
+       <ScrollPane layoutY="250.0" prefHeight="600.0" prefWidth="1000.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="500.0" prefWidth="1000.0">
+          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="900.0" prefWidth="1000.0">
                <children>
-                  <BarChart fx:id="chart_numberOfSales" prefHeight="400.0" prefWidth="250.0" title="Number of sales">
+                  <BarChart fx:id="chart_numberOfSales" prefHeight="400.0" prefWidth="330.0" title="Number of sales">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -34,7 +34,7 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <BarChart fx:id="chart_revenue" layoutX="250.0" prefHeight="400.0" prefWidth="250.0" title="Revenue">
+                  <BarChart fx:id="chart_revenue" layoutX="330.0" prefHeight="400.0" prefWidth="330.0" title="Revenue">
                     <xAxis>
                       <CategoryAxis side="BOTTOM" />
                     </xAxis>
@@ -42,9 +42,17 @@
                       <NumberAxis side="LEFT" />
                     </yAxis>
                   </BarChart>
-                  <Label fx:id="label_productivity" layoutX="15.0" layoutY="415.0" text="Label" />
-                  <PieChart fx:id="chart_contribution" layoutX="500.0" prefHeight="400.0" title="Contribution to the revenue" />
-                  <Label fx:id="label_efficiency" layoutX="15.0" layoutY="430.0" text="Label" />
+                   <BarChart fx:id="chart_efficiency" layoutX="660.0" prefHeight="400.0" prefWidth="330.0" title="Efficiency">
+                       <xAxis>
+                           <CategoryAxis side="BOTTOM" />
+                       </xAxis>
+                       <yAxis>
+                           <NumberAxis side="LEFT" />
+                       </yAxis>
+                   </BarChart>
+                  <Label fx:id="label_productivity" layoutX="415.0" layoutY="415.0" text="Label" />
+                  <PieChart fx:id="chart_contribution" layoutX="0.0" layoutY="400.0" prefHeight="400.0" title="Contribution to the revenue" />
+                  <Label fx:id="label_efficiency" layoutX="415.0" layoutY="430.0" text="Label" />
                </children>
             </AnchorPane>
         </content>
