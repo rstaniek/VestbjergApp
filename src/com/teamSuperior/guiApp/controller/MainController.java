@@ -13,6 +13,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+import java.text.DecimalFormat;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -47,6 +48,7 @@ import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static java.lang.Math.round;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
 
@@ -59,6 +61,8 @@ public class MainController implements Initializable {
     public Button btn_logIn;
     @FXML
     public AreaChart efficiency;
+    @FXML
+    public PieChart sales_chart;
     @FXML
     public NumberAxis xAxis;
     @FXML
@@ -81,6 +85,7 @@ public class MainController implements Initializable {
     private DBConnect conn;
     private ArrayList<Employee> employees;
     private boolean effChartInitialized;
+    private boolean salesPercentageInitialized;
 
     public MainController() {
         welcomeMessage = new SimpleStringProperty("");
@@ -89,6 +94,7 @@ public class MainController implements Initializable {
         USDRatio = new SimpleStringProperty("Loading");
         EURRatio = new SimpleStringProperty("Loading");
         effChartInitialized = false;
+        salesPercentageInitialized = false;
     }
 
     @Override
@@ -134,6 +140,7 @@ public class MainController implements Initializable {
                         {
                             sortEmployees();
                             displayEfficiencyChart();
+                            displaySalesPercentageChart();
                         }
                     });
                     Thread.sleep(2000);
@@ -328,6 +335,10 @@ public class MainController implements Initializable {
     public void handleLogOut() {
         if (UserController.logout()) {
             setWelcomeMessage("Please log in first.");
+            efficiency.getData().clear();
+            sales_chart.getData().clear();
+            effChartInitialized = false;
+            salesPercentageInitialized = false;
             btn_logIn.setDisable(false);
         } else {
             displayError(USER_ALREADY_LOGGED_OUT);
@@ -457,14 +468,24 @@ public class MainController implements Initializable {
             effSeriesPersonal.setName("personal");
             for(int i = 0; i < employees.size(); i++) {
                 if (employees.get(i).getId() == UserController.getUser().getId()) {
+                    double effminus = (employees.get(i-1).getTotalRevenue()) / (employees.get(i-1).getNumberOfSales());
                     double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
+                    double effplus = (employees.get(i+1).getTotalRevenue()) / (employees.get(i+1).getNumberOfSales());
+                    if(i > 1){
+                        //effSeriesPersonal.getData().add(new XYChart.Data(i-1, 0));
+                    }
+
                     effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
+                    if(i < employees.size() -1){
+                        //effSeriesPersonal.getData().add(new XYChart.Data(i+1, 0));
+                    }
+
                 } else {
                     double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
                     effSeries.getData().add(new XYChart.Data(i, eff));
                 }
             }
-            efficiency.setCreateSymbols(false);
+            efficiency.setCreateSymbols(true);
             xAxis.setAutoRanging(false);
             xAxis.setLowerBound(0);
             xAxis.setUpperBound(100);
@@ -474,6 +495,22 @@ public class MainController implements Initializable {
             effChartInitialized = true;
         }
     }
+
+    private void displaySalesPercentageChart() {
+        if(UserController.isLoggedIn()){
+            ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
+            int totalSales = 0;
+            for(Employee e : employees){
+                totalSales += e.getNumberOfSales();
+            }
+            double salesPercentageLabel = (((double)UserController.getUser().getNumberOfSales()*100)/(double)totalSales);
+            DecimalFormat percentageFormat = new DecimalFormat("###.##");
+            contributionData.addAll(new PieChart.Data("Total sales\n" + totalSales, totalSales), new PieChart.Data("Your sales \n"+ percentageFormat.format(salesPercentageLabel)+"%", UserController.getUser().getNumberOfSales()));
+            sales_chart.getData().addAll(contributionData);
+        }
+
+    }
+
 
     @FXML
     public void handleAddOffer(ActionEvent actionEvent) {

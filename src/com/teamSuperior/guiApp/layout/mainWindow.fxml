@@ -75,6 +75,7 @@
             <Label layoutX="300.0" layoutY="530.0" styleClass="label-ratio" text="${controller.EURRatio}" />
             <Label layoutX="550.0" layoutY="500.0" styleClass="label-ratio" text="SALES %" />
             <Label layoutX="800.0" layoutY="500.0" styleClass="label-ratio" text="MACHINES" />
+            <PieChart fx:id="sales_chart" layoutX="400.0" layoutY="450.0" prefHeight="200.0" />
         </AnchorPane>
     </center>
     <bottom>
