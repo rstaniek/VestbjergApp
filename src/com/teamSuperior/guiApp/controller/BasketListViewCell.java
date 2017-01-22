@@ -10,6 +10,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * Created by rajmu on 17.01.19.
@@ -53,6 +54,7 @@ public class BasketListViewCell extends ListCell<BasketItem> {
                 imageView_item.setImage(new Image(item.getImgURL()));
             }
 
+            System.out.printf("Creating new ListView cell: name=%s, id=%d, url=%s\n", item.getName(), item.getItemID(), item.getImgURL());
             setText(null);
             setGraphic(itemGrid);
         }

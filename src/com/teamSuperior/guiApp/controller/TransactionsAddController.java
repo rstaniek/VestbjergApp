@@ -7,7 +7,6 @@ import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
 import com.teamSuperior.guiApp.GUI.Error;
-import com.teamSuperior.guiApp.controller.MainController;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -26,12 +25,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
 
-import static com.teamSuperior.core.Utils.isNumeric;
-import static com.teamSuperior.core.connection.DBConnect.validateField;
-import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -109,6 +106,7 @@ public class TransactionsAddController implements Initializable {
     private DBConnect conn;
     private ObservableList<BasketItem> basketItems;
     private BasketItem selectedBasketItem;
+    private HashMap<String, String> categoryURLs;
 
 
 
@@ -133,6 +131,23 @@ public class TransactionsAddController implements Initializable {
         initCustomerTableColumns(customers);
         tableView_customers.getSelectionModel().selectFirst();
         selectedCustomer = (Customer) tableView_customers.getSelectionModel().getSelectedItem();
+
+        categoryURLs = new HashMap<>();
+        initCategories();
+    }
+
+    private void initCategories() {
+        conn = new DBConnect();
+        try{
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM productPictures");
+            while (rs.next()){
+                categoryURLs.put(rs.getString("category"), rs.getString("url"));
+            }
+        } catch (SQLException sqlex) {
+            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+        } catch (Exception ex) {
+            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+        }
     }
 
     @FXML
@@ -314,7 +329,13 @@ public class TransactionsAddController implements Initializable {
 
     @FXML
     public void btn_addToBasket_onClick(ActionEvent actionEvent) {
-        basketItems.add(new BasketItem(selectedProduct.getName(), selectedProduct.getSubname(), selectedProduct.getPrice()));
+        String url = "";
+        for (String key : categoryURLs.keySet()){
+            if(selectedProduct.getCategory().equals(key)){
+                url = categoryURLs.get(key);
+            }
+        }
+        basketItems.add(new BasketItem(selectedProduct.getId() ,selectedProduct.getName(), selectedProduct.getSubname(), selectedProduct.getPrice(), url));
         listView_basket.setItems(basketItems);
         listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
 
