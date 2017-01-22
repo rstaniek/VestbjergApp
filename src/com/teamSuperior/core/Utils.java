@@ -19,6 +19,17 @@ public class Utils {
         return true;
     }
 
+    public static boolean isInteger(String s){
+        if (!s.isEmpty()) {
+            try {
+                int i = Integer.parseInt(s);
+            } catch (NumberFormatException nfe) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static <T> String arrayToString(ArrayList<T> array){
         String result = "";
         if(array.size() != 0){

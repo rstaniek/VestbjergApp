@@ -10,6 +10,8 @@ import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.GUI.TextFieldBox;
+import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -40,8 +42,8 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
 
-import static com.teamSuperior.core.Utils.isExpired;
-import static com.teamSuperior.core.Utils.isValidOffer;
+import static com.teamSuperior.core.Utils.*;
+import static com.teamSuperior.guiApp.GUI.Error.*;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -179,9 +181,9 @@ public class TransactionsAddController implements Initializable {
                         rs.getString("title")));
             }
         } catch (SQLException sqlex) {
-            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
         } catch (Exception ex) {
-            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
         }
         return result;
     }
@@ -194,9 +196,9 @@ public class TransactionsAddController implements Initializable {
                 categoryURLs.put(rs.getString("category"), rs.getString("url"));
             }
         } catch (SQLException sqlex) {
-            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
         } catch (Exception ex) {
-            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
         }
     }
 
@@ -337,9 +339,9 @@ public class TransactionsAddController implements Initializable {
                 }
             }
         } catch (SQLException sqlex) {
-            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
         } catch (Exception ex) {
-            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
         }
     }
 
@@ -428,11 +430,13 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void updateLabels() {
-        label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
+        int q = 0;
         double tmp = 0;
         for (BasketItem basketItem : listView_basket.getItems()){
-            tmp += basketItem.getPrice();
+            tmp += basketItem.getPrice() * basketItem.getQuantity();
+            q += basketItem.getQuantity();
         }
+        label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
         label_overallPrice.setText(String.format("Total: kr. %.2f", tmp));
     }
 
@@ -599,7 +603,7 @@ public class TransactionsAddController implements Initializable {
                 window.setScene(scene);
                 window.show();
             } catch (IOException ex) {
-                Error.displayMessage(ERROR, ex.getMessage());
+                displayMessage(ERROR, ex.getMessage());
             }
         }
     }
@@ -659,6 +663,45 @@ public class TransactionsAddController implements Initializable {
     @FXML
     public void AddToBasket_contextMenu_onClick(ActionEvent actionEvent) {
         btn_addToBasket_onClick(null);
+    }
+
+    @FXML
+    public void AddToBasketMore_contextMenu_onClick(ActionEvent actionEvent) {
+        String ans = TextFieldBox.display("Product quantity", "Quantity");
+        if(isInteger(ans)){
+            if(Integer.parseInt(ans) <= selectedProduct.getQuantity()){
+                String url = "";
+                for (String key : categoryURLs.keySet()){
+                    if(selectedProduct.getCategory().equals(key)){
+                        url = categoryURLs.get(key);
+                    }
+                }
+                float price = selectedProduct.getPrice();
+                String discount = "";
+                for (Offer offer : offers){
+                    if(selectedProduct.getId() == offer.getProductID() && isValidOffer(offer.getExpiresDate())){
+                        price = (float)offer.getPrice();
+                        discount = String.valueOf(offer.getDiscount());
+                    }
+                }
+
+                basketItems.add(new BasketItem(selectedProduct.getId(),
+                        selectedProduct.getName(),
+                        selectedProduct.getSubname(),
+                        price,
+                        url,
+                        discount,
+                        Integer.parseInt(ans)));
+                listView_basket.setItems(basketItems);
+                listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
+
+                updateLabels();
+            } else {
+                displayError(ErrorCode.NOT_ENOUGH_ITEMS);
+            }
+        } else {
+            displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
+        }
     }
 }
 

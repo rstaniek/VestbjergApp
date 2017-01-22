@@ -28,6 +28,8 @@ public class BasketListViewCell extends ListCell<BasketItem> {
     public ImageView imageView_item;
     @FXML
     public Label label_discount;
+    @FXML
+    public Label label_quantity;
 
     private FXMLLoader mLLoader;
 
@@ -50,6 +52,7 @@ public class BasketListViewCell extends ListCell<BasketItem> {
             label_name.setText(item.getName());
             label_subname.setText(item.getSubname());
             label_price.setText(String.format("kr. %.2f", item.getPrice()));
+            label_quantity.setText(String.format("Quantity: %d",item.getQuantity()));
             if(item.getDiscount().isEmpty()){
                 label_discount.setVisible(false);
                 label_discount.setText("");

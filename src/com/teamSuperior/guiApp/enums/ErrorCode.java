@@ -24,6 +24,7 @@ public enum ErrorCode {
     USER_ALREADY_LOGGED_OUT("You are already logged out", INFORMATION),
     DATABASE_UPLOAD_ERROR("Upload ERROR", "Couldn't upload changes to the database!", ERROR),
     WAREHOUSE_LOW_AMOUNT_OF_PRODUCT("Low supply of the current product.", "Please consider restocking the supplies.", WARNING),
+    NOT_ENOUGH_ITEMS("Not enough items.", "There are not enough items in the warehouse to complete this transaction.", WARNING),
     TEXT_FIELD_NON_NUMERIC("Illegal, non numeric characters detected in the text field!", ERROR),
     LOGIN_INCORRECT_CREDENTIALS("Username and/or password are incorrect!", WARNING),
     LOGIN_EMPTY_INPUT("User validation error", "None of the fields can be empty", ERROR),

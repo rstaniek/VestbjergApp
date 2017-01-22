@@ -26,7 +26,8 @@
       <contextMenu>
          <ContextMenu>
            <items>
-             <MenuItem mnemonicParsing="false" onAction="#AddToBasket_contextMenu_onClick" text="Add to basket" />
+             <MenuItem mnemonicParsing="false" onAction="#AddToBasket_contextMenu_onClick" text="Add 1 item" />
+               <MenuItem mnemonicParsing="false" onAction="#AddToBasketMore_contextMenu_onClick" text="Add more..." />
            </items>
          </ContextMenu>
       </contextMenu></TableView>
