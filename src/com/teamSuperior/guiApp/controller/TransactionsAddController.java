@@ -3,6 +3,7 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.BasketItem;
+import com.teamSuperior.core.model.Discount;
 import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Offer;
@@ -124,6 +125,7 @@ public class TransactionsAddController implements Initializable {
     private BasketItem selectedBasketItem;
     private HashMap<String, String> categoryURLs;
     private ObservableList<Offer> offers;
+    private ObservableList<Discount> discounts;
 
 
 
@@ -153,6 +155,7 @@ public class TransactionsAddController implements Initializable {
         initCategories();
 
         offers = getOffersFromDatabase();
+        discounts = getDiscountsFromDatabase();
 
         label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
         label_overallPrice.setText("Total: kr. 0");
@@ -163,6 +166,24 @@ public class TransactionsAddController implements Initializable {
                 selectedBasketItem = newValue;
             }
         });
+    }
+
+    private ObservableList<Discount> getDiscountsFromDatabase() {
+        ObservableList<Discount> result = FXCollections.observableArrayList();
+        conn = new DBConnect();
+        try{
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM discounts");
+            while (rs.next()){
+                result.add(new Discount(rs.getInt("id"),
+                        rs.getDouble("value"),
+                        rs.getString("title")));
+            }
+        } catch (SQLException sqlex) {
+            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+        } catch (Exception ex) {
+            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+        }
+        return result;
     }
 
     private void initCategories() {
