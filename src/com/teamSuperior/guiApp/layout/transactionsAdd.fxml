@@ -19,7 +19,7 @@
     <TableView fx:id="tableView_products" layoutX="14.0" layoutY="50.0" onMouseClicked="#tableView_products_onMouseClicked" prefHeight="169.0" prefWidth="973.0">
     </TableView>
     <Button fx:id="btn_addToBasket" layoutX="399.0" layoutY="232.0" mnemonicParsing="false" onAction="#btn_addToBasket_onClick" text="Add selected product to the basket" />
-    <HBox layoutX="201.0" layoutY="278.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
+    <HBox layoutX="687.0" layoutY="261.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
       <children>
             <ListView fx:id="listView_basket" prefHeight="200.0" prefWidth="300.0" />
       </children>

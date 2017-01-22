@@ -75,6 +75,16 @@ public class Product {
 
     @Override
     public String toString() {
-        return String.format("Product: name=%1$s, q=%2$d", name, quantity);
+        return "{rpduct{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", subname='" + subname + '\'' +
+                ", barcode='" + barcode + '\'' +
+                ", q='" + quantity + '\'' +
+                ", category='" + category + '\'' +
+                ", location='" + warehouseLocation + '\'' +
+                ", price='" + price + '\'' +
+                ", contractor Id='" + contractorId + '\'' +
+                '}';
     }
 }

@@ -132,7 +132,7 @@ public class TransactionsAddController implements Initializable {
         retrieveCustomerData();
         initCustomerTableColumns(customers);
         tableView_customers.getSelectionModel().selectFirst();
-        selectedCustomer = (Customer) tableView_products.getSelectionModel().getSelectedItem();
+        selectedCustomer = (Customer) tableView_customers.getSelectionModel().getSelectedItem();
     }
 
     @FXML
@@ -253,53 +253,63 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void initProductTableColumns(ObservableList<Product> source){
-        productIdColumn = new TableColumn<>("ID");
-        productIdColumn.setMinWidth(50);
-        productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        productNameColumn = new TableColumn<>("Product name");
-        productNameColumn.setMinWidth(80);
-        productNameColumn.setCellValueFactory(new PropertyValueFactory<>("productName"));
-
-        productSubnameColumn = new TableColumn<>("Date");
-        productSubnameColumn.setMinWidth(150);
-        productSubnameColumn.setCellValueFactory(new PropertyValueFactory<>("date"));
+        tableView_products.getColumns().removeAll(productBarcodeColumn,
+                productCategoryColumn,
+                productContractorIdColumn,
+                productIdColumn,
+                productLocationColumn,
+                productNameColumn,
+                productPriceColumn,
+                productQuantityColumn,
+                productSubnameColumn);
 
         productBarcodeColumn = new TableColumn<>("Barcode");
-        productBarcodeColumn.setMinWidth(60);
-        productBarcodeColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
+        productBarcodeColumn.setMinWidth(80);
+        productBarcodeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("barcode"));
 
         productCategoryColumn = new TableColumn<>("Category");
-        productCategoryColumn.setMinWidth(80);
-        productCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        productCategoryColumn.setMinWidth(50);
+        productCategoryColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("category"));
+
+        productContractorIdColumn = new TableColumn<>("Contractor ID");
+        productContractorIdColumn.setMinWidth(30);
+        productContractorIdColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("contractorId"));
+
+        productIdColumn = new TableColumn<>("product ID");
+        productIdColumn.setMinWidth(30);
+        productIdColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("id"));
+
+        productLocationColumn = new TableColumn<>("Location");
+        productLocationColumn.setMinWidth(60);
+        productLocationColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("warehouseLocation"));
+
+        productNameColumn = new TableColumn<>("Name");
+        productNameColumn.setMinWidth(50);
+        productNameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("name"));
 
         productPriceColumn = new TableColumn<>("Price");
-        productPriceColumn.setMinWidth(80);
-        productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-
-        productLocationColumn = new TableColumn<>("Warehouse location");
-        productLocationColumn.setMinWidth(220);
-        productLocationColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
+        productPriceColumn.setMinWidth(50);
+        productPriceColumn.setCellValueFactory(new PropertyValueFactory<Product, Float>("price"));
 
         productQuantityColumn = new TableColumn<>("Q");
         productQuantityColumn.setMinWidth(30);
-        productQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        productQuantityColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("quantity"));
 
-        productContractorIdColumn = new TableColumn<>("Contractor");
-        productContractorIdColumn.setMinWidth(50);
-        productContractorIdColumn.setCellValueFactory(new PropertyValueFactory<>("contractorId"));
+        productSubnameColumn = new TableColumn<>("Sub name");
+        productSubnameColumn.setMinWidth(50);
+        productSubnameColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("subname"));
+
 
         tableView_products.setItems(source);
-        tableView_products.getColumns().addAll(customerIdColumn,
-                customerSalesColumn,
-                customerTotalSpentColumn,
-                customerNameColumn,
-                customerSurnameColumn,
-                customerAddressColumn,
-                customerCityColumn,
-                customerZipColumn,
-                customerEmailColumn,
-                customerPhoneColumn);
+        tableView_products.getColumns().addAll(productBarcodeColumn,
+                productCategoryColumn,
+                productContractorIdColumn,
+                productIdColumn,
+                productLocationColumn,
+                productNameColumn,
+                productPriceColumn,
+                productQuantityColumn,
+                productSubnameColumn);
     }
 
     @FXML
