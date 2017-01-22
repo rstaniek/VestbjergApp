@@ -405,7 +405,7 @@ public class TransactionsAddController implements Initializable {
         try {
             ResultSet rs = conn.getFromDataBase("SELECT * FROM customers");
             while (rs.next()){
-                searchCustomersResults.add(new Customer(rs.getInt("id"),
+                customers.add(new Customer(rs.getInt("id"),
                         rs.getInt("salesMade"),
                         rs.getDouble("totalSpent"),
                         rs.getString("name"),
@@ -415,6 +415,9 @@ public class TransactionsAddController implements Initializable {
                         rs.getString("zip"),
                         rs.getString("email"),
                         rs.getString("phone")));
+                for (Customer c : customers){
+                    System.out.println(c.toString());
+                }
             }
         } catch (SQLException sqlException) {
             displayMessage(ERROR, "SQL connection error", sqlException.getMessage());
