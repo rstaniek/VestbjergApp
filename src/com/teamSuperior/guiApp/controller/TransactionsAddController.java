@@ -556,6 +556,14 @@ public class TransactionsAddController implements Initializable {
     @FXML
     public void btn_assignCustomer_onClick(ActionEvent actionEvent) {
         customerID = selectedCustomer.getId();
+        Alert a = new Alert(Alert.AlertType.INFORMATION);
+        a.setHeaderText("Assigned registered customer to the transaction.");
+        a.setContentText(String.format("Name: %s\nSurname: %s\nEmail: %s\nPhone: %s",
+                selectedCustomer.getName(),
+                selectedCustomer.getSurname(),
+                selectedCustomer.getEmail(),
+                selectedCustomer.getPhone()));
+        a.show();
     }
 
     @FXML
