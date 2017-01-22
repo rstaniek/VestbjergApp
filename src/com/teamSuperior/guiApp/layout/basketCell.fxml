@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 
 <GridPane fx:id="itemGrid" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="125.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
   <columnConstraints>
@@ -29,10 +30,19 @@
             <Insets left="5.0" />
          </GridPane.margin>
       </Label>
-      <Label fx:id="label_price" text="Price" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
-         <GridPane.margin>
-            <Insets left="5.0" top="5.0" />
-         </GridPane.margin>
-      </Label>
+      <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <children>
+            <Label fx:id="label_price" text="Price">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
+            </Label>
+            <Label fx:id="label_discount" text="Discount">
+               <padding>
+                  <Insets left="5.0" top="5.0" />
+               </padding>
+            </Label>
+         </children>
+      </VBox>
    </children>
 </GridPane>

@@ -1,9 +1,11 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.BasketItem;
 import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.core.model.entity.Employee;
+import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
 import com.teamSuperior.guiApp.GUI.Error;
@@ -13,22 +15,30 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
+import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.ArrayList;
 
+import static com.teamSuperior.core.Utils.isExpired;
+import static com.teamSuperior.core.Utils.isValidOffer;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -107,6 +117,7 @@ public class TransactionsAddController implements Initializable {
     private ObservableList<BasketItem> basketItems;
     private BasketItem selectedBasketItem;
     private HashMap<String, String> categoryURLs;
+    private ObservableList<Offer> offers;
 
 
 
@@ -134,6 +145,8 @@ public class TransactionsAddController implements Initializable {
 
         categoryURLs = new HashMap<>();
         initCategories();
+
+        offers = getOffersFromDatabase();
     }
 
     private void initCategories() {
@@ -148,6 +161,33 @@ public class TransactionsAddController implements Initializable {
         } catch (Exception ex) {
             Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
         }
+    }
+
+    private ObservableList<Offer> getOffersFromDatabase(){
+        conn = new DBConnect();
+        ObservableList<Offer> results = FXCollections.observableArrayList();
+        try{
+            ResultSet rs = conn.getFromDataBase("SELECT offers.id,offers.date,offers.time,offers.productIDs,offers.price,offers.discount,offers.expiresDate,offers.expiresTime,products.name FROM offers,products WHERE offers.productIDs = products.id");
+            while (rs.next()){
+                if(rs.getInt("offers.id") != -1){
+                    results.add(new Offer(rs.getDate("offers.date"),
+                            rs.getInt("offers.id"),
+                            rs.getInt("offers.productIDs"),
+                            rs.getDouble("offers.price"),
+                            rs.getDouble("offers.discount"),
+                            rs.getString("products.name"),
+                            rs.getTime("offers.time"),
+                            rs.getDate("offers.expiresDate"),
+                            rs.getTime("offers.expiresTime"),
+                            isExpired(rs.getDate("offers.expiresDate"))));
+                }
+            }
+        } catch (SQLException sqlException) {
+            displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
+        } catch (Exception ex) {
+            displayMessage(ERROR, ex.getMessage());
+        }
+        return results;
     }
 
     @FXML
@@ -335,7 +375,16 @@ public class TransactionsAddController implements Initializable {
                 url = categoryURLs.get(key);
             }
         }
-        basketItems.add(new BasketItem(selectedProduct.getId() ,selectedProduct.getName(), selectedProduct.getSubname(), selectedProduct.getPrice(), url));
+        float price = selectedProduct.getPrice();
+        String discount = "";
+        for (Offer offer : offers){
+            if(selectedProduct.getId() == offer.getProductID() && isValidOffer(offer.getExpiresDate())){
+                price = (float)offer.getPrice();
+                discount = String.valueOf(offer.getDiscount());
+            }
+        }
+
+        basketItems.add(new BasketItem(selectedProduct.getId() ,selectedProduct.getName(), selectedProduct.getSubname(), price, url, discount));
         listView_basket.setItems(basketItems);
         listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
 
@@ -519,7 +568,19 @@ public class TransactionsAddController implements Initializable {
 
     @FXML
     public void btn_registerCustomer_onClick(ActionEvent actionEvent) {
-        //TODO: open the window for registering customer
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/customersManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("View Customers");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
     }
 
     @FXML
@@ -527,15 +588,34 @@ public class TransactionsAddController implements Initializable {
         DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        if (true) { //TODO perhaps here should be some validation of fields
+
+        //TODO: calculate the final price
+        finalPrice = 0;
+        for (BasketItem item : listView_basket.getItems()){
+            finalPrice = (float)item.getPrice();
+            for(Product p : products){
+                if(item.getItemID() == p.getId()){
+                    productIDs.add(p.getId());
+                }
+            }
+        }
+
+
+
+
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Are you sure you want to complete the transaction?");
+        a.setContentText("You will not be able to revert this action!");
+        Optional<ButtonType> okResponse = a.showAndWait();
+        if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get())) {
             conn = new DBConnect();
             try {
                 conn.upload(String.format("INSERT INTO transactions (productIDs,employeeID,customerID,price,discountIDs,description,date,time) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s','%8$s')",
-                        productIDs, //TODO: solve this in the basket
+                        Utils.arrayToString(productIDs),
                         loggedUser.getId(),
                         customerID,
-                        finalPrice, //TODO: solve this in the basket
-                        discountIDs, //TODO: solve this in the basket
+                        finalPrice,
+                        Utils.arrayToString(discountIDs),
                         description,
                         dtf_date.format(now),
                         dtf_time.format(now)));

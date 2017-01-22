@@ -26,6 +26,8 @@ public class BasketListViewCell extends ListCell<BasketItem> {
     public Label label_price;
     @FXML
     public ImageView imageView_item;
+    @FXML
+    public Label label_discount;
 
     private FXMLLoader mLLoader;
 
@@ -48,6 +50,13 @@ public class BasketListViewCell extends ListCell<BasketItem> {
             label_name.setText(item.getName());
             label_subname.setText(item.getSubname());
             label_price.setText(String.format("kr. %.2f", item.getPrice()));
+            if(item.getDiscount().isEmpty()){
+                label_discount.setVisible(false);
+                label_discount.setText("");
+            } else {
+                label_discount.setText(String.format("Discount: %s%s", item.getDiscount(), "%"));
+                label_price.setStyle("-fx-text-fill: #9b000f");
+            }
             if(item.getImgURL().isEmpty()){
                 imageView_item.setImage(new Image("http://remix1436.ct8.pl/resources/img/big-white-chicken.jpg"));
             } else {

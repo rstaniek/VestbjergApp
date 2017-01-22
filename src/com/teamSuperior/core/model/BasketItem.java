@@ -8,6 +8,7 @@ public class BasketItem {
     private String name, subname;
     private double price;
     private String imgURL;
+    private String discount;
 
     public BasketItem(String name, String subname, double price) {
         this.name = name;
@@ -18,12 +19,20 @@ public class BasketItem {
     }
 
     public BasketItem(int itemID, String name, String subname, double price, String imgURL) {
-
         this.itemID = itemID;
         this.name = name;
         this.subname = subname;
         this.price = price;
         this.imgURL = imgURL;
+    }
+
+    public BasketItem(int itemID, String name, String subname, double price, String imgURL, String discount) {
+        this.itemID = itemID;
+        this.name = name;
+        this.subname = subname;
+        this.price = price;
+        this.imgURL = imgURL;
+        this.discount = discount;
     }
 
     public int getItemID() {
@@ -44,5 +53,9 @@ public class BasketItem {
 
     public String getImgURL() {
         return imgURL;
+    }
+
+    public String getDiscount() {
+        return discount;
     }
 }

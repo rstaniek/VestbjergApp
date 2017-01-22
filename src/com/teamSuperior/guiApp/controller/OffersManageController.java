@@ -245,18 +245,6 @@ public class OffersManageController implements Initializable {
                 statusColumn);
     }
 
-    /***
-     * checks if the offer is still valid and usable
-     * @return VALID if valid and EXPIRED when expired
-     */
-    private String isExpired(Date expirationDate){
-        if(expirationDate.before(Date.valueOf(LocalDate.now()))){
-            return "EXPIRED";
-        } else {
-            return "VALID";
-        }
-    }
-
     private void updateText(){
         label_productName.setText(selectedOffer.getProductName());
         label_price.setText(String.valueOf(selectedOffer.getPrice()));
