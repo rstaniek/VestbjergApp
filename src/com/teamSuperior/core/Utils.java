@@ -1,5 +1,7 @@
 package com.teamSuperior.core;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 
 /**
@@ -35,5 +37,21 @@ public class Utils {
             result.add(Integer.parseInt(s1));
         }
         return result;
+    }
+
+    /***
+     * checks if the offer is still valid and usable
+     * @return VALID if valid and EXPIRED when expired
+     */
+    public static String isExpired(Date expirationDate){
+        if(expirationDate.before(Date.valueOf(LocalDate.now()))){
+            return "EXPIRED";
+        } else {
+            return "VALID";
+        }
+    }
+
+    public static boolean isValidOffer(Date date){
+        return !date.before(Date.valueOf(LocalDate.now()));
     }
 }

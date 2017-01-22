@@ -13,7 +13,7 @@ import static com.teamSuperior.core.Utils.arrayToString;
  */
 public class Transaction {
 
-    private int id, employeeID;
+    private int id, employeeID, customerID;
     private ArrayList<Integer> productIDs, discountIDs;
     private String productIDs_str, discountIDs_str, description;
     private double price;
@@ -21,9 +21,10 @@ public class Transaction {
     private Time time;
     private DBConnect conn;
 
-    public Transaction(int id, int employeeID, ArrayList<Integer> productIDs, ArrayList<Integer> discountIDs, double price, String description, Date date, Time time) {
+    public Transaction(int id, int employeeID, int customerID, ArrayList<Integer> productIDs, ArrayList<Integer> discountIDs, double price, String description, Date date, Time time) {
         this.id = id;
         this.employeeID = employeeID;
+        this.customerID = customerID;
         this.productIDs = productIDs;
         this.discountIDs = discountIDs;
         this.price = price;
@@ -40,6 +41,10 @@ public class Transaction {
 
     public int getEmployeeID() {
         return employeeID;
+    }
+
+    public int getCustomerID() {
+        return customerID;
     }
 
     public ArrayList<Integer> getProductIDs() {
