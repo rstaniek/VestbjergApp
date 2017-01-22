@@ -182,17 +182,17 @@ public class OfferAddController implements Initializable {
             float currentDiscount = Float.parseFloat(text_discount.getText());
             float newPrice = currentPrice/100 * (100-currentDiscount);
             if (newPrice >= 0){ //checks that the price never goes under 0 (discount doesn't go higher than 100)
-                text_price.setText(Float.toString(newPrice));
+                text_price.setText(String.format("%.2f",newPrice));
             }
             else { //should the price go under 0, error pops up, discount field is cleared and price is updated to original value
                 text_discount.clear();
-                text_price.setText(Float.toString(currentPrice));
+                text_price.setText(String.format("%.2f",currentPrice));
                 displayError(OFFER_DISCOUNT_OUT_OF_BOUND);
             }
         }
         else { //same as in previous case, only different error pops up
             text_discount.clear();
-            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+            text_price.setText(String.format("%.2f",findProduct(Integer.parseInt(text_product.getText())).getPrice()));
             displayError(TEXT_FIELD_NON_NUMERIC);
         }
 
@@ -205,7 +205,7 @@ public class OfferAddController implements Initializable {
             float originalPrice = findProduct(Integer.parseInt(text_product.getText())).getPrice();
             float currentPrice = Float.parseFloat(text_price.getText());
             float newDiscount = 100-currentPrice/originalPrice*100;
-            if (newDiscount <= 100 && newDiscount >= 0) text_discount.setText(Float.toString(newDiscount)+"%");
+            if (newDiscount <= 100 && newDiscount >= 0) text_discount.setText(String.format("%.2f",newDiscount).replace(",","."));
             else if (newDiscount <= 100) {
                 text_discount.clear();
                 text_price.setText(Float.toString(originalPrice));
