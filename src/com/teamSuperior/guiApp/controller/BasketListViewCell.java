@@ -53,7 +53,9 @@ public class BasketListViewCell extends ListCell<BasketItem> {
             if(item.getDiscount().isEmpty()){
                 label_discount.setVisible(false);
                 label_discount.setText("");
+                label_price.setStyle("-fx-text-fill: black");
             } else {
+                label_discount.setVisible(true);
                 label_discount.setText(String.format("Discount: %s%s", item.getDiscount(), "%"));
                 label_price.setStyle("-fx-text-fill: #9b000f");
             }
