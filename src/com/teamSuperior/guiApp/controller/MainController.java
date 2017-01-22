@@ -13,37 +13,46 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
+
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.text.DecimalFormat;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Side;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
+import javafx.scene.control.Hyperlink;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Path;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ResourceBundle;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
@@ -67,6 +76,25 @@ public class MainController implements Initializable {
     public NumberAxis xAxis;
     @FXML
     public NumberAxis yAxis;
+    @FXML
+    public LineChart currency_eurChart;
+    @FXML
+    public LineChart currency_usdChart;
+    @FXML
+    public NumberAxis xAxisCurrencyEur;
+    @FXML
+    public NumberAxis yAxisCurrencyEur;
+    @FXML
+    public NumberAxis xAxisCurrencyUsd;
+    @FXML
+    public NumberAxis yAxisCurrencyUsd;
+    @FXML
+    public Hyperlink button_copyEur;
+    @FXML
+    public Hyperlink button_copyUsd;
+
+
+
 
 
     private Stage settings;
@@ -86,6 +114,12 @@ public class MainController implements Initializable {
     private ArrayList<Employee> employees;
     private boolean effChartInitialized;
     private boolean salesPercentageInitialized;
+    private boolean currencyChartsInitialized;
+    private ArrayList<String> eurData;
+    private ArrayList<String> usdData;
+    private XYChart.Series eurSeries;
+    private XYChart.Series usdSeries;
+    private int chartCounter;
 
     public MainController() {
         welcomeMessage = new SimpleStringProperty("");
@@ -95,6 +129,19 @@ public class MainController implements Initializable {
         EURRatio = new SimpleStringProperty("Loading");
         effChartInitialized = false;
         salesPercentageInitialized = false;
+        currencyChartsInitialized = false;
+        eurData = new ArrayList<>();
+        usdData = new ArrayList<>();
+        eurSeries = new XYChart.Series();
+        usdSeries = new XYChart.Series();
+        chartCounter = 0;
+        button_copyUsd = new Hyperlink();
+        button_copyUsd.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent e) {
+                System.out.println("This link is clicked");
+            }
+        });
     }
 
     @Override
@@ -135,7 +182,22 @@ public class MainController implements Initializable {
                     String ratioEUR = WebsiteCrawler.getExchangeRatioBloomberg(Currency.EURDKK);
                     Platform.runLater(() -> {
                         setUSDRatio(ratioUSD);
+                        if(usdData.size() < 30){
+                            usdData.add(ratioUSD);
+                        }
+                        else{
+                            usdData.remove(0);
+                            usdData.add(ratioUSD);
+                        }
                         setEURRatio(ratioEUR);
+                        if(eurData.size() < 30){
+                            eurData.add(ratioEUR);
+                        }
+                        else{
+                            eurData.remove(0);
+                            eurData.add(ratioUSD);
+                        }
+                        displayCurrencyCharts();
                         if(!effChartInitialized)
                         {
                             sortEmployees();
@@ -171,6 +233,9 @@ public class MainController implements Initializable {
         th.start();
         th2.start();
         th3.start();
+        if(eurSeries.getData() != null){
+            currency_eurChart.getData().addAll(eurSeries, usdSeries);
+        }
     }
 
     public String getWelcomeMessage() {
@@ -465,12 +530,15 @@ public class MainController implements Initializable {
         if(UserController.isLoggedIn()){
             XYChart.Series effSeries = new XYChart.Series();
             XYChart.Series effSeriesPersonal = new XYChart.Series();
-            effSeriesPersonal.setName("personal");
+            xAxis.setTickLabelsVisible(false);
+            effSeriesPersonal.setName("Your record");
+            efficiency.setTitle("Efficiency chart");
             for(int i = 0; i < employees.size(); i++) {
                 if (employees.get(i).getId() == UserController.getUser().getId()) {
                     double effminus = (employees.get(i-1).getTotalRevenue()) / (employees.get(i-1).getNumberOfSales());
                     double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
                     double effplus = (employees.get(i+1).getTotalRevenue()) / (employees.get(i+1).getNumberOfSales());
+                    // uncomment to make the personalized area bigger
                     if(i > 1){
                         //effSeriesPersonal.getData().add(new XYChart.Data(i-1, 0));
                     }
@@ -486,10 +554,7 @@ public class MainController implements Initializable {
                 }
             }
             efficiency.setCreateSymbols(true);
-            xAxis.setAutoRanging(false);
-            xAxis.setLowerBound(0);
-            xAxis.setUpperBound(100);
-            xAxis.setTickUnit(25);
+            xAxis.setAutoRanging(true);
             yAxis.setAutoRanging(true);
             efficiency.getData().addAll(effSeries, effSeriesPersonal);
             effChartInitialized = true;
@@ -508,10 +573,74 @@ public class MainController implements Initializable {
             contributionData.addAll(new PieChart.Data("Total sales\n" + totalSales, totalSales), new PieChart.Data("Your sales \n"+ percentageFormat.format(salesPercentageLabel)+"%", UserController.getUser().getNumberOfSales()));
             sales_chart.getData().addAll(contributionData);
         }
-
     }
 
+    @FXML
+    private void displayCurrencyCharts(){
+        if(UserController.isLoggedIn()){
+            currency_eurChart.setAnimated(false);
+            double eurValue = 0;
+            double usdValue = 0;
+            xAxisCurrencyEur.setTickMarkVisible(false);
+            currency_eurChart.setLegendVisible(true);
+            currency_eurChart.setLegendSide(Side.RIGHT);
+            eurSeries.setName("EUR/DKK \n("+getEURRatio()+")");
+            usdSeries.setName("USD/DKK \n("+getUSDRatio()+")");
+            button_copyEur.setVisible(true);
+            button_copyUsd.setVisible(true);
+            button_copyEur.toFront();
+            button_copyUsd.toFront();
+            currency_eurChart.setTitle("Currency rates tracker");
+            chartCounter++;
+            try{
+                eurValue = Double.parseDouble(getEURRatio());
+                usdValue = Double.parseDouble(getUSDRatio());
+                yAxisCurrencyEur.setAutoRanging(false);
+                yAxisCurrencyEur.setLowerBound(((eurValue+usdValue)/2)-1);
+                yAxisCurrencyEur.setUpperBound(((eurValue+usdValue)/2)+1);
+                yAxisCurrencyEur.setTickUnit(1);
+            }
+            catch(NumberFormatException ex){
+                eurValue = 0;
+                usdValue = 0;
+            }
+            if(chartCounter < 43200){
+                eurSeries.getData().addAll(new XYChart.Data(chartCounter-1, eurValue));
+                usdSeries.getData().addAll(new XYChart.Data(chartCounter-1, usdValue));
+            }
+            else{
+                eurSeries.getData().clear();
+                chartCounter = 0;
+                /*
+                eurSeries.getData().remove(0);
+                for(int i=0; i< eurSeries.getData().size(); i++){
+                    XYChart.Data data = (XYChart.Data)eurSeries.getData().get(i);
+                    int x = (int)data.getXValue();
+                    data.setXValue(x-1);
+                    eurSeries.getData().add(new XYChart.Data(eurSeries.getData().size()+1, eurValue));
+                }
+                */
+            }
+        }
+    }
 
+    @FXML
+    public void handleCopyEur(ActionEvent actionEvent)
+    {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Clipboard clipboard = toolkit.getSystemClipboard();
+        StringSelection str = new StringSelection(getEURRatio());
+        clipboard.setContents(str, null);
+
+
+    }
+    @FXML
+    public void handleCopyUsd(){
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Clipboard clipboard = toolkit.getSystemClipboard();
+        StringSelection str = new StringSelection(getUSDRatio());
+        clipboard.setContents(str, null);
+    }
     @FXML
     public void handleAddOffer(ActionEvent actionEvent) {
         if (UserController.isAllowed(2)) {
