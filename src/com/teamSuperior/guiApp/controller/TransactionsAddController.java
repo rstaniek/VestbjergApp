@@ -21,9 +21,11 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
@@ -73,6 +75,10 @@ public class TransactionsAddController implements Initializable {
     public Button btn_completePurchase;
     @FXML
     public ListView<BasketItem> listView_basket;
+    @FXML
+    public Label label_numOfItems;
+    @FXML
+    public Label label_overallPrice;
 
 
     //products table columns
@@ -147,6 +153,16 @@ public class TransactionsAddController implements Initializable {
         initCategories();
 
         offers = getOffersFromDatabase();
+
+        label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
+        label_overallPrice.setText("Total: kr. 0");
+
+        listView_basket.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BasketItem>() {
+            @Override
+            public void changed(ObservableValue<? extends BasketItem> observable, BasketItem oldValue, BasketItem newValue) {
+                selectedBasketItem = newValue;
+            }
+        });
     }
 
     private void initCategories() {
@@ -356,15 +372,15 @@ public class TransactionsAddController implements Initializable {
 
 
         tableView_products.setItems(source);
-        tableView_products.getColumns().addAll(productBarcodeColumn,
-                productCategoryColumn,
-                productContractorIdColumn,
-                productIdColumn,
-                productLocationColumn,
+        tableView_products.getColumns().addAll(productIdColumn,
                 productNameColumn,
+                productSubnameColumn,
+                productCategoryColumn,
                 productPriceColumn,
                 productQuantityColumn,
-                productSubnameColumn);
+                productBarcodeColumn,
+                productLocationColumn,
+                productContractorIdColumn);
     }
 
     @FXML
@@ -388,12 +404,16 @@ public class TransactionsAddController implements Initializable {
         listView_basket.setItems(basketItems);
         listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
 
-        listView_basket.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BasketItem>() {
-            @Override
-            public void changed(ObservableValue<? extends BasketItem> observable, BasketItem oldValue, BasketItem newValue) {
-                selectedBasketItem = newValue;
-            }
-        });
+        updateLabels();
+    }
+
+    private void updateLabels() {
+        label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
+        double tmp = 0;
+        for (BasketItem basketItem : listView_basket.getItems()){
+            tmp += basketItem.getPrice();
+        }
+        label_overallPrice.setText(String.format("Total: kr. %.2f", tmp));
     }
 
     @FXML
@@ -625,6 +645,19 @@ public class TransactionsAddController implements Initializable {
             }
             displayMessage(INFORMATION, "Transaction completed successfully.");
         }
+    }
+
+    @FXML
+    public void deleteItem_onClick(ActionEvent actionEvent) {
+        basketItems.remove(selectedBasketItem);
+        System.out.println(basketItems.size());
+        listView_basket.refresh();
+        updateLabels();
+    }
+
+    @FXML
+    public void AddToBasket_contextMenu_onClick(ActionEvent actionEvent) {
+        btn_addToBasket_onClick(null);
     }
 }
 
