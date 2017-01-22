@@ -33,6 +33,7 @@ import javafx.scene.shape.Path;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -545,6 +546,21 @@ public class MainController implements Initializable {
             } catch (IOException ex) {
                 Error.displayMessage(ERROR, ex.getMessage());
             }
+        }
+    }
+
+    @FXML
+    public void about(ActionEvent actionEvent){
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/about.fxml"));
+            Stage window = new Stage();
+            window.setTitle("About");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
         }
     }
 
