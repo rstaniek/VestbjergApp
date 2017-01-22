@@ -113,7 +113,7 @@ public class ProductsController implements Initializable {
 
         updateStats();
         runWarehouseCheck(true);
-        initWarehouseCheckDone = true;
+
     }
 
     private void runWarehouseCheck(boolean runForAllItems) {
@@ -129,7 +129,8 @@ public class ProductsController implements Initializable {
                 }
             }
             if (numberOfWarnings != 0 && !initWarehouseCheckDone) {
-                //TODO: alert box looping, needs fix
+                //moved the line below from above
+                initWarehouseCheckDone = true;
                 boolean result = ConfirmBox.display("Empty storages detected",
                         String.format("There were %1$d almost empty storages found during the checkup. Do you want to intervene?", numberOfWarnings));
                 if (result) {
