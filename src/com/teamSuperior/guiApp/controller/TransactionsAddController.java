@@ -218,29 +218,28 @@ public class TransactionsAddController implements Initializable {
         selectedProduct = (Product) tableView_products.getFocusModel().getFocusedItem();
     }
 
+    private void printQueryLog(String sender, CheckComboBox<String> checkComboBox, TextField tf) {
+        String c = "";
+        for (String s : checkComboBox.getCheckModel().getCheckedItems()) {
+            c += s + ", ";
+        }
+        System.out.printf("%s@[%s]: %s%n", sender, c, tf.getText());
+    }
+
     @FXML
     public void text_searchProducts_query_onKeyReleased(KeyEvent keyEvent) {
+        printQueryLog("searchProducts_query_onKeyReleased", checkComboBox_searchProducts_criteria, text_searchProducts_query);
         searchProductsResults = null;
         searchProductsResults = performProductSearch(text_searchProducts_query.getText());
-        tableView_products.getColumns().removeAll(productIdColumn,
-                productNameColumn,
-                productSubnameColumn,
-                productBarcodeColumn,
-                productCategoryColumn,
-                productPriceColumn,
-                productLocationColumn,
-                productQuantityColumn,
-                productContractorIdColumn);
         initProductTableColumns(searchProductsResults);
     }
 
     private ObservableList<Product> performProductSearch(String query) {
         ObservableList<Product> results = FXCollections.observableArrayList();
-        ObservableList<Product> source = FXCollections.observableArrayList();
         if (query.isEmpty()) {
-            return source;
+            return products;
         }
-        for (Product product : source) {
+        for (Product product : products) {
             for (String criteria : checkComboBox_searchProducts_criteria.getCheckModel().getCheckedItems()) {
                 switch (criteria) {
                     case "ID":
@@ -419,7 +418,7 @@ public class TransactionsAddController implements Initializable {
     @FXML
     public void btn_searchCustomers_clear_onClick(ActionEvent actionEvent) {
         text_searchCustomers_query.clear();
-        initCustomerTableColumns(searchCustomersResults);
+        initCustomerTableColumns(customers);
         selectedCustomer = (Customer)tableView_customers.getFocusModel().getFocusedItem();
     }
 
@@ -430,27 +429,18 @@ public class TransactionsAddController implements Initializable {
 
     @FXML
     public void text_searchCustomers_query_onKeyReleased(KeyEvent keyEvent) {
+        printQueryLog("text_searchCustomers_query_onKeyReleased", checkComboBox_searchCustomers_criteria, text_searchCustomers_query);
         searchCustomersResults = null;
-        searchCustomersResults = performCustomerSearch(text_searchProducts_query.getText());
-        tableView_customers.getColumns().removeAll(customerIdColumn,
-                customerSalesColumn,
-                customerTotalSpentColumn,
-                customerNameColumn,
-                customerSurnameColumn,
-                customerAddressColumn,
-                customerCityColumn,
-                customerZipColumn,
-                customerEmailColumn,
-                customerPhoneColumn);
+        searchCustomersResults = performCustomerSearch(text_searchCustomers_query.getText());
         initCustomerTableColumns(searchCustomersResults);
     }
 
     private ObservableList<Customer> performCustomerSearch(String query){
         ObservableList<Customer> results = FXCollections.observableArrayList();
         if(query.isEmpty()){
-            return searchCustomersResults;
+            return customers;
         }
-        for (Customer c : searchCustomersResults){
+        for (Customer c : customers){
             for (String criteria : checkComboBox_searchCustomers_criteria.getCheckModel().getCheckedItems()){
                 switch (criteria){
                     case "ID":
@@ -517,28 +507,13 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void initCustomerTableColumns(ObservableList<Customer> source){
-        tableView_customers.getColumns().removeAll(customerIdColumn,
-                customerSalesColumn,
-                customerTotalSpentColumn,
-                customerNameColumn,
+        tableView_customers.getColumns().removeAll(customerNameColumn,
                 customerSurnameColumn,
                 customerAddressColumn,
                 customerCityColumn,
                 customerZipColumn,
                 customerEmailColumn,
                 customerPhoneColumn);
-
-        customerIdColumn = new TableColumn<>("ID");
-        customerIdColumn.setMinWidth(30);
-        customerIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-
-        customerSalesColumn = new TableColumn<>("Sales");
-        customerSalesColumn.setMinWidth(30);
-        customerSalesColumn.setCellValueFactory(new PropertyValueFactory<>("salesMade"));
-
-        customerTotalSpentColumn = new TableColumn<>("Total spent");
-        customerTotalSpentColumn.setMinWidth(60);
-        customerTotalSpentColumn.setCellValueFactory(new PropertyValueFactory<>("totalSpent"));
 
         customerNameColumn = new TableColumn<>("Name");
         customerNameColumn.setMinWidth(50);
@@ -569,10 +544,7 @@ public class TransactionsAddController implements Initializable {
         customerPhoneColumn.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
         tableView_customers.setItems(source);
-        tableView_customers.getColumns().addAll(customerIdColumn,
-                customerSalesColumn,
-                customerTotalSpentColumn,
-                customerNameColumn,
+        tableView_customers.getColumns().addAll(customerNameColumn,
                 customerSurnameColumn,
                 customerAddressColumn,
                 customerCityColumn,
