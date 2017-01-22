@@ -542,9 +542,9 @@ public class MainController implements Initializable {
     public void handleNewTransaction(ActionEvent actionEvent) {
         //TODO: to be implemented
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/testBasket.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("../layout/transactionsAdd.fxml"));
             Stage window = new Stage();
-            window.setTitle("Basket");
+            window.setTitle("Add a transaction");
             window.setResizable(false);
             Scene scene = new Scene(root);
             window.setScene(scene);

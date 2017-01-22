@@ -46,6 +46,7 @@ public class TransactionsViewController implements Initializable {
 
     private TableColumn<Transaction, Integer> idColumn;
     private TableColumn<Transaction, String> productIDsColumn;
+    private TableColumn<Transaction, Integer> customerIDColumn;
     private TableColumn<Transaction, Integer> employeeIDColumn;
     private TableColumn<Transaction, Double> priceColumn;
     private TableColumn<Transaction, String> discountIDsColumn;
@@ -71,7 +72,7 @@ public class TransactionsViewController implements Initializable {
     @FXML
     public void btn_search_clear_onClick(ActionEvent actionEvent) {
         text_search_query.clear();
-        tableView_offers.getColumns().removeAll(idColumn, productIDsColumn, priceColumn, discountIDsColumn, employeeIDColumn, dateColumn, timeColumn, descriptionColumn);
+        tableView_offers.getColumns().removeAll(idColumn, productIDsColumn, customerIDColumn, priceColumn, discountIDsColumn, employeeIDColumn, dateColumn, timeColumn, descriptionColumn);
         initTransactionTableColumns(transactions);
     }
 
@@ -79,7 +80,7 @@ public class TransactionsViewController implements Initializable {
     public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
         searchResults = null;
         searchResults = performSearch(text_search_query.getText());
-        tableView_offers.getColumns().removeAll(idColumn, productIDsColumn, priceColumn, discountIDsColumn, employeeIDColumn, dateColumn, timeColumn, descriptionColumn);
+        tableView_offers.getColumns().removeAll(idColumn, productIDsColumn, customerIDColumn, priceColumn, discountIDsColumn, employeeIDColumn, dateColumn, timeColumn, descriptionColumn);
         initTransactionTableColumns(searchResults);
     }
 
@@ -88,7 +89,7 @@ public class TransactionsViewController implements Initializable {
         transactions = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         products = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("ID", "Discount", "Employee ID", "product ID", "Date", "Description");
+        checkComboBox_search_criteria.getItems().addAll("ID", "Discount", "Customer ID", "Employee ID", "product ID", "Date", "Description");
         retrieveData();
         initTransactionTableColumns(transactions);
         selectedTransaction = (Transaction)tableView_offers.getFocusModel().getFocusedItem();
@@ -105,6 +106,7 @@ public class TransactionsViewController implements Initializable {
                     ArrayList<Integer> discountIDs = stringToArray(rs.getString("discountIDs"));
                     transactions.add(new Transaction(rs.getInt("id"),
                             rs.getInt("employeeID"),
+                            rs.getInt("customerID"),
                             productIDs,
                             discountIDs,
                             rs.getDouble("price"),
@@ -140,6 +142,11 @@ public class TransactionsViewController implements Initializable {
         employeeIDColumn = new TableColumn<>("employee ID");
         employeeIDColumn.setMinWidth(30);
         employeeIDColumn.setCellValueFactory(new PropertyValueFactory<Transaction, Integer>("employeeID"));
+
+        customerIDColumn = new TableColumn<>("Customer ID");
+        customerIDColumn.setMinWidth(30);
+        customerIDColumn.setCellValueFactory(new PropertyValueFactory<Transaction, Integer>("customerID"));
+
 
         priceColumn = new TableColumn<>("Price");
         priceColumn.setMinWidth(50);
@@ -253,6 +260,13 @@ public class TransactionsViewController implements Initializable {
                             results.add(t);
                         }
                         break;
+
+                    case "Customer ID":
+                        if(String.valueOf(t.getCustomerID()).contains(query)){
+                            results.add(t);
+                        }
+                        break;
+
                     case "Product ID":
                         if(t.getProductIDs_str().contains(query)){
                             results.add(t);
