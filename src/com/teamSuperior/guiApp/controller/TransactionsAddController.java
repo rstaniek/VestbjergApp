@@ -23,6 +23,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
@@ -31,6 +34,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import org.controlsfx.control.CheckComboBox;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -82,23 +86,28 @@ public class TransactionsAddController implements Initializable {
     public Label label_numOfItems;
     @FXML
     public Label label_overallPrice;
+    @FXML
+    public Label label_finalPrice;
+    @FXML
+    public Label label_discount;
+    @FXML
+    public Label label_assignedCustomer;
+    @FXML
+    public TextField text_description;
+    @FXML
+    public Button btn_clearBasket;
 
 
     //products table columns
     private TableColumn<Product, Integer> productIdColumn;
     private TableColumn<Product, String> productNameColumn;
     private TableColumn<Product, String> productSubnameColumn;
-    private TableColumn<Product, String> productBarcodeColumn;
     private TableColumn<Product, String> productCategoryColumn;
     private TableColumn<Product, Float> productPriceColumn;
     private TableColumn<Product, String> productLocationColumn;
     private TableColumn<Product, Integer> productQuantityColumn;
-    private TableColumn<Product, Integer> productContractorIdColumn;
 
     //customer table columns
-    private TableColumn<Customer, Integer> customerIdColumn;
-    private TableColumn<Customer, Integer> customerSalesColumn;
-    private TableColumn<Customer, Double> customerTotalSpentColumn;
     private TableColumn<Customer, String> customerNameColumn;
     private TableColumn<Customer, String> customerSurnameColumn;
     private TableColumn<Customer, String> customerAddressColumn;
@@ -346,9 +355,8 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void initProductTableColumns(ObservableList<Product> source){
-        tableView_products.getColumns().removeAll(productBarcodeColumn,
+        tableView_products.getColumns().removeAll(
                 productCategoryColumn,
-                productContractorIdColumn,
                 productIdColumn,
                 productLocationColumn,
                 productNameColumn,
@@ -356,17 +364,9 @@ public class TransactionsAddController implements Initializable {
                 productQuantityColumn,
                 productSubnameColumn);
 
-        productBarcodeColumn = new TableColumn<>("Barcode");
-        productBarcodeColumn.setMinWidth(80);
-        productBarcodeColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("barcode"));
-
         productCategoryColumn = new TableColumn<>("Category");
         productCategoryColumn.setMinWidth(50);
         productCategoryColumn.setCellValueFactory(new PropertyValueFactory<Product, String>("category"));
-
-        productContractorIdColumn = new TableColumn<>("Contractor ID");
-        productContractorIdColumn.setMinWidth(30);
-        productContractorIdColumn.setCellValueFactory(new PropertyValueFactory<Product, Integer>("contractorId"));
 
         productIdColumn = new TableColumn<>("product ID");
         productIdColumn.setMinWidth(30);
@@ -400,9 +400,7 @@ public class TransactionsAddController implements Initializable {
                 productCategoryColumn,
                 productPriceColumn,
                 productQuantityColumn,
-                productBarcodeColumn,
-                productLocationColumn,
-                productContractorIdColumn);
+                productLocationColumn);
     }
 
     @FXML
@@ -436,8 +434,16 @@ public class TransactionsAddController implements Initializable {
             tmp += basketItem.getPrice() * basketItem.getQuantity();
             q += basketItem.getQuantity();
         }
+        finalPrice = (float) tmp;
         label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
-        label_overallPrice.setText(String.format("Total: kr. %.2f", tmp));
+        label_overallPrice.setText(String.format("Price without discount: kr. %.2f", tmp));
+        label_finalPrice.setText(String.format("Final price: %.2f", finalPrice));
+    }
+    @FXML
+    public void btn_clearBasket_onClick(ActionEvent actionEvent) {
+        basketItems.removeAll();      //TODO: doesn't delete anything this way - needs to be fixed
+        listView_basket.refresh();
+        updateLabels();
     }
 
     @FXML
@@ -581,6 +587,7 @@ public class TransactionsAddController implements Initializable {
     @FXML
     public void btn_assignCustomer_onClick(ActionEvent actionEvent) {
         customerID = selectedCustomer.getId();
+        label_assignedCustomer.setText(String.format("Assigned customer: %1$s %2$s", selectedCustomer.getName(), selectedCustomer.getSurname()));
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setHeaderText("Assigned registered customer to the transaction.");
         a.setContentText(String.format("Name: %s\nSurname: %s\nEmail: %s\nPhone: %s",
@@ -641,7 +648,7 @@ public class TransactionsAddController implements Initializable {
                         customerID,
                         finalPrice,
                         Utils.arrayToString(discountIDs),
-                        description,
+                        text_description.getText(),
                         dtf_date.format(now),
                         dtf_time.format(now)));
 
