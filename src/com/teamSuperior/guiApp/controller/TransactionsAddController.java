@@ -90,6 +90,8 @@ public class TransactionsAddController implements Initializable {
     public TextField text_description;
     @FXML
     public Button btn_clearBasket;
+    @FXML
+    public CheckBox checkBox_selfPickup;
 
 
     //products table columns
@@ -131,6 +133,8 @@ public class TransactionsAddController implements Initializable {
     private HashMap<String, String> categoryURLs;
     private ObservableList<Offer> offers;
     private ObservableList<Discount> discounts;
+
+    private static final int quantityDiscountTrashold = 20000;
 
 
 
@@ -179,6 +183,13 @@ public class TransactionsAddController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends BasketItem> observable, BasketItem oldValue, BasketItem newValue) {
                 selectedBasketItem = newValue;
+            }
+        });
+
+        checkBox_selfPickup.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                updateLabels();
             }
         });
     }
@@ -455,10 +466,12 @@ public class TransactionsAddController implements Initializable {
 
     private void calculateDiscount() {
         //first it checks if the quantity discount is applicable and applies it if so (right now it's set at 20 000 kr.)
-        if(noDiscountPrice > 20000) {
+        if(noDiscountPrice > quantityDiscountTrashold) {
             if (!discountIDs.contains(3)) discountIDs.add(3);
         }
         else if (discountIDs.contains(3)) discountIDs.remove(discountIDs.indexOf(3));
+        if (checkBox_selfPickup.isSelected() && !discountIDs.contains(4)) discountIDs.add(4);
+        else if (discountIDs.contains(4) && !checkBox_selfPickup.isSelected()) discountIDs.remove(discountIDs.indexOf(4));
         discount = 0.0;
         for (int id : discountIDs){
             for (Discount d : discounts) {
