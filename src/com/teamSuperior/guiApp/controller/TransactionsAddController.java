@@ -451,6 +451,9 @@ public class TransactionsAddController implements Initializable {
         }
         finalPrice = (float) tmp;
 
+        //calculating discount
+        finalPrice = finalPrice * ((100 - (float)discount) / 100);
+
         label_numOfItems.setText(String.format("Number of items in the basket: %d", q));
         label_overallPrice.setText(String.format("Price without discount: kr. %.2f", tmp));
         label_finalPrice.setText(String.format("Final price: kr %s", formatter.format(finalPrice)));
@@ -623,8 +626,6 @@ public class TransactionsAddController implements Initializable {
                 discount += d.getValue();
                 if(discount > discountTreshold) discount = discountTreshold;
                 label_discount.setText(String.format("Total discount: %.1f", discount));
-                //calculating discount TODO: doesn't work
-                finalPrice = finalPrice * ((100 - (float)discount) / 100);
                 updateLabels();
             }
         }
@@ -659,20 +660,6 @@ public class TransactionsAddController implements Initializable {
         DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-
-        //TODO: calculate the final price
-        finalPrice = 0;
-        for (BasketItem item : listView_basket.getItems()){
-            finalPrice = (float)item.getPrice();
-            for(Product p : products){
-                if(item.getItemID() == p.getId()){
-                    productIDs.add(p.getId());
-                }
-            }
-        }
-
-
-
 
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setHeaderText("Are you sure you want to complete the transaction?");
