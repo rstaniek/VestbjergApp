@@ -166,6 +166,7 @@ public class TransactionsAddController implements Initializable {
 
         customerID = -1;
         discountIDs = new ArrayList<>();
+        discountIDs.add(-1);
         for (Discount d : discounts){
             if(d.getId() == 5){
                 discountThreshold = d.getValue();
@@ -670,6 +671,13 @@ public class TransactionsAddController implements Initializable {
         return productIDs;
     }
 
+    private boolean verifyFields() {
+        if (text_description.getText().isEmpty()) text_description.setText("no description");
+        if (discountIDs.size() >= 2)  discountIDs.remove(discountIDs.indexOf(-1));
+        discountIDs.sort(Comparator.naturalOrder());
+        return !basketItems.isEmpty();
+    }
+
     @FXML
     public void btn_completePurchase_onClick(ActionEvent actionEvent) {
         DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -680,7 +688,7 @@ public class TransactionsAddController implements Initializable {
         a.setHeaderText("Are you sure you want to complete the transaction?");
         a.setContentText("You will not be able to revert this action!");
         Optional<ButtonType> okResponse = a.showAndWait();
-        if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get())) {
+        if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get()) && verifyFields()) {
             conn = new DBConnect();
             try {
                 conn.upload(String.format("INSERT INTO transactions (productIDs,employeeID,customerID,price,discountIDs,description,date,time) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s','%8$s')",
@@ -692,12 +700,28 @@ public class TransactionsAddController implements Initializable {
                         text_description.getText(),
                         dtf_date.format(now),
                         dtf_time.format(now)));
-
+                clearAll();
+                displayMessage(INFORMATION, "Transaction completed successfully.");
             } catch (SQLException sqlEx){
                 displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
             }
-            displayMessage(INFORMATION, "Transaction completed successfully.");
         }
+        else displayMessage(ERROR, "Transaction could not have been completed.");
+    }
+
+    public void clearAll() {
+        basketItems = null;
+        basketItems = FXCollections.observableArrayList();
+        System.out.println("Number of items in the basket: " + basketItems.size());
+        listView_basket.setItems(basketItems);
+        listView_basket.refresh();
+        label_assignedCustomer.setText("Assigned customer: ");
+        customerID = -1;
+        discountIDs.clear();
+        discountIDs.add(-1);
+        text_description.clear();
+        updateLabels();
+
     }
 
     @FXML
