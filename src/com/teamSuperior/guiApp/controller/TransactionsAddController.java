@@ -167,6 +167,7 @@ public class TransactionsAddController implements Initializable {
         customerID = -1;
         discountIDs = new ArrayList<>();
         discountIDs.add(-1);
+
         for (Discount d : discounts){
             if(d.getId() == 5){
                 discountThreshold = d.getValue();
