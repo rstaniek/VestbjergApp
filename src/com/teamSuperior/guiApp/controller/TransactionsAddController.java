@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.sun.xml.internal.fastinfoset.util.CharArray;
 import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.BasketItem;
@@ -675,6 +676,7 @@ public class TransactionsAddController implements Initializable {
     private boolean verifyFields() {
         if (text_description.getText().isEmpty()) text_description.setText("no description");
         if (discountIDs.size() >= 2)  discountIDs.remove(discountIDs.indexOf(-1));
+        text_description.setText(text_description.getText().replace("'","''"));
         discountIDs.sort(Comparator.naturalOrder());
         return !basketItems.isEmpty();
     }
