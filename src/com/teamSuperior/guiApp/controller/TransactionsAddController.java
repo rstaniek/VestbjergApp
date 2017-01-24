@@ -405,26 +405,30 @@ public class TransactionsAddController implements Initializable {
 
     @FXML
     public void btn_addToBasket_onClick(ActionEvent actionEvent) {
-        String url = "";
-        for (String key : categoryURLs.keySet()){
-            if(selectedProduct.getCategory().equals(key)){
-                url = categoryURLs.get(key);
+        if(selectedProduct.getQuantity() > 0){
+            String url = "";
+            for (String key : categoryURLs.keySet()){
+                if(selectedProduct.getCategory().equals(key)){
+                    url = categoryURLs.get(key);
+                }
             }
-        }
-        float price = selectedProduct.getPrice();
-        String discount = "";
-        for (Offer offer : offers){
-            if(selectedProduct.getId() == offer.getProductID() && isValidOffer(offer.getExpiresDate())){
-                price = (float)offer.getPrice();
-                discount = String.valueOf(offer.getDiscount());
+            float price = selectedProduct.getPrice();
+            String discount = "";
+            for (Offer offer : offers){
+                if(selectedProduct.getId() == offer.getProductID() && isValidOffer(offer.getExpiresDate())){
+                    price = (float)offer.getPrice();
+                    discount = String.valueOf(offer.getDiscount());
+                }
             }
+
+            basketItems.add(new BasketItem(selectedProduct.getId() ,selectedProduct.getName(), selectedProduct.getSubname(), price, url, discount));
+            listView_basket.setItems(basketItems);
+            listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
+
+            updateLabels();
+        } else {
+            displayError(ErrorCode.NOT_ENOUGH_ITEMS);
         }
-
-        basketItems.add(new BasketItem(selectedProduct.getId() ,selectedProduct.getName(), selectedProduct.getSubname(), price, url, discount));
-        listView_basket.setItems(basketItems);
-        listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
-
-        updateLabels();
     }
 
     private void updateLabels() {
@@ -435,13 +439,14 @@ public class TransactionsAddController implements Initializable {
             q += basketItem.getQuantity();
         }
         finalPrice = (float) tmp;
-        label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
+        label_numOfItems.setText(String.format("Number of items in the basket: %d", q));
         label_overallPrice.setText(String.format("Price without discount: kr. %.2f", tmp));
         label_finalPrice.setText(String.format("Final price: %.2f", finalPrice));
     }
     @FXML
     public void btn_clearBasket_onClick(ActionEvent actionEvent) {
-        basketItems.removeAll();      //TODO: doesn't delete anything this way - needs to be fixed
+        basketItems = null; //TODO: still ain't working
+        basketItems = FXCollections.observableArrayList();
         listView_basket.refresh();
         updateLabels();
     }
@@ -526,9 +531,6 @@ public class TransactionsAddController implements Initializable {
                         rs.getString("zip"),
                         rs.getString("email"),
                         rs.getString("phone")));
-                for (Customer c : customers){
-                    System.out.println(c.toString());
-                }
             }
         } catch (SQLException sqlException) {
             displayMessage(ERROR, "SQL connection error", sqlException.getMessage());
@@ -608,11 +610,18 @@ public class TransactionsAddController implements Initializable {
                 window.setResizable(false);
                 Scene scene = new Scene(root);
                 window.setScene(scene);
-                window.show();
+                window.showAndWait();
+                refreshCustomerTable();
             } catch (IOException ex) {
                 displayMessage(ERROR, ex.getMessage());
             }
         }
+    }
+
+    private void refreshCustomerTable() {
+        customers = FXCollections.observableArrayList();
+        retrieveCustomerData();
+        initCustomerTableColumns(customers);
     }
 
     @FXML

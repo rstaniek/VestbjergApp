@@ -312,7 +312,8 @@ public class CustomersManageController implements Initializable {
             window.setResizable(false);
             Scene scene = new Scene(root);
             window.setScene(scene);
-            window.show();
+            window.showAndWait();
+            refreshTable();
         } catch (IOException ex) {
             Error.displayMessage(ERROR, ex.getMessage());
         }
