@@ -39,12 +39,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.NumberFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
-import java.util.Optional;
-import java.util.ResourceBundle;
-import java.util.ArrayList;
+import java.util.*;
 
 import static com.teamSuperior.core.Utils.*;
 import static com.teamSuperior.guiApp.GUI.Error.*;
@@ -432,6 +430,8 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void updateLabels() {
+        Locale loc = new Locale("da","DK");
+        NumberFormat formatter = NumberFormat.getInstance(loc);
         int q = 0;
         double tmp = 0;
         for (BasketItem basketItem : listView_basket.getItems()){
@@ -441,14 +441,22 @@ public class TransactionsAddController implements Initializable {
         finalPrice = (float) tmp;
         label_numOfItems.setText(String.format("Number of items in the basket: %d", q));
         label_overallPrice.setText(String.format("Price without discount: kr. %.2f", tmp));
-        label_finalPrice.setText(String.format("Final price: %.2f", finalPrice));
+        label_finalPrice.setText(String.format("Final price: kr %s", formatter.format(finalPrice)));
     }
     @FXML
     public void btn_clearBasket_onClick(ActionEvent actionEvent) {
-        basketItems = null; //TODO: still ain't working
-        basketItems = FXCollections.observableArrayList();
-        listView_basket.refresh();
-        updateLabels();
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Are you sure you want to clear the basket?");
+        a.setContentText("You will not be able to revert this action.");
+        Optional<ButtonType> okResponse = a.showAndWait();
+        if(okResponse.isPresent() && ButtonType.OK.equals(okResponse.get())){
+            basketItems = null;
+            basketItems = FXCollections.observableArrayList();
+            System.out.println("Number of items in the basket: " + basketItems.size());
+            listView_basket.setItems(basketItems);
+            listView_basket.refresh();
+            updateLabels();
+        }
     }
 
     @FXML
