@@ -120,6 +120,8 @@ public class TransactionsAddController implements Initializable {
     private ArrayList<Integer> discountIDs;
     private String description;
     private int customerID;
+    private double discount;
+    private double discountTreshold;
 
     private Transaction transaction;
     private ObservableList<Product> products;
@@ -140,6 +142,7 @@ public class TransactionsAddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        discount = 0.0;
         conn = new DBConnect();
         loggedUser = UserController.getUser();
         basketItems = FXCollections.observableArrayList();
@@ -168,6 +171,14 @@ public class TransactionsAddController implements Initializable {
 
         label_numOfItems.setText(String.format("Number of items in the basket: %d", basketItems.size()));
         label_overallPrice.setText("Total: kr. 0");
+
+        customerID = -1;
+
+        for (Discount d : discounts){
+            if(d.getId() == 5){
+                discountTreshold = d.getValue();
+            }
+        }
 
         listView_basket.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<BasketItem>() {
             @Override
@@ -439,6 +450,7 @@ public class TransactionsAddController implements Initializable {
             q += basketItem.getQuantity();
         }
         finalPrice = (float) tmp;
+
         label_numOfItems.setText(String.format("Number of items in the basket: %d", q));
         label_overallPrice.setText(String.format("Price without discount: kr. %.2f", tmp));
         label_finalPrice.setText(String.format("Final price: kr %s", formatter.format(finalPrice)));
@@ -606,6 +618,16 @@ public class TransactionsAddController implements Initializable {
                 selectedCustomer.getEmail(),
                 selectedCustomer.getPhone()));
         a.show();
+        for (Discount d : discounts){
+            if(d.getId() == 1){
+                discount += d.getValue();
+                if(discount > discountTreshold) discount = discountTreshold;
+                label_discount.setText(String.format("Total discount: %.1f", discount));
+                //calculating discount TODO: doesn't work
+                finalPrice = finalPrice * ((100 - (float)discount) / 100);
+                updateLabels();
+            }
+        }
     }
 
     @FXML
