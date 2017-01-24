@@ -8,8 +8,6 @@ import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
-import com.teamSuperior.core.model.service.Transaction;
-import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.TextFieldBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.beans.value.ChangeListener;
@@ -27,14 +25,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import org.controlsfx.control.CheckComboBox;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -115,15 +110,13 @@ public class TransactionsAddController implements Initializable {
     private TableColumn<Customer, String> customerPhoneColumn;
 
     //fields for the new transaction
-    private ArrayList<Integer> productIDs;
     private float finalPrice;
+    private float noDiscountPrice;
     private ArrayList<Integer> discountIDs;
-    private String description;
     private int customerID;
     private double discount;
-    private double discountTreshold;
+    private double discountThreshold;
 
-    private Transaction transaction;
     private ObservableList<Product> products;
     private ObservableList<Customer> customers;
     private ObservableList<Product> searchProductsResults;
@@ -142,7 +135,6 @@ public class TransactionsAddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        discount = 0.0;
         conn = new DBConnect();
         loggedUser = UserController.getUser();
         basketItems = FXCollections.observableArrayList();
@@ -173,10 +165,10 @@ public class TransactionsAddController implements Initializable {
         label_overallPrice.setText("Total: kr. 0");
 
         customerID = -1;
-
+        discountIDs = new ArrayList<>();
         for (Discount d : discounts){
             if(d.getId() == 5){
-                discountTreshold = d.getValue();
+                discountThreshold = d.getValue();
             }
         }
 
@@ -433,7 +425,6 @@ public class TransactionsAddController implements Initializable {
             basketItems.add(new BasketItem(selectedProduct.getId() ,selectedProduct.getName(), selectedProduct.getSubname(), price, url, discount));
             listView_basket.setItems(basketItems);
             listView_basket.setCellFactory(basketListView -> new BasketListViewCell());
-
             updateLabels();
         } else {
             displayError(ErrorCode.NOT_ENOUGH_ITEMS);
@@ -443,21 +434,41 @@ public class TransactionsAddController implements Initializable {
     private void updateLabels() {
         Locale loc = new Locale("da","DK");
         NumberFormat formatter = NumberFormat.getInstance(loc);
-        int q = 0;
-        double tmp = 0;
-        for (BasketItem basketItem : listView_basket.getItems()){
-            tmp += basketItem.getPrice() * basketItem.getQuantity();
-            q += basketItem.getQuantity();
-        }
-        finalPrice = (float) tmp;
-
-        //calculating discount
-        finalPrice = finalPrice * ((100 - (float)discount) / 100);
-
+        int q = basketItems.size();
+        calculatePrice();
+        calculateDiscount();
         label_numOfItems.setText(String.format("Number of items in the basket: %d", q));
-        label_overallPrice.setText(String.format("Price without discount: kr. %.2f", tmp));
+        label_overallPrice.setText(String.format("Price without discount: kr. %.2f", noDiscountPrice));
         label_finalPrice.setText(String.format("Final price: kr %s", formatter.format(finalPrice)));
     }
+
+    private void calculatePrice() {
+        double tmp = 0;
+        for (BasketItem basketItem : listView_basket.getItems()) {
+            tmp += basketItem.getPrice() * basketItem.getQuantity();
+        }
+        noDiscountPrice = (float) tmp;
+    }
+
+    private void calculateDiscount() {
+        //first it checks if the quantity discount is applicable and applies it if so (right now it's set at 20 000 kr.)
+        if(noDiscountPrice > 20000) {
+            if (!discountIDs.contains(3)) discountIDs.add(3);
+        }
+        else if (discountIDs.contains(3)) discountIDs.remove(discountIDs.indexOf(3));
+        discount = 0.0;
+        for (int id : discountIDs){
+            for (Discount d : discounts) {
+                if (d.getId() == id) {
+                    discount += d.getValue();
+                }
+            }
+        }
+        if (discount > discountThreshold) discount = discountThreshold;
+        label_discount.setText(String.format("Total discount: %.1f", discount));
+        finalPrice = noDiscountPrice * ((100 - (float)discount) / 100);
+    }
+
     @FXML
     public void btn_clearBasket_onClick(ActionEvent actionEvent) {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
@@ -621,14 +632,10 @@ public class TransactionsAddController implements Initializable {
                 selectedCustomer.getEmail(),
                 selectedCustomer.getPhone()));
         a.show();
-        for (Discount d : discounts){
-            if(d.getId() == 1){
-                discount += d.getValue();
-                if(discount > discountTreshold) discount = discountTreshold;
-                label_discount.setText(String.format("Total discount: %.1f", discount));
-                updateLabels();
-            }
+        if (!discountIDs.contains(1)) {
+            discountIDs.add(1);
         }
+        updateLabels();
     }
 
     @FXML
@@ -655,6 +662,14 @@ public class TransactionsAddController implements Initializable {
         initCustomerTableColumns(customers);
     }
 
+    private ArrayList<Integer> getProductIDs() {
+        ArrayList<Integer> productIDs = new ArrayList<>();
+        for (BasketItem b : basketItems) {
+            productIDs.add(b.getItemID());
+        }
+        return productIDs;
+    }
+
     @FXML
     public void btn_completePurchase_onClick(ActionEvent actionEvent) {
         DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
@@ -669,7 +684,7 @@ public class TransactionsAddController implements Initializable {
             conn = new DBConnect();
             try {
                 conn.upload(String.format("INSERT INTO transactions (productIDs,employeeID,customerID,price,discountIDs,description,date,time) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s','%8$s')",
-                        Utils.arrayToString(productIDs),
+                        Utils.arrayToString(getProductIDs()),
                         loggedUser.getId(),
                         customerID,
                         finalPrice,
