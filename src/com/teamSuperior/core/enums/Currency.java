@@ -6,6 +6,8 @@ package com.teamSuperior.core.enums;
 public enum Currency {
     USDDKK("USDDKK"),
     EURDKK("EURDKK"),
+    DKKUSD("DKKUSD"),
+    DKKEUR("DKKEUR"),
     PLNDKK("PLNDKK");
 
     private String currency;

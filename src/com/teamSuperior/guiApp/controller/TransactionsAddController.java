@@ -3,6 +3,9 @@ package com.teamSuperior.guiApp.controller;
 import com.sun.xml.internal.fastinfoset.util.CharArray;
 import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.controlLayer.WebsiteCrawler;
+import com.teamSuperior.core.enums.*;
+import com.teamSuperior.core.enums.Currency;
 import com.teamSuperior.core.model.BasketItem;
 import com.teamSuperior.core.model.Discount;
 import com.teamSuperior.core.model.entity.Customer;
@@ -41,6 +44,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.teamSuperior.core.Utils.*;
+import static com.teamSuperior.core.controlLayer.WebsiteCrawler.*;
+import static com.teamSuperior.core.enums.Currency.*;
 import static com.teamSuperior.guiApp.GUI.Error.*;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
@@ -92,6 +97,10 @@ public class TransactionsAddController implements Initializable {
     public Button btn_clearBasket;
     @FXML
     public CheckBox checkBox_selfPickup;
+    @FXML
+    public CheckBox checkBox_craftsman;
+    @FXML
+    public ChoiceBox<String> choiceBox_currency;
 
 
     //products table columns
@@ -114,7 +123,9 @@ public class TransactionsAddController implements Initializable {
 
     //fields for the new transaction
     private float finalPrice;
+    private float finalPriceOnLabels;
     private float noDiscountPrice;
+    private float noDiscountPriceOnLabels;
     private ArrayList<Integer> discountIDs;
     private int customerID;
     private double discount;
@@ -133,8 +144,10 @@ public class TransactionsAddController implements Initializable {
     private HashMap<String, String> categoryURLs;
     private ObservableList<Offer> offers;
     private ObservableList<Discount> discounts;
+    private String currency;
 
     private static final int quantityDiscountTrashold = 20000;
+    private static final String[] currencies = new String[]{"kr.", "$", "€"};
 
 
 
@@ -173,6 +186,10 @@ public class TransactionsAddController implements Initializable {
         discountIDs = new ArrayList<>();
         discountIDs.add(-1);
 
+        choiceBox_currency.setItems(FXCollections.observableArrayList("DKK", "USD", "EUR"));
+        currency = currencies[0];
+        choiceBox_currency.getSelectionModel().select(0);
+
         for (Discount d : discounts){
             if(d.getId() == 5){
                 discountThreshold = d.getValue();
@@ -192,6 +209,50 @@ public class TransactionsAddController implements Initializable {
                 updateLabels();
             }
         });
+
+        checkBox_craftsman.selectedProperty().addListener(new ChangeListener<Boolean>() {
+            @Override
+            public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
+                updateLabels();
+            }
+        });
+
+        choiceBox_currency.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                currency = currencies[newValue.intValue()];
+                updateLabels();
+            }
+        });
+    }
+
+    private Employee retrieveEmploeeData(){
+        conn = new DBConnect();
+        Employee e;
+        try{
+            ResultSet rs = conn.getFromDataBase(String.format("SELECT * FROM employees WHERE id='%s'", loggedUser.getId()));
+            rs.next();
+            e =  new Employee(rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("surname"),
+                    rs.getString("address"),
+                    rs.getString("city"),
+                    rs.getString("zip"),
+                    rs.getString("email"),
+                    rs.getString("phone"),
+                    rs.getString("password"),
+                    rs.getString("position"),
+                    rs.getInt("numberOfSales"),
+                    rs.getDouble("totalRevenue"),
+                    rs.getInt("accessLevel"));
+        } catch (SQLException sqlex) {
+            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+            e = null;
+        } catch (Exception ex) {
+            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+            e = null;
+        }
+        return e;
     }
 
     private ObservableList<Discount> getDiscountsFromDatabase() {
@@ -452,8 +513,13 @@ public class TransactionsAddController implements Initializable {
         calculatePrice();
         calculateDiscount();
         label_numOfItems.setText(String.format("Number of items in the basket: %d", q));
-        label_overallPrice.setText(String.format("Price without discount: kr. %.2f", noDiscountPrice));
-        label_finalPrice.setText(String.format("Final price: kr %s", formatter.format(finalPrice)));
+        if(choiceBox_currency.getSelectionModel().getSelectedIndex() != 2){
+            label_overallPrice.setText(String.format("Price without discount: %1$s %2$.2f", currency, noDiscountPriceOnLabels));
+            label_finalPrice.setText(String.format("Final price: %2$s %1$s", formatter.format(finalPriceOnLabels), currency));
+        } else {
+            label_overallPrice.setText(String.format("Price without discount: %2$.2f%1$s", currency, noDiscountPriceOnLabels));
+            label_finalPrice.setText(String.format("Final price: %s%s", formatter.format(finalPriceOnLabels), currency));
+        }
     }
 
     private void calculatePrice() {
@@ -462,6 +528,35 @@ public class TransactionsAddController implements Initializable {
             tmp += basketItem.getPrice() * basketItem.getQuantity();
         }
         noDiscountPrice = (float) tmp;
+        String dkkusd = getExchangeRatioBloomberg(DKKUSD);
+        String dkkeur = getExchangeRatioBloomberg(DKKEUR);
+        while (!isNumeric(dkkusd)){
+            System.out.println("Retrieving DKK-USD currency ratio failed, trying once again...");
+            dkkusd = getExchangeRatioBloomberg(DKKUSD);
+        }
+        while (!isNumeric(dkkeur)){
+            System.out.println("Retrieving DKK-EUR currency ratio failed, trying once again...");
+            dkkeur = getExchangeRatioBloomberg(DKKEUR);
+        }
+        System.out.println("Selected currency: " + currency);
+        System.out.println("DKKUSD: " + dkkusd);
+        System.out.println("DKKEUR: " + dkkeur);
+        switch (currency){
+            case "kr.":
+                finalPriceOnLabels = finalPrice;
+                noDiscountPriceOnLabels = noDiscountPrice;
+                break;
+            case "$":
+                finalPriceOnLabels = finalPrice * (float)Double.parseDouble(dkkusd);
+                noDiscountPriceOnLabels = noDiscountPrice * (float)Double.parseDouble(dkkusd);
+                break;
+            case "€":
+                finalPriceOnLabels = finalPrice * (float)Double.parseDouble(dkkeur);
+                noDiscountPriceOnLabels = noDiscountPrice * (float)Double.parseDouble(dkkeur);
+                break;
+        }
+        System.out.println("finalPrice: " + finalPrice);
+        System.out.println("noDiscountPrice: " + noDiscountPrice);
     }
 
     private void calculateDiscount() {
@@ -472,6 +567,8 @@ public class TransactionsAddController implements Initializable {
         else if (discountIDs.contains(3)) discountIDs.remove(discountIDs.indexOf(3));
         if (checkBox_selfPickup.isSelected() && !discountIDs.contains(4)) discountIDs.add(4);
         else if (discountIDs.contains(4) && !checkBox_selfPickup.isSelected()) discountIDs.remove(discountIDs.indexOf(4));
+        if(checkBox_craftsman.isSelected() && !discountIDs.contains(2)) discountIDs.add(2);
+        else if(discountIDs.contains(2) && !checkBox_craftsman.isSelected()) discountIDs.remove(discountIDs.indexOf(2));
         discount = 0.0;
         for (int id : discountIDs){
             for (Discount d : discounts) {
@@ -483,6 +580,7 @@ public class TransactionsAddController implements Initializable {
         if (discount > discountThreshold) discount = discountThreshold;
         label_discount.setText(String.format("Total discount: %.1f", discount));
         finalPrice = noDiscountPrice * ((100 - (float)discount) / 100);
+        finalPriceOnLabels = noDiscountPriceOnLabels * ((100 - (float)discount) / 100);
     }
 
     @FXML
@@ -700,6 +798,10 @@ public class TransactionsAddController implements Initializable {
         DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
+        loggedUser = retrieveEmploeeData(); //retrieves most current employee data
+        if(loggedUser == null) loggedUser = retrieveEmploeeData(); //if failure tries once again
+        if(loggedUser == null) loggedUser = UserController.getUser(); //if second failure gets the employee from userConreoller
+
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setHeaderText("Are you sure you want to complete the transaction?");
         a.setContentText("You will not be able to revert this action!");
@@ -716,10 +818,41 @@ public class TransactionsAddController implements Initializable {
                         text_description.getText(),
                         dtf_date.format(now),
                         dtf_time.format(now)));
+                if(customerID != -1){
+                    conn.upload(String.format("UPDATE customers SET salesMade='%1$d',totalSpent='%2$s' WHERE id='%3$d'",
+                            selectedCustomer.getSalesMade() + 1,
+                            selectedCustomer.getTotalSpent() + finalPrice,
+                            customerID));
+                }
+                conn.upload(String.format("UPDATE employees SET numberOfSales='%1$s',totalRevenue='%2$s' WHERE id='%3$d'",
+                        loggedUser.getNumberOfSales() + 1,
+                        loggedUser.getTotalRevenue() + finalPrice,
+                        loggedUser.getId()));
+                String productsQuery = "";
+                for (BasketItem item : basketItems){
+                    int qLeft = -1;
+                    for (Product p : products){
+                        if(p.getId() == item.getItemID()){
+                            qLeft = p.getQuantity() - item.getQuantity();
+                        }
+                    }
+                    productsQuery += String.format("UPDATE products SET quantity='%d' WHERE id='%d';\n",
+                            qLeft, item.getItemID());
+                }
+                conn.upload(productsQuery);
                 clearAll();
                 displayMessage(INFORMATION, "Transaction completed successfully.");
             } catch (SQLException sqlEx){
                 displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+            }catch (Exception ex) {
+                displayMessage(ERROR, ex.getMessage());
+            } finally {
+                products = null;
+                products = FXCollections.observableArrayList();
+                retrieveCustomerData();
+                refreshCustomerTable();
+                retrieveProductsData();
+                initProductTableColumns(products);
             }
         }
         else displayMessage(ERROR, "Transaction could not have been completed.");
