@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
@@ -62,7 +63,7 @@
       <font>
          <Font size="16.0" />
       </font></Button>
-   <VBox layoutX="19.0" layoutY="517.0" prefHeight="169.0" prefWidth="293.0">
+   <VBox layoutX="19.0" layoutY="517.0" prefHeight="200.0" prefWidth="293.0">
       <children>
          <Label text="Transaction Details">
             <font>
@@ -83,6 +84,11 @@
                <Insets top="10.0" />
             </VBox.margin>
          </CheckBox>
+         <CheckBox fx:id="checkBox_craftsman" mnemonicParsing="false" text="Craftsman">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </CheckBox>
       </children></VBox>
    <Button fx:id="btn_clearBasket" layoutX="380.0" layoutY="227.0" mnemonicParsing="false" onAction="#btn_clearBasket_onClick" text="Clear basket" />
     <Label fx:id="label_assignedCustomer" layoutX="283.0" layoutY="566.0" text="Assigned customer: no customer has been assigned" />
@@ -93,4 +99,5 @@
          <Font size="25.0" />
       </font>
    </Label>
+   <ChoiceBox fx:id="choiceBox_currency" layoutX="283.0" layoutY="652.0" prefHeight="25.0" prefWidth="111.0" />
 </AnchorPane>
