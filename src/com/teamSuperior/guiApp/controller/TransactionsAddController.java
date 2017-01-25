@@ -194,6 +194,35 @@ public class TransactionsAddController implements Initializable {
         });
     }
 
+    private Employee retrieveEmploeeData(){
+        conn = new DBConnect();
+        Employee e;
+        try{
+            ResultSet rs = conn.getFromDataBase(String.format("SELECT * FROM employees WHERE id='%s'", loggedUser.getId()));
+            rs.next();
+            e =  new Employee(rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getString("surname"),
+                    rs.getString("address"),
+                    rs.getString("city"),
+                    rs.getString("zip"),
+                    rs.getString("email"),
+                    rs.getString("phone"),
+                    rs.getString("password"),
+                    rs.getString("position"),
+                    rs.getInt("numberOfSales"),
+                    rs.getDouble("totalRevenue"),
+                    rs.getInt("accessLevel"));
+        } catch (SQLException sqlex) {
+            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+            e = null;
+        } catch (Exception ex) {
+            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
+            e = null;
+        }
+        return e;
+    }
+
     private ObservableList<Discount> getDiscountsFromDatabase() {
         ObservableList<Discount> result = FXCollections.observableArrayList();
         conn = new DBConnect();
@@ -700,6 +729,10 @@ public class TransactionsAddController implements Initializable {
         DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
 
+        loggedUser = retrieveEmploeeData(); //retrieves most current employee data
+        if(loggedUser == null) loggedUser = retrieveEmploeeData(); //if failure tries once again
+        if(loggedUser == null) loggedUser = UserController.getUser(); //if second failure gets the employee from userConreoller
+
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setHeaderText("Are you sure you want to complete the transaction?");
         a.setContentText("You will not be able to revert this action!");
@@ -716,10 +749,40 @@ public class TransactionsAddController implements Initializable {
                         text_description.getText(),
                         dtf_date.format(now),
                         dtf_time.format(now)));
+                if(customerID != -1){
+                    conn.upload(String.format("UPDATE customers SET salesMade='%1$d',totalSpent='%2$s' WHERE id='%3$d'",
+                            selectedCustomer.getSalesMade() + 1,
+                            selectedCustomer.getTotalSpent() + finalPrice,
+                            customerID));
+                }
+                conn.upload(String.format("UPDATE employees SET numberOfSales='%1$s',totalRevenue='%2$s' WHERE id='%3$d'",
+                        loggedUser.getNumberOfSales() + 1,
+                        loggedUser.getTotalRevenue() + finalPrice,
+                        loggedUser.getId()));
+                String productsQuery = "";
+                for (BasketItem item : basketItems){
+                    int qLeft = -1;
+                    for (Product p : products){
+                        if(p.getId() == item.getItemID()){
+                            qLeft = p.getQuantity() - item.getQuantity();
+                        }
+                    }
+                    productsQuery += String.format("UPDATE products SET quantity='%d' WHERE id='%d';\n",
+                            qLeft, item.getItemID());
+                }
+                conn.upload(productsQuery);
+                //TODO: all those query changes are unconfirmed as the database's fucked up rn
                 clearAll();
                 displayMessage(INFORMATION, "Transaction completed successfully.");
             } catch (SQLException sqlEx){
                 displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
+            }catch (Exception ex) {
+                displayMessage(ERROR, ex.getMessage());
+            } finally {
+                retrieveCustomerData();
+                refreshCustomerTable();
+                retrieveProductsData();
+                initProductTableColumns(products);
             }
         }
         else displayMessage(ERROR, "Transaction could not have been completed.");
