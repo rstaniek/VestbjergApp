@@ -45,39 +45,6 @@ public class MainWindow extends Application {
         }
     }
 
-    private void loadEfficiencyChart(){
-        /**
-        XYChart.Series series = new XYChart.Series();
-        conn = new DBConnect();
-        empEfficiency = new ArrayList();
-        try
-        {
-            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-            while(rs.next())
-            {
-                int sales = rs.getInt("numberOfSales");
-                double revenue = rs.getDouble("totalRevenue");
-                double eff = revenue/sales;
-                empEfficiency.add(eff);
-            }
-            Collections.sort(empEfficiency);
-            for(int i = 0; i < empEfficiency.size(); i++)
-            {
-                System.out.println(empEfficiency.get(i));
-            }
-        }
-        catch(SQLException ex)
-        {
-            System.out.println("err");
-        }
-        series.getData().add(new XYChart.Data(1,2));
-        series.getData().add(new XYChart.Data(2,2));
-        series.getData().add(new XYChart.Data(3,2));
-        series.getData().add(new XYChart.Data(4,2));
-        efficiency.getData().add(series);
-         **/
-    }
-
     public static void main(String[] args) {
         launch(args);
     }
