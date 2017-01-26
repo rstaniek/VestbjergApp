@@ -1,11 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
-import com.sun.xml.internal.fastinfoset.util.CharArray;
 import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.core.controlLayer.WebsiteCrawler;
-import com.teamSuperior.core.enums.*;
-import com.teamSuperior.core.enums.Currency;
 import com.teamSuperior.core.model.BasketItem;
 import com.teamSuperior.core.model.Discount;
 import com.teamSuperior.core.model.entity.Customer;
@@ -146,8 +142,10 @@ public class TransactionsAddController implements Initializable {
     private ObservableList<Discount> discounts;
     private String currency;
 
-    private static final int quantityDiscountTrashold = 20000;
+    private static final int quantityDiscountThreshold = 20000;
     private static final String[] currencies = new String[]{"kr.", "$", "€"};
+    private static final String[] productsCriteria = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID"};
+    private static final String[] customersCriteria = new String[]{"ID", "Name", "Surname", "Address", "City", "ZIP"};
 
 
 
@@ -159,7 +157,7 @@ public class TransactionsAddController implements Initializable {
 
         products = FXCollections.observableArrayList();
         searchProductsResults = FXCollections.observableArrayList();
-        checkComboBox_searchProducts_criteria.getItems().addAll("ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID");
+        checkComboBox_searchProducts_criteria.getItems().addAll(productsCriteria);
         retrieveProductsData();
         initProductTableColumns(products);
         tableView_products.getSelectionModel().selectFirst();
@@ -167,7 +165,7 @@ public class TransactionsAddController implements Initializable {
 
         customers = FXCollections.observableArrayList();
         searchCustomersResults = FXCollections.observableArrayList();
-        checkComboBox_searchCustomers_criteria.getItems().addAll("ID", "Name", "Surname", "Address", "City", "ZIP");
+        checkComboBox_searchCustomers_criteria.getItems().addAll(customersCriteria);
         retrieveCustomerData();
         initCustomerTableColumns(customers);
         tableView_customers.getSelectionModel().selectFirst();
@@ -348,7 +346,13 @@ public class TransactionsAddController implements Initializable {
             return products;
         }
         for (Product product : products) {
-            for (String criteria : checkComboBox_searchProducts_criteria.getCheckModel().getCheckedItems()) {
+            ObservableList<String> criteriaList;
+            if(checkComboBox_searchProducts_criteria.getCheckModel().getCheckedItems().size() != 0){
+                criteriaList = checkComboBox_searchProducts_criteria.getCheckModel().getCheckedItems();
+            } else {
+                criteriaList = FXCollections.observableArrayList(productsCriteria);
+            }
+            for (String criteria : criteriaList) {
                 switch (criteria) {
                     case "ID":
                         if (String.valueOf(product.getId()).contains(query)) {
@@ -561,7 +565,7 @@ public class TransactionsAddController implements Initializable {
 
     private void calculateDiscount() {
         //first it checks if the quantity discount is applicable and applies it if so (right now it's set at 20 000 kr.)
-        if(noDiscountPrice > quantityDiscountTrashold) {
+        if(noDiscountPrice > quantityDiscountThreshold) {
             if (!discountIDs.contains(3)) discountIDs.add(3);
         }
         else if (discountIDs.contains(3)) discountIDs.remove(discountIDs.indexOf(3));
@@ -625,7 +629,13 @@ public class TransactionsAddController implements Initializable {
             return customers;
         }
         for (Customer c : customers){
-            for (String criteria : checkComboBox_searchCustomers_criteria.getCheckModel().getCheckedItems()){
+            ObservableList<String> searchCriteriaList;
+            if(checkComboBox_searchCustomers_criteria.getCheckModel().getCheckedItems().size() != 0){
+                searchCriteriaList = checkComboBox_searchCustomers_criteria.getCheckModel().getCheckedItems();
+            } else {
+                searchCriteriaList = FXCollections.observableArrayList(customersCriteria);
+            }
+            for (String criteria : searchCriteriaList){
                 switch (criteria){
                     case "ID":
                         if (String.valueOf(c.getId()).contains(query)){

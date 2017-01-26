@@ -84,12 +84,14 @@ public class ProductsController implements Initializable {
     private TableColumn<Product, Integer> quantityCol;
     private TableColumn<Product, Integer> contractorIdCol;
 
+    private static final String[] productsCriteria = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID"};
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         conn = new DBConnect();
         products = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID");
+        checkComboBox_search_criteria.getItems().addAll(productsCriteria);
         loggedInUser = UserController.getUser();
         showsAll = true;
         initWarehouseCheckDone = false;
@@ -328,7 +330,13 @@ public class ProductsController implements Initializable {
             return source;
         }
         for (Product product : source) {
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+            ObservableList<String> clist;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                clist = FXCollections.observableArrayList(productsCriteria);
+            }
+            for (String criteria : clist) {
                 switch (criteria) {
                     case "ID":
                         if (String.valueOf(product.getId()).contains(query)) {

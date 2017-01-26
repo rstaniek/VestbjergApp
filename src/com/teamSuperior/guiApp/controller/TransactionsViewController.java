@@ -69,6 +69,8 @@ public class TransactionsViewController implements Initializable {
     private DBConnect conn;
     private Transaction selectedTransaction;
 
+    private static final String[] transactionCriteria = new String[]{"ID", "Discount", "Customer ID", "Employee ID", "product ID", "Date", "Description"};
+
     @FXML
     public void btn_search_clear_onClick(ActionEvent actionEvent) {
         text_search_query.clear();
@@ -89,7 +91,7 @@ public class TransactionsViewController implements Initializable {
         transactions = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         products = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("ID", "Discount", "Customer ID", "Employee ID", "product ID", "Date", "Description");
+        checkComboBox_search_criteria.getItems().addAll(transactionCriteria);
         retrieveData();
         initTransactionTableColumns(transactions);
         selectedTransaction = (Transaction)tableView_offers.getFocusModel().getFocusedItem();
@@ -243,7 +245,13 @@ public class TransactionsViewController implements Initializable {
             return transactions;
         }
         for (Transaction t : transactions){
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()){
+            ObservableList<String> clist;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                clist = FXCollections.observableArrayList(transactionCriteria);
+            }
+            for (String criteria : clist){
                 switch (criteria){
                     case "ID":
                         if(String.valueOf(t.getId()).contains(query)){

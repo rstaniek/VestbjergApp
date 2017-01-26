@@ -80,11 +80,13 @@ public class EmployeeManagementController implements Initializable {
     private TableColumn<Employee, String> cityColumn;
     private TableColumn<Employee, String> zipColumn;
 
+    private static final String[] employeeCriteria = new String[]{"Name", "Surname", "Address", "City", "ZIP", "Phone", "Position"};
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("Name", "Surname", "Address", "City", "ZIP", "Phone", "Position");
+        checkComboBox_search_criteria.getItems().addAll(employeeCriteria);
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
 
@@ -318,7 +320,13 @@ public class EmployeeManagementController implements Initializable {
             return employees;
         }
         for (Employee employee : employees) {
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+            ObservableList<String> clist;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                clist = FXCollections.observableArrayList(employeeCriteria);
+            }
+            for (String criteria : clist) {
                 switch (criteria) {
                     case "Name":
                         if (employee.getName().contains(query)) {

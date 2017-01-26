@@ -79,11 +79,13 @@ public class CustomersManageController implements Initializable {
     private TableColumn<Customer, String> emailColumn;
     private TableColumn<Customer, String> phoneColumn;
 
+    private static final String[] customersCriteria = new String[]{"ID", "Name", "Surname", "Address", "City", "ZIP"};
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         customers = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("ID", "Name", "Surname", "Address", "City", "ZIP");
+        checkComboBox_search_criteria.getItems().addAll(customersCriteria);
         conn = new DBConnect();
 
         retrieveData();
@@ -179,7 +181,13 @@ public class CustomersManageController implements Initializable {
             return customers;
         }
         for (Customer customer : customers){
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()){
+            ObservableList<String> cList;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                cList = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                cList = FXCollections.observableArrayList(customersCriteria);
+            }
+            for (String criteria : cList){
                 switch (criteria){
                     case "ID":
                         if (String.valueOf(customer.getId()).contains(query)){

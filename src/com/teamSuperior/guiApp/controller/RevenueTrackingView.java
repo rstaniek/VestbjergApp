@@ -47,6 +47,8 @@ public class RevenueTrackingView implements Initializable {
     private ObservableList<RevenueLog> searchResults;
     private DBConnect conn;
 
+    private static final String[] revenueCriteria = new String[]{"ID", "Quarter / Year", "Employee ID"};
+
     @FXML
     public void btn_search_clear_onClick(ActionEvent actionEvent) {
         text_search_query.clear();
@@ -70,7 +72,13 @@ public class RevenueTrackingView implements Initializable {
             return revenues;
         }
         for (RevenueLog r : revenues){
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()){
+            ObservableList<String> clist;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                clist = FXCollections.observableArrayList(revenueCriteria);
+            }
+            for (String criteria : clist){
                 switch (criteria){
                     case "ID":
                         if (String.valueOf(r.getId()).contains(query)){
@@ -100,7 +108,7 @@ public class RevenueTrackingView implements Initializable {
         revenues = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         conn = new DBConnect();
-        checkComboBox_search_criteria.getItems().addAll("ID", "Quarter / Year", "Employee ID");
+        checkComboBox_search_criteria.getItems().addAll(revenueCriteria);
 
         retrieveData();
         initTableColumns(revenues);

@@ -67,11 +67,13 @@ public class ContractorsManageController implements Initializable {
     private TableColumn<Contractor, String> phoneCol;
     private TableColumn<Contractor, String> emailCol;
 
+    private static final String[] contractorsCriteria = new String[]{"Name", "Address", "City", "ZIP", "Phone", "Email"};
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchResults = FXCollections.observableArrayList();
         contractors = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("Name", "Address", "City", "ZIP", "Phone", "Email");
+        checkComboBox_search_criteria.getItems().addAll(contractorsCriteria);
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
 
@@ -261,7 +263,13 @@ public class ContractorsManageController implements Initializable {
             return contractors;
         }
         for (Contractor contractor : contractors) {
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+            ObservableList<String> searchCriteriaList;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                searchCriteriaList = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                searchCriteriaList = FXCollections.observableArrayList(contractorsCriteria);
+            }
+            for (String criteria : searchCriteriaList) {
                 switch (criteria) {
                     case "Name":
                         if (contractor.getName().contains(query)) {

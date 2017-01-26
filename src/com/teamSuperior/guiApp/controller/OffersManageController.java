@@ -79,6 +79,8 @@ public class OffersManageController implements Initializable {
     private Offer selectedOffer;
     private DBConnect conn;
 
+    private static final String[] offersCriteria = new String[]{"Name", "Product ID", "Price", "Discount", "Expiration Date"};
+
     @FXML
     public void btn_search_clear_onClick(ActionEvent actionEvent) {
         text_search_query.clear();
@@ -115,7 +117,13 @@ public class OffersManageController implements Initializable {
             return offers;
         }
         for (Offer o : offers){
-            for (String criteria : checkComboBox_search_criteria.getCheckModel().getCheckedItems()){
+            ObservableList<String> clist;
+            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
+                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            } else {
+                clist = FXCollections.observableArrayList(offersCriteria);
+            }
+            for (String criteria : clist){
                 switch (criteria){
                     case "Name":
                         if(o.getProductName().contains(query)){
@@ -154,7 +162,7 @@ public class OffersManageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         offers = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll("Name", "Product ID", "Price", "Discount", "Expiration Date");
+        checkComboBox_search_criteria.getItems().addAll(offersCriteria);
         conn = new DBConnect();
         loggedUser = UserController.getUser();
 
