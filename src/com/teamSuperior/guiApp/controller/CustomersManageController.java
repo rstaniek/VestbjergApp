@@ -37,6 +37,8 @@ public class CustomersManageController implements Initializable {
     @FXML
     public Button btn_search_clear;
     @FXML
+    public Button btn_saveQuit;
+    @FXML
     public TextField text_search_query;
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
@@ -284,9 +286,7 @@ public class CustomersManageController implements Initializable {
         retrieveData();
         initTableColumns(customers);
     }
-
-    @FXML
-    public void btn_delete_onClick(ActionEvent actionEvent) {
+    private void saveCustomer(){
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText("You are about to perform an non-revertable action!");
         alert.setContentText(String.format("Are you sure you want to delete %1$s from the customers list?", selectedCustomer.getName()));
@@ -309,6 +309,17 @@ public class CustomersManageController implements Initializable {
                 }
             }
         }
+    }
+    @FXML
+    public void btn_delete_onClick(ActionEvent actionEvent) {
+        saveCustomer();
+    }
+
+    @FXML
+    public void btn_saveQuit_onClick(ActionEvent actionEvent) {
+        saveCustomer();
+        Stage stage = (Stage) btn_saveQuit.getScene().getWindow();
+        stage.close();
     }
 
     @FXML

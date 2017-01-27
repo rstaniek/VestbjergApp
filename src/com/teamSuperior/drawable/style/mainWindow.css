@@ -109,13 +109,11 @@
 
 .default-color0.chart-series-area-line {
     -fx-stroke:#385BA4;
-    -fx-padding:4px;
     -fx-stroke-width:4px;
 }
 
 .default-color0.chart-series-area-fill {
     -fx-fill: #385BA4;
-    -fx-padding:4px;
     -fx-stroke-width:4px;
 }
 
@@ -127,7 +125,6 @@
 .default-color1.chart-series-area-fill {
     -fx-stroke:#F92D26;
     -fx-fill:#F92D26;
-    -fx-padding:4px;
     -fx-stroke-width:4px;
 }
 

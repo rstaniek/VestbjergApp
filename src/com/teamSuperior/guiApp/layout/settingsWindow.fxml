@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXCheckBox?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.SettingsController">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" maxWidth="600.0"  xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.SettingsController">
     <children>
-        <BorderPane prefHeight="400.0" prefWidth="600.0">
+        <BorderPane prefHeight="400.0" prefWidth="60.0" maxWidth="600.0" minWidth="600.0">
             <center>
-                <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
-                    <tabs>
+                <JFXTabPane prefHeight="400.0" prefWidth="630.0" maxWidth="630.0" minWidth="630.0" tabClosingPolicy="UNAVAILABLE" BorderPane.alignment="CENTER">
+                    <Tab text="" disable="true">
+                        <content>
+                        </content>
+                    </Tab>
                         <Tab text="General">
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                            <children>
-                              <CheckBox fx:id="checkBox_showNotifications_lowAmountOfProducts" layoutX="10" layoutY="6.0" mnemonicParsing="false" text="Show warnings about low amount of products" />
+                              <JFXCheckBox fx:id="checkBox_showNotifications_lowAmountOfProducts" checkedColor="#385ba4" layoutX="14.0" layoutY="14.0" mnemonicParsing="false" text="Show warnings about low amount of products" />
                            </children>
                                 </AnchorPane>
                             </content>
@@ -32,13 +35,10 @@
                             <content>
                                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                     <children>
-                                        <TextField fx:id="text_settings_connection_hostname" layoutX="14.0" layoutY="14.0" promptText="Hostname URL" />
-                                        <TextField fx:id="text_settings_connection_username" layoutX="14.0" layoutY="44.0" promptText="Database username" />
-                                        <PasswordField fx:id="text_settings_connection_password" layoutX="14.0" layoutY="74.0" prefWidth="149.0" promptText="Database password" />
-                                        <Button fx:id="btn_settings_connection_testConn" layoutX="103.0" layoutY="103.0" mnemonicParsing="false" onAction="#btn_settings_connection_testConn_clicked" text="Connect" />
-                                        <Label layoutX="163.0" layoutY="18.0" text="- Hostname URL" />
-                                        <Label layoutX="163.0" layoutY="48.0" text="- Database username" />
-                                        <Label layoutX="163.0" layoutY="78.0" text="- Database password" />
+                                        <JFXTextField fx:id="text_settings_connection_hostname" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="40.0" prefWidth="570.0" promptText="Hostname URL" />
+                                        <JFXTextField fx:id="text_settings_connection_username" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="120.0" prefWidth="260.0" promptText="Database username" />
+                                        <JFXPasswordField fx:id="text_settings_connection_password" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="200.0" prefWidth="260.0" promptText="Database password" />
+                                        <JFXButton fx:id="btn_settings_connection_testConn" layoutX="187.0" layoutY="245.0" mnemonicParsing="false" onAction="#btn_settings_connection_testConn_clicked" style="-fx-background-color: #c9c9c9;" text="Connect" />
                                     </children>
                                 </AnchorPane>
                             </content>
@@ -46,17 +46,12 @@
                         <Tab fx:id="tab_discounts" text="Discounts">
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                 <children>
-                                    <Label layoutX="14.0" layoutY="14.0" text="Discount percentages" />
-                                    <TextField fx:id="text_settings_discounts_registered" layoutX="14.0" layoutY="32.0" promptText="Registered user" />
-                                    <TextField fx:id="text_settings_discounts_craftsman" layoutX="14.0" layoutY="58.0" promptText="Craftsman discount" />
-                                    <TextField fx:id="text_settings_discounts_quantity" layoutX="14.0" layoutY="84.0" promptText="Quantity discount" />
-                                    <TextField fx:id="text_settings_discounts_selfPickUp" layoutX="14.0" layoutY="110.0" promptText="Self pick up discount" />
-                                    <TextField fx:id="text_settings_discounts_maxTreshold" layoutX="14.0" layoutY="136.0" promptText="Max discount treshold" />
-                                    <Label layoutX="163.0" layoutY="36.0" text="- Registered user" />
-                                    <Label layoutX="163.0" layoutY="62.0" text="- Craftsman" />
-                                    <Label layoutX="163.0" layoutY="88.0" text="- Quantity" />
-                                    <Label layoutX="163.0" layoutY="114.0" text="- Self pickup" />
-                                    <Label layoutX="163.0" layoutY="140.0" text="- Max treshold" />
+                                    <Label layoutX="25.0" layoutY="14.0" text="Discount percentages" />
+                                    <JFXTextField fx:id="text_settings_discounts_registered" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="75.0" prefWidth="180.0" promptText="Registered user" />
+                                    <JFXTextField fx:id="text_settings_discounts_craftsman" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="155.0" prefWidth="180.0" promptText="Craftsman discount" />
+                                    <JFXTextField fx:id="text_settings_discounts_quantity" focusColor="#385ba4" labelFloat="true" layoutX="300.0" layoutY="75.0" prefWidth="180.0" promptText="Quantity discount" />
+                                    <JFXTextField fx:id="text_settings_discounts_selfPickUp" focusColor="#385ba4" labelFloat="true" layoutX="300.0" layoutY="155.0" prefWidth="180.0" promptText="Self pick up discount" />
+                                    <JFXTextField fx:id="text_settings_discounts_maxTreshold" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="240.0" prefWidth="465.0"  promptText="Max discount treshold" />
                                 </children>
                             </AnchorPane>
                         </Tab>
@@ -68,27 +63,26 @@
                            </children></AnchorPane>
                             </content>
                         </Tab>
-                    </tabs>
-                </TabPane>
+                </JFXTabPane>
             </center>
             <bottom>
                 <HBox prefHeight="32.0" prefWidth="600.0" BorderPane.alignment="CENTER">
                     <children>
-                        <Button fx:id="btn_save" mnemonicParsing="false" onAction="#btn_save_click" text="Save">
+                        <JFXButton fx:id="btn_save" mnemonicParsing="false" onAction="#btn_save_click" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Save">
                             <HBox.margin>
                                 <Insets left="10.0" right="5.0" />
                             </HBox.margin>
-                        </Button>
-                        <Button fx:id="btn_saveQuit" mnemonicParsing="false" onAction="#btn_saveQuit_clicked" text="Save &amp; Quit">
+                        </JFXButton>
+                        <JFXButton fx:id="btn_saveQuit" mnemonicParsing="false" onAction="#btn_saveQuit_clicked" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Save &amp; Quit">
                             <HBox.margin>
                                 <Insets left="5.0" right="5.0" />
                             </HBox.margin>
-                        </Button>
-                        <Button fx:id="btn_quit" mnemonicParsing="false" onAction="#btn_quit_clicked" text="Quit without saving">
+                        </JFXButton>
+                        <JFXButton fx:id="btn_quit" mnemonicParsing="false" onAction="#btn_quit_clicked" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Quit without saving">
                             <HBox.margin>
                                 <Insets left="5.0" right="5.0" />
                             </HBox.margin>
-                        </Button>
+                        </JFXButton>
                     </children>
                 </HBox>
             </bottom>
