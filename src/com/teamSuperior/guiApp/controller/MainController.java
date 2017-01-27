@@ -736,4 +736,20 @@ public class MainController implements Initializable {
         });
     }
 
+    @FXML
+    public void handleAddNewProduct(ActionEvent actionEvent) {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/productAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add new product");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
 }

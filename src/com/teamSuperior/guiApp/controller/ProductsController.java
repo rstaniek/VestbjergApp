@@ -60,7 +60,7 @@ public class ProductsController implements Initializable {
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
 
-    private static final int maxCap = 250;
+    public static final int maxCap = 250;
     private static final int capTreshold = 15;
 
     private DBConnect conn;
