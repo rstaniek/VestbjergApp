@@ -49,15 +49,13 @@ public class ProductAddController implements Initializable {
     @FXML
     public JFXTextField text_quantity;
     @FXML
-    public JFXTextField text_contractorID;
-    @FXML
-    public Label label_contractor;
-    @FXML
     public JFXButton btn_add;
     @FXML
     public JFXButton btn_clear;
     @FXML
     public JFXTextField text_location;
+    @FXML
+    public JFXComboBox<String> comboBox_contractor;
 
     private ObservableList<Contractor> contractors;
     private DBConnect conn;
@@ -70,7 +68,6 @@ public class ProductAddController implements Initializable {
     public void btn_add_onClick(ActionEvent actionEvent) {
         conn = new DBConnect();
         if(validateField(text_barcode) &&
-                validateField(text_contractorID) &&
                 validateField(text_name) &&
                 validateField(text_price) &&
                 validateField(text_quantity) &&
@@ -106,15 +103,22 @@ public class ProductAddController implements Initializable {
     }
 
     private void clearFields(){
-        text_contractorID.clear();
         text_barcode.clear();
         text_name.clear();
         text_price.clear();
         text_quantity.clear();
         comboBox_category.getSelectionModel().selectFirst();
+        comboBox_contractor.getSelectionModel().selectFirst();
         text_subname.clear();
         text_location.clear();
-        label_contractor.setText("");
+    }
+
+    private ObservableList<String> getContractorNames(ObservableList<Contractor> source){
+        ObservableList<String> results = FXCollections.observableArrayList();
+        for (Contractor c : source){
+            results.add(c.getName());
+        }
+        return results;
     }
 
     @Override
@@ -122,18 +126,12 @@ public class ProductAddController implements Initializable {
         validatedPrice = 0.0;
         validatedQuantity = 0;
         validatedContractorID = 0;
-        label_contractor.setText("");
         contractors = FXCollections.observableArrayList();
         comboBox_category.setItems(retrieveCategoriesData());
         comboBox_category.getSelectionModel().selectFirst();
         retrieveContractorData();
-
-        text_contractorID.textProperty().addListener(new ChangeListener<String>() {
-            @Override
-            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                contractorID_onTextChanged(newValue);
-            }
-        });
+        comboBox_contractor.setItems(getContractorNames(contractors));
+        comboBox_contractor.getSelectionModel().selectFirst();
 
         text_price.textProperty().addListener(new ChangeListener<String>() {
             @Override
@@ -146,6 +144,18 @@ public class ProductAddController implements Initializable {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
                 quantity_onTextChanged(newValue);
+            }
+        });
+
+        comboBox_contractor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+                for (Contractor c : contractors){
+                    if(c.getName().equals(newValue)){
+                        validatedContractorID = c.getId();
+                        System.out.println("Contractor ID: " + validatedContractorID);
+                    }
+                }
             }
         });
     }
@@ -227,28 +237,5 @@ public class ProductAddController implements Initializable {
             displayMessage(ERROR, ex.getMessage());
         }
         return results;
-    }
-
-    private void contractorID_onTextChanged(String newValue){
-        if(!newValue.isEmpty()){
-            if (isInteger(newValue)){
-                int intValue = Integer.parseInt(newValue);
-                boolean isFound = false;
-                for (Contractor contractor : contractors){
-                    if(contractor.getId() == intValue){
-                        label_contractor.setText(contractor.getName());
-                        validatedContractorID = contractor.getId();
-                        isFound = true;
-                    }
-                }
-                if(!isFound){
-                    displayMessage(WARNING, "Such contractor ID doesn't exist!", "Please check validity of this field content.");
-                    label_contractor.setText("");
-                    text_contractorID.clear();
-                }
-            } else {
-                displayError(TEXT_FIELD_NON_NUMERIC);
-            }
-        }
     }
 }

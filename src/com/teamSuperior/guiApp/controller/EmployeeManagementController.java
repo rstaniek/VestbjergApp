@@ -1,6 +1,8 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.jfoenix.controls.JFXComboBox;
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
@@ -40,8 +42,6 @@ public class EmployeeManagementController implements Initializable {
     @FXML
     public TextField text_email;
     @FXML
-    public TextField text_position;
-    @FXML
     public TextField text_address;
     @FXML
     public TextField text_city;
@@ -61,9 +61,12 @@ public class EmployeeManagementController implements Initializable {
     public CheckComboBox<String> checkComboBox_search_criteria;
     @FXML
     public Button btn_delete;
+    @FXML
+    public JFXComboBox<String> comboBox_position;
 
     private ObservableList<Employee> employees;
     private ObservableList<Employee> searchResults;
+    private ObservableList<Position> positions;
     private static Employee loggedInUser;
     private Employee selectedEmployee;
     private DBConnect conn;
@@ -94,6 +97,35 @@ public class EmployeeManagementController implements Initializable {
         //fill the table with data
         initTableColumns(loggedInUser.getAccessLevel(), employees);
         selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
+
+        positions = retrievePositionsData();
+        comboBox_position.setItems(getPositionNames());
+        comboBox_position.getSelectionModel().selectFirst();
+    }
+
+    private ObservableList<Position> retrievePositionsData(){
+        conn = new DBConnect();
+        ObservableList<Position> results = FXCollections.observableArrayList();
+        try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
+            while (rs.next()){
+                results.add(new Position(rs.getInt("accessLevel"),
+                        rs.getString("name")));
+            }
+        } catch (SQLException sqlException) {
+            displayMessage(ERROR, "Server connection error.", sqlException.getMessage());
+        } catch (Exception ex) {
+            displayMessage(ERROR, ex.getMessage());
+        }
+        return results;
+    }
+
+    private ObservableList<String> getPositionNames(){
+        ObservableList<String> results = FXCollections.observableArrayList();
+        for (Position p : positions){
+            results.add(p.getName());
+        }
+        return results;
     }
 
     private void retrieveData() {
@@ -190,10 +222,10 @@ public class EmployeeManagementController implements Initializable {
         text_name.setText(selectedEmployee.getName());
         text_surname.setText(selectedEmployee.getSurname());
         text_email.setText(selectedEmployee.getEmail());
-        text_position.setText(selectedEmployee.getPosition());
         text_address.setText(selectedEmployee.getAddress());
         text_city.setText(selectedEmployee.getCity());
         text_zip.setText(selectedEmployee.getZip());
+        comboBox_position.getSelectionModel().select(selectedEmployee.getPosition());
     }
 
     @FXML
@@ -215,31 +247,41 @@ public class EmployeeManagementController implements Initializable {
     }
 
     private void saveChanges(Employee e) {
-        boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about" + selectedEmployee.getName() + "?");
+        boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about " + selectedEmployee.getName() + "?");
         if (result &&
                 validateField(text_name) &&
                 validateField(text_surname) &&
                 validateField(text_email) &&
-                validateField(text_position) &&
                 validateField(text_address) &&
                 validateField(text_city) &&
                 validateField(text_zip)) {
             conn = new DBConnect();
             try {
-                conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s' WHERE id='%8$d'",
+                conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s',accessLevel='%9$d' WHERE id='%8$d'",
                         text_name.getText(),
                         text_surname.getText(),
                         text_address.getText(),
                         text_city.getText(),
                         text_zip.getText(),
-                        text_position.getText(),
+                        comboBox_position.getSelectionModel().getSelectedItem(),
                         text_email.getText(),
-                        e.getId()));
+                        e.getId(),
+                        getAccessLevelBySelectedPosition()));
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
             }
         } else if (result) displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
         refreshTable();
+    }
+
+    private int getAccessLevelBySelectedPosition(){
+        int tmp = 0;
+        for (Position p : positions){
+            if(p.getName().equals(comboBox_position.getSelectionModel().getSelectedItem())){
+                tmp = p.getAccessLevel();
+            }
+        }
+        return tmp;
     }
 
     private void refreshTable() {

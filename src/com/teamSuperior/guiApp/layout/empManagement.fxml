@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
@@ -22,7 +23,6 @@
          <TextField fx:id="text_name" layoutX="14.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
          <TextField fx:id="text_surname" layoutX="14.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="Surname" />
           <TextField fx:id="text_email" layoutX="14.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" />
-         <TextField fx:id="text_position" layoutX="14.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" promptText="Position" />
          <Label layoutX="225.0" layoutY="19.0" text="- Name" />
           <Label layoutX="225.0" layoutY="59.0" text="- Surname" />
           <Label layoutX="225.0" layoutY="99.0" text="- Email" />
@@ -37,6 +37,7 @@
          <Button fx:id="btn_saveQuit" layoutX="570.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_saveQuit_onClick" text="Save &amp; Quit" />
          <Button fx:id="btn_quit" layoutX="665.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_quit_onClick" text="Quit without saving" />
          <Button fx:id="btn_delete" layoutX="800.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_delete_onClick" text="Delete" />
+         <JFXComboBox fx:id="comboBox_position" layoutX="14.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" />
       </children>
    </AnchorPane>
 </AnchorPane>
