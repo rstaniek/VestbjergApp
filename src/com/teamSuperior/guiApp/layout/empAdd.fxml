@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXPasswordField?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.PasswordField?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeAddController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeAddController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="170.0" minWidth="10.0" prefWidth="87.0" />
     <ColumnConstraints hgrow="SOMETIMES" maxWidth="280.0" minWidth="10.0" prefWidth="46.0" />
@@ -74,55 +74,55 @@
             <Insets left="15.0" />
          </GridPane.margin>
       </Label>
-      <TextField fx:id="text_name" promptText="Name" GridPane.columnIndex="1" GridPane.columnSpan="2">
+      <JFXTextField fx:id="text_name" focusColor="#385ba4" promptText="Name" GridPane.columnIndex="1" GridPane.columnSpan="2">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="text_surname" promptText="Surname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="text_surname" focusColor="#385ba4" promptText="Surname" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="1">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="text_address" promptText="Address" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="text_address" focusColor="#385ba4" promptText="Address" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="2">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="text_city" promptText="City" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="text_city" focusColor="#385ba4" promptText="City" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="text_zip" promptText="ZIP code" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="text_zip" focusColor="#385ba4" promptText="ZIP code" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="text_email" promptText="example@server.com" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="text_email" focusColor="#385ba4" promptText="example@server.com" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="text_phone" promptText="(45) 00 00 00 00" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
+         </GridPane.margin></JFXTextField>
+      <JFXTextField fx:id="text_phone" focusColor="#385ba4" promptText="(45) 00 00 00 00" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></TextField>
-      <PasswordField fx:id="text_password" promptText="password" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
+         </GridPane.margin></JFXTextField>
+      <JFXPasswordField fx:id="text_password" focusColor="#385ba4" promptText="password" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="7">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></PasswordField>
-      <ChoiceBox fx:id="choiceBox_position" prefHeight="25.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
+         </GridPane.margin></JFXPasswordField>
+      <JFXComboBox fx:id="choiceBox_position" prefHeight="25.0" prefWidth="260.0" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.rowIndex="8">
          <GridPane.margin>
             <Insets right="15.0" />
-         </GridPane.margin></ChoiceBox>
-      <Button fx:id="btn_add" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
+         </GridPane.margin></JFXComboBox>
+      <JFXButton fx:id="btn_add" mnemonicParsing="false" onAction="#btn_add_onClick" style="-fx-background-color: #c9c9c9;" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="9" GridPane.valignment="CENTER">
          <GridPane.margin>
             <Insets left="15.0" right="15.0" />
          </GridPane.margin>
-      </Button>
-      <Button fx:id="btn_clear" mnemonicParsing="false" onAction="#btn_clear_onClick" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="9" />
-      <Button fx:id="btn_editEmployees" mnemonicParsing="false" onAction="#btn_editEmployees_onClick" text="Edit employees" GridPane.columnIndex="2" GridPane.rowIndex="9">
+      </JFXButton>
+      <JFXButton fx:id="btn_clear" mnemonicParsing="false" onAction="#btn_clear_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Clear" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="9" />
+      <JFXButton fx:id="btn_editEmployees" mnemonicParsing="false" onAction="#btn_editEmployees_onClick" prefHeight="31.0" prefWidth="117.0" style="-fx-background-color: #c9c9c9;" text="Edit employees" GridPane.columnIndex="2" GridPane.rowIndex="9">
          <opaqueInsets>
             <Insets />
          </opaqueInsets>
          <GridPane.margin>
             <Insets left="15.0" />
          </GridPane.margin>
-      </Button>
+      </JFXButton>
    </children>
 </GridPane>

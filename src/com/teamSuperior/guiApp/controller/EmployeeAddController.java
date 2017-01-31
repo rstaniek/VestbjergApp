@@ -10,10 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.PasswordField;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.stage.Stage;
 
 import java.io.IOException;
@@ -48,7 +45,7 @@ public class EmployeeAddController implements Initializable {
     @FXML
     public PasswordField text_password;
     @FXML
-    public ChoiceBox choiceBox_position;
+    public ComboBox choiceBox_position;
     @FXML
     public Button btn_add;
     @FXML

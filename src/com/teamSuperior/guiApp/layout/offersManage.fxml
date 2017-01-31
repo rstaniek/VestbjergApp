@@ -1,48 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Button?>
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="570.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.OffersManageController">
+<AnchorPane prefHeight="570.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.OffersManageController">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
         <children>
-            <Button fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" text="X" />
-            <TextField fx:id="text_search_query" layoutX="49.0" layoutY="13.0" onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0" promptText="Search..." />
+            <JFXButton fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
+            <JFXTextField fx:id="text_search_query" focusColor="#385ba4" layoutX="49.0" layoutY="13.0" onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0" promptText="Search..." />
             <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="838.0" layoutY="13.0" prefHeight="25" prefWidth="150.0" />
         </children>
     </AnchorPane>
-    <TableView fx:id="tableView_offers" layoutY="50.0" onMouseClicked="#tableView_employees_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
+    <TableView fx:id="tableView_offers" layoutY="50.0" onMouseClicked="#tableView_employees_onMouseClicked" prefHeight="293.0" prefWidth="1000.0">
     </TableView>
-    <AnchorPane layoutY="450.0" prefHeight="120.0" prefWidth="1000.0">
+    <AnchorPane layoutY="343.0" prefHeight="227.0" prefWidth="1000.0">
       <children>
-         <Label fx:id="label_productName" layoutX="14.0" layoutY="14.0" text="ProductName">
+         <Label fx:id="label_productName" layoutX="14.0" layoutY="9.0" prefHeight="41.0" prefWidth="153.0" text="ProductName">
             <font>
                <Font size="25.0" />
             </font>
          </Label>
-         <Label layoutX="14.0" layoutY="52.0" text="Price: kr. " />
-         <Label fx:id="label_price" layoutX="62.0" layoutY="52.0" text="price" />
-         <Label layoutX="14.0" layoutY="69.0" text="Product ID: " />
-         <Label fx:id="label_productID" layoutX="74.0" layoutY="69.0" text="productID" />
-         <Label layoutX="14.0" layoutY="86.0" text="Offer ID: " />
-         <Label fx:id="label_offerID" layoutX="60.0" layoutY="86.0" text="offerID" />
-         <TextField fx:id="text_newPrice" layoutX="229.0" layoutY="47.0" promptText="kr. 0.00" />
-         <TextField fx:id="text_newDiscount" layoutX="229.0" layoutY="84.0" promptText="0.00" />
-         <Label layoutX="167.0" layoutY="51.0" text="New price -" />
-         <Label layoutX="128.0" layoutY="88.0" text="New Discount [%] -" />
-         <Button fx:id="btn_update" layoutX="388.0" layoutY="84.0" mnemonicParsing="false" onAction="#btn_update_onClick" text="Update Offer" />
-          <Button fx:id="btn_delete" layoutX="485.0" layoutY="84.0" mnemonicParsing="false" onAction="#btn_delete_onClick" text="Delete" />
-         <Label layoutX="388.0" layoutY="45.0" text="Status: ">
+         <Label layoutX="53.0" layoutY="51.0" text="Price: kr. " />
+         <Label fx:id="label_price" layoutX="141.0" layoutY="51.0" text="price" />
+         <Label layoutX="35.0" layoutY="80.0" text="Product ID: " />
+         <Label fx:id="label_productID" layoutX="141.0" layoutY="80.0" text="productID" />
+         <Label layoutX="53.0" layoutY="110.0" text="Offer ID: " />
+         <Label fx:id="label_offerID" layoutX="140.0" layoutY="110.0" text="offerID" />
+         <JFXTextField fx:id="text_newPrice" focusColor="#385ba4" labelFloat="true" layoutX="552.0" layoutY="64.0" promptText="New price [kr.]" />
+         <JFXTextField fx:id="text_newDiscount" focusColor="#385ba4" labelFloat="true" layoutX="552.0" layoutY="135.0" promptText="New discount [%]" />
+         <JFXButton fx:id="btn_update" layoutX="789.0" layoutY="182.0" mnemonicParsing="false" onAction="#btn_update_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Update Offer" />
+          <JFXButton fx:id="btn_delete" layoutX="910.0" layoutY="182.0" mnemonicParsing="false" onAction="#btn_delete_onClick" style="-fx-background-color: #c9c9c9;" text="Delete" />
+         <Label layoutX="821.0" layoutY="15.0" text="Status: ">
             <font>
                <Font size="20.0" />
             </font>
          </Label>
-         <Label fx:id="label_status" layoutX="451.0" layoutY="48.0" text="Label">
+         <Label fx:id="label_status" layoutX="887.0" layoutY="18.0" text="Label">
             <font>
                <Font name="Tahoma" size="20.0" />
             </font>
