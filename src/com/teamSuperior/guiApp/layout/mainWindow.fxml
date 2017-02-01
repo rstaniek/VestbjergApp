@@ -1,106 +1,97 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
-<?import javafx.scene.chart.LineChart?>
-<?import javafx.scene.chart.NumberAxis?>
-<?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Menu?>
-<?import javafx.scene.control.MenuBar?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-
-<?import javafx.scene.chart.AreaChart?>
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1000.0" stylesheets="/style/mainWindow.css" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0"
+            prefWidth="1000.0" stylesheets="/style/mainWindow.css" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MainController">
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <Menu mnemonicParsing="false" text="File">
-                <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Settings" />
-                <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit" />
+                <MenuItem mnemonicParsing="false" onAction="#handleSettings" text="Settings"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleExit" text="Exit"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Connection">
-                <MenuItem mnemonicParsing="false" onAction="#handleConnect" text="Connect" />
-                <MenuItem mnemonicParsing="false" onAction="#handleLogIn" text="Log in" />
-                <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out" />
+                <MenuItem mnemonicParsing="false" onAction="#handleConnect" text="Connect"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleLogIn" text="Log in"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Transactions">
-                <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleNewTransaction" text="New" />
-                    <MenuItem mnemonicParsing="false" onAction="#handleViewTransactions" text="View" />
-                </items>
+                <MenuItem mnemonicParsing="false" onAction="#handleNewTransaction" text="New"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleViewTransactions" text="View"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Products">
-            <MenuItem mnemonicParsing="false" onAction="#handleAddNewProduct" text="Add new" />
-                <MenuItem mnemonicParsing="false" onAction="#handleProductsView" text="View" />
-                <SeparatorMenuItem mnemonicParsing="false" />
-                <MenuItem mnemonicParsing="false" onAction="#handleAddOffer" text="Add Offer" />
-                <MenuItem mnemonicParsing="false" onAction="#handleViewOffers" text="View Offers" />
+                <MenuItem mnemonicParsing="false" onAction="#handleAddNewProduct" text="Add new"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleProductsView" text="View"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleAddOffer" text="Add Offer"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleViewOffers" text="View Offers"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Employees">
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add" />
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics" />
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Edit" />
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Edit"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Contractors">
-                <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add" />
-                <MenuItem mnemonicParsing="false" onAction="#handleContractorsManage" text="Manage" />
+                <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleContractorsManage" text="Manage"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Customers">
-                <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit" />
-                </items>
+                <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
-                <MenuItem mnemonicParsing="false" text="About" />
+                <MenuItem mnemonicParsing="false" text="About"/>
             </Menu>
         </MenuBar>
     </top>
     <center>
         <AnchorPane styleClass="backgroundGray" BorderPane.alignment="CENTER">
-            <Label layoutX="25.0" layoutY="25.0" styleClass="heading2" text="Welcome" />
-            <Label layoutX="60.0" layoutY="85.0" styleClass="loggedEmployee" text="${controller.welcomeMessage}" />
-            <Label layoutX="830.0" layoutY="15.0" styleClass="current-time" text="${controller.currentTime}" />
-            <Label layoutX="845.0" layoutY="95.0" styleClass="current-date" text="${controller.currentDate}" />
-            <LineChart fx:id="currency_eurChart" layoutX="25.0" layoutY="460.0" legendVisible="true" prefHeight="190.0" prefWidth="500.0">
+            <Label layoutX="25.0" layoutY="25.0" styleClass="heading2" text="Welcome"/>
+            <Label layoutX="60.0" layoutY="85.0" styleClass="loggedEmployee" text="${controller.welcomeMessage}"/>
+            <Label layoutX="830.0" layoutY="15.0" styleClass="current-time" text="${controller.currentTime}"/>
+            <Label layoutX="845.0" layoutY="95.0" styleClass="current-date" text="${controller.currentDate}"/>
+            <LineChart fx:id="currency_eurChart" layoutX="25.0" layoutY="460.0" prefHeight="190.0"
+                       prefWidth="500.0">
                 <xAxis>
-                    <NumberAxis side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" fx:id="xAxisCurrencyEur" />
+                    <NumberAxis side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false"
+                                fx:id="xAxisCurrencyEur"/>
                 </xAxis>
                 <yAxis>
-                    <NumberAxis fx:id="yAxisCurrencyEur" side="LEFT" />
+                    <NumberAxis fx:id="yAxisCurrencyEur" side="LEFT"/>
                 </yAxis>
             </LineChart>
-            <Hyperlink fx:id="button_copyEur" layoutX="520.0" layoutY="532.0" onAction="#handleCopyEur" text="Copy" visible="false" />
-            <Hyperlink fx:id="button_copyUsd" layoutX="520.0" layoutY="580.0" onAction="#handleCopyUsd" text="Copy" visible="false" />
-            <PieChart fx:id="sales_chart" layoutX="515.0" layoutY="450.0" prefHeight="200.0" styleClass="tee" />
-            <children>
-                <AreaChart fx:id="efficiency" layoutX="25.0" layoutY="145.0" prefHeight="300.0" prefWidth="950.0">
-                    <xAxis>
-                        <NumberAxis side="BOTTOM" styleClass="blk" fx:id="xAxis" />
-                    </xAxis>
-                    <yAxis>
-                        <NumberAxis fx:id="yAxis" side="RIGHT" styleClass="blk" />
-                    </yAxis>
-                </AreaChart>
-            </children>
+            <Hyperlink fx:id="button_copyEur" layoutX="520.0" layoutY="532.0" onAction="#handleCopyEur" text="Copy"
+                       visible="false"/>
+            <Hyperlink fx:id="button_copyUsd" layoutX="520.0" layoutY="580.0" onAction="#handleCopyUsd" text="Copy"
+                       visible="false"/>
+            <PieChart fx:id="sales_chart" layoutX="515.0" layoutY="450.0" prefHeight="200.0" styleClass="tee"/>
+            <AreaChart fx:id="efficiency" layoutX="25.0" layoutY="145.0" prefHeight="300.0" prefWidth="950.0">
+                <xAxis>
+                    <NumberAxis side="BOTTOM" styleClass="blk" fx:id="xAxis"/>
+                </xAxis>
+                <yAxis>
+                    <NumberAxis fx:id="yAxis" side="RIGHT" styleClass="blk"/>
+                </yAxis>
+            </AreaChart>
         </AnchorPane>
     </center>
     <bottom>
         <AnchorPane maxHeight="60.0" prefWidth="809.0" styleClass="bottom" BorderPane.alignment="CENTER">
             <ImageView pickOnBounds="true" preserveRatio="true" styleClass="logo">
-                <Image preserveRatio="true" url="/silvan.png" />
+                <Image preserveRatio="true" url="/silvan.png"/>
             </ImageView>
-            <JFXButton fx:id="btn_logIn" layoutX="845.0" layoutY="26.0" lineSpacing="1.0" mnemonicParsing="false" onAction="#handleLogIn" prefHeight="50.0" prefWidth="140.0" ripplerFill="#385BA4" style="-fx-background-color: #c9c9c9;" text="Log In">
+            <JFXButton fx:id="btn_logIn" layoutX="845.0" layoutY="26.0" lineSpacing="1.0" mnemonicParsing="false"
+                       onAction="#handleLogIn" prefHeight="50.0" prefWidth="140.0" ripplerFill="#385BA4"
+                       text="Log In">
                 <font>
-                    <Font size="25.0" />
-                </font></JFXButton>
-
-
+                    <Font size="25.0"/>
+                </font>
+            </JFXButton>
         </AnchorPane>
     </bottom>
 </BorderPane>
