@@ -348,7 +348,9 @@ public class EmployeeStatisticsController implements Initializable {
     }
 
     private double getEfficiency(Employee e) {
-        return e.getTotalRevenue() / e.getNumberOfSales();
+        if (e.getNumberOfSales() == 0 || e.getTotalRevenue() == 0) {
+            return 0;
+        } else return e.getTotalRevenue() / e.getNumberOfSales();
     }
 
     private double calculateAvgEfficiency(){
