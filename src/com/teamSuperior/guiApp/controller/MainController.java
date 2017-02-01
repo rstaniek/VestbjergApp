@@ -524,32 +524,34 @@ public class MainController implements Initializable {
             xAxis.setTickLabelsVisible(false);
             effSeriesPersonal.setName("Your record");
             efficiency.setTitle("Efficiency chart");
+            double eff = 0;
+            int zeroEffCounter = 0;
             for(int i = 0; i < employees.size(); i++) {
                 if (employees.get(i).getId() == UserController.getUser().getId()) {
-                    //double effminus = (employees.get(i-1).getTotalRevenue()) / (employees.get(i-1).getNumberOfSales());
-                    double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
-                    //double eff = (i / 2);
-                    //double effplus = (employees.get(i+1).getTotalRevenue()) / (employees.get(i+1).getNumberOfSales());
-                    // uncomment to make the personalized area bigger
-                    if(i > 1){
-                        //effSeriesPersonal.getData().add(new XYChart.Data(i-1, 0));
+                    if((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)){
+                        eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
+                        effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
                     }
-
-                    effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
-                    if(i < employees.size() -1){
-                        //effSeriesPersonal.getData().add(new XYChart.Data(i+1, 0));
+                    else {
+                        eff = 0;
+                        zeroEffCounter++;
                     }
-
                 } else {
-                    double eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
-                    effSeries.getData().add(new XYChart.Data(i, eff));
+                    if((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)){
+                        eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
+                        effSeries.getData().add(new XYChart.Data(i, eff));
+                    }
+                    else{
+                        eff = 0;
+                        zeroEffCounter++;
+                    }
                 }
             }
             efficiency.setCreateSymbols(true);
             yAxis.setAutoRanging(true);
             xAxis.setAutoRanging(false);
             xAxis.setLowerBound(0);
-            xAxis.setUpperBound(employees.size());
+            xAxis.setUpperBound(employees.size() - zeroEffCounter);
             efficiency.getData().addAll(effSeries, effSeriesPersonal);
             effChartInitialized = true;
         }
