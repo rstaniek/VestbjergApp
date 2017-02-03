@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<?import com.jfoenix.controls.JFXTextField?>
-<?import com.jfoenix.controls.JFXButton?>
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ContractorsAddController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="300.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ContractorsAddController">
     <children>
-        <JFXTextField layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="290.0" promptText="Name" fx:id="text_name" />
-        <JFXTextField layoutX="15.0" layoutY="54.0" prefHeight="25.0" prefWidth="290.0" promptText="Address" fx:id="text_address" />
-        <JFXTextField layoutX="15.0" layoutY="94.0" prefHeight="25.0" prefWidth="290.0" promptText="City" fx:id="text_city" />
-        <JFXTextField layoutX="15.0" layoutY="134.0" prefHeight="25.0" prefWidth="290.0" promptText="ZIP code" fx:id="text_zip" />
-        <JFXTextField layoutX="15.0" layoutY="174.0" prefHeight="25.0" prefWidth="290.0" promptText="Phone number" fx:id="text_phone" />
-        <JFXTextField layoutX="15.0" layoutY="214.0" prefHeight="25.0" prefWidth="290.0" promptText="Email" fx:id="text_email" />
-        <JFXButton layoutX="15.0" layoutY="258.0" mnemonicParsing="false" text="Add" fx:id="btn_add" onAction="#btn_add_onClick" />
-        <JFXButton layoutX="68.0" layoutY="258.0" mnemonicParsing="false" text="Clear" fx:id="btn_clear" onAction="#btn_clear_onClick" />
-        <JFXButton layoutX="126.0" layoutY="258.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="165.0" text="Manage contractors" fx:id="btn_manageContractors" onAction="#btn_manageContractors_onClick" />
+        <JFXTextField fx:id="text_name" focusColor="#385ba4" layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="290.0" promptText="Name" />
+        <JFXTextField fx:id="text_address" focusColor="#385ba4" layoutX="15.0" layoutY="54.0" prefHeight="25.0" prefWidth="290.0" promptText="Address" />
+        <JFXTextField fx:id="text_city" focusColor="#385ba4" layoutX="15.0" layoutY="94.0" prefHeight="25.0" prefWidth="290.0" promptText="City" />
+        <JFXTextField fx:id="text_zip" focusColor="#385ba4" layoutX="15.0" layoutY="134.0" prefHeight="25.0" prefWidth="290.0" promptText="ZIP code" />
+        <JFXTextField fx:id="text_phone" focusColor="#385ba4" layoutX="15.0" layoutY="174.0" prefHeight="25.0" prefWidth="290.0" promptText="Phone number" />
+        <JFXTextField fx:id="text_email" focusColor="#385ba4" layoutX="15.0" layoutY="214.0" prefHeight="25.0" prefWidth="290.0" promptText="Email" />
+        <JFXButton fx:id="btn_add" layoutX="15.0" layoutY="258.0" mnemonicParsing="false" onAction="#btn_add_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Add" />
+        <JFXButton fx:id="btn_clear" layoutX="68.0" layoutY="258.0" mnemonicParsing="false" onAction="#btn_clear_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Clear" />
+        <JFXButton fx:id="btn_manageContractors" layoutX="127.0" layoutY="258.0" mnemonicParsing="false" onAction="#btn_manageContractors_onClick" prefHeight="25.0" prefWidth="165.0" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Manage contractors" />
     </children>
 </AnchorPane>
