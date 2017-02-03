@@ -74,6 +74,7 @@ public class MachinesManageController implements Initializable {
         searchResults = FXCollections.observableArrayList();
         machines = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(machinesCriteria);
+        checkComboBox_search_criteria.getCheckModel().checkAll();
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
         retrieveData();
@@ -158,20 +159,14 @@ public class MachinesManageController implements Initializable {
         yesButton.setText("Yes");
         Optional<ButtonType> yesResponse = a.showAndWait();
         if(yesResponse.isPresent() && ButtonType.OK.equals(yesResponse.get())){
-            if (validateField(text_name) &&
-                    validateField(text_pricePerDay) && checkBox_leased.isSelected()) {
+            if (validateField(text_name) && validateField(text_pricePerDay)) {
                 System.out.println("Validation passed");
                 conn = new DBConnect();
                 try {
-                    System.out.println(String.format("UPDATE leaseMachines SET name='%1$s',pricePerDay='%2$s',leased='%3$s', WHERE id='%4$d'",
+                    conn.upload(String.format("UPDATE leaseMachines SET name='%1$s',pricePerDay='%2$s', leased='%3$d' WHERE id='%4$d'",
                             text_name.getText(),
                             text_pricePerDay.getText(),
-                            String.valueOf(checkBox_leased.isSelected()),
-                            selectedMachine.getId()));
-                    conn.upload(String.format("UPDATE leaseMachines SET name='%1$s',pricePerDay='%2$s',leased='%3$s', WHERE id='%4$d'",
-                            text_name.getText(),
-                            text_pricePerDay.getText(),
-                            String.valueOf(checkBox_leased.isSelected()),
+                            checkBox_leased.isSelected() ? 1 : 0,
                             selectedMachine.getId()));
                 } catch (Exception ex) {
                     displayMessage(ERROR, ex.getMessage());

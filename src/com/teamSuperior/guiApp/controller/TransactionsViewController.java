@@ -92,6 +92,7 @@ public class TransactionsViewController implements Initializable {
         searchResults = FXCollections.observableArrayList();
         products = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(transactionCriteria);
+        checkComboBox_search_criteria.getCheckModel().checkAll();
         retrieveData();
         initTransactionTableColumns(transactions);
         selectedTransaction = (Transaction)tableView_offers.getFocusModel().getFocusedItem();

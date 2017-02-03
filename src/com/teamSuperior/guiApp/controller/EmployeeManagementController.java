@@ -90,6 +90,7 @@ public class EmployeeManagementController implements Initializable {
         employees = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(employeeCriteria);
+        checkComboBox_search_criteria.getCheckModel().checkAll();
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
 

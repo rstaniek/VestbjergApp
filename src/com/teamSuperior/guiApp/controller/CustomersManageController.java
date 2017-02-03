@@ -88,6 +88,7 @@ public class CustomersManageController implements Initializable {
         searchResults = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(customersCriteria);
         conn = new DBConnect();
+        checkComboBox_search_criteria.getCheckModel().checkAll();
 
         retrieveData();
         initTableColumns(customers);

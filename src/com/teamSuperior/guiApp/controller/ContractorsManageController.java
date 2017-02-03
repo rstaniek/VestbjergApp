@@ -76,6 +76,7 @@ public class ContractorsManageController implements Initializable {
         checkComboBox_search_criteria.getItems().addAll(contractorsCriteria);
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
+        checkComboBox_search_criteria.getCheckModel().checkAll();
 
         retrieveData();
         //init table
