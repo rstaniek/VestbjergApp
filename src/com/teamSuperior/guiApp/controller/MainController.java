@@ -156,7 +156,7 @@ public class MainController implements Initializable {
                     Platform.runLater(() -> setCurrentDateTime(timeFormat.format(now), dateFormat.format(now)));
                     Thread.sleep(1000);
                 }
-            }
+            } 
         };
 
         //Currency exchange update
