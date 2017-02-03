@@ -1,5 +1,7 @@
 package com.teamSuperior.guiApp;
 
+import com.teamSuperior.guiApp.controller.Drawable;
+import com.teamSuperior.guiApp.enums.Drawables;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -21,6 +23,7 @@ public class MainWindow extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         window = primaryStage;
+        window.getIcons().add(Drawable.getImage(this.getClass(), Drawables.ICON));
         Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/mainWindow.fxml"));
         primaryStage.setTitle("Team Superior - representing Silvan Inc.");
         primaryStage.setResizable(false);

@@ -765,4 +765,72 @@ public class MainController implements Initializable {
             }
         }
     }
+
+    @FXML
+    public void handleMachinesAdd (ActionEvent actionEvent) {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/machineAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add new machine");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleMachinesManage (ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/machinesManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage machines");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleLeasesAdd (ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/leaseAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add new lease");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleLeasesManage (ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("../layout/leasesManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage leases");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
 }
