@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="153.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.LeasesAddController">
+    <children>
+        <JFXTextField fx:id="text_machineID" layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="290.0" promptText="Machine ID" />
+        <JFXTextField fx:id="text_customerName" layoutX="15.0" layoutY="54.0" prefHeight="25.0" prefWidth="290.0" promptText="Customer name" />
+        <JFXButton fx:id="btn_add" layoutX="15.0" layoutY="118.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
+        <JFXButton fx:id="btn_clear" layoutX="68.0" layoutY="118.0" mnemonicParsing="false" onAction="#btn_clear_onClick" text="Clear" />
+        <JFXButton fx:id="btn_manageLeases" layoutX="126.0" layoutY="118.0" mnemonicParsing="false" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="165.0" text="Manage leases" />
+    </children>
+</AnchorPane>

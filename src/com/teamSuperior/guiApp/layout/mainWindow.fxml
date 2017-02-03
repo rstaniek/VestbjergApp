@@ -44,6 +44,15 @@
             <Menu mnemonicParsing="false" text="Customers">
                 <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit"/>
             </Menu>
+            <Menu mnemonicParsing="false" text="Lease machines">
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#handleMachinesAdd" text="Add machine" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleMachinesManage" text="Manage machines"/>
+                    <SeparatorMenuItem mnemonicParsing="false" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleLeasesAdd" text="Add lease" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleLeasesManage" text="Manage leases" />
+                </items>
+            </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem mnemonicParsing="false" text="About"/>
             </Menu>
