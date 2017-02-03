@@ -74,7 +74,7 @@ public class ContractorsAddController {
     public void btn_manageContractors_onClick() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/contractorsManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage contractors");
                 window.setResizable(false);
