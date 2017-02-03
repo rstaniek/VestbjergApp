@@ -21,9 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -40,9 +37,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.teamSuperior.core.Utils.*;
-import static com.teamSuperior.core.controlLayer.WebsiteCrawler.*;
-import static com.teamSuperior.core.enums.Currency.*;
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.core.controlLayer.WebsiteCrawler.getExchangeRatioBloomberg;
+import static com.teamSuperior.core.enums.Currency.DKKEUR;
+import static com.teamSuperior.core.enums.Currency.DKKUSD;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -846,10 +844,14 @@ public class TransactionsAddController implements Initializable {
                             qLeft = p.getQuantity() - item.getQuantity();
                         }
                     }
-                    productsQuery += String.format("UPDATE products SET quantity='%d' WHERE id='%d';\n",
-                            qLeft, item.getItemID());
+                    /*productsQuery += String.format("UPDATE products SET quantity=%d WHERE id=%d;\n",
+                            qLeft, item.getItemID());*/
+                    conn.upload(String.format("UPDATE products SET quantity=%d WHERE id=%d",
+                            qLeft, item.getItemID()));
                 }
-                conn.upload(productsQuery);
+                System.out.println(productsQuery);
+                //TODO: for some reason executing chain of queries in a single request stopped working without any reason. Now it's being executed one by one spamming the server with requests
+                //conn.upload(productsQuery);
                 clearAll();
                 displayMessage(INFORMATION, "Transaction completed successfully.");
             } catch (SQLException sqlEx){
