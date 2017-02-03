@@ -1,13 +1,11 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
-import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
-import com.teamSuperior.core.Utils;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -25,8 +23,8 @@ import org.controlsfx.control.CheckComboBox;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.ResourceBundle;
-import java.util.prefs.Preferences;
 
 /**
  * Created by Domestos on 16.12.12.
@@ -68,7 +66,7 @@ public class ProductsController implements Initializable {
     private Employee loggedInUser;
     private Product selectedProduct;
     private ObservableList<Product> almostEmptyStorages;
-    private boolean showsAll, initWarehouseCheckDone;
+    private boolean showsAll;
     private ObservableList<Product> searchResults;
 
     private ObservableList<PieChart.Data> quantityChartData;
@@ -94,7 +92,6 @@ public class ProductsController implements Initializable {
         checkComboBox_search_criteria.getItems().addAll(productsCriteria);
         loggedInUser = UserController.getUser();
         showsAll = true;
-        initWarehouseCheckDone = false;
 
         //init columns ad stuff
         retrieveData();
@@ -114,40 +111,39 @@ public class ProductsController implements Initializable {
         }
 
         updateStats();
-        runWarehouseCheck(true);
-        initWarehouseCheckDone = true;
+        runWarehouseCheck();
     }
 
-    private void runWarehouseCheck(boolean runForAllItems) {
-        Preferences reg = Preferences.userRoot();
+    private void runItemCheck() {
+        if (selectedProduct.getQuantity() < capTreshold) {
+            if (showsAll) Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
+        }
+    }
+
+    private void runWarehouseCheck() {
         almostEmptyStorages = null;
         almostEmptyStorages = FXCollections.observableArrayList();
-        if (runForAllItems) {
-            int numberOfWarnings = 0;
-            for (Product p : products) {
-                if (p.getQuantity() < capTreshold) {
-                    numberOfWarnings += 1;
-                    almostEmptyStorages.add(p);
-                }
+
+        int numberOfWarnings = 0;
+        for (Product p : products) {
+            if (p.getQuantity() < capTreshold) {
+                numberOfWarnings += 1;
+                almostEmptyStorages.add(p);
             }
-            if (numberOfWarnings != 0 && !initWarehouseCheckDone) {
-                //TODO: alert box looping, needs fix
-                boolean result = ConfirmBox.display("Empty storages detected",
-                        String.format("There were %1$d almost empty storages found during the checkup. Do you want to intervene?", numberOfWarnings));
-                if (result) {
-                    //Error.displayMessage(ErrorCode.NOT_IMPLEMENTED);
-                    showsAll = false;
-                    updateTable(showsAll);
-                    btn_showLowQuantity.setText("Show All products");
-                }
-            }
-        } else {
-            if (selectedProduct.getQuantity() < capTreshold) {
-                if (showsAll) Error.displayError(ErrorCode.WAREHOUSE_LOW_AMOUNT_OF_PRODUCT);
-                //TODO: implement this shit
-                /*if(reg.getBoolean("SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS", false)){
-                    AlertBox.display("WARNING","Low amount of product, resupply is advised.","SETTINGS_NOTIFICATIONS_SHOW_ON_LOW_PRODUCTS");
-                }*/
+        }
+        if (numberOfWarnings != 0) {
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setHeaderText("Empty storages detected!");
+            a.setContentText(String.format("There were %1$d almost empty storages found during the checkup. Do you want to intervene?", numberOfWarnings));
+            Button yesButton = (Button) a.getDialogPane().lookupButton(ButtonType.OK);
+            yesButton.setText("Yes");
+            Button noButton = (Button) a.getDialogPane().lookupButton(ButtonType.CANCEL);
+            noButton.setText("No");
+            Optional<ButtonType> okResponse = a.showAndWait();
+            if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get())) {
+                showsAll = false;
+                updateTable();
+                btn_showLowQuantity.setText("Show All products");
             }
         }
     }
@@ -246,13 +242,12 @@ public class ProductsController implements Initializable {
         else label_quantity.setTextFill(Color.BLACK);
     }
 
-    private void updateTable(boolean showAll) {
+    private void updateTable() {
         products.removeAll();
         products = null;
         products = FXCollections.observableArrayList();
         tableView_products.getColumns().removeAll(idCol, nameCol, subnameCol, barcodeCol, categoryCol, priceCol, locationCol, quantityCol, contractorIdCol);
         retrieveData();
-        runWarehouseCheck(true);
         if (showsAll) {
             updateColumns(products);
         } else {
@@ -266,13 +261,13 @@ public class ProductsController implements Initializable {
         selectedProduct = (Product) tableView_products.getSelectionModel().getSelectedItem();
         System.out.println(selectedProduct.toString());
         updateStats();
-        runWarehouseCheck(false);
+        runItemCheck();
     }
 
     @FXML
     public void btn_requestResupply_onClick(ActionEvent actionEvent) {
         if (Utils.isNumeric(text_amountToRequest.getText())) {
-            WaitingBox.display("Creating request", 6000);
+            WaitingBox.display("Creating request", 5000);
             int itemsTotal = selectedProduct.getQuantity() + Integer.parseInt(text_amountToRequest.getText());
             if (itemsTotal > maxCap) {
                 itemsTotal = maxCap;
@@ -284,7 +279,7 @@ public class ProductsController implements Initializable {
             } catch (SQLException sqlEx){
                 Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlEx.getMessage());
             } finally {
-                updateTable(true);
+                updateTable();
             }
             text_amountToRequest.clear();
         } else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
@@ -294,11 +289,11 @@ public class ProductsController implements Initializable {
     public void btn_showLowQuantity_onClick(ActionEvent actionEvent) {
         if (showsAll) {
             showsAll = false;
-            updateTable(showsAll);
+            updateTable();
             btn_showLowQuantity.setText("Show All products");
         } else {
             showsAll = true;
-            updateTable(showsAll);
+            updateTable();
             btn_showLowQuantity.setText("Show only low quantity");
         }
     }
