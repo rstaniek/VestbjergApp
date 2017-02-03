@@ -70,15 +70,9 @@ public class MainController implements Initializable {
     @FXML
     public LineChart currency_eurChart;
     @FXML
-    public LineChart currency_usdChart;
-    @FXML
     public NumberAxis xAxisCurrencyEur;
     @FXML
     public NumberAxis yAxisCurrencyEur;
-    @FXML
-    public NumberAxis xAxisCurrencyUsd;
-    @FXML
-    public NumberAxis yAxisCurrencyUsd;
     @FXML
     public Hyperlink button_copyEur;
     @FXML
@@ -97,6 +91,8 @@ public class MainController implements Initializable {
     private StringProperty currentDate;
     private StringProperty USDRatio;
     private StringProperty EURRatio;
+    private Parent transactionsFXMLLoader;
+
 
     private Preferences registry;
 
@@ -141,7 +137,6 @@ public class MainController implements Initializable {
         //displayXmasWnd();
         registry = Preferences.userRoot();
         window = new Window();
-
         conn = new DBConnect();
         // generating array list and users
         employees = new ArrayList<>();
@@ -524,13 +519,14 @@ public class MainController implements Initializable {
             xAxis.setTickLabelsVisible(false);
             effSeriesPersonal.setName("Your record");
             efficiency.setTitle("Efficiency chart");
-            double eff = 0;
+            double eff;
             int zeroEffCounter = 0;
             for(int i = 0; i < employees.size(); i++) {
                 if (employees.get(i).getId() == UserController.getUser().getId()) {
                     if((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)){
                         eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
                         effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
+                        effSeries.getData().add(new XYChart.Data(i, eff));
                     }
                     else {
                         eff = 0;
@@ -607,7 +603,7 @@ public class MainController implements Initializable {
             else{
                 eurSeries.getData().clear();
                 chartCounter = 0;
-                /*
+                /* Code that supposedly should work but it doesn't - make the chart dynamic again
                 eurSeries.getData().remove(0);
                 for(int i=0; i< eurSeries.getData().size(); i++){
                     XYChart.Data data = (XYChart.Data)eurSeries.getData().get(i);
