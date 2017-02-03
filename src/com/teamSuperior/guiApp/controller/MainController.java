@@ -12,12 +12,6 @@ import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.text.DecimalFormat;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -37,18 +31,24 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
-import static java.lang.Math.round;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
 
@@ -337,7 +337,7 @@ public class MainController implements Initializable {
     @FXML
     public void handleSettings() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/settingsWindow.fxml"));
             Stage settingsWnd = new Stage();
             settingsWnd.setOnCloseRequest(e -> {
                 e.consume();
@@ -360,7 +360,7 @@ public class MainController implements Initializable {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
             if (employees.size() < 1) connectClient();
             try {
-                Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
+                Parent logInScreen = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/loginWindowPopup.fxml"));
                 loginWindow = new Stage();
                 loginWindow.initModality(Modality.APPLICATION_MODAL);
                 loginWindow.setTitle("Log in");
@@ -400,7 +400,7 @@ public class MainController implements Initializable {
     public void handleEmployeesStatistics() {
         if (UserController.isLoggedIn()) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/empStatistics.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Employee statistics");
                 window.setResizable(false);
@@ -427,7 +427,7 @@ public class MainController implements Initializable {
     public void handleContractorsAdd() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/contractorsAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add a new contractor");
                 window.setResizable(false);
@@ -446,7 +446,7 @@ public class MainController implements Initializable {
     public void handleContractorsManage() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/contractorsManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage contractors");
                 window.setResizable(false);
@@ -465,7 +465,7 @@ public class MainController implements Initializable {
     public void handleProductsView() {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/productsWindow.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Products");
                 window.setResizable(false);
@@ -482,7 +482,7 @@ public class MainController implements Initializable {
     public void handleEmployeesAdd() {
         if (UserController.isAllowed(3)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/empAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add a new employee");
                 window.setResizable(false);
@@ -637,7 +637,7 @@ public class MainController implements Initializable {
     public void handleAddOffer(ActionEvent actionEvent) {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/offerAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/offerAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add a new offer");
                 window.setResizable(false);
@@ -654,7 +654,7 @@ public class MainController implements Initializable {
     public void handleViewOffers(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/offersManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/offersManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("manage Offers");
                 window.setResizable(false);
@@ -670,7 +670,7 @@ public class MainController implements Initializable {
     @FXML
     public void handleNewTransaction(ActionEvent actionEvent) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/transactionsAdd.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsAdd.fxml"));
             Stage window = new Stage();
             window.setTitle("Add a new transaction");
             window.setResizable(false);
@@ -686,7 +686,7 @@ public class MainController implements Initializable {
     public void handleViewTransactions(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/transactionsView.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsView.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Transactions");
                 window.setResizable(false);
@@ -703,7 +703,7 @@ public class MainController implements Initializable {
     public void handleCustomers(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/customersManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/customersManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Customers");
                 window.setResizable(false);
@@ -729,7 +729,7 @@ public class MainController implements Initializable {
     public void handleAddNewProduct(ActionEvent actionEvent) {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/productAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/productAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add new product");
                 window.setResizable(false);
