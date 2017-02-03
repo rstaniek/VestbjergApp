@@ -82,7 +82,7 @@ public class ProductsController implements Initializable {
     private TableColumn<Product, Integer> quantityCol;
     private TableColumn<Product, Integer> contractorIdCol;
 
-    private static final String[] productsCriteria = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID"};
+    private static final String[] productsCriteria = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Minimum price", "Maximum price", "Contractor ID"};
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -363,8 +363,13 @@ public class ProductsController implements Initializable {
                             results.add(product);
                         }
                         break;
-                    case "Price":
-                        if (String.valueOf(product.getPrice()).contains(query)) {
+                    case "Minimum price":
+                        if (product.getPrice() >= Float.parseFloat(query)) {
+                            results.add(product);
+                        }
+                        break;
+                    case "Maximum price":
+                        if (product.getPrice() <= Float.parseFloat(query)) {
                             results.add(product);
                         }
                         break;
