@@ -844,14 +844,11 @@ public class TransactionsAddController implements Initializable {
                             qLeft = p.getQuantity() - item.getQuantity();
                         }
                     }
-                    /*productsQuery += String.format("UPDATE products SET quantity=%d WHERE id=%d;\n",
-                            qLeft, item.getItemID());*/
-                    conn.upload(String.format("UPDATE products SET quantity=%d WHERE id=%d",
-                            qLeft, item.getItemID()));
+                    productsQuery += String.format("UPDATE products SET quantity=%d WHERE id=%d;\n",
+                            qLeft, item.getItemID());
                 }
                 System.out.println(productsQuery);
-                //TODO: for some reason executing chain of queries in a single request stopped working without any reason. Now it's being executed one by one spamming the server with requests
-                //conn.upload(productsQuery);
+                conn.upload(productsQuery);
                 clearAll();
                 displayMessage(INFORMATION, "Transaction completed successfully.");
             } catch (SQLException sqlEx){
