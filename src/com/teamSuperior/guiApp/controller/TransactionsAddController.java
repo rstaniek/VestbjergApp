@@ -94,7 +94,7 @@ public class TransactionsAddController implements Initializable {
     @FXML
     public CheckBox checkBox_craftsman;
     @FXML
-    public ChoiceBox<String> choiceBox_currency;
+    public ComboBox<String> choiceBox_currency;
 
 
     //products table columns
