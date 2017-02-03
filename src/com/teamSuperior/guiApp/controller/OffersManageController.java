@@ -162,7 +162,6 @@ public class OffersManageController implements Initializable {
         offers = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(offersCriteria);
-        checkComboBox_search_criteria.getCheckModel().checkAll();
         conn = new DBConnect();
         loggedUser = UserController.getUser();
 

@@ -90,7 +90,6 @@ public class ProductsController implements Initializable {
         products = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(productsCriteria);
-        checkComboBox_search_criteria.getCheckModel().checkAll();
         loggedInUser = UserController.getUser();
         showsAll = true;
 

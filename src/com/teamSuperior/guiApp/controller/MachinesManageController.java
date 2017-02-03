@@ -74,7 +74,6 @@ public class MachinesManageController implements Initializable {
         searchResults = FXCollections.observableArrayList();
         machines = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(machinesCriteria);
-        checkComboBox_search_criteria.getCheckModel().checkAll();
         conn = new DBConnect();
         loggedInUser = UserController.getUser();
         retrieveData();
