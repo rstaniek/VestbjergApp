@@ -50,6 +50,21 @@ public class SplashScreen {
             @Override
             protected Void call() throws Exception {
                 Thread.sleep(durationMillis);
+
+                Task fadeOut = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        fadeOut();
+                        return null;
+                    }
+                };
+
+                Thread th = new Thread(fadeOut);
+                th.setDaemon(true);
+                th.start();
+
+                if (styleClose == Style.FADE) Thread.sleep(1000);
+
                 Platform.runLater(window::close);
                 return null;
             }
@@ -59,7 +74,7 @@ public class SplashScreen {
         wait.setDaemon(true);
         wait.start();
         if (styleOpen == Style.FADE) {
-            FadeTransition ft = new FadeTransition(Duration.millis(1500), img);
+            FadeTransition ft = new FadeTransition(Duration.millis(1000), img);
             ft.setFromValue(0.0);
             ft.setToValue(1.0);
             ft.play();
