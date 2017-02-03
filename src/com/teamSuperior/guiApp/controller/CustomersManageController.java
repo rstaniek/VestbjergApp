@@ -3,7 +3,6 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.guiApp.GUI.Error;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,7 +25,7 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.teamSuperior.core.connection.DBConnect.*;
+import static com.teamSuperior.core.connection.DBConnect.validateField;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
@@ -325,7 +324,7 @@ public class CustomersManageController implements Initializable {
     @FXML
     public void btn_add_onClick(ActionEvent actionEvent) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/customerAdd.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/customerAdd.fxml"));
             Stage window = new Stage();
             window.setTitle("Add new customer");
             window.setResizable(false);

@@ -764,7 +764,7 @@ public class TransactionsAddController implements Initializable {
     public void btn_registerCustomer_onClick(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/customersManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/customersManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Customers");
                 window.setResizable(false);
