@@ -14,19 +14,19 @@
         <ColumnConstraints hgrow="SOMETIMES" maxWidth="215.0" minWidth="10.0" prefWidth="120.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+        <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <JFXButton fx:id="btn_logIn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn_logIn_click" ripplerFill="#385ba4" style="-fx-background-color: #c3c3c3;" text="Log in" GridPane.rowIndex="2">
+        <JFXButton fx:id="btn_logIn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn_logIn_click" prefHeight="31.0" prefWidth="100.0" ripplerFill="#385ba4" style="-fx-background-color: #c3c3c3;" text="Log in" GridPane.rowIndex="2">
             <GridPane.margin>
-                <Insets left="10.0" />
+                <Insets left="20.0" />
             </GridPane.margin>
         </JFXButton>
-        <JFXButton fx:id="btn_cancel" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn_cancel_click" ripplerFill="#f92d26" style="-fx-background-color: c3c3c3;" text="Cancel" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+        <JFXButton fx:id="btn_cancel" alignment="CENTER" cancelButton="true" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn_cancel_click" prefHeight="31.0" prefWidth="100.0" ripplerFill="#f92d26" style="-fx-background-color: c3c3c3;" text="Cancel" textAlignment="CENTER" GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
             <GridPane.margin>
-                <Insets right="10.0" />
+                <Insets right="20.0" />
             </GridPane.margin>
         </JFXButton>
         <JFXPasswordField fx:id="txt_empPassw" alignment="CENTER" focusColor="#385ba4" labelFloat="true" promptText="Password" GridPane.columnSpan="2" GridPane.rowIndex="1">
@@ -34,7 +34,7 @@
                 <Insets left="10.0" right="10.0" />
             </GridPane.margin>
         </JFXPasswordField>
-        <JFXTextField fx:id="txt_empID" alignment="CENTER" focusColor="#385ba4" labelFloat="true" promptText="Employee ID" GridPane.columnSpan="2">
+        <JFXTextField fx:id="txt_empID" alignment="BOTTOM_CENTER" focusColor="#385ba4" labelFloat="true" promptText="Employee ID" GridPane.columnSpan="2">
             <GridPane.margin>
                 <Insets left="10.0" right="10.0" />
             </GridPane.margin>
