@@ -156,7 +156,6 @@ public class TransactionsAddController implements Initializable {
         products = FXCollections.observableArrayList();
         searchProductsResults = FXCollections.observableArrayList();
         checkComboBox_searchProducts_criteria.getItems().addAll(productsCriteria);
-        checkComboBox_searchProducts_criteria.getCheckModel().checkAll();
         retrieveProductsData();
         initProductTableColumns(products);
         tableView_products.getSelectionModel().selectFirst();

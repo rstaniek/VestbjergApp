@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
+import static com.teamSuperior.guiApp.GUI.SplashScreen.Style;
+import static com.teamSuperior.guiApp.GUI.SplashScreen.viewSplashScreen;
+
 /**
  * Vestbjerg App GUI Version
  *
@@ -22,6 +25,7 @@ public class MainWindow extends Application {
     private Stage window;
     @Override
     public void start(Stage primaryStage) throws Exception {
+        viewSplashScreen(4000, Style.FADE, Style.FADE);
         window = primaryStage;
         window.getIcons().add(Drawable.getImage(this.getClass(), Drawables.ICON));
         Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/mainWindow.fxml"));
