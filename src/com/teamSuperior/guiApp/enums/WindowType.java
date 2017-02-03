@@ -4,9 +4,9 @@ package com.teamSuperior.guiApp.enums;
  * Created by Domestos Maximus on 06-Dec-16.
  */
 public enum WindowType {
-    EMP_STATS("../layout/empStatistics.fxml", "Statistics", true),
-    EMP_MANAGEMENT("../layout/empManagement.fxml", "Manage Employees", false),
-    SETTINGS("../layout/settingsWindow.fxml", "Settings", false);
+    EMP_STATS("/com/teamSuperior/guiApp/layout/empStatistics.fxml", "Statistics", true),
+    EMP_MANAGEMENT("/com/teamSuperior/guiApp/layout/empManagement.fxml", "Manage Employees", false),
+    SETTINGS("/com/teamSuperior/guiApp/layout/settingsWindow.fxml", "Settings", false);
 
 
     private String layoutPath, wndTitle;

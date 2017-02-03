@@ -770,7 +770,7 @@ public class MainController implements Initializable {
     public void handleMachinesAdd (ActionEvent actionEvent) {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/machineAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machineAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add new machine");
                 window.setResizable(false);
@@ -787,7 +787,7 @@ public class MainController implements Initializable {
     public void handleMachinesManage (ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/machinesManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machinesManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage machines");
                 window.setResizable(false);
@@ -804,7 +804,7 @@ public class MainController implements Initializable {
     public void handleLeasesAdd (ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/leaseAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leaseAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add new lease");
                 window.setResizable(false);
@@ -821,7 +821,7 @@ public class MainController implements Initializable {
     public void handleLeasesManage (ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/leasesManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leasesManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage leases");
                 window.setResizable(false);
