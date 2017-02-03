@@ -4,12 +4,12 @@
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="161.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MachinesAddController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="220.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MachinesAddController">
     <children>
-        <JFXTextField fx:id="text_name" layoutX="15.0" layoutY="14.0" prefHeight="25.0" prefWidth="290.0" promptText="Name" />
-        <JFXTextField fx:id="text_pricePerDay" layoutX="15.0" layoutY="54.0" prefHeight="25.0" prefWidth="290.0" promptText="Price per day" />
-        <JFXButton fx:id="btn_add" layoutX="15.0" layoutY="117.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
-        <JFXButton fx:id="btn_clear" layoutX="68.0" layoutY="117.0" mnemonicParsing="false" onAction="#btn_clear_onClick" text="Clear" />
-        <JFXButton fx:id="btn_manageMachines" layoutX="126.0" layoutY="117.0" mnemonicParsing="false" onAction="#btn_manageMachines_onClick" prefHeight="25.0" prefWidth="165.0" text="Manage machines" />
+        <JFXTextField fx:id="text_name" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="45.0" prefHeight="25.0" prefWidth="290.0" promptText="Name" />
+        <JFXTextField fx:id="text_pricePerDay" focusColor="#385ba4" labelFloat="true" layoutX="15.0" layoutY="110.0" prefHeight="25.0" prefWidth="290.0" promptText="Price per day" />
+        <JFXButton fx:id="btn_add" layoutX="15.0" layoutY="170.0" mnemonicParsing="false" onAction="#btn_add_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Add" />
+        <JFXButton fx:id="btn_clear" layoutX="68.0" layoutY="170.0" mnemonicParsing="false" onAction="#btn_clear_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Clear" />
+        <JFXButton fx:id="btn_manageMachines" layoutX="127.0" layoutY="170.0" mnemonicParsing="false" onAction="#btn_manageMachines_onClick" prefHeight="25.0" prefWidth="165.0" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Manage machines" />
     </children>
 </AnchorPane>

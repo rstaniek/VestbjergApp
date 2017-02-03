@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ProductAddController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ProductAddController">
   <columnConstraints>
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -23,27 +23,27 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <JFXTextField fx:id="text_name" labelFloat="true" promptText="Name" GridPane.columnSpan="2" />
-      <JFXTextField fx:id="text_subname" labelFloat="true" promptText="Subname" GridPane.columnSpan="2" GridPane.rowIndex="1" />
-      <JFXTextField fx:id="text_barcode" labelFloat="true" promptText="barcode" GridPane.columnSpan="2" GridPane.rowIndex="2" />
+      <JFXTextField fx:id="text_name" focusColor="#385ba4" labelFloat="true" promptText="Name" GridPane.columnSpan="2" />
+      <JFXTextField fx:id="text_subname" focusColor="#385ba4" labelFloat="true" promptText="Subname" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+      <JFXTextField fx:id="text_barcode" focusColor="#385ba4" labelFloat="true" promptText="barcode" GridPane.columnSpan="2" GridPane.rowIndex="2" />
       <JFXComboBox fx:id="comboBox_category" prefWidth="150.0" promptText="Category" GridPane.rowIndex="3">
          <GridPane.margin>
             <Insets left="5.0" right="5.0" />
          </GridPane.margin>
       </JFXComboBox>
-      <JFXTextField fx:id="text_price" labelFloat="true" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <JFXTextField fx:id="text_quantity" labelFloat="true" promptText="Quantity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <JFXButton fx:id="btn_add" buttonType="RAISED" mnemonicParsing="false" onAction="#btn_add_onClick" ripplerFill="#385ba4" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
+      <JFXTextField fx:id="text_price" focusColor="#385ba4" labelFloat="true" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+      <JFXTextField fx:id="text_quantity" focusColor="#385ba4" labelFloat="true" promptText="Quantity" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+      <JFXButton fx:id="btn_add" mnemonicParsing="false" onAction="#btn_add_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Add" GridPane.halignment="RIGHT" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets right="5.0" />
          </GridPane.margin>
       </JFXButton>
-      <JFXButton fx:id="btn_clear" buttonType="RAISED" mnemonicParsing="false" onAction="#btn_clear_onClick" ripplerFill="#385ba4" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="6">
+      <JFXButton fx:id="btn_clear" mnemonicParsing="false" onAction="#btn_clear_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Clear" GridPane.columnIndex="1" GridPane.rowIndex="6">
          <GridPane.margin>
             <Insets left="5.0" />
          </GridPane.margin>
       </JFXButton>
-      <JFXTextField fx:id="text_location" labelFloat="true" promptText="Location" GridPane.columnSpan="2" GridPane.rowIndex="4" />
+      <JFXTextField fx:id="text_location" focusColor="#385ba4" labelFloat="true" promptText="Location" GridPane.columnSpan="2" GridPane.rowIndex="4" />
       <JFXComboBox fx:id="comboBox_contractor" prefWidth="150.0" promptText="Contractor" GridPane.rowIndex="5">
          <GridPane.margin>
             <Insets left="5.0" right="5.0" />

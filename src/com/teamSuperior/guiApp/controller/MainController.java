@@ -107,6 +107,7 @@ public class MainController implements Initializable {
     private XYChart.Series eurSeries;
     private XYChart.Series usdSeries;
     private int chartCounter;
+    private ObservableList<PieChart.Data> contributionData;
 
     public MainController() {
         welcomeMessage = new SimpleStringProperty("");
@@ -210,15 +211,38 @@ public class MainController implements Initializable {
             }
         };
 
+        Task updateCharts = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while (true) {
+                    Platform.runLater(() -> {
+                        efficiency.setAnimated(false);
+                        sales_chart.setAnimated(false);
+                        efficiency.getData().clear();
+                        effChartInitialized = false;
+                        displayEfficiencyChart();
+                        sales_chart.getData().clear();
+                        displaySalesPercentageChart();
+                        efficiency.setAnimated(true);
+                        sales_chart.setAnimated(true);
+                    });
+                    Thread.sleep(6000);
+                }
+            }
+        };
+
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
         Thread th3 = new Thread(waitForLogin);
+        //Thread th4 = new Thread(updateCharts);
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
+        //th4.setDaemon(true);
         th.start();
         th2.start();
         th3.start();
+        //th4.start();
         if(eurSeries.getData() != null){
             currency_eurChart.getData().addAll(eurSeries, usdSeries);
         }
@@ -555,7 +579,7 @@ public class MainController implements Initializable {
 
     private void displaySalesPercentageChart() {
         if(UserController.isLoggedIn()){
-            ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
+            contributionData = FXCollections.observableArrayList();
             int totalSales = 0;
             for(Employee e : employees){
                 totalSales += e.getNumberOfSales();
