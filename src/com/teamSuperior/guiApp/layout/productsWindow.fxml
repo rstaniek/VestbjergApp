@@ -1,46 +1,60 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
-
-<AnchorPane prefHeight="850.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ProductsController">
-    <children>
-        <AnchorPane prefHeight="50.0" prefWidth="1000.0">
-            <children>
-                <JFXButton fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
-                <JFXTextField fx:id="text_search_query" layoutX="49.0" layoutY="13.0" onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0" promptText="Search..." />
-                <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="838.0" layoutY="13.0" prefHeight="25" prefWidth="150.0" />
-            </children>
-        </AnchorPane>
-        <TableView fx:id="tableView_products" layoutY="50.0" onMouseClicked="#tableView_products_onClick" prefHeight="400.0" prefWidth="1000.0">
-        </TableView>
-        <PieChart fx:id="chart_storageCap" layoutY="450.0" prefHeight="400.0" prefWidth="400.0" title="Storage Capacity" />
-        <Label layoutX="415.0" layoutY="455.0" text="Product overview">
-         <font>
-            <Font name="System Bold" size="18.0" />
-         </font></Label>
-        <Label layoutX="416.0" layoutY="619.0" text="Request new items" />
-        <JFXTextField fx:id="text_amountToRequest" focusColor="#385ba4" labelFloat="true" layoutX="409.0" layoutY="669.0" maxWidth="149.0" minWidth="109.0" prefHeight="37.0" prefWidth="149.0" promptText="Amount" />
-        <JFXButton fx:id="btn_requestResupply" layoutX="586.0" layoutY="672.0" mnemonicParsing="false" onAction="#btn_requestResupply_onClick" style="-fx-background-color: #c9c9c9;" text="Request" />
-        <JFXButton fx:id="btn_showLowQuantity" layoutX="586.0" layoutY="456.0" mnemonicParsing="false" onAction="#btn_showLowQuantity_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Show only low quantity" />
-        <Label fx:id="label_name" layoutX="415.0" layoutY="482.0" text="Name">
-         <font>
-            <Font size="25.0" />
-         </font>
-      </Label>
-        <Label fx:id="label_subname" layoutX="415.0" layoutY="518.0" text="Subname">
-         <font>
-            <Font size="15.0" />
-         </font>
-      </Label>
-        <Label fx:id="label_category" layoutX="415.0" layoutY="539.0" text="category" />
-        <Label fx:id="label_quantity" layoutX="415.0" layoutY="567.0" text="Q:" />
-        <Label fx:id="label_price" layoutX="493.0" layoutY="567.0" text="Price:" />
-    </children>
+<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.ProductsController" prefHeight="850.0" prefWidth="1000.0"
+            xmlns:fx="http://javafx.com/fxml">
+    <AnchorPane prefHeight="50.0" prefWidth="1000.0">
+        <JFXButton fx:id="clearSearchButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
+                   onAction="#clickSearchClear" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26"
+                   style="-fx-background-color: #c9c9c9;" text="X"/>
+        <JFXTextField fx:id="searchQueryField" layoutX="49.0" layoutY="13.0" prefHeight="25.0" prefWidth="779.0"
+                      promptText="Search..."/>
+        <CheckComboBox fx:id="searchCriteriaCheckComboBox" layoutX="838.0" layoutY="13.0" prefHeight="25"
+                       prefWidth="150.0"/>
+    </AnchorPane>
+    <TableView layoutY="50.0" fx:id="tableView" prefHeight="400.0" prefWidth="1000.0">
+        <columns>
+            <TableColumn fx:id="idColumn" minWidth="50.0" text="ID"/>
+            <TableColumn fx:id="nameColumn" minWidth="80.0" text="Name"/>
+            <TableColumn fx:id="subnameColumn" minWidth="150.0" text="Sub name"/>
+            <TableColumn fx:id="barcodeColumn" minWidth="60.0" text="Barcode"/>
+            <TableColumn fx:id="categoryColumn" minWidth="80.0" text="Category"/>
+            <TableColumn fx:id="priceColumn" minWidth="80.0" text="Price"/>
+            <TableColumn fx:id="locationColumn" minWidth="220.0" text="Warehouse location"/>
+            <TableColumn fx:id="quantityColumn" minWidth="30.0" text="Q"/>
+            <TableColumn fx:id="contractorIdColumn" minWidth="50.0" text="Contractor"/>
+        </columns>
+    </TableView>
+    <PieChart fx:id="storageCapPieChart" layoutY="450.0" prefHeight="400.0" prefWidth="400.0" title="Storage Capacity"/>
+    <Label layoutX="415.0" layoutY="455.0" text="Product overview">
+        <font>
+            <Font name="System Bold" size="18.0"/>
+        </font>
+    </Label>
+    <Label layoutX="416.0" layoutY="619.0" text="Request new items"/>
+    <JFXTextField fx:id="amountToRequestField" focusColor="#385ba4" labelFloat="true" layoutX="409.0" layoutY="669.0"
+                  maxWidth="149.0" minWidth="109.0" prefHeight="37.0" prefWidth="149.0" promptText="Amount"/>
+    <JFXButton fx:id="requestResupplyButton" layoutX="586.0" layoutY="672.0" mnemonicParsing="false"
+               onAction="#clickRequestResupply" style="-fx-background-color: #c9c9c9;" text="Request"/>
+    <JFXButton fx:id="showLowQuantityButton" layoutX="586.0" layoutY="456.0" mnemonicParsing="false"
+               onAction="#clickShowLowQuantity" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;"
+               text="Show only low quantity"/>
+    <Label fx:id="nameLabel" layoutX="415.0" layoutY="482.0" text="Name">
+        <font>
+            <Font size="25.0"/>
+        </font>
+    </Label>
+    <Label fx:id="subnameLabel" layoutX="415.0" layoutY="518.0" text="Subname">
+        <font>
+            <Font size="15.0"/>
+        </font>
+    </Label>
+    <Label fx:id="categoryLabel" layoutX="415.0" layoutY="539.0" text="category"/>
+    <Label fx:id="quantityLabel" layoutX="415.0" layoutY="567.0" text="Q:"/>
+    <Label fx:id="priceLabel" layoutX="493.0" layoutY="567.0" text="Price:"/>
 </AnchorPane>

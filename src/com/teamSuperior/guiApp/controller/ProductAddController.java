@@ -3,11 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.service.Contractor;
-import com.teamSuperior.guiApp.GUI.Error;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -15,22 +12,21 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ResourceBundle;
 
-import static com.teamSuperior.core.Utils.*;
-import static com.teamSuperior.core.connection.DBConnect.*;
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.core.Utils.isInteger;
+import static com.teamSuperior.core.Utils.isNumeric;
+import static com.teamSuperior.core.connection.DBConnect.validateField;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
-import static com.teamSuperior.guiApp.enums.ErrorCode.*;
+import static com.teamSuperior.guiApp.enums.ErrorCode.TEXT_FIELD_NON_NUMERIC;
+import static com.teamSuperior.guiApp.enums.ErrorCode.VALUE_LESS_THAN_ZERO;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
-import static javafx.scene.control.Alert.AlertType.WARNING;
 
 /**
  * Created by rajmu on 17.01.26.
@@ -67,12 +63,12 @@ public class ProductAddController implements Initializable {
     @FXML
     public void btn_add_onClick(ActionEvent actionEvent) {
         conn = new DBConnect();
-        if(validateField(text_barcode) &&
+        if (validateField(text_barcode) &&
                 validateField(text_name) &&
                 validateField(text_price) &&
                 validateField(text_quantity) &&
                 validateField(text_subname) &&
-                validateField(text_location)){
+                validateField(text_location)) {
             try {
                 conn.upload(String.format("INSERT INTO products (name,subname,barcode,category,price,warehouseLocation,quantity,contractorId) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$.2f','%6$s','%7$d','%8$d')",
                         text_name.getText(),
@@ -102,7 +98,7 @@ public class ProductAddController implements Initializable {
         clearFields();
     }
 
-    private void clearFields(){
+    private void clearFields() {
         text_barcode.clear();
         text_name.clear();
         text_price.clear();
@@ -113,9 +109,9 @@ public class ProductAddController implements Initializable {
         text_location.clear();
     }
 
-    private ObservableList<String> getContractorNames(ObservableList<Contractor> source){
+    private ObservableList<String> getContractorNames(ObservableList<Contractor> source) {
         ObservableList<String> results = FXCollections.observableArrayList();
-        for (Contractor c : source){
+        for (Contractor c : source) {
             results.add(c.getName());
         }
         return results;
@@ -150,8 +146,8 @@ public class ProductAddController implements Initializable {
         comboBox_contractor.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<String>() {
             @Override
             public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
-                for (Contractor c : contractors){
-                    if(c.getName().equals(newValue)){
+                for (Contractor c : contractors) {
+                    if (c.getName().equals(newValue)) {
                         validatedContractorID = c.getId();
                         System.out.println("Contractor ID: " + validatedContractorID);
                     }
@@ -161,15 +157,15 @@ public class ProductAddController implements Initializable {
     }
 
     private void quantity_onTextChanged(String newValue) {
-        if(!newValue.isEmpty()){
-            if(isInteger(newValue)){
+        if (!newValue.isEmpty()) {
+            if (isInteger(newValue)) {
                 int intValue = Integer.parseInt(newValue);
-                if(intValue > 0){
-                    if(intValue <= ProductsController.maxCap){
+                if (intValue > 0) {
+                    if (intValue <= ProductsController.MAX_CAP) {
                         validatedQuantity = intValue;
                     } else {
-                        validatedQuantity = ProductsController.maxCap;
-                        text_quantity.setText(String.valueOf(ProductsController.maxCap));
+                        validatedQuantity = ProductsController.MAX_CAP;
+                        text_quantity.setText(String.valueOf(ProductsController.MAX_CAP));
                         displayMessage(INFORMATION, "Value set is greater than the ma capacity of the storage.", "Resetting the value to fit the max capacity.");
                     }
                 } else {
@@ -184,10 +180,10 @@ public class ProductAddController implements Initializable {
     }
 
     private void price_onTextChanged(String newValue) {
-        if(!newValue.isEmpty()){
-            if(isNumeric(newValue)){
+        if (!newValue.isEmpty()) {
+            if (isNumeric(newValue)) {
                 double doubleValue = Double.parseDouble(newValue);
-                if(doubleValue > 0.0){
+                if (doubleValue > 0.0) {
                     validatedPrice = doubleValue;
                 } else {
                     displayError(VALUE_LESS_THAN_ZERO);
@@ -200,11 +196,11 @@ public class ProductAddController implements Initializable {
         }
     }
 
-    private void retrieveContractorData(){
+    private void retrieveContractorData() {
         conn = new DBConnect();
-        try{
+        try {
             ResultSet rs = conn.getFromDataBase("SELECT * FROM contractors");
-            while (rs.next()){
+            while (rs.next()) {
                 Contractor tmp = new Contractor(rs.getInt("id"),
                         rs.getString("name"),
                         rs.getString("address"),
@@ -221,13 +217,13 @@ public class ProductAddController implements Initializable {
         }
     }
 
-    private ObservableList<String> retrieveCategoriesData(){
+    private ObservableList<String> retrieveCategoriesData() {
         conn = new DBConnect();
         ObservableList<String> results = FXCollections.observableArrayList();
-        try{
+        try {
             ResultSet rs = conn.getFromDataBase("SELECT category FROM productPictures");
-            while (rs.next()){
-                if(rs.getString("category") != null){
+            while (rs.next()) {
+                if (rs.getString("category") != null) {
                     results.add(rs.getString("category"));
                 }
             }
