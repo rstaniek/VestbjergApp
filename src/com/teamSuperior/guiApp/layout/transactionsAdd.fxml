@@ -1,22 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import com.jfoenix.controls.JFXButton?>
-<?import com.jfoenix.controls.JFXCheckBox?>
-<?import com.jfoenix.controls.JFXComboBox?>
-<?import com.jfoenix.controls.JFXTextField?>
+<?import com.jfoenix.controls.*?>
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.ContextMenu?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.MenuItem?>
-<?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
-
-<AnchorPane prefHeight="759.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.TransactionsAddController">
+<AnchorPane prefHeight="759.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.teamSuperior.guiApp.controller.TransactionsAddController">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
         <children>
             <JFXButton fx:id="btn_searchProducts_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_searchProducts_clear_onClick" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
@@ -84,7 +76,11 @@
                <Insets top="10.0" />
             </VBox.margin>
          </JFXCheckBox>
-         <JFXCheckBox fx:id="checkBox_craftsman" checkedColor="#385ba4" mnemonicParsing="false" text="Craftsman" />
+          <JFXCheckBox fx:id="checkBox_craftsman" checkedColor="#385ba4" mnemonicParsing="false" text="Craftsman">
+              <VBox.margin>
+                  <Insets top="10.0"/>
+              </VBox.margin>
+          </JFXCheckBox>
       </children></VBox>
    <JFXButton fx:id="btn_clearBasket" layoutX="566.0" layoutY="227.0" mnemonicParsing="false" onAction="#btn_clearBasket_onClick" style="-fx-background-color: #c9c9c9;" text="Clear basket" />
     <Label fx:id="label_assignedCustomer" layoutX="279.0" layoutY="565.0" text="Assigned customer: no customer has been assigned" />
