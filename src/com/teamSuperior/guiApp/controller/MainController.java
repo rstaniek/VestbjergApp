@@ -12,12 +12,6 @@ import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-
-import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.text.DecimalFormat;
-
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -37,18 +31,24 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
-import static java.lang.Math.round;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
 
@@ -70,15 +70,9 @@ public class MainController implements Initializable {
     @FXML
     public LineChart currency_eurChart;
     @FXML
-    public LineChart currency_usdChart;
-    @FXML
     public NumberAxis xAxisCurrencyEur;
     @FXML
     public NumberAxis yAxisCurrencyEur;
-    @FXML
-    public NumberAxis xAxisCurrencyUsd;
-    @FXML
-    public NumberAxis yAxisCurrencyUsd;
     @FXML
     public Hyperlink button_copyEur;
     @FXML
@@ -97,6 +91,8 @@ public class MainController implements Initializable {
     private StringProperty currentDate;
     private StringProperty USDRatio;
     private StringProperty EURRatio;
+    private Parent transactionsFXMLLoader;
+
 
     private Preferences registry;
 
@@ -111,6 +107,7 @@ public class MainController implements Initializable {
     private XYChart.Series eurSeries;
     private XYChart.Series usdSeries;
     private int chartCounter;
+    private ObservableList<PieChart.Data> contributionData;
 
     public MainController() {
         welcomeMessage = new SimpleStringProperty("");
@@ -141,7 +138,6 @@ public class MainController implements Initializable {
         //displayXmasWnd();
         registry = Preferences.userRoot();
         window = new Window();
-
         conn = new DBConnect();
         // generating array list and users
         employees = new ArrayList<>();
@@ -161,7 +157,7 @@ public class MainController implements Initializable {
                     Platform.runLater(() -> setCurrentDateTime(timeFormat.format(now), dateFormat.format(now)));
                     Thread.sleep(1000);
                 }
-            }
+            } 
         };
 
         //Currency exchange update
@@ -215,15 +211,38 @@ public class MainController implements Initializable {
             }
         };
 
+        Task updateCharts = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                while (true) {
+                    Platform.runLater(() -> {
+                        efficiency.setAnimated(false);
+                        sales_chart.setAnimated(false);
+                        efficiency.getData().clear();
+                        effChartInitialized = false;
+                        displayEfficiencyChart();
+                        sales_chart.getData().clear();
+                        displaySalesPercentageChart();
+                        efficiency.setAnimated(true);
+                        sales_chart.setAnimated(true);
+                    });
+                    Thread.sleep(6000);
+                }
+            }
+        };
+
         Thread th = new Thread(getDateTime);
         Thread th2 = new Thread(getCurrencyRatios);
         Thread th3 = new Thread(waitForLogin);
+        //Thread th4 = new Thread(updateCharts);
         th.setDaemon(true);
         th2.setDaemon(true);
         th3.setDaemon(true);
+        //th4.setDaemon(true);
         th.start();
         th2.start();
         th3.start();
+        //th4.start();
         if(eurSeries.getData() != null){
             currency_eurChart.getData().addAll(eurSeries, usdSeries);
         }
@@ -342,7 +361,7 @@ public class MainController implements Initializable {
     @FXML
     public void handleSettings() {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/settingsWindow.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/settingsWindow.fxml"));
             Stage settingsWnd = new Stage();
             settingsWnd.setOnCloseRequest(e -> {
                 e.consume();
@@ -365,7 +384,7 @@ public class MainController implements Initializable {
         if (!registry.get("DATABASE_HOSTNAME", "").equals("") && !registry.get("DATABASE_USER", "").equals("") && !registry.get("DATABASE_PASS", "").equals("")) {
             if (employees.size() < 1) connectClient();
             try {
-                Parent logInScreen = FXMLLoader.load(getClass().getResource("../layout/loginWindowPopup.fxml"));
+                Parent logInScreen = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/loginWindowPopup.fxml"));
                 loginWindow = new Stage();
                 loginWindow.initModality(Modality.APPLICATION_MODAL);
                 loginWindow.setTitle("Log in");
@@ -405,7 +424,7 @@ public class MainController implements Initializable {
     public void handleEmployeesStatistics() {
         if (UserController.isLoggedIn()) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/empStatistics.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/empStatistics.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Employee statistics");
                 window.setResizable(false);
@@ -432,7 +451,7 @@ public class MainController implements Initializable {
     public void handleContractorsAdd() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/contractorsAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add a new contractor");
                 window.setResizable(false);
@@ -451,7 +470,7 @@ public class MainController implements Initializable {
     public void handleContractorsManage() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/contractorsManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/contractorsManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage contractors");
                 window.setResizable(false);
@@ -470,7 +489,7 @@ public class MainController implements Initializable {
     public void handleProductsView() {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/productsWindow.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/productsWindow.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Products");
                 window.setResizable(false);
@@ -487,7 +506,7 @@ public class MainController implements Initializable {
     public void handleEmployeesAdd() {
         if (UserController.isAllowed(3)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/empAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/empAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add a new employee");
                 window.setResizable(false);
@@ -524,13 +543,14 @@ public class MainController implements Initializable {
             xAxis.setTickLabelsVisible(false);
             effSeriesPersonal.setName("Your record");
             efficiency.setTitle("Efficiency chart");
-            double eff = 0;
+            double eff;
             int zeroEffCounter = 0;
             for(int i = 0; i < employees.size(); i++) {
                 if (employees.get(i).getId() == UserController.getUser().getId()) {
                     if((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)){
                         eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
                         effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
+                        effSeries.getData().add(new XYChart.Data(i, eff));
                     }
                     else {
                         eff = 0;
@@ -559,7 +579,7 @@ public class MainController implements Initializable {
 
     private void displaySalesPercentageChart() {
         if(UserController.isLoggedIn()){
-            ObservableList<PieChart.Data> contributionData = FXCollections.observableArrayList();
+            contributionData = FXCollections.observableArrayList();
             int totalSales = 0;
             for(Employee e : employees){
                 totalSales += e.getNumberOfSales();
@@ -607,7 +627,7 @@ public class MainController implements Initializable {
             else{
                 eurSeries.getData().clear();
                 chartCounter = 0;
-                /*
+                /* Code that supposedly should work but it doesn't - make the chart dynamic again
                 eurSeries.getData().remove(0);
                 for(int i=0; i< eurSeries.getData().size(); i++){
                     XYChart.Data data = (XYChart.Data)eurSeries.getData().get(i);
@@ -641,7 +661,7 @@ public class MainController implements Initializable {
     public void handleAddOffer(ActionEvent actionEvent) {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/offerAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/offerAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add a new offer");
                 window.setResizable(false);
@@ -658,7 +678,7 @@ public class MainController implements Initializable {
     public void handleViewOffers(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/offersManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/offersManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("manage Offers");
                 window.setResizable(false);
@@ -674,7 +694,7 @@ public class MainController implements Initializable {
     @FXML
     public void handleNewTransaction(ActionEvent actionEvent) {
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("../layout/transactionsAdd.fxml"));
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsAdd.fxml"));
             Stage window = new Stage();
             window.setTitle("Add a new transaction");
             window.setResizable(false);
@@ -690,7 +710,7 @@ public class MainController implements Initializable {
     public void handleViewTransactions(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/transactionsView.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsView.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Transactions");
                 window.setResizable(false);
@@ -707,7 +727,7 @@ public class MainController implements Initializable {
     public void handleCustomers(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/customersManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/customersManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Customers");
                 window.setResizable(false);
@@ -733,9 +753,77 @@ public class MainController implements Initializable {
     public void handleAddNewProduct(ActionEvent actionEvent) {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/productAdd.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/productAdd.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Add new product");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleMachinesAdd (ActionEvent actionEvent) {
+        if (UserController.isAllowed(2)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machineAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add new machine");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleMachinesManage (ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machinesManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage machines");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleLeasesAdd (ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leaseAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add new lease");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    public void handleLeasesManage (ActionEvent actionEvent) {
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leasesManage.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Manage leases");
                 window.setResizable(false);
                 Scene scene = new Scene(root);
                 window.setScene(scene);

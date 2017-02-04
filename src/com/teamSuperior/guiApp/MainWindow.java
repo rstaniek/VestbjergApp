@@ -1,4 +1,7 @@
 package com.teamSuperior.guiApp;
+
+import com.teamSuperior.guiApp.controller.Drawable;
+import com.teamSuperior.guiApp.enums.Drawables;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -7,7 +10,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+
 import java.util.Optional;
+
+import static com.teamSuperior.guiApp.GUI.SplashScreen.Style;
+import static com.teamSuperior.guiApp.GUI.SplashScreen.viewSplashScreen;
 
 /**
  * Vestbjerg App GUI Version
@@ -18,8 +25,10 @@ public class MainWindow extends Application {
     private Stage window;
     @Override
     public void start(Stage primaryStage) throws Exception {
+        viewSplashScreen(3000, Style.FADE, Style.FADE);
         window = primaryStage;
-        Parent root = FXMLLoader.load(getClass().getResource("layout/mainWindow.fxml"));
+        window.getIcons().add(Drawable.getImage(this.getClass(), Drawables.ICON));
+        Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/mainWindow.fxml"));
         primaryStage.setTitle("Team Superior - representing Silvan Inc.");
         primaryStage.setResizable(false);
 

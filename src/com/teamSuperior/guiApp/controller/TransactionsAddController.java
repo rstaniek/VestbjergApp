@@ -21,9 +21,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -40,9 +37,10 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.teamSuperior.core.Utils.*;
-import static com.teamSuperior.core.controlLayer.WebsiteCrawler.*;
-import static com.teamSuperior.core.enums.Currency.*;
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.core.controlLayer.WebsiteCrawler.getExchangeRatioBloomberg;
+import static com.teamSuperior.core.enums.Currency.DKKEUR;
+import static com.teamSuperior.core.enums.Currency.DKKUSD;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 import static javafx.scene.control.Alert.AlertType.INFORMATION;
@@ -96,7 +94,7 @@ public class TransactionsAddController implements Initializable {
     @FXML
     public CheckBox checkBox_craftsman;
     @FXML
-    public ChoiceBox<String> choiceBox_currency;
+    public ComboBox<String> choiceBox_currency;
 
 
     //products table columns
@@ -166,6 +164,7 @@ public class TransactionsAddController implements Initializable {
         customers = FXCollections.observableArrayList();
         searchCustomersResults = FXCollections.observableArrayList();
         checkComboBox_searchCustomers_criteria.getItems().addAll(customersCriteria);
+        checkComboBox_searchCustomers_criteria.getCheckModel().checkAll();
         retrieveCustomerData();
         initCustomerTableColumns(customers);
         tableView_customers.getSelectionModel().selectFirst();
@@ -766,7 +765,7 @@ public class TransactionsAddController implements Initializable {
     public void btn_registerCustomer_onClick(ActionEvent actionEvent) {
         if (UserController.isAllowed(1)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/customersManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/customersManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("View Customers");
                 window.setResizable(false);
@@ -846,9 +845,10 @@ public class TransactionsAddController implements Initializable {
                             qLeft = p.getQuantity() - item.getQuantity();
                         }
                     }
-                    productsQuery += String.format("UPDATE products SET quantity='%d' WHERE id='%d';\n",
+                    productsQuery += String.format("UPDATE products SET quantity=%d WHERE id=%d;\n",
                             qLeft, item.getItemID());
                 }
+                System.out.println(productsQuery);
                 conn.upload(productsQuery);
                 clearAll();
                 displayMessage(INFORMATION, "Transaction completed successfully.");

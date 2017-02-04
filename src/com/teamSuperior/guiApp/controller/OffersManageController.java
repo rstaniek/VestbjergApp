@@ -80,7 +80,6 @@ public class OffersManageController implements Initializable {
     private DBConnect conn;
 
     private static final String[] offersCriteria = new String[]{"Name", "Product ID", "Price", "Discount", "Expiration Date"};
-
     @FXML
     public void btn_search_clear_onClick(ActionEvent actionEvent) {
         text_search_query.clear();

@@ -1,7 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.Error;
 import javafx.collections.FXCollections;
@@ -20,13 +19,15 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.Utils.isNumeric;
 import static com.teamSuperior.core.connection.DBConnect.validateField;
-import static com.teamSuperior.guiApp.GUI.Error.*;
+import static com.teamSuperior.guiApp.GUI.Error.displayError;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
-import static javafx.scene.control.Alert.AlertType.*;
+import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 /**
  * Created by rajmu on 17.01.06.
@@ -164,7 +165,7 @@ public class OfferAddController implements Initializable {
         if(isNumeric(text_product.getText())){
             if(findProduct(Integer.parseInt(text_product.getText())) != null){
                 label_productName.setText(findProduct(Integer.parseInt(text_product.getText())).getName());
-                text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+                text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()).replace(",", "."));
             }
             else {
                 displayError(DATABASE_PRODUCTS_NOT_FOUND);
@@ -175,24 +176,24 @@ public class OfferAddController implements Initializable {
     @FXML
     public void text_discount_onKeyReleased(KeyEvent keyEvent) {
         if (text_discount.getText().isEmpty()) { //after the last character is deleted, it resets the price
-            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()).replace(",", "."));
         }
         if(isNumeric(text_discount.getText())){
             float currentPrice = findProduct(Integer.parseInt(text_product.getText())).getPrice();
             float currentDiscount = Float.parseFloat(text_discount.getText());
             float newPrice = currentPrice/100 * (100-currentDiscount);
             if (newPrice >= 0){ //checks that the price never goes under 0 (discount doesn't go higher than 100)
-                text_price.setText(String.format("%.2f",newPrice));
+                text_price.setText(String.format("%.2f", newPrice).replace(",", "."));
             }
             else { //should the price go under 0, error pops up, discount field is cleared and price is updated to original value
                 text_discount.clear();
-                text_price.setText(String.format("%.2f",currentPrice));
+                text_price.setText(String.format("%.2f", currentPrice).replace(",", "."));
                 displayError(OFFER_DISCOUNT_OUT_OF_BOUND);
             }
         }
         else { //same as in previous case, only different error pops up
             text_discount.clear();
-            text_price.setText(String.format("%.2f",findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+            text_price.setText(String.format("%.2f", findProduct(Integer.parseInt(text_product.getText())).getPrice()).replace(",", "."));
             displayError(TEXT_FIELD_NON_NUMERIC);
         }
 
@@ -208,18 +209,18 @@ public class OfferAddController implements Initializable {
             if (newDiscount <= 100 && newDiscount >= 0) text_discount.setText(String.format("%.2f",newDiscount).replace(",","."));
             else if (newDiscount <= 100) {
                 text_discount.clear();
-                text_price.setText(Float.toString(originalPrice));
+                text_price.setText(Float.toString(originalPrice).replace(",", "."));
                 displayError(OFFER_DISCOUNT_LESS_THEN_ZERO);
             }
             else {
                 text_discount.clear();
-                text_price.setText(Float.toString(originalPrice));
+                text_price.setText(Float.toString(originalPrice).replace(",", "."));
                 displayError(VALUE_LESS_THAN_ZERO);
             }
         }
         else {
             text_discount.clear();
-            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()));
+            text_price.setText(Float.toString(findProduct(Integer.parseInt(text_product.getText())).getPrice()).replace(",", "."));
             displayError(TEXT_FIELD_NON_NUMERIC);
         }
     }

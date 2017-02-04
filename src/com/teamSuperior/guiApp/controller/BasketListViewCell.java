@@ -10,7 +10,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 
 import java.io.IOException;
-import java.util.HashMap;
 
 /**
  * Created by rajmu on 17.01.19.
@@ -41,7 +40,7 @@ public class BasketListViewCell extends ListCell<BasketItem> {
             setGraphic(null);
         } else {
             if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("../layout/basketCell.fxml"));
+                mLLoader = new FXMLLoader(getClass().getResource("/com/teamSuperior/guiApp//layout/basketCell.fxml"));
                 mLLoader.setController(this);
                 try {
                     mLLoader.load();

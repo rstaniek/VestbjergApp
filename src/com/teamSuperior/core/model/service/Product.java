@@ -1,12 +1,24 @@
 package com.teamSuperior.core.model.service;
 
+import com.teamSuperior.core.model.Model;
+
+import javax.persistence.*;
+
 /**
- * Created by Domestos Maximus on 24-Nov-16.
+ * Product entity class
  */
-public class Product {
-    private int id, quantity, contractorId;
+@Entity
+@Table(name = "products")
+public class Product implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private int quantity, contractorId;
     private String barcode, name, subname, category, warehouseLocation;
     private float price;
+
+    public Product() {
+    }
 
     public Product(int id, int quantity, String barcode, String name, String subname, String category, String warehouseLocation, float price) {
         this.id = id;
@@ -73,9 +85,45 @@ public class Product {
         return contractorId;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
+    public void setContractorId(int contractorId) {
+        this.contractorId = contractorId;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSubname(String subname) {
+        this.subname = subname;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setWarehouseLocation(String warehouseLocation) {
+        this.warehouseLocation = warehouseLocation;
+    }
+
+    public void setPrice(float price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
-        return "{rpduct{" +
+        return "{product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", subname='" + subname + '\'' +
@@ -86,5 +134,10 @@ public class Product {
                 ", price='" + price + '\'' +
                 ", contractor Id='" + contractorId + '\'' +
                 '}';
+    }
+
+    @Override
+    public String toJson() {
+        return null;
     }
 }
