@@ -71,6 +71,7 @@ public class MachinesManageController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
         searchResults = FXCollections.observableArrayList();
         machines = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(machinesCriteria);

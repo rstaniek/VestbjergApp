@@ -2,17 +2,20 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXDatePicker?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="225.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.LeasesAddController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.LeasesAddController">
     <children>
-        <JFXButton fx:id="btn_add" layoutX="15.0" layoutY="153.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
-        <JFXButton fx:id="btn_clear" layoutX="68.0" layoutY="153.0" mnemonicParsing="false" onAction="#btn_clear_onClick" text="Clear" />
-        <JFXButton fx:id="btn_manageLeases" layoutX="126.0" layoutY="153.0" mnemonicParsing="false" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="165.0" text="Manage leases" />
-      <Text layoutX="27.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Machine" />
-      <JFXComboBox fx:id="lease_machines_available" layoutX="134.0" layoutY="27.0" prefWidth="150.0" />
-      <Text layoutX="27.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
-      <JFXComboBox fx:id="customers" layoutX="134.0" layoutY="66.0" prefWidth="150.0" />
+
+        <Text layoutX="27.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Machine" />
+        <JFXComboBox fx:id="lease_machines_available" layoutX="134.0" layoutY="27.0" prefWidth="150.0" />
+        <Text layoutX="27.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
+        <JFXComboBox fx:id="customers" layoutX="134.0" layoutY="66.0" prefWidth="150.0" />
+        <Text layoutX="27.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Return date" />
+        <JFXDatePicker fx:id="datePicker_returnDate" layoutX="127.0" layoutY="101.0" prefHeight="31.0" prefWidth="162.0" />
+        <JFXButton fx:id="btn_add" layoutX="70.0" layoutY="161.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
+        <JFXButton fx:id="btn_manageLeases" layoutX="128.0" layoutY="161.0" mnemonicParsing="false" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="112.0" text="Manage leases" />
     </children>
 </AnchorPane>
