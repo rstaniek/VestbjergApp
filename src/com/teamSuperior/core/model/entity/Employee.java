@@ -8,7 +8,7 @@ import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
- * Created by Domestos Maximus on 24-Nov-16.
+ * Employee entity
  */
 @Entity
 @Table(name = "employees")
@@ -34,6 +34,10 @@ public class Employee implements Model {
     private String numberOfSales_str;
     private String totalRevenue_str;
     private String accessLevel_str;
+
+    public Employee() {
+    }
+
     public Employee(int id, String name, String surname, String address, String city, String zip, String email, String phone, String password, String position, int numberOfSales, double totalRevenue, int accessLevel) {
         this.id = id;
         this.name = name;
@@ -48,7 +52,7 @@ public class Employee implements Model {
         this.numberOfSales = numberOfSales;
         this.totalRevenue = totalRevenue;
         this.accessLevel = accessLevel;
-        loc = new Locale("da","DK");
+        loc = new Locale("da", "DK");
         formatter = NumberFormat.getInstance(loc);
         numberOfSales_str = String.valueOf(numberOfSales);
         totalRevenue_str = String.valueOf("kr " + formatter.format(totalRevenue));
@@ -69,10 +73,6 @@ public class Employee implements Model {
 
     public void setAccessLevel(int accessLevel) {
         this.accessLevel = accessLevel;
-    }
-
-    public Employee() {
-
     }
 
     public String getNumberOfSales_str() {
@@ -167,7 +167,9 @@ public class Employee implements Model {
         return password;
     }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     private void setLocale(String lang) {
         loc = new Locale(lang);
