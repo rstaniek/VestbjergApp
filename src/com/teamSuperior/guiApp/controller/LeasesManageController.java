@@ -1,12 +1,15 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.jfoenix.controls.JFXButton;
+import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXDatePicker;
 import com.jfoenix.controls.JFXTextField;
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Lease;
 import com.teamSuperior.core.model.service.Machine;
+import com.teamSuperior.guiApp.GUI.Error;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -42,9 +45,9 @@ public class LeasesManageController implements Initializable {
     @FXML
     public TableView tableView_leases;
     @FXML
-    public JFXTextField text_machineID;
+    public JFXComboBox list_machines;
     @FXML
-    public JFXTextField text_customerID;
+    public JFXComboBox list_customers;
     @FXML
     public JFXTextField text_price;
     @FXML
@@ -62,6 +65,7 @@ public class LeasesManageController implements Initializable {
     private ObservableList<Lease> searchResults;
     private ObservableList<Lease> leases;
     private ObservableList<Machine> machines;
+    private ObservableList<Customer> customers;
     private Lease selectedLease;
     private DBConnect conn;
     private Employee loggedUser;
@@ -86,11 +90,13 @@ public class LeasesManageController implements Initializable {
         searchResults = FXCollections.observableArrayList();
         leases = FXCollections.observableArrayList();
         machines = FXCollections.observableArrayList();
+        customers = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(leasesCriteria);
         text_price.setDisable(true);
         conn = new DBConnect();
         retrieveLeaseData();
         retrieveMachineData();
+        retrieveCustomers();
         initTableColumns(leases);
         selectedLease = (Lease) tableView_leases.getFocusModel().getFocusedItem();
     }
@@ -135,6 +141,7 @@ public class LeasesManageController implements Initializable {
         try {
             ResultSet rs = conn.getFromDataBase("SELECT * FROM leaseMachines");
             while (rs.next()) {
+                list_machines.getItems().add(rs.getString("name"));
                 if (rs.getString("name") != null &&
                         rs.getString("pricePerDay") != null &&
                         rs.getString("leased") != null) {
@@ -150,6 +157,31 @@ public class LeasesManageController implements Initializable {
             displayMessage(ERROR, "SQL connection error", sqlException.getMessage());
         } catch (Exception ex) {
             displayMessage(ERROR, ex.getMessage());
+        }
+    }
+
+    public void retrieveCustomers()
+    {
+        try{
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM customers");
+            while (rs.next()) {
+                String fullName = rs.getString("name") + " " + rs.getString("surname");
+                list_customers.getItems().add(fullName);
+                customers.add(new Customer(rs.getInt("id"),
+                        rs.getInt("salesMade"),
+                        rs.getDouble("totalSpent"),
+                        rs.getString("name"),
+                        rs.getString("surname"),
+                        rs.getString("address"),
+                        rs.getString("city"),
+                        rs.getString("zip"),
+                        rs.getString("email"),
+                        rs.getString("phone")));
+            }
+        } catch (SQLException sqlex) {
+            Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
+        } catch (Exception ex) {
+            Error.displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
         }
     }
 
@@ -259,8 +291,8 @@ public class LeasesManageController implements Initializable {
     @FXML
     public void tableView_leases_onMouseClicked() {
         selectedLease = (Lease) tableView_leases.getFocusModel().getFocusedItem();
-        text_machineID.setText(String.valueOf(selectedLease.getLeaseMachineID()));
-        text_customerID.setText(String.valueOf(selectedLease.getCustomerID()));
+        list_machines.getSelectionModel().select(getMachineName(selectedLease.getLeaseMachineID()));
+        list_customers.getSelectionModel().select(getCustomerName(selectedLease.getCustomerID()));
         datePicker_borrowDate.setValue(selectedLease.getBorrowDate().toLocalDate());
         datePicker_returnDate.setValue(selectedLease.getReturnDate().toLocalDate());
         Machine machine = null;
@@ -281,29 +313,26 @@ public class LeasesManageController implements Initializable {
         yesButton.setText("Yes");
         Optional<ButtonType> yesResponse = a.showAndWait();
         if(yesResponse.isPresent() && ButtonType.OK.equals(yesResponse.get())){
-            if (
-                    validateField(text_machineID) &&
-                            validateField(text_customerID) &&
-                            validateField(text_price) &&
-                            datePicker_borrowDate.getValue() != null &&
-                            datePicker_returnDate.getValue() != null)
-            {
+            if (validateDates()) {
                 System.out.println("Validation passed");
                 conn = new DBConnect();
                 try {
                     conn.upload(String.format("UPDATE leases SET leaseMachineID='%1$s',customerID='%2$s', borrowDate='%3$s', returnDate='%4$s' WHERE id='%5$d'",
-                            text_machineID.getText(),
-                            text_customerID.getText(),
+                            getMachineID(String.valueOf(list_machines.getSelectionModel().getSelectedItem())),
+                            getCustomerID(String.valueOf(list_customers.getSelectionModel().getSelectedItem())),
                             datePicker_borrowDate.getValue(),
                             datePicker_returnDate.getValue(),
                             selectedLease.getId()));
                 } catch (Exception ex) {
                     displayMessage(ERROR, ex.getMessage());
                 } finally {
+                    updateMachineAvailability();
                     displayMessage(INFORMATION, "Lease updated successfully.");
                     refreshTable();
+
                 }
-            }
+            } else displayMessage(ERROR, "There has been a problem with one of the fields. Please, check that all fields are filled in correctly.");
+
         }
     }
 
@@ -329,10 +358,11 @@ public class LeasesManageController implements Initializable {
                         } catch (Exception ex) {
                             displayMessage(ERROR, ex.getMessage());
                         } finally {
+                            updateMachineAvailability();
                             displayMessage(INFORMATION, "Lease deleted successfully.");
                             refreshTable();
                         }
-                        updateMachineAvailibility();
+
                     }
                 }
             }
@@ -358,25 +388,36 @@ public class LeasesManageController implements Initializable {
                 } catch (Exception ex) {
                     displayMessage(ERROR, ex.getMessage());
                 } finally {
-                    refreshTable();
-                    displayMessage(INFORMATION, "Lease ended successfully.");
-                }
-                updateMachineAvailibility();
-                updateEmployeeStatistics();
 
+                    updateMachineAvailability();
+                    updateEmployeeStatistics();
+                    updateCustomerStatistics();
+                    displayMessage(INFORMATION, "Lease ended successfully.");
+                    refreshTable();
+                }
             }
         }
     }
 
-    public void updateMachineAvailibility() {
+    public void updateMachineAvailability() {
         try {
-            conn.upload(String.format("UPDATE leaseMachines SET leased='%1$s' WHERE id='%2$d'",
-                    0,
-                    selectedLease.getLeaseMachineID()));
-        } catch (Exception ex) {
+            for (Machine m : machines)
+                if (!isMachineInLease(m.getId()) && m.isLeased()) {
+                    conn.upload(String.format("UPDATE leaseMachines SET leased='%1$s' WHERE id='%2$d'",
+                            0,
+                            m.getId()));
+                }
+            for (Machine m : machines)
+                if (isMachineInLease(m.getId()) && !m.isLeased()) {
+                    conn.upload(String.format("UPDATE leaseMachines SET leased='%1$s' WHERE id='%2$d'",
+                            1,
+                            m.getId()));
+                }
+        } catch (Exception ex){
             displayMessage(ERROR, ex.getMessage());
         }
     }
+
 
     public void updateEmployeeStatistics() {
         try {
@@ -389,15 +430,69 @@ public class LeasesManageController implements Initializable {
         }
     }
 
-    //TODO: Solve this after implementing the customer and machine list fields
-    /*public void updateCustomerStatistics() {
+    public void updateCustomerStatistics() {
+        Customer customer = getCustomerWithID(selectedLease.getCustomerID());
+        System.out.println(customer.getName() + " " + customer.getSalesMade() + " " + customer.getTotalSpent());
         try {
             conn.upload(String.format("UPDATE customers SET salesMade='%1$d',totalSpent='%2$s' WHERE id='%3$d'",
                     customer.getSalesMade() + 1,
                     customer.getTotalSpent() + Double.valueOf(text_price.getText()),
-                    customer.getID));
+                    customer.getId()));
         } catch (Exception ex) {
             displayMessage(ERROR, ex.getMessage());
         }
-    }*/
+    }
+
+    public boolean validateDates() {
+        if (datePicker_returnDate.getValue() != null && datePicker_borrowDate.getId() != null) {
+            LocalDate d1 = datePicker_returnDate.getValue();
+            LocalDate d2 = datePicker_borrowDate.getValue();
+            return d1.isAfter(d2);
+        }
+        else return false;
+    }
+
+    public String getMachineName(int id) {
+        String name = null;
+        for (Machine m : machines) {
+            if (m.getId() == id) name = m.getName();
+        }
+        return name;
+    }
+
+    public String getCustomerName(int id) {
+        String name = null;
+        for (Customer c : customers) {
+            if (c.getId() == id) name = c.getName() + " " + c.getSurname();
+        }
+        return name;
+    }
+
+    public int getMachineID (String name) {
+        int id = 0;
+        for (Machine m : machines) {
+            if (m.getName().equals(name)) id = m.getId();
+        }
+        return id;
+    }
+
+    public int getCustomerID (String fullName) {
+        int id = 0;
+        for (Customer c : customers) {
+            if ((c.getName() + " " + c.getSurname()).equals(fullName)) id = c.getId();
+        }
+        return id;
+    }
+
+    public boolean isMachineInLease(int id) {
+        for (Lease l : leases) if (l.getLeaseMachineID() == id && l.getPrice() == 0) return true;
+        return false;
+    }
+
+    public Customer getCustomerWithID (int id) {
+        for (Customer c : customers) {
+            if (c.getId() == id) return c;
+        }
+        return null;
+    }
 }

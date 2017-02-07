@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
@@ -113,7 +114,7 @@ public class LeasesAddController implements Initializable {
         DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
         DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        if(datePicker_returnDate.getValue() != null) {
+        if(isDateInTheFuture()) {
             try {
                 conn = new DBConnect();
                 conn.upload(String.format("INSERT INTO leases (leaseMachineID, customerID, borrowDate, borrowTime, returnDate, returnTime, employeeID) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s')",
@@ -133,7 +134,7 @@ public class LeasesAddController implements Initializable {
                 displayMessage(INFORMATION, "Lease added successfully.");
             }
         }
-        else displayMessage(ERROR, "Return date needs to be selected before proceeding.");
+        else displayMessage(ERROR, "A future return date needs to be selected before proceeding.");
     }
 
     @FXML
@@ -171,5 +172,14 @@ public class LeasesAddController implements Initializable {
                 id = c.getId();
             }
         return id;
+    }
+
+    public boolean isDateInTheFuture() {
+        if (datePicker_returnDate.getValue() != null) {
+            LocalDate d1 = datePicker_returnDate.getValue();
+            LocalDate d2 = LocalDate.now();
+            return d1.isAfter(d2);
+        }
+        else return false;
     }
 }

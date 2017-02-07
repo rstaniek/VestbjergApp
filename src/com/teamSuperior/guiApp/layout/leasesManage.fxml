@@ -7,6 +7,7 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
+<?import com.jfoenix.controls.JFXComboBox?>
 
 <AnchorPane prefHeight="665.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.LeasesManageController">
     <children>
@@ -19,8 +20,8 @@
         </AnchorPane>
         <TableView fx:id="tableView_leases" layoutY="50.0" onMouseClicked="#tableView_leases_onMouseClicked" prefHeight="400.0" prefWidth="800.0">
         </TableView>
-        <JFXTextField fx:id="text_machineID" focusColor="#385ba4" layoutX="15.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Machine ID" />
-        <JFXTextField fx:id="text_customerID" focusColor="#385ba4" layoutX="15.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Customer ID" />
+        <JFXComboBox fx:id="list_machines" focusColor="#385ba4" layoutX="15.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Machine ID" />
+        <JFXComboBox fx:id="list_customers" focusColor="#385ba4" layoutX="15.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Customer ID" />
         <JFXTextField fx:id="text_price" focusColor="#385ba4" layoutX="15.0" layoutY="545.0" prefHeight="25.0" prefWidth="200.0" promptText="Current price" />
         <Label layoutX="230.0" layoutY="472.0" text="- Machine ID" />
         <Label layoutX="230.0" layoutY="512.0" text="- Customer ID" />
