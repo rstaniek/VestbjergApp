@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import com.jfoenix.controls.JFXDatePicker?>
 <?import com.jfoenix.controls.JFXTextField?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
-<?import com.jfoenix.controls.JFXComboBox?>
 
 <AnchorPane prefHeight="665.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.LeasesManageController">
     <children>
@@ -34,6 +34,7 @@
         <JFXButton fx:id="btn_save" layoutX="449.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save changes" />
         <JFXButton fx:id="btn_endLease" layoutX="554.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_endLease_onClick" style="-fx-background-color: #c9c9c9;" text="End lease" />
         <JFXButton fx:id="btn_delete" layoutX="636.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete lease" />
+        <JFXButton fx:id="btn_show" layoutX="15.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_show_onClick" prefHeight="25.0" prefWidth="171.0" text="Show leases not returned" />
 
 
 

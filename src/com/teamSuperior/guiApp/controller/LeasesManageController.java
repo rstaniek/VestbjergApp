@@ -60,6 +60,8 @@ public class LeasesManageController implements Initializable {
     public JFXButton btn_endLease;
     @FXML
     public JFXButton btn_delete;
+    @FXML
+    public JFXButton btn_show;
 
 
     private ObservableList<Lease> searchResults;
@@ -115,6 +117,41 @@ public class LeasesManageController implements Initializable {
                                 rs.getString("returnDate") != null &&
                                 rs.getString("returnTime") != null &&
                                 rs.getString("price") != null &&
+                                rs.getString("employeeID") != null)
+                {
+                    Lease tmp = new Lease(
+                            rs.getInt("id"),
+                            rs.getInt("leaseMachineID"),
+                            rs.getInt("customerID"),
+                            rs.getFloat("price"),
+                            rs.getDate("borrowDate"),
+                            rs.getTime("borrowTime"),
+                            rs.getDate("returnDate"),
+                            rs.getTime("returnTime"),
+                            rs.getInt("employeeID"));
+                    leases.add(tmp);
+                }
+            }
+        } catch (SQLException sqlException) {
+            displayMessage(ERROR, "SQL connection error", sqlException.getMessage());
+        } catch (Exception ex) {
+            displayMessage(ERROR, ex.getMessage());
+        }
+    }
+
+    private void retrieveNotReturnedLeaseData() {
+        try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM leases");
+            while (rs.next()) {
+                if (
+                        rs.getString("id") != null &&
+                                rs.getString("leaseMachineID") != null &&
+                                rs.getString("customerID") != null &&
+                                rs.getString("borrowDate") != null &&
+                                rs.getString("borrowTime") != null &&
+                                rs.getString("returnDate") != null &&
+                                rs.getString("returnTime") != null &&
+                                rs.getFloat("price") == 0 &&
                                 rs.getString("employeeID") != null)
                 {
                     Lease tmp = new Lease(
@@ -494,5 +531,21 @@ public class LeasesManageController implements Initializable {
             if (c.getId() == id) return c;
         }
         return null;
+    }
+
+    @FXML
+    public void btn_show_onClick(ActionEvent event){
+        switch (btn_show.getText()){
+            case "Show leases not returned":
+                leases.clear();
+                retrieveNotReturnedLeaseData();
+                btn_show.setText("Show all leases");
+                break;
+            case "Show all leases":
+                leases.clear();
+                retrieveLeaseData();
+                btn_show.setText("Show leases not returned");
+                break;
+        }
     }
 }
