@@ -101,6 +101,7 @@ public class LeasesManageController implements Initializable {
         retrieveCustomers();
         initTableColumns(leases);
         selectedLease = (Lease) tableView_leases.getFocusModel().getFocusedItem();
+        runLeaseExpirationCheck();
     }
 
 
@@ -197,8 +198,7 @@ public class LeasesManageController implements Initializable {
         }
     }
 
-    public void retrieveCustomers()
-    {
+    private void retrieveCustomers() {
         try{
             ResultSet rs = conn.getFromDataBase("SELECT * FROM customers");
             while (rs.next()) {
@@ -222,6 +222,31 @@ public class LeasesManageController implements Initializable {
         }
     }
 
+    private void runLeaseExpirationCheck() {
+        LocalDateTime now = LocalDateTime.now();
+        int numberOfExpired = 0;
+        for (Lease l: leases) {
+            if(l.getReturnDate().toLocalDate().atTime(l.getReturnTime().toLocalTime()).isBefore(now) && l.getPrice() == 0) {
+                numberOfExpired++;
+            }
+        }
+        if (numberOfExpired > 0) {
+            Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+            a.setHeaderText("Expired leases detected!");
+            if (numberOfExpired == 1) a.setContentText("There is 1 lease with expired return date. Do you want to intervene?");
+            else a.setContentText(String.format("There are %1$d leases with expired return dates. Do you want to intervene?", numberOfExpired));
+            Button yesButton = (Button) a.getDialogPane().lookupButton(ButtonType.OK);
+            yesButton.setText("Yes");
+            Button noButton = (Button) a.getDialogPane().lookupButton(ButtonType.CANCEL);
+            noButton.setText("No");
+            Optional<ButtonType> okResponse = a.showAndWait();
+            if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get())) {
+                leases.clear();
+                retrieveNotReturnedLeaseData();
+            }
+        }
+    }
+
     private void refreshTable() {
         leases.removeAll();
         leases = null;
@@ -232,13 +257,13 @@ public class LeasesManageController implements Initializable {
     }
 
     @FXML
-    public void btn_search_clear_onClick(ActionEvent actionEvent) {
+    public void btn_search_clear_onClick() {
         text_search_query.clear();
         initTableColumns(leases);
     }
 
     @FXML
-    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+    public void text_search_query_onKeyReleased() {
         searchResults = null;
         searchResults = performSearch(text_search_query.getText());
         tableView_leases.getColumns().removeAll(leaseMachineIDCOl, customerIDCol, borrowDateCol, borrowTimeCol, returnDateCol, returnTimeCol, priceCol, employeeIDCol);
@@ -289,35 +314,35 @@ public class LeasesManageController implements Initializable {
 
 
     private void initTableColumns(ObservableList<Lease> source) {
-        leaseMachineIDCOl = new TableColumn<Lease, String>("Machine ID");
+        leaseMachineIDCOl = new TableColumn<>("Machine ID");
         leaseMachineIDCOl.setMinWidth(80);
         leaseMachineIDCOl.setCellValueFactory(new PropertyValueFactory<>("leaseMachineID"));
 
-        customerIDCol = new TableColumn<Lease, String>("Customer ID");
+        customerIDCol = new TableColumn<>("Customer ID");
         customerIDCol.setMinWidth(150);
         customerIDCol.setCellValueFactory(new PropertyValueFactory<>("customerID"));
 
-        borrowDateCol = new TableColumn<Lease, String>("Borrow date");
+        borrowDateCol = new TableColumn<>("Borrow date");
         borrowDateCol.setMinWidth(80);
         borrowDateCol.setCellValueFactory(new PropertyValueFactory<>("borrowDate"));
 
-        borrowTimeCol = new TableColumn<Lease, String>("Borrow time");
+        borrowTimeCol = new TableColumn<>("Borrow time");
         borrowTimeCol.setMinWidth(80);
         borrowTimeCol.setCellValueFactory(new PropertyValueFactory<>("borrowTime"));
 
-        returnDateCol = new TableColumn<Lease, String>("Return date");
+        returnDateCol = new TableColumn<>("Return date");
         returnDateCol.setMinWidth(80);
         returnDateCol.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
 
-        returnTimeCol = new TableColumn<Lease, String>("Return time");
+        returnTimeCol = new TableColumn<>("Return time");
         returnTimeCol.setMinWidth(80);
         returnTimeCol.setCellValueFactory(new PropertyValueFactory<>("returnTime"));
 
-        priceCol = new TableColumn<Lease, String>("Price");
+        priceCol = new TableColumn<>("Price");
         priceCol.setMinWidth(80);
         priceCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        employeeIDCol = new TableColumn<Lease, String>("EmployeeID");
+        employeeIDCol = new TableColumn<>("EmployeeID");
         employeeIDCol.setMinWidth(80);
         employeeIDCol.setCellValueFactory(new PropertyValueFactory<>("employeeID"));
 
@@ -436,7 +461,7 @@ public class LeasesManageController implements Initializable {
         }
     }
 
-    public void updateMachineAvailability() {
+    private void updateMachineAvailability() {
         try {
             for (Machine m : machines)
                 if (!isMachineInLease(m.getId()) && m.isLeased()) {
@@ -456,7 +481,7 @@ public class LeasesManageController implements Initializable {
     }
 
 
-    public void updateEmployeeStatistics() {
+    private void updateEmployeeStatistics() {
         try {
             conn.upload(String.format("UPDATE employees SET numberOfSales='%1$s',totalRevenue='%2$s' WHERE id='%3$d'",
                     loggedUser.getNumberOfSales() + 1,
@@ -467,7 +492,7 @@ public class LeasesManageController implements Initializable {
         }
     }
 
-    public void updateCustomerStatistics() {
+    private void updateCustomerStatistics() {
         Customer customer = getCustomerWithID(selectedLease.getCustomerID());
         System.out.println(customer.getName() + " " + customer.getSalesMade() + " " + customer.getTotalSpent());
         try {
@@ -480,7 +505,7 @@ public class LeasesManageController implements Initializable {
         }
     }
 
-    public boolean validateDates() {
+    private boolean validateDates() {
         if (datePicker_returnDate.getValue() != null && datePicker_borrowDate.getId() != null) {
             LocalDate d1 = datePicker_returnDate.getValue();
             LocalDate d2 = datePicker_borrowDate.getValue();
@@ -489,7 +514,7 @@ public class LeasesManageController implements Initializable {
         else return false;
     }
 
-    public String getMachineName(int id) {
+    private String getMachineName(int id) {
         String name = null;
         for (Machine m : machines) {
             if (m.getId() == id) name = m.getName();
@@ -497,7 +522,7 @@ public class LeasesManageController implements Initializable {
         return name;
     }
 
-    public String getCustomerName(int id) {
+    private String getCustomerName(int id) {
         String name = null;
         for (Customer c : customers) {
             if (c.getId() == id) name = c.getName() + " " + c.getSurname();
@@ -505,7 +530,7 @@ public class LeasesManageController implements Initializable {
         return name;
     }
 
-    public int getMachineID (String name) {
+    private int getMachineID (String name) {
         int id = 0;
         for (Machine m : machines) {
             if (m.getName().equals(name)) id = m.getId();
@@ -513,7 +538,7 @@ public class LeasesManageController implements Initializable {
         return id;
     }
 
-    public int getCustomerID (String fullName) {
+    private int getCustomerID (String fullName) {
         int id = 0;
         for (Customer c : customers) {
             if ((c.getName() + " " + c.getSurname()).equals(fullName)) id = c.getId();
@@ -521,12 +546,12 @@ public class LeasesManageController implements Initializable {
         return id;
     }
 
-    public boolean isMachineInLease(int id) {
+    private boolean isMachineInLease(int id) {
         for (Lease l : leases) if (l.getLeaseMachineID() == id && l.getPrice() == 0) return true;
         return false;
     }
 
-    public Customer getCustomerWithID (int id) {
+    private Customer getCustomerWithID (int id) {
         for (Customer c : customers) {
             if (c.getId() == id) return c;
         }
@@ -534,7 +559,7 @@ public class LeasesManageController implements Initializable {
     }
 
     @FXML
-    public void btn_show_onClick(ActionEvent event){
+    public void btn_show_onClick(){
         switch (btn_show.getText()){
             case "Show leases not returned":
                 leases.clear();
