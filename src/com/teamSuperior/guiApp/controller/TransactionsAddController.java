@@ -8,7 +8,6 @@ import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
-import com.teamSuperior.core.model.service.ProductCategory;
 import com.teamSuperior.guiApp.GUI.TextFieldBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;

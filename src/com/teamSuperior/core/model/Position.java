@@ -3,16 +3,19 @@ package com.teamSuperior.core.model;
 import javax.persistence.*;
 
 /**
- * Created by Domestos Maximus on 15-Dec-16.
+ * Position entity
  */
 @Entity
 @Table(name = "positions")
-public class Position {
-
+public class Position implements Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id, accessLevel;
+    private int id;
+    private int accessLevel;
     private String name;
+
+    public Position() {
+    }
 
     public Position(int accessLevel, String name) {
         this.accessLevel = accessLevel;
@@ -42,5 +45,10 @@ public class Position {
     @Override
     public String toString() {
         return "Position: id='" + id + "', name='" + name + "', accessLevel='" + accessLevel + "'\n";
+    }
+
+    @Override
+    public String toJson() {
+        return null;
     }
 }
