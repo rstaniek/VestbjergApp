@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="470.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MachinesManageController">
+<AnchorPane prefHeight="470.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.MachinesManageController">
     <children>
         <AnchorPane prefHeight="50.0" prefWidth="800.0">
             <children>
@@ -24,5 +24,6 @@
 
         <JFXButton fx:id="btn_save" layoutX="355.0" layoutY="419.0" mnemonicParsing="false" onAction="#btn_save_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Save changes" />
         <JFXButton fx:id="btn_delete" layoutX="650.0" layoutY="419.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete machine" />
-    </children>
+        <JFXButton fx:id="btn_show" layoutX="475.0" layoutY="419.0" mnemonicParsing="false" onAction="#btn_show_onClick" text="Show available machines" />
+        </children>
 </AnchorPane>

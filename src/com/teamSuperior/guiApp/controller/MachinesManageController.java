@@ -54,6 +54,8 @@ public class MachinesManageController implements Initializable {
     public JFXTextField text_search_query;
     @FXML
     public CheckComboBox<String> checkComboBox_search_criteria;
+    @FXML
+    public JFXButton btn_show;
 
     private ObservableList<Machine> machines;
     private ObservableList<Machine> searchResults;
@@ -95,6 +97,27 @@ public class MachinesManageController implements Initializable {
                             rs.getFloat("pricePerDay"),
                             rs.getBoolean("leased"));
                     //System.out.print(tmp.toString());
+                    machines.add(tmp);
+                }
+            }
+        } catch (SQLException sqlException) {
+            displayMessage(ERROR, "SQL connection error", sqlException.getMessage());
+        } catch (Exception ex) {
+            displayMessage(ERROR, ex.getMessage());
+        }
+    }
+
+    private void retrieveNotLeasedData(){
+        try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM leaseMachines");
+            while (rs.next()) {
+                if (rs.getString("name") != null &&
+                        rs.getString("pricePerDay") != null &&
+                        rs.getBoolean("leased") == false) {
+                    Machine tmp = new Machine(rs.getInt("id"),
+                            rs.getString("name"),
+                            rs.getFloat("pricePerDay"),
+                            rs.getBoolean("leased"));
                     machines.add(tmp);
                 }
             }
@@ -269,5 +292,23 @@ public class MachinesManageController implements Initializable {
             }
         }
         return results;
+    }
+
+    @FXML
+    public void btn_show_onClick(ActionEvent event){
+        switch(btn_show.getText()){
+            case "Show available machines":
+                machines.clear();
+                retrieveNotLeasedData();
+                initTableColumns(machines);
+                btn_show.setText("Show all machines");
+                break;
+            case "Show all machines":
+                machines.clear();
+                retrieveData();
+                initTableColumns(machines);
+                btn_show.setText("Show available machines");
+                break;
+        }
     }
 }
