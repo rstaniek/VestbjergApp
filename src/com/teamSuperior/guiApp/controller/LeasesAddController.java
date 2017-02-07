@@ -68,12 +68,14 @@ public class LeasesAddController implements Initializable {
         try{
             ResultSet rs = conn.getFromDataBase("SELECT * FROM leaseMachines");
             while (rs.next()) {
-                lease_machines_available.getItems().add(rs.getString("name"));
+                if (rs.getInt("leased") == 0) {
+                    lease_machines_available.getItems().add(rs.getString("name"));
+                }
                 machinesList.add(new Machine(rs.getInt("id"),
                         rs.getString("name"),
                         rs.getFloat("pricePerDay"),
                         rs.getBoolean("leased")));
-        }
+            }
         } catch (SQLException sqlex) {
             Error.displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
         } catch (Exception ex) {
@@ -115,13 +117,16 @@ public class LeasesAddController implements Initializable {
             try {
                 conn = new DBConnect();
                 conn.upload(String.format("INSERT INTO leases (leaseMachineID, customerID, borrowDate, borrowTime, returnDate, returnTime, employeeID) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s')",
-                        machinesList.get(lease_machines_available.getSelectionModel().getSelectedIndex()).getId(),
-                        customersList.get(customers.getSelectionModel().getSelectedIndex()).getId(),
+                        getSelectedMachineIndex(),
+                        getSelectedCustomerIndex(),
                         dtf_date.format(now),
                         dtf_time.format(now),
                         datePicker_returnDate.getValue(),
                         dtf_time.format(now),
                         loggedUser.getId()));
+                conn.upload(String.format("UPDATE leaseMachines SET leased='%1$s' WHERE id='%2$d'",
+                        1,
+                        getSelectedMachineIndex()));
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
             } finally {
@@ -148,5 +153,23 @@ public class LeasesAddController implements Initializable {
                 displayMessage(ERROR, ex.getMessage());
             }
         }
+    }
+
+    public int getSelectedMachineIndex() {
+        int id = 0;
+        for (Machine m : machinesList)
+            if(m.getName().equals(lease_machines_available.getSelectionModel().getSelectedItem().toString())) {
+            id = m.getId();
+        }
+        return id;
+    }
+
+    public int getSelectedCustomerIndex() {
+        int id = 0;
+        for (Customer c : customersList)
+            if((c.getName() + " " + c.getSurname()).equals(customers.getSelectionModel().getSelectedItem().toString())) {
+                id = c.getId();
+            }
+        return id;
     }
 }
