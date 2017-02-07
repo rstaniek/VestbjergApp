@@ -1,10 +1,5 @@
 package com.teamSuperior.guiApp.controller;
 
-import com.sun.javafx.geom.BaseBounds;
-import com.sun.javafx.geom.transform.BaseTransform;
-import com.sun.javafx.jmx.MXNodeAlgorithm;
-import com.sun.javafx.jmx.MXNodeAlgorithmContext;
-import com.sun.javafx.sg.prism.NGNode;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
@@ -348,9 +343,11 @@ public class EmployeeStatisticsController implements Initializable {
     }
 
     private double getEfficiency(Employee e) {
-        if (e.getNumberOfSales() == 0 || e.getTotalRevenue() == 0) {
-            return 0;
-        } else return e.getTotalRevenue() / e.getNumberOfSales();
+        if (e.getTotalRevenue() == 0 || e.getNumberOfSales() == 0) {
+            return 0.0;
+        } else {
+            return e.getTotalRevenue() / e.getNumberOfSales();
+        }
     }
 
     private double calculateAvgEfficiency(){

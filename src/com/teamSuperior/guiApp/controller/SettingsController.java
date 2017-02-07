@@ -1,17 +1,24 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
+import javafx.application.Platform;
+import javafx.beans.InvalidationListener;
+import javafx.beans.Observable;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -58,6 +65,17 @@ public class SettingsController implements Initializable {
     public Tab tab_discounts;
     @FXML
     public CheckBox checkBox_showNotifications_lowAmountOfProducts;
+    @FXML
+    public Label label_timeline;
+    @FXML
+    public Button btn_play;
+    @FXML
+    public Button btn_stop;
+    @FXML
+    public Slider slider_timeline;
+    private MediaPlayer mediaPlayer;
+    private Media media;
+    private boolean isPlaying;
 
 
     private Preferences registry; //application settings
@@ -194,6 +212,71 @@ public class SettingsController implements Initializable {
         text_settings_discounts_quantity.setText(String.valueOf(registry.getDouble("DISCOUNT_QUANTITY", 0)));
         text_settings_discounts_selfPickUp.setText(String.valueOf(registry.getDouble("DISCOUNT_SELF_PICKUP", 0)));
         text_settings_discounts_maxTreshold.setText(String.valueOf(registry.getDouble("DISCOUNT_MAX", 0)));
+
+        URL url = null;
+        try {
+            url = new URL("http://remix1436.ct8.pl/resources/Media/Thomas_Jack-Booka_Shake.mp4");
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+
+        String s = "";
+        try {
+            s = url.toURI().toString();
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+        }
+        media = new Media(s);
+        System.out.println(s);
+        mediaPlayer = new MediaPlayer(media);
+        label_timeline.setText("0:00");
+        btn_play.setDisable(true);
+        mediaPlayer.setOnReady(new Runnable() {
+            @Override
+            public void run() {
+                slider_timeline.setMin(0);
+                slider_timeline.setValue(0.0);
+                System.err.println("INFO: Media duration init: " + media.getDuration().toSeconds());
+                slider_timeline.setMax(media.getDuration().toSeconds());
+                btn_play.setDisable(false);
+            }
+        });
+        isPlaying = false;
+        mediaPlayer.currentTimeProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                updateValues();
+            }
+        });
+        slider_timeline.valueProperty().addListener(new InvalidationListener() {
+            @Override
+            public void invalidated(Observable observable) {
+                if (slider_timeline.isValueChanging()) {
+                    mediaPlayer.seek(new Duration(slider_timeline.getValue()));
+                }
+            }
+        });
+    }
+
+    private void updateValues() {
+        if (slider_timeline != null) {
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    slider_timeline.setDisable(media.getDuration().isUnknown());
+                    Duration current = mediaPlayer.getCurrentTime();
+                    if (!slider_timeline.isDisabled() && !slider_timeline.isValueChanging() && media.getDuration().greaterThan(Duration.ZERO)) {
+                        slider_timeline.setValue(current.toSeconds());
+                    }
+                    int mins = (int) current.toMinutes();
+                    String secs = String.valueOf((int) current.toSeconds() % 60);
+                    if (((int) current.toSeconds() & 60) < 10) {
+                        secs = "0" + secs;
+                    }
+                    label_timeline.setText(String.format("%d:%s", mins, secs));
+                }
+            });
+        }
     }
 
     @FXML
@@ -207,5 +290,23 @@ public class SettingsController implements Initializable {
     public void btn_quit_clicked(ActionEvent actionEvent) {
         Stage stage = (Stage) btn_quit.getScene().getWindow();
         stage.close();
+    }
+
+    @FXML
+    public void btn_play_onClick(ActionEvent actionEvent) {
+        if (isPlaying) {
+            btn_play.setText("Play");
+            mediaPlayer.pause();
+            isPlaying = false;
+        } else {
+            btn_play.setText("Pause");
+            mediaPlayer.play();
+            isPlaying = true;
+        }
+    }
+
+    @FXML
+    public void btn_stop_onClick(ActionEvent actionEvent) {
+        mediaPlayer.stop();
     }
 }

@@ -12,9 +12,9 @@ public class Lease {
     private Date borrowDate;
     private Time borrowTime;
     private Date returnDate;
-    private Date returnTime;
+    private Time returnTime;
 
-    public Lease (int id, int leaseMachineID, int customerID, int employeeID, float price, Date borrowDate, Time borrowTime, Date returnDate, Date returnTime) {
+    public Lease (int id, int leaseMachineID, int customerID, float price, Date borrowDate, Time borrowTime, Date returnDate, Time returnTime, int employeeID) {
         this.id = id;
         this.leaseMachineID = leaseMachineID;
         this.customerID = customerID;
@@ -58,7 +58,7 @@ public class Lease {
         return returnDate;
     }
 
-    public Date getReturnTime() {
+    public Time getReturnTime() {
         return returnTime;
     }
 

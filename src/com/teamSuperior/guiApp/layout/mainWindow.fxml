@@ -92,7 +92,7 @@
     <bottom>
         <AnchorPane maxHeight="60.0" prefWidth="809.0" styleClass="bottom" BorderPane.alignment="CENTER">
             <ImageView pickOnBounds="true" preserveRatio="true" styleClass="logo">
-                <Image preserveRatio="true" url="/silvan.png"/>
+                <Image preserveRatio="true" url="/img/silvan.png"/>
             </ImageView>
             <JFXButton fx:id="btn_logIn" layoutX="845.0" layoutY="26.0" lineSpacing="1.0" mnemonicParsing="false"
                        onAction="#handleLogIn" prefHeight="50.0" prefWidth="140.0" ripplerFill="#385BA4"

@@ -6,12 +6,12 @@ package com.teamSuperior.guiApp.enums;
  * can be used with Drawable class
  */
 public enum Drawables {
-    TEST_MEME("/i_want_to_believe.jpg"),
+    TEST_MEME("/img/i_want_to_believe.jpg"),
     APP_LOGO("/silvan_logo_rectangle.png"),
-    TEAM_LOGO("/team_logo.png"),
-    X_MAS_IMAGE("/post-8868-Have-a-fucking-weekend-and-don-YeZz.jpeg"),
-    SPLASH("/splash_big.png"),
-    ICON("/icon_256.png");
+    TEAM_LOGO("/img/team_logo.png"),
+    X_MAS_IMAGE("/img/post-8868-Have-a-fucking-weekend-and-don-YeZz.jpeg"),
+    SPLASH("/img/splash_big.png"),
+    ICON("/img/icon_256.png");
 
     private String path;
 

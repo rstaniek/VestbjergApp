@@ -19,7 +19,7 @@
         </AnchorPane>
         <TableView fx:id="tableView_leases" layoutY="50.0" onMouseClicked="#tableView_leases_onMouseClicked" prefHeight="400.0" prefWidth="800.0">
         </TableView>
-        <JFXTextField fx:id="text_leaseID" focusColor="#385ba4" layoutX="15.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Machine ID" />
+        <JFXTextField fx:id="text_machineID" focusColor="#385ba4" layoutX="15.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Machine ID" />
         <JFXTextField fx:id="text_customerID" focusColor="#385ba4" layoutX="15.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Customer ID" />
         <JFXTextField fx:id="text_price" focusColor="#385ba4" layoutX="15.0" layoutY="545.0" prefHeight="25.0" prefWidth="200.0" promptText="Price" />
         <Label layoutX="230.0" layoutY="472.0" text="- Machine ID" />

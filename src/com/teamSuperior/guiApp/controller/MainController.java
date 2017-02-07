@@ -693,16 +693,18 @@ public class MainController implements Initializable {
 
     @FXML
     public void handleNewTransaction(ActionEvent actionEvent) {
-        try {
-            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsAdd.fxml"));
-            Stage window = new Stage();
-            window.setTitle("Add a new transaction");
-            window.setResizable(false);
-            Scene scene = new Scene(root);
-            window.setScene(scene);
-            window.show();
-        } catch (IOException ex) {
-            Error.displayMessage(ERROR, ex.getMessage());
+        if (UserController.isAllowed(1)) {
+            try {
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsAdd.fxml"));
+                Stage window = new Stage();
+                window.setTitle("Add a new transaction");
+                window.setResizable(false);
+                Scene scene = new Scene(root);
+                window.setScene(scene);
+                window.show();
+            } catch (IOException ex) {
+                Error.displayMessage(ERROR, ex.getMessage());
+            }
         }
     }
 
