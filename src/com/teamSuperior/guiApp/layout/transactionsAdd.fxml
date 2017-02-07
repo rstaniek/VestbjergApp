@@ -6,90 +6,131 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
-<AnchorPane prefHeight="759.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112"
-            xmlns:fx="http://javafx.com/fxml/1"
-            fx:controller="com.teamSuperior.guiApp.controller.TransactionsAddController">
+<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.TransactionsAddController" prefHeight="759.0"
+            prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
-        <children>
-            <JFXButton fx:id="btn_searchProducts_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_searchProducts_clear_onClick" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
-            <JFXTextField fx:id="text_searchProducts_query" focusColor="#385ba4" layoutX="49.0" layoutY="13.0" onKeyReleased="#text_searchProducts_query_onKeyReleased" prefHeight="25.0" prefWidth="466.0" promptText="Search for products..." />
-            <CheckComboBox fx:id="checkComboBox_searchProducts_criteria" layoutX="528.0" layoutY="13.0" prefHeight="25" prefWidth="139.0" />
-         <Label layoutX="797.0" layoutY="7.0" text="Basket">
+        <JFXButton fx:id="clearSearchProductsButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
+                   onAction="#clickClearSearchProducts" prefHeight="25.0" prefWidth="25.0"
+                   ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X"/>
+        <JFXTextField fx:id="searchProductsField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0"
+                      onKeyReleased="#text_searchProducts_query_onKeyReleased" prefHeight="25.0" prefWidth="466.0"
+                      promptText="Search for products..."/>
+        <CheckComboBox fx:id="searchProductsCriteriaComboBox" layoutX="528.0" layoutY="13.0" prefHeight="25"
+                       prefWidth="139.0"/>
+        <Label layoutX="797.0" layoutY="7.0" text="Basket">
             <font>
-               <Font size="25.0" />
+                <Font size="25.0"/>
             </font>
-         </Label>
-        </children>
+        </Label>
     </AnchorPane>
-    <TableView fx:id="tableView_products" layoutX="14.0" layoutY="50.0" onMouseClicked="#tableView_products_onMouseClicked" prefHeight="169.0" prefWidth="654.0">
-      <contextMenu>
-         <ContextMenu>
-           <items>
-             <MenuItem mnemonicParsing="false" onAction="#AddToBasket_contextMenu_onClick" text="Add 1 item" />
-               <MenuItem mnemonicParsing="false" onAction="#AddToBasketMore_contextMenu_onClick" text="Add more..." />
-           </items>
-         </ContextMenu>
-      </contextMenu></TableView>
-    <JFXButton fx:id="btn_addToBasket" layoutX="14.0" layoutY="227.0" mnemonicParsing="false" onAction="#btn_addToBasket_onClick" style="-fx-background-color: #c9c9c9;" text="Add to basket" />
-    <HBox layoutX="679.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="614.0" prefWidth="316.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
-      <children>
-            <ListView fx:id="listView_basket" prefHeight="614.0" prefWidth="313.0">
-            <contextMenu>
-               <ContextMenu>
-                 <items>
-                   <MenuItem mnemonicParsing="false" onAction="#deleteItem_onClick" text="Delete item" />
-                 </items>
-               </ContextMenu>
-            </contextMenu>
-         </ListView>
-      </children>
-    </HBox>
-    <JFXButton fx:id="btn_searchCustomers_clear" layoutX="14.0" layoutY="280.0" mnemonicParsing="false" onAction="#btn_searchCustomers_clear_onClick" prefHeight="25.0" prefWidth="25.0" style="-fx-background-color: #c9c9c9;" text="X" />
-    <JFXTextField fx:id="text_searchCustomers_query" focusColor="#385ba4" layoutX="49.0" layoutY="280.0" onKeyReleased="#text_searchCustomers_query_onKeyReleased" prefHeight="25.0" prefWidth="466.0" promptText="Search for customers..." />
-    <CheckComboBox fx:id="checkComboBox_searchCustomers_criteria" layoutX="528.0" layoutY="280.0" prefHeight="25" prefWidth="139.0" />
-    <TableView fx:id="tableView_customers" layoutX="13.0" layoutY="316.0" onMouseClicked="#tableView_customers_onMouseClicked" prefHeight="150.0" prefWidth="654.0">
+    <TableView fx:id="productsTableView" layoutX="14.0" layoutY="50.0"
+               onMouseClicked="#clickProductsTableView" prefHeight="169.0" prefWidth="654.0">
+        <columns>
+            <TableColumn fx:id="productCategoryColumn" minWidth="50.0" text="Category"/>
+            <TableColumn fx:id="productIdColumn" minWidth="30.0" text="product ID"/>
+            <TableColumn fx:id="productLocationColumn" minWidth="60.0" text="Location"/>
+            <TableColumn fx:id="productNameColumn" minWidth="50.0" text="Name"/>
+            <TableColumn fx:id="productPriceColumn" minWidth="50.0" text="Price"/>
+            <TableColumn fx:id="productQuantityColumn" minWidth="30.0" text="Q"/>
+            <TableColumn fx:id="productSubnameColumn" minWidth="50.0" text="Sub name"/>
+        </columns>
+        <contextMenu>
+            <ContextMenu>
+                <items>
+                    <MenuItem mnemonicParsing="false" onAction="#clickAddToBasket" text="Add 1 item"/>
+                    <MenuItem mnemonicParsing="false" onAction="#AddToBasketMore_contextMenu_onClick"
+                              text="Add more..."/>
+                </items>
+            </ContextMenu>
+        </contextMenu>
     </TableView>
-    <JFXButton fx:id="btn_assignCustomer" layoutX="13.0" layoutY="480.0" mnemonicParsing="false" onAction="#btn_assignCustomer_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Assign selected customer" />
-    <JFXButton fx:id="btn_registerCustomer" layoutX="481.0" layoutY="480.0" mnemonicParsing="false" onAction="#btn_registerCustomer_onClick" style="-fx-background-color: #c9c9c9;" text="Register a new customer" />
-    <JFXButton fx:id="btn_completePurchase" layoutX="465.0" layoutY="694.0" mnemonicParsing="false" onAction="#btn_completePurchase_onClick" prefHeight="47.0" prefWidth="202.0" style="-fx-background-color: #c9c9c9;" text="Complete the purchase">
-      <font>
-         <Font size="16.0" />
-      </font></JFXButton>
-   <VBox layoutX="19.0" layoutY="517.0" prefHeight="200.0" prefWidth="293.0">
-      <children>
-         <Label text="Transaction Details">
+    <JFXButton fx:id="addToBasketButton" layoutX="14.0" layoutY="227.0" mnemonicParsing="false"
+               onAction="#clickAddToBasket" style="-fx-background-color: #c9c9c9;" text="Add to basket"/>
+    <HBox layoutX="679.0" layoutY="50.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity"
+          minWidth="-Infinity" prefHeight="614.0" prefWidth="316.0" xmlns="http://javafx.com/javafx/8.0.112"
+          xmlns:fx="http://javafx.com/fxml/1">
+        <ListView fx:id="basketListView" prefHeight="614.0" prefWidth="313.0">
+            <contextMenu>
+                <ContextMenu>
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#deleteItem_onClick" text="Delete item"/>
+                    </items>
+                </ContextMenu>
+            </contextMenu>
+        </ListView>
+    </HBox>
+    <JFXButton fx:id="clearSearchCustomersButton" layoutX="14.0" layoutY="280.0" mnemonicParsing="false"
+               onAction="#btn_searchCustomers_clear_onClick" prefHeight="25.0" prefWidth="25.0"
+               style="-fx-background-color: #c9c9c9;" text="X"/>
+    <JFXTextField fx:id="searchCustomersQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="280.0"
+                  onKeyReleased="#text_searchCustomers_query_onKeyReleased" prefHeight="25.0" prefWidth="466.0"
+                  promptText="Search for customers..."/>
+    <CheckComboBox fx:id="searchCustomersCriteriaComboBox" layoutX="528.0" layoutY="280.0" prefHeight="25"
+                   prefWidth="139.0"/>
+    <TableView fx:id="customersTableView" layoutX="13.0" layoutY="316.0"
+               onMouseClicked="#clickCustomersTableView" prefHeight="150.0" prefWidth="654.0">
+        <columns>
+            <TableColumn fx:id="customerNameColumn" minWidth="50.0" text="Name"/>
+            <TableColumn fx:id="customerSurnameColumn" minWidth="50.0" text="Surname"/>
+            <TableColumn fx:id="customerAddressColumn" minWidth="60.0" text="Address"/>
+            <TableColumn fx:id="customerCityColumn" minWidth="60.0" text="City"/>
+            <TableColumn fx:id="customerZipColumn" minWidth="40.0" text="ZIP"/>
+            <TableColumn fx:id="customerEmailColumn" minWidth="80.0" text="email"/>
+            <TableColumn fx:id="customerPhoneColumn" minWidth="60.0" text="Phone"/>
+        </columns>
+    </TableView>
+    <JFXButton fx:id="assignCustomerButton" layoutX="13.0" layoutY="480.0" mnemonicParsing="false"
+               onAction="#clickAssignCustomer" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;"
+               text="Assign selected customer"/>
+    <JFXButton fx:id="registerCustomerButton" layoutX="481.0" layoutY="480.0" mnemonicParsing="false"
+               onAction="#clickRegisterCustomer" style="-fx-background-color: #c9c9c9;"
+               text="Register a new customer"/>
+    <JFXButton fx:id="completePurchaseButton" layoutX="465.0" layoutY="694.0" mnemonicParsing="false"
+               onAction="#btn_completePurchase_onClick" prefHeight="47.0" prefWidth="202.0"
+               style="-fx-background-color: #c9c9c9;" text="Complete the purchase">
+        <font>
+            <Font size="16.0"/>
+        </font>
+    </JFXButton>
+    <VBox layoutX="19.0" layoutY="517.0" prefHeight="200.0" prefWidth="293.0">
+        <Label text="Transaction Details">
             <font>
-               <Font name="System Bold" size="32.0" />
+                <Font name="System Bold" size="32.0"/>
             </font>
-         </Label>
-         <Label fx:id="label_numOfItems" text="Number of items: " />
-         <Label fx:id="label_overallPrice" contentDisplay="TOP" text="Price without discount:">
+        </Label>
+        <Label fx:id="numOfItemsLabel" text="Number of items: "/>
+        <Label fx:id="overallPriceLabel" contentDisplay="TOP" text="Price without discount:">
             <VBox.margin>
-               <Insets top="10.0" />
-            </VBox.margin></Label>
-          <Label fx:id="label_discount" text="Total discount: ">
-            <VBox.margin>
-               <Insets top="10.0" />
-            </VBox.margin></Label>
-          <JFXCheckBox fx:id="checkBox_selfPickup" checkedColor="#385ba4" mnemonicParsing="false" text="Self pickup">
-            <VBox.margin>
-               <Insets top="10.0" />
+                <Insets top="10.0"/>
             </VBox.margin>
-         </JFXCheckBox>
-          <JFXCheckBox fx:id="checkBox_craftsman" checkedColor="#385ba4" mnemonicParsing="false" text="Craftsman">
-              <VBox.margin>
-                  <Insets top="10.0"/>
-              </VBox.margin>
-          </JFXCheckBox>
-      </children></VBox>
-   <JFXButton fx:id="btn_clearBasket" layoutX="566.0" layoutY="227.0" mnemonicParsing="false" onAction="#btn_clearBasket_onClick" style="-fx-background-color: #c9c9c9;" text="Clear basket" />
-    <Label fx:id="label_assignedCustomer" layoutX="279.0" layoutY="565.0" text="Assigned customer: no customer has been assigned" />
-   <Label layoutX="280.0" layoutY="612.0" text="Description: " />
-   <JFXTextField fx:id="text_description" focusColor="#385ba4" layoutX="359.0" layoutY="604.0" prefHeight="25.0" prefWidth="313.0" />
-   <Label fx:id="label_finalPrice" layoutX="279.0" layoutY="646.0" text="Final price: ">
-      <font>
-         <Font size="25.0" />
-      </font>
-   </Label>
-   <JFXComboBox fx:id="choiceBox_currency" layoutX="280.0" layoutY="694.0" prefHeight="25.0" prefWidth="111.0" />
+        </Label>
+        <Label fx:id="discountLabel" text="Total discount: ">
+            <VBox.margin>
+                <Insets top="10.0"/>
+            </VBox.margin>
+        </Label>
+        <JFXCheckBox fx:id="selfPickupCheckBox" checkedColor="#385ba4" mnemonicParsing="false" text="Self pickup">
+            <VBox.margin>
+                <Insets top="10.0"/>
+            </VBox.margin>
+        </JFXCheckBox>
+        <JFXCheckBox fx:id="craftsmanCheckBox" checkedColor="#385ba4" mnemonicParsing="false" text="Craftsman">
+            <VBox.margin>
+                <Insets top="10.0"/>
+            </VBox.margin>
+        </JFXCheckBox>
+    </VBox>
+    <JFXButton fx:id="clearBasketButton" layoutX="566.0" layoutY="227.0" mnemonicParsing="false"
+               onAction="#clickClearBasket" style="-fx-background-color: #c9c9c9;" text="Clear basket"/>
+    <Label fx:id="assignedCustomerLabel" layoutX="279.0" layoutY="565.0"
+           text="Assigned customer: no customer has been assigned"/>
+    <Label layoutX="280.0" layoutY="612.0" text="Description: "/>
+    <JFXTextField fx:id="descriptionField" focusColor="#385ba4" layoutX="359.0" layoutY="604.0" prefHeight="25.0"
+                  prefWidth="313.0"/>
+    <Label fx:id="finalPriceLabel" layoutX="279.0" layoutY="646.0" text="Final price: ">
+        <font>
+            <Font size="25.0"/>
+        </font>
+    </Label>
+    <JFXComboBox fx:id="currencyComboBox" layoutX="280.0" layoutY="694.0" prefHeight="25.0" prefWidth="111.0"/>
 </AnchorPane>

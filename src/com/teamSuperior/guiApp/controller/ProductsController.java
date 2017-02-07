@@ -30,9 +30,9 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
 
     static final int MAX_CAP = 250;
     private static final int CAP_THRESHOLD = 15;
-    private static final String[] PRODUCTS_CRITERIA = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID"};
+    private static final String[] PRODUCTS_CRITERIA = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor"};
 
-    private static Controller<Product, Integer> controller;
+    private static Controller<Product, Integer> controller = new Controller<>(Product.class);
 
     @FXML
     public JFXTextField amountToRequestField;
@@ -83,16 +83,12 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
     @FXML
     private TableColumn<Product, Integer> quantityColumn;
     @FXML
-    private TableColumn<Product, Integer> contractorIdColumn;
+    private TableColumn<Product, Integer> contractorColumn;
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
     private Employee loggedInUser;
     private Product selectedProduct;
     private boolean showsAll;
-
-    public ProductsController() {
-        controller = new Controller<>(Product.class);
-    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -143,7 +139,7 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        contractorIdColumn.setCellValueFactory(new PropertyValueFactory<>("contractorId"));
+        contractorColumn.setCellValueFactory(new PropertyValueFactory<>("contractor"));
     }
 
     private void selectProduct(Product selectedProduct) {
@@ -168,7 +164,7 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
 
         nameLabel.setText(selectedProduct.getName());
         subnameLabel.setText(selectedProduct.getSubname());
-        categoryLabel.setText(selectedProduct.getCategory());
+        categoryLabel.setText(selectedProduct.getCategory().toString());
         quantityLabel.setText(String.format("Q: %1$d", selectedProduct.getQuantity()));
         priceLabel.setText(String.format("Price: %1$.2fkr.", selectedProduct.getPrice()));
         quantityLabel.setTextFill((selectedProduct.getQuantity() < CAP_THRESHOLD) ? Color.RED : Color.BLACK);
@@ -287,7 +283,7 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
                             }
                             break;
                         case "Category":
-                            if (product.getCategory().toLowerCase().contains(lowerCaseFilter)) {
+                            if (String.valueOf(product.getCategory()).toLowerCase().contains(lowerCaseFilter)) {
                                 return true;
                             }
                             break;
@@ -307,7 +303,7 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
                             }
                             break;
                         case "Contractor ID":
-                            if (String.valueOf(product.getContractorId()).toLowerCase().contains(lowerCaseFilter)) {
+                            if (String.valueOf(product.getContractor()).toLowerCase().contains(lowerCaseFilter)) {
                                 return true;
                             }
                             break;

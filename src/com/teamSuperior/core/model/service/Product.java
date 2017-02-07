@@ -5,7 +5,7 @@ import com.teamSuperior.core.model.Model;
 import javax.persistence.*;
 
 /**
- * Product entity class
+ * Product entity
  */
 @Entity
 @Table(name = "products")
@@ -13,25 +13,30 @@ public class Product implements Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private int quantity, contractorId;
-    private String barcode, name, subname, category, warehouseLocation;
-    private float price;
+    private int quantity;
+    private String barcode, name, subname, warehouseLocation;
+    private double price;
+    @ManyToOne
+    private ProductCategory category;
+    @ManyToOne
+    private Contractor contractor;
 
     public Product() {
     }
 
-    public Product(int id, int quantity, String barcode, String name, String subname, String category, String warehouseLocation, float price) {
-        this.id = id;
-        this.quantity = quantity;
-        this.barcode = barcode;
+    public Product(String name, String subname, String barcode, ProductCategory category, double price, String warehouseLocation, int quantity, Contractor contractor) {
+        super();
         this.name = name;
         this.subname = subname;
+        this.barcode = barcode;
         this.category = category;
-        this.warehouseLocation = warehouseLocation;
         this.price = price;
+        this.warehouseLocation = warehouseLocation;
+        this.quantity = quantity;
+        this.contractor = contractor;
     }
 
-    public Product(int id, int quantity, String barcode, String name, String subname, String category, String warehouseLocation, float price, int contractorId) {
+    public Product(int id, int quantity, String barcode, String name, String subname, ProductCategory category, String warehouseLocation, double price, Contractor contractor) {
         this.id = id;
         this.quantity = quantity;
         this.barcode = barcode;
@@ -40,7 +45,7 @@ public class Product implements Model {
         this.category = category;
         this.warehouseLocation = warehouseLocation;
         this.price = price;
-        this.contractorId = contractorId;
+        this.contractor = contractor;
     }
 
     public Product(int id, String name, float price) {
@@ -69,7 +74,7 @@ public class Product implements Model {
         return subname;
     }
 
-    public String getCategory() {
+    public ProductCategory getCategory() {
         return category;
     }
 
@@ -77,12 +82,12 @@ public class Product implements Model {
         return warehouseLocation;
     }
 
-    public float getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public int getContractorId() {
-        return contractorId;
+    public Contractor getContractor() {
+        return contractor;
     }
 
     public void setId(int id) {
@@ -93,8 +98,8 @@ public class Product implements Model {
         this.quantity = quantity;
     }
 
-    public void setContractorId(int contractorId) {
-        this.contractorId = contractorId;
+    public void setContractor(Contractor contractorId) {
+        this.contractor = contractorId;
     }
 
     public void setBarcode(String barcode) {
@@ -109,7 +114,7 @@ public class Product implements Model {
         this.subname = subname;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(ProductCategory category) {
         this.category = category;
     }
 
@@ -117,22 +122,22 @@ public class Product implements Model {
         this.warehouseLocation = warehouseLocation;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
     @Override
     public String toString() {
-        return "{product{" +
+        return "Product{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", subname='" + subname + '\'' +
                 ", barcode='" + barcode + '\'' +
-                ", q='" + quantity + '\'' +
+                ", quantity=" + quantity +
                 ", category='" + category + '\'' +
-                ", location='" + warehouseLocation + '\'' +
-                ", price='" + price + '\'' +
-                ", contractor Id='" + contractorId + '\'' +
+                ", warehouseLocation='" + warehouseLocation + '\'' +
+                ", price=" + price +
+                ", contractor=" + contractor +
                 '}';
     }
 

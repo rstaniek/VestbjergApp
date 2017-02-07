@@ -182,16 +182,16 @@ public class TransactionsViewController implements Initializable {
         try{
             ResultSet rs = conn.getFromDataBase(String.format("SELECT * FROM products WHERE id IN (%1$s)", t.getProductIDs_str()));
             while (rs.next()){
-                Product p = new Product(rs.getInt("id"),
-                        rs.getInt("quantity"),
-                        rs.getString("barcode"),
-                        rs.getString("name"),
-                        rs.getString("subname"),
-                        rs.getString("category"),
-                        rs.getString("warehouseLocation"),
-                        (float) rs.getDouble("price"),
-                        rs.getInt("contractorId"));
-                products.add(p);
+//                Product p = new Product(rs.getInt("id"),
+//                        rs.getInt("quantity"),
+//                        rs.getString("barcode"),
+//                        rs.getString("name"),
+//                        rs.getString("subname"),
+//                        rs.getString("category_id"),
+//                        rs.getString("warehouseLocation"),
+//                        (float) rs.getDouble("price"),
+//                        rs.getInt("contractorId"));
+//                products.add(p);
             }
         } catch (SQLException sqlException) {
             displayMessage(ERROR, "Server connection error.", sqlException.getMessage());

@@ -1,15 +1,22 @@
 package com.teamSuperior.core.model.service;
 
-import com.teamSuperior.core.connection.DBConnect;
-import java.sql.ResultSet;
+import com.teamSuperior.core.model.Model;
+
+import javax.persistence.*;
 
 /**
- * Created by Domestos Maximus on 24-Nov-16.
+ * Contractor entity
  */
-
-public class Contractor {
+@Entity
+@Table(name = "contractors")
+public class Contractor implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name, address, city, zip, phone, email;
+
+    public Contractor() {
+    }
 
     public Contractor(int id, String name, String address, String city, String zip, String phone, String email) {
         this.id = id;
@@ -79,14 +86,11 @@ public class Contractor {
 
     @Override
     public String toString() {
-        return "Contractor{" +
-                "id='" + id + '\'' +
-                "name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", city='" + city + '\'' +
-                ", zip='" + zip + '\'' +
-                ", phone='" + phone + '\'' +
-                ", email='" + email + '\'' +
-                '}';
+        return id + " - " + name;
+    }
+
+    @Override
+    public String toJson() {
+        return null;
     }
 }

@@ -1,36 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
-
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1">
-   <children>
-      <ScrollPane prefHeight="400.0" prefWidth="600.0">
-        <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="584.0">
-               <children>
-                  <Label layoutX="14.0" layoutY="14.0" text="Vestbjerg app">
-                     <font>
-                        <Font name="System Bold" size="25.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="14.0" layoutY="50.0" text="Versatile and interactive application that is capable of managing warehouse," />
-                  <Label layoutX="14.0" layoutY="67.0" text=" employees and the whole company!" />
-                  <Label layoutX="14.0" layoutY="84.0" text="Authors">
-                     <font>
-                        <Font name="System Bold" size="25.0" />
-                     </font>
-                  </Label>
-                  <Label layoutX="14.0" layoutY="120.0" text="Marek Červinka" />
-                  <Label layoutX="15.0" layoutY="154.0" text="Jakub Slíva" />
-                  <Label layoutX="15.0" layoutY="171.0" text="Ondřej Soukup" />
-                  <Label layoutX="14.0" layoutY="137.0" text="Andrei Katona" />
-                  <Label layoutX="15.0" layoutY="188.0" text="Rajmund Staniek" />
-               </children>
-            </AnchorPane>
-        </content>
-      </ScrollPane>
-   </children>
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0"
+            prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml">
+    <ScrollPane prefHeight="400.0" prefWidth="600.0">
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="397.0" prefWidth="584.0">
+            <Label layoutX="14.0" layoutY="14.0" text="Vestbjerg app">
+                <font>
+                    <Font name="System Bold" size="25.0"/>
+                </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="50.0"
+                   text="Versatile and interactive application that is capable of managing warehouse,"/>
+            <Label layoutX="14.0" layoutY="67.0" text=" employees and the whole company!"/>
+            <Label layoutX="14.0" layoutY="84.0" text="Authors">
+                <font>
+                    <Font name="System Bold" size="25.0"/>
+                </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="120.0" text="Marek Červinka"/>
+            <Label layoutX="15.0" layoutY="154.0" text="Jakub Slíva"/>
+            <Label layoutX="15.0" layoutY="171.0" text="Ondřej Soukup"/>
+            <Label layoutX="14.0" layoutY="137.0" text="Andrei Katona"/>
+            <Label layoutX="15.0" layoutY="188.0" text="Rajmund Staniek"/>
+        </AnchorPane>
+    </ScrollPane>
 </AnchorPane>

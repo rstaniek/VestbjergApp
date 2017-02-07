@@ -1,12 +1,24 @@
 package com.teamSuperior.core.model.entity;
 
+import com.teamSuperior.core.model.Model;
+
+import javax.persistence.*;
+
 /**
- * Created by rajmu on 17.01.13.
+ * Customer entity
  */
-public class Customer {
-    private int id, salesMade;
+@Entity
+@Table(name = "customers")
+public class Customer implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private int salesMade;
     private double totalSpent;
     private String name, surname, address, city, zip, email, phone;
+
+    public Customer() {
+    }
 
     public Customer(int id, int salesMade, double totalSpent, String name, String surname, String address, String city, String zip, String email, String phone) {
         this.id = id;
@@ -107,5 +119,10 @@ public class Customer {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public String toJson() {
+        return null;
     }
 }

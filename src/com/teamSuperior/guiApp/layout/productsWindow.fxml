@@ -27,7 +27,7 @@
             <TableColumn fx:id="priceColumn" minWidth="80.0" text="Price"/>
             <TableColumn fx:id="locationColumn" minWidth="220.0" text="Warehouse location"/>
             <TableColumn fx:id="quantityColumn" minWidth="30.0" text="Q"/>
-            <TableColumn fx:id="contractorIdColumn" minWidth="50.0" text="Contractor"/>
+            <TableColumn fx:id="contractorColumn" minWidth="50.0" text="Contractor"/>
         </columns>
     </TableView>
     <PieChart fx:id="storageCapPieChart" layoutY="450.0" prefHeight="400.0" prefWidth="400.0" title="Storage Capacity"/>

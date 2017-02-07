@@ -19,26 +19,26 @@ public class Controller<T, Id extends Serializable> implements DAO<T, Id> {
     private Session currentSession; // To store a MySQL database access session
     private Transaction currentTransaction; // Helper to manage database commits
 
-    protected Controller(Class<T> clazz) {
+    Controller(Class<T> clazz) {
         this.clazz = clazz;
     }
 
-    public Session openCurrentSession() {
+    private Session openCurrentSession() {
         currentSession = getSessionFactory().openSession();
         return currentSession;
     }
 
-    public Session openCurrentSessionwithTransaction() {
+    private Session openCurrentSessionwithTransaction() {
         currentSession = getSessionFactory().openSession();
         currentTransaction = currentSession.beginTransaction();
         return currentSession;
     }
 
-    public void closeCurrentSession() {
+    private void closeCurrentSession() {
         currentSession.close();
     }
 
-    public void closeCurrentSessionwithTransaction() {
+    private void closeCurrentSessionwithTransaction() {
         currentTransaction.commit();
         currentSession.close();
     }
@@ -47,11 +47,10 @@ public class Controller<T, Id extends Serializable> implements DAO<T, Id> {
         Configuration configuration = new Configuration().configure();
         StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
                 .applySettings(configuration.getProperties());
-        SessionFactory sessionFactory = configuration.buildSessionFactory(builder.build());
-        return sessionFactory;
+        return configuration.buildSessionFactory(builder.build());
     }
 
-    public Session getCurrentSession() {
+    private Session getCurrentSession() {
         return currentSession;
     }
 
