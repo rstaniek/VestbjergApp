@@ -1,14 +1,21 @@
 package com.teamSuperior.core.model.entity;
 
 
+import com.teamSuperior.core.model.Model;
+
+import javax.persistence.*;
 import java.text.NumberFormat;
 import java.util.Locale;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
  */
-public class Employee{
+@Entity
+@Table(name = "employees")
+public class Employee implements Model {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String name;
     private String surname;
@@ -46,6 +53,26 @@ public class Employee{
         numberOfSales_str = String.valueOf(numberOfSales);
         totalRevenue_str = String.valueOf("kr " + formatter.format(totalRevenue));
         accessLevel_str = String.valueOf(accessLevel);
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public void setNumberOfSales(int numberOfSales) {
+        this.numberOfSales = numberOfSales;
+    }
+
+    public void setTotalRevenue(double totalRevenue) {
+        this.totalRevenue = totalRevenue;
+    }
+
+    public void setAccessLevel(int accessLevel) {
+        this.accessLevel = accessLevel;
+    }
+
+    public Employee() {
+
     }
 
     public String getNumberOfSales_str() {
@@ -168,5 +195,10 @@ public class Employee{
                 ", totalRevenue_str='" + totalRevenue_str + '\'' +
                 ", accessLevel_str='" + accessLevel_str + '\'' +
                 '}';
+    }
+
+    @Override
+    public String toJson() {
+        return null;
     }
 }

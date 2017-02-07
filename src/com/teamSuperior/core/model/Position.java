@@ -1,10 +1,16 @@
 package com.teamSuperior.core.model;
 
+import javax.persistence.*;
+
 /**
  * Created by Domestos Maximus on 15-Dec-16.
  */
+@Entity
+@Table(name = "positions")
 public class Position {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id, accessLevel;
     private String name;
 

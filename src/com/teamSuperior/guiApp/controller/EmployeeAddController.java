@@ -2,6 +2,7 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.Position;
+import com.teamSuperior.core.model.entity.Employee;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 
@@ -30,7 +32,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 /**
  * Created by Domestos on 16.12.12.
  */
-public class EmployeeAddController implements Initializable {
+public class EmployeeAddController implements Initializable, DAO<Employee, Integer> {
     @FXML
     public TextField text_name;
     @FXML
@@ -58,6 +60,7 @@ public class EmployeeAddController implements Initializable {
 
     private DBConnect conn;
     private ObservableList<Position> positions;
+    private static Controller<Employee, Integer> controller;
 
 
     @Override
@@ -113,6 +116,7 @@ public class EmployeeAddController implements Initializable {
                         selectedPosition.getName(),
                         passwordSafe,
                         selectedPosition.getAccessLevel()));
+
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
             } finally {
@@ -154,5 +158,35 @@ public class EmployeeAddController implements Initializable {
         text_email.clear();
         text_phone.clear();
         text_password.clear();
+    }
+
+    @Override
+    public void persist(Employee employee) {
+        controller.persist(employee);
+    }
+
+    @Override
+    public Employee getById(Integer integer) {
+        return controller.getById(integer);
+    }
+
+    @Override
+    public List<Employee> getAll() {
+        return controller.getAll();
+    }
+
+    @Override
+    public void update(Employee employee) {
+        controller.update(employee);
+    }
+
+    @Override
+    public void delete(Employee employee) {
+        controller.delete(employee);
+    }
+
+    @Override
+    public void deleteAll() {
+        controller.deleteAll();
     }
 }

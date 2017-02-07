@@ -18,9 +18,11 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -32,7 +34,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 /**
  * Created by Domestos Maximus on 06-Dec-16.
  */
-public class EmployeeManagementController implements Initializable {
+public class EmployeeManagementController implements Initializable, DAO<Employee, Integer> {
     @FXML
     public TableView tableView_employees;
     @FXML
@@ -84,6 +86,7 @@ public class EmployeeManagementController implements Initializable {
     private TableColumn<Employee, String> zipColumn;
 
     private static final String[] employeeCriteria = new String[]{"Name", "Surname", "Address", "City", "ZIP", "Phone", "Position"};
+    private static Controller<Employee, Integer> controller;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -129,7 +132,7 @@ public class EmployeeManagementController implements Initializable {
     }
 
     private void retrieveData() {
-        try {
+        /*try {
             ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
             while (rs.next()) {
                 if (rs.getInt("id") != -1 && rs.getString("name") != null
@@ -162,7 +165,8 @@ public class EmployeeManagementController implements Initializable {
             displayMessage(ERROR, "Server connection error.", sqlException.getMessage());
         } catch (Exception ex) {
             displayMessage(ERROR, ex.getMessage());
-        }
+        }*/
+        employees = FXCollections.observableArrayList(getAll());
     }
 
     private void initTableColumns(int accessLevel, ObservableList<Employee> source) {
@@ -255,7 +259,7 @@ public class EmployeeManagementController implements Initializable {
                 validateField(text_address) &&
                 validateField(text_city) &&
                 validateField(text_zip)) {
-            conn = new DBConnect();
+            /*conn = new DBConnect();
             try {
                 conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s',accessLevel='%9$d' WHERE id='%8$d'",
                         text_name.getText(),
@@ -269,7 +273,16 @@ public class EmployeeManagementController implements Initializable {
                         getAccessLevelBySelectedPosition()));
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
-            }
+            }*/
+            e.setName(text_name.getText());
+            e.setSurname(text_surname.getText());
+            e.setAddress(text_address.getText());
+            e.setCity(text_city.getText());
+            e.setZip(text_zip.getText());
+            e.setPosition(comboBox_position.getSelectionModel().getSelectedItem());
+            e.setEmail(text_email.getText());
+            e.setAccessLevel(getAccessLevelBySelectedPosition());
+            update(e);
         } else if (result) displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
         refreshTable();
     }
@@ -433,5 +446,35 @@ public class EmployeeManagementController implements Initializable {
                 }
             }
         }
+    }
+
+    @Override
+    public void persist(Employee employee) {
+        controller.persist(employee);
+    }
+
+    @Override
+    public Employee getById(Integer integer) {
+        return controller.getById(integer);
+    }
+
+    @Override
+    public List<Employee> getAll() {
+        return controller.getAll();
+    }
+
+    @Override
+    public void update(Employee employee) {
+        controller.update(employee);
+    }
+
+    @Override
+    public void delete(Employee employee) {
+        controller.delete(employee);
+    }
+
+    @Override
+    public void deleteAll() {
+        controller.deleteAll();
     }
 }
