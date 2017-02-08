@@ -1,4 +1,4 @@
-package com.teamSuperior.guiApp.controller;
+package com.teamSuperior.core.connection;
 
 import java.io.Serializable;
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
  * This interface defines the functions required to communicate with the database.
  * We use generics as we do not want create the same interface implementation for every model.
  */
-public interface DAO<T, Id extends Serializable> {
+public interface IDataAccessObject<T, Id extends Serializable> {
     void persist(T t);
 
     T getById(Id id);

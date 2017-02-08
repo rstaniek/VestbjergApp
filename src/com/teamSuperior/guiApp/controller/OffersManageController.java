@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.Utils;
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import javafx.collections.FXCollections;
@@ -28,7 +29,7 @@ import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 public class OffersManageController implements Initializable {
     private static final String[] OFFERS_CRITERIA = new String[]{"Name", "Product ID", "Price", "Discount", "Expiration Date"};
 
-    private static Controller<Offer, Integer> offerController = new Controller<>(Offer.class);
+    private static ConnectionController<Offer, Integer> offerConnectionController = new ConnectionController<>(Offer.class);
 
     @FXML
     public Button clearSearchButton;
@@ -155,7 +156,7 @@ public class OffersManageController implements Initializable {
     }
 
     private void retrieveData() {
-        offers = FXCollections.observableArrayList(offerController.getAll());
+        offers = FXCollections.observableArrayList(offerConnectionController.getAll());
     }
 
     private void initTableColumns(ObservableList<Offer> source) {
@@ -222,7 +223,7 @@ public class OffersManageController implements Initializable {
                         if (ButtonType.OK.equals(yesResponse.get())) {
                             selectedOffer.setPrice(Double.parseDouble(newPriceField.getText()));
                             selectedOffer.setDiscount(Double.parseDouble(newDiscountField.getText()));
-                            offerController.update(selectedOffer);
+                            offerConnectionController.update(selectedOffer);
                             refreshWindow();
                         }
                     }
@@ -246,7 +247,7 @@ public class OffersManageController implements Initializable {
         Optional<ButtonType> deleteResponse = alert.showAndWait();
         if (deleteResponse.isPresent()) {
             if (ButtonType.OK.equals(deleteResponse.get())) {
-                offerController.delete(selectedOffer);
+                offerConnectionController.delete(selectedOffer);
                 refreshWindow();
             }
         }

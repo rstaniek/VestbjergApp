@@ -1,9 +1,10 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -34,7 +35,7 @@ import static javafx.scene.control.Alert.AlertType.INFORMATION;
 /**
  * Created by Domestos on 16.12.12.
  */
-public class EmployeeAddController implements Initializable, DAO<Employee, Integer> {
+public class EmployeeAddController implements Initializable, IDataAccessObject<Employee, Integer> {
     @FXML
     public TextField text_name;
     @FXML
@@ -66,7 +67,7 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
 
     private DBConnect conn;
     private ObservableList<Position> positions;
-    private static Controller<Employee, Integer> controller;
+    private static ConnectionController<Employee, Integer> connectionController;
 
 
     @Override
@@ -176,32 +177,32 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
 
     @Override
     public void persist(Employee employee) {
-        controller.persist(employee);
+        connectionController.persist(employee);
     }
 
     @Override
     public Employee getById(Integer integer) {
-        return controller.getById(integer);
+        return connectionController.getById(integer);
     }
 
     @Override
     public List<Employee> getAll() {
-        return controller.getAll();
+        return connectionController.getAll();
     }
 
     @Override
     public void update(Employee employee) {
-        controller.update(employee);
+        connectionController.update(employee);
     }
 
     @Override
     public void delete(Employee employee) {
-        controller.delete(employee);
+        connectionController.delete(employee);
     }
 
     @Override
     public void deleteAll() {
-        controller.deleteAll();
+        connectionController.deleteAll();
     }
 
 

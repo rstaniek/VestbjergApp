@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.Utils;
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import javafx.collections.FXCollections;
@@ -28,8 +29,8 @@ import static javafx.scene.control.Alert.AlertType.INFORMATION;
  */
 public class OfferAddController implements Initializable {
 
-    private static Controller<Product, Integer> productController = new Controller<>(Product.class);
-    private static Controller<Offer, Integer> offerController = new Controller<>(Offer.class);
+    private static ConnectionController<Product, Integer> productConnectionController = new ConnectionController<>(Product.class);
+    private static ConnectionController<Offer, Integer> offerConnectionController = new ConnectionController<>(Offer.class);
 
     @FXML
     public TextField productField;
@@ -53,7 +54,7 @@ public class OfferAddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        products = FXCollections.observableArrayList(productController.getAll());
+        products = FXCollections.observableArrayList(productConnectionController.getAll());
         productNameLabel.setText("");
 
         expiresDatePicker.setConverter(new StringConverter<LocalDate>() {
@@ -112,8 +113,8 @@ public class OfferAddController implements Initializable {
                 isNumeric(productField.getText())) {
             if (Double.parseDouble(discountField.getText()) < 100.0) {
                 if (findProduct(Integer.parseInt(productField.getText())) != null) {
-                    offerController.persist(new Offer(
-                            productController.getById(Integer.parseInt(productField.getText())),
+                    offerConnectionController.persist(new Offer(
+                            productConnectionController.getById(Integer.parseInt(productField.getText())),
                             Double.parseDouble(priceField.getText()),
                             Double.parseDouble(discountField.getText()),
                             Date.valueOf(expiresDatePicker.getValue())

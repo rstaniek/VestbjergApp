@@ -1,7 +1,9 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.jfoenix.controls.JFXComboBox;
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
@@ -18,7 +20,6 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,7 +35,7 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 /**
  * Created by Domestos Maximus on 06-Dec-16.
  */
-public class EmployeeManagementController implements Initializable, DAO<Employee, Integer> {
+public class EmployeeManagementController implements Initializable, IDataAccessObject<Employee, Integer> {
     @FXML
     public TableView tableView_employees;
     @FXML
@@ -86,7 +87,7 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
     private TableColumn<Employee, String> zipColumn;
 
     private static final String[] employeeCriteria = new String[]{"Name", "Surname", "Address", "City", "ZIP", "Phone", "Position"};
-    private static Controller<Employee, Integer> controller;
+    private static ConnectionController<Employee, Integer> connectionController;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -450,31 +451,31 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
 
     @Override
     public void persist(Employee employee) {
-        controller.persist(employee);
+        connectionController.persist(employee);
     }
 
     @Override
     public Employee getById(Integer integer) {
-        return controller.getById(integer);
+        return connectionController.getById(integer);
     }
 
     @Override
     public List<Employee> getAll() {
-        return controller.getAll();
+        return connectionController.getAll();
     }
 
     @Override
     public void update(Employee employee) {
-        controller.update(employee);
+        connectionController.update(employee);
     }
 
     @Override
     public void delete(Employee employee) {
-        controller.delete(employee);
+        connectionController.delete(employee);
     }
 
     @Override
     public void deleteAll() {
-        controller.deleteAll();
+        connectionController.deleteAll();
     }
 }

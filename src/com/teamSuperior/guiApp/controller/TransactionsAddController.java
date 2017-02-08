@@ -1,6 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.Utils;
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.BasketItem;
 import com.teamSuperior.core.model.Discount;
 import com.teamSuperior.core.model.entity.Customer;
@@ -9,9 +10,15 @@ import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
 import com.teamSuperior.guiApp.GUI.TextFieldBox;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -45,12 +52,12 @@ public class TransactionsAddController implements Initializable {
     private static final String[] PRODUCTS_CRITERIA = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor ID"};
     private static final String[] CUSTOMERS_CRITERIA = new String[]{"ID", "Name", "Surname", "Address", "City", "ZIP"};
 
-    private static Controller<Product, Integer> productController = new Controller<>(Product.class);
-    private static Controller<Customer, Integer> customerController = new Controller<>(Customer.class);
-    private static Controller<Discount, Integer> discountController = new Controller<>(Discount.class);
-    private static Controller<Offer, Integer> offerController = new Controller<>(Offer.class);
-    private static Controller<Transaction, Integer> transactionController = new Controller<>(Transaction.class);
-    private static Controller<Employee, Integer> employeeController = new Controller<>(Employee.class);
+    private static ConnectionController<Product, Integer> productConnectionController = new ConnectionController<>(Product.class);
+    private static ConnectionController<Customer, Integer> customerConnectionController = new ConnectionController<>(Customer.class);
+    private static ConnectionController<Discount, Integer> discountConnectionController = new ConnectionController<>(Discount.class);
+    private static ConnectionController<Offer, Integer> offerConnectionController = new ConnectionController<>(Offer.class);
+    private static ConnectionController<Transaction, Integer> transactionConnectionController = new ConnectionController<>(Transaction.class);
+    private static ConnectionController<Employee, Integer> employeeConnectionController = new ConnectionController<>(Employee.class);
 
     private static Employee loggedUser;
     @FXML
@@ -153,25 +160,71 @@ public class TransactionsAddController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         loggedUser = UserController.getUser();
         basketItems = FXCollections.observableArrayList();
+        WaitingBox initWaitingBox = new WaitingBox();
+        initWaitingBox.setMessage("Retrieving data from the database.");
 
         products = FXCollections.observableArrayList();
         searchProductsResults = FXCollections.observableArrayList();
         searchProductsCriteriaComboBox.getItems().addAll(PRODUCTS_CRITERIA);
-        retrieveProductsData();
+
+        Task<Void> retrieve = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(() -> initWaitingBox.displayIndefinite());
+                products = FXCollections.observableArrayList(productConnectionController.getAll());
+                customers = FXCollections.observableArrayList(customerConnectionController.getAll());
+                offers = FXCollections.observableArrayList(offerConnectionController.getAll());
+                discounts = FXCollections.observableArrayList(discountConnectionController.getAll());
+                return null;
+            }
+        };
+
+        retrieve.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    initWaitingBox.closeWindow();
+                    System.out.println("[Retrieve]: Thread finished");
+
+                    //products
+                    initProductTableColumns(products);
+                    productsTableView.getSelectionModel().selectFirst();
+                    selectedProduct = productsTableView.getSelectionModel().getSelectedItem();
+
+                    //customers
+                    initCustomerTableColumns(customers);
+                    customersTableView.getSelectionModel().selectFirst();
+                    selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
+
+                    for (Discount d : discounts) {
+                        if (d.getId() == 5) {
+                            discountThreshold = d.getValue();
+                        }
+                    }
+                } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
+                    initWaitingBox.closeWindow();
+                }
+            }
+        });
+
+        /*retrieveProductsData();
         initProductTableColumns(products);
         productsTableView.getSelectionModel().selectFirst();
-        selectedProduct = productsTableView.getSelectionModel().getSelectedItem();
+        selectedProduct = productsTableView.getSelectionModel().getSelectedItem();*/
+
 
         customers = FXCollections.observableArrayList();
         searchCustomersResults = FXCollections.observableArrayList();
         searchCustomersCriteriaComboBox.getItems().addAll(CUSTOMERS_CRITERIA);
-        retrieveCustomerData();
+
+        /*retrieveCustomerData();
         initCustomerTableColumns(customers);
         customersTableView.getSelectionModel().selectFirst();
-        selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
+        selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();*/
 
-        offers = FXCollections.observableArrayList(offerController.getAll());
-        discounts = FXCollections.observableArrayList(discountController.getAll());
+        Thread th1 = new Thread(retrieve);
+        th1.setDaemon(true);
+        th1.start();
 
         numOfItemsLabel.setText(String.format("Number of items in the basket: %d", basketItems.size()));
         overallPriceLabel.setText("Total: kr. 0");
@@ -183,12 +236,6 @@ public class TransactionsAddController implements Initializable {
         currencyComboBox.setItems(FXCollections.observableArrayList("DKK", "USD", "EUR"));
         currency = CURRENCIES[0];
         currencyComboBox.getSelectionModel().select(0);
-
-        for (Discount d : discounts) {
-            if (d.getId() == 5) {
-                discountThreshold = d.getValue();
-            }
-        }
 
         basketListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> selectedBasketItem = newValue);
 
@@ -290,10 +337,6 @@ public class TransactionsAddController implements Initializable {
             }
         }
         return results;
-    }
-
-    private void retrieveProductsData() {
-        products = FXCollections.observableArrayList(productController.getAll());
     }
 
     private void initProductTableColumns(ObservableList<Product> source) {
@@ -494,10 +537,6 @@ public class TransactionsAddController implements Initializable {
         return results;
     }
 
-    private void retrieveCustomerData() {
-        customers = FXCollections.observableArrayList(customerController.getAll());
-    }
-
     private void initCustomerTableColumns(ObservableList<Customer> source) {
         customerNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         customerSurnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
@@ -548,8 +587,30 @@ public class TransactionsAddController implements Initializable {
 
     private void refreshCustomerTable() {
         customers = FXCollections.observableArrayList();
-        retrieveCustomerData();
-        initCustomerTableColumns(customers);
+        WaitingBox wb = new WaitingBox("Retrieving customer data");
+        Task<Void> retrieve = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                customers = FXCollections.observableArrayList(customerConnectionController.getAll());
+                return null;
+            }
+        };
+
+        retrieve.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue == Worker.State.SUCCEEDED) {
+                    wb.closeWindow();
+                    initCustomerTableColumns(customers);
+                } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
+                    wb.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(retrieve);
+        th.setDaemon(true);
+        th.start();
     }
 
     private ArrayList<Integer> getProductIDs() {
@@ -576,7 +637,7 @@ public class TransactionsAddController implements Initializable {
         Optional<ButtonType> okResponse = a.showAndWait();
         if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get()) && verifyFields()) {
             try {
-                transactionController.persist(new Transaction(
+                transactionConnectionController.persist(new Transaction(
                         loggedUser,
                         customer,
                         Utils.arrayToString(getProductIDs()),
@@ -587,30 +648,103 @@ public class TransactionsAddController implements Initializable {
                 if (customer != null) {
                     selectedCustomer.setSalesMade(selectedCustomer.getSalesMade() + 1);
                     selectedCustomer.setTotalSpent(selectedCustomer.getTotalSpent() + finalPrice);
-                    customerController.update(selectedCustomer);
+                    WaitingBox waitingBoxUpdateCustomer = new WaitingBox("Updating customer data");
+                    Task<Void> taskUpdateCustomer = new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            customerConnectionController.update(selectedCustomer);
+                            return null;
+                        }
+                    };
+
+                    taskUpdateCustomer.stateProperty().addListener(new ChangeListener<Worker.State>() {
+                        @Override
+                        public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                            if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                                waitingBoxUpdateCustomer.closeWindow();
+                            }
+                        }
+                    });
+
+                    Thread th = new Thread(taskUpdateCustomer);
+                    th.setDaemon(true);
+                    th.start();
                 }
                 loggedUser.setNumberOfSales(loggedUser.getNumberOfSales() + 1);
                 loggedUser.setTotalRevenue(loggedUser.getTotalRevenue() + finalPrice);
-                employeeController.update(loggedUser);
+                /*employeeConnectionController.update(loggedUser);
                 for (BasketItem item : basketItems) {
                     for (Product p : products) {
                         if (p.getId() == item.getItemID()) {
                             p.setQuantity(p.getQuantity() - item.getQuantity());
-                            productController.update(p);
+                            productConnectionController.update(p);
                         }
                     }
-                }
+                }*/
+                WaitingBox wb1 = new WaitingBox("Finalizing the transaction");
+                Task<Void> updateFinal = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        employeeConnectionController.update(loggedUser);
+                        for (BasketItem item : basketItems) {
+                            for (Product p : products) {
+                                if (p.getId() == item.getItemID()) {
+                                    p.setQuantity(p.getQuantity() - item.getQuantity());
+                                    productConnectionController.update(p);
+                                }
+                            }
+                        }
+                        return null;
+                    }
+                };
+
+                updateFinal.stateProperty().addListener(new ChangeListener<Worker.State>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                        if (newValue.equals(Worker.State.SUCCEEDED)) {
+                            wb1.closeWindow();
+                            displayMessage(INFORMATION, "Transaction completed successfully.");
+                        } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                            wb1.closeWindow();
+                        }
+                    }
+                });
+
+                Thread thread = new Thread(updateFinal);
+                thread.setDaemon(true);
+                thread.start();
+
                 clearAll();
-                displayMessage(INFORMATION, "Transaction completed successfully.");
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
             } finally {
                 products = null;
                 products = FXCollections.observableArrayList();
-                retrieveCustomerData();
-                refreshCustomerTable();
-                retrieveProductsData();
-                initProductTableColumns(products);
+
+                WaitingBox wb = new WaitingBox("Retrieving products data");
+                Task<Void> retrieve = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        products = FXCollections.observableArrayList(productConnectionController.getAll());
+                        return null;
+                    }
+                };
+
+                retrieve.stateProperty().addListener(new ChangeListener<Worker.State>() {
+                    @Override
+                    public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                        if (newValue == Worker.State.SUCCEEDED) {
+                            initProductTableColumns(products);
+                            wb.closeWindow();
+                        } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
+                            wb.closeWindow();
+                        }
+                    }
+                });
+
+                Thread thread = new Thread(retrieve);
+                thread.setDaemon(true);
+                thread.start();
             }
         } else displayMessage(ERROR, "Transaction could not have been completed.");
     }
