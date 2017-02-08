@@ -29,6 +29,7 @@ import java.util.stream.Collectors;
 import static com.teamSuperior.core.connection.DBConnect.validateField;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
+import static javafx.scene.control.Alert.AlertType.INFORMATION;
 
 /**
  * Created by Domestos on 16.12.12.
@@ -126,7 +127,7 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
                         selectedPosition.getName(),
                         passwordSafe,
                         selectedPosition.getAccessLevel()));
-                AlertBox.display("Success", "Employee successfully added");
+                displayMessage(INFORMATION, "Success", "Employee successfully added");
 
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
@@ -206,13 +207,13 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
 
     public boolean emailMatch() {
         if (!text_email.getText().equals(text_email_confirm.getText()))
-            AlertBox.display("Error", "Emails don't match, please try again");
+            displayMessage(ERROR, "Emails don't match", "Please try again");
         return (text_email.getText().equals(text_email_confirm.getText()));
     }
 
     public boolean passwordMatch() {
         if (!text_password.getText().equals(text_password_confirm.getText()))
-            AlertBox.display("Error", "Passwords don't match, please try again");
+            displayMessage(ERROR, "Passwords don't match", "Please try again");
         return (text_password.getText().equals(text_password_confirm.getText()));
     }
 
@@ -231,7 +232,7 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
             displayMessage(ERROR, exception.getMessage());
         }
         if(!isNew)
-            AlertBox.display("Error", "Email already exists");
+            displayMessage(ERROR, "Email already exists");
         return isNew;
     }
 }
