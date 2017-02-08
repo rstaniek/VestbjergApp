@@ -27,7 +27,6 @@ public class Position implements Model {
         this.id = id;
         this.accessLevel = accessLevel;
         this.name = name;
-
     }
 
     public int getId() {

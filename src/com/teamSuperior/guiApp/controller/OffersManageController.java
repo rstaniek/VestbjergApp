@@ -90,7 +90,7 @@ public class OffersManageController implements Initializable {
     }
 
     @FXML
-    public void text_search_query_onKeyReleased() {
+    public void handleSearchQuery() {
         searchResults = null;
         searchResults = performSearch(searchQueryField.getText());
         initTableColumns(searchResults);
