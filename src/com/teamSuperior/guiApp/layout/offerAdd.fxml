@@ -23,38 +23,38 @@
         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <JFXTextField fx:id="text_product" focusColor="#385ba4" labelFloat="true" onKeyReleased="#text_product_onKeyReleased" promptText="Product ID" GridPane.columnIndex="1" GridPane.rowIndex="1">
+        <JFXTextField fx:id="productField" focusColor="#385ba4" labelFloat="true" onKeyReleased="#text_product_onKeyReleased" promptText="Product ID" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <GridPane.margin>
                 <Insets right="10.0" />
             </GridPane.margin>
         </JFXTextField>
-        <JFXTextField fx:id="text_price" focusColor="#385ba4" labelFloat="true" onKeyReleased="#text_price_onKeyReleased" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <JFXTextField fx:id="priceField" focusColor="#385ba4" labelFloat="true" onKeyReleased="#text_price_onKeyReleased" promptText="Price" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets right="10.0" />
             </GridPane.margin>
         </JFXTextField>
-        <JFXTextField fx:id="text_discount" focusColor="#385ba4" labelFloat="true" onKeyReleased="#text_discount_onKeyReleased" promptText="Discount" GridPane.columnIndex="1" GridPane.rowIndex="3">
+        <JFXTextField fx:id="discountField" focusColor="#385ba4" labelFloat="true" onKeyReleased="#text_discount_onKeyReleased" promptText="Discount" GridPane.columnIndex="1" GridPane.rowIndex="3">
             <GridPane.margin>
                 <Insets right="10.0" />
             </GridPane.margin>
         </JFXTextField>
-        <JFXButton fx:id="btn_ok" mnemonicParsing="false" onAction="#btn_ok_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Ok" GridPane.columnIndex="1" GridPane.rowIndex="5">
+        <JFXButton fx:id="okButton" mnemonicParsing="false" onAction="#clickOkButton" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Ok" GridPane.columnIndex="1" GridPane.rowIndex="5">
 
             <GridPane.margin>
                 <Insets right="10.0" />
             </GridPane.margin>
         </JFXButton>
-        <JFXButton fx:id="btn_clear" mnemonicParsing="false" onAction="#btn_clear_onClick" style="-fx-background-color: #c9c9c9;" text="Clear" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5">
+        <JFXButton fx:id="clearButton" mnemonicParsing="false" onAction="#clickClearButton" style="-fx-background-color: #c9c9c9;" text="Clear" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="5">
             <GridPane.margin>
                 <Insets />
             </GridPane.margin>
         </JFXButton>
-      <Label fx:id="label_productName" alignment="CENTER_RIGHT" text="Label" GridPane.columnIndex="1" />
+      <Label fx:id="productNameLabel" alignment="CENTER_RIGHT" text="Label" GridPane.columnIndex="1" />
       <Label text="Expires -" GridPane.halignment="RIGHT" GridPane.rowIndex="4">
          <GridPane.margin>
             <Insets right="10.0" />
          </GridPane.margin>
       </Label>
-      <JFXDatePicker fx:id="datePicker_expires" defaultColor="#385ba4" prefHeight="25.0" prefWidth="180.0" promptText="Date" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+      <JFXDatePicker fx:id="expiresDatePicker" defaultColor="#385ba4" prefHeight="25.0" prefWidth="180.0" promptText="Date" GridPane.columnIndex="1" GridPane.rowIndex="4" />
     </children>
 </GridPane>

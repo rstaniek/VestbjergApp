@@ -2,10 +2,9 @@
 
 <?import com.jfoenix.controls.JFXButton?>
 <?import com.jfoenix.controls.JFXTextField?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.*?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
-<?import javafx.scene.control.TableColumn?>
 <AnchorPane fx:controller="com.teamSuperior.guiApp.controller.TransactionsViewController" prefHeight="650.0"
             prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">

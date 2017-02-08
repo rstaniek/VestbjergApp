@@ -128,17 +128,7 @@ public class Product implements Model {
 
     @Override
     public String toString() {
-        return "Product{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", subname='" + subname + '\'' +
-                ", barcode='" + barcode + '\'' +
-                ", quantity=" + quantity +
-                ", category='" + category + '\'' +
-                ", warehouseLocation='" + warehouseLocation + '\'' +
-                ", price=" + price +
-                ", contractor=" + contractor +
-                '}';
+        return id + " - " + name;
     }
 
     @Override

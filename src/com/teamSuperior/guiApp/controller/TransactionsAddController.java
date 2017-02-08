@@ -314,7 +314,7 @@ public class TransactionsAddController implements Initializable {
             double price = selectedProduct.getPrice();
             String discount = "";
             for (Offer offer : offers) {
-                if (selectedProduct.getId() == offer.getProductIDs() && isValidOffer(offer.getExpiresDate())) {
+                if (selectedProduct.getId() == offer.getProduct().getId() && isValidOffer(offer.getExpiresDate())) {
                     price = offer.getPrice();
                     discount = String.valueOf(offer.getDiscount());
                 }
@@ -645,7 +645,7 @@ public class TransactionsAddController implements Initializable {
                 double price = selectedProduct.getPrice();
                 String discount = "";
                 for (Offer offer : offers) {
-                    if (selectedProduct.getId() == offer.getProductIDs() && isValidOffer(offer.getExpiresDate())) {
+                    if (selectedProduct.getId() == offer.getProduct().getId() && isValidOffer(offer.getExpiresDate())) {
                         price = (float) offer.getPrice();
                         discount = String.valueOf(offer.getDiscount());
                     }

@@ -4,7 +4,7 @@ import com.teamSuperior.core.model.Model;
 
 import javax.persistence.*;
 import java.sql.Date;
-import java.sql.Time;
+import java.sql.Timestamp;
 
 /**
  * Offer entity
@@ -15,26 +15,20 @@ public class Offer implements Model {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private Date date, expiresDate;
-    private int productIDs;
+    private Date expiresDate;
+    @ManyToOne
+    private Product product;
     private double price, discount;
-    @Transient
-    private String productName;
-    private Time time, expiresTime;
+    private Timestamp createDate;
 
     public Offer() {
     }
 
-    public Offer(Date date, int id, int productIDs, double price, double discount, String productName, Time time, Date expiresDate, Time expiresTime, String status) {
-        this.date = date;
-        this.id = id;
-        this.productIDs = productIDs;
+    public Offer(Product product, double price, double discount, Date expiresDate) {
+        this.product = product;
         this.price = price;
         this.discount = discount;
-        this.productName = productName;
-        this.time = time;
         this.expiresDate = expiresDate;
-        this.expiresTime = expiresTime;
     }
 
     public int getId() {
@@ -45,14 +39,6 @@ public class Offer implements Model {
         this.id = id;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public Date getExpiresDate() {
         return expiresDate;
     }
@@ -61,12 +47,12 @@ public class Offer implements Model {
         this.expiresDate = expiresDate;
     }
 
-    public int getProductIDs() {
-        return productIDs;
+    public Product getProduct() {
+        return product;
     }
 
-    public void setProductIDs(int productID) {
-        this.productIDs = productID;
+    public void setProduct(Product product) {
+        this.product = product;
     }
 
     public double getPrice() {
@@ -85,28 +71,12 @@ public class Offer implements Model {
         this.discount = discount;
     }
 
-    public String getProductName() {
-        return productName;
+    public Timestamp getCreateDate() {
+        return createDate;
     }
 
-    public void setProductName(String productName) {
-        this.productName = productName;
-    }
-
-    public Time getTime() {
-        return time;
-    }
-
-    public void setTime(Time time) {
-        this.time = time;
-    }
-
-    public Time getExpiresTime() {
-        return expiresTime;
-    }
-
-    public void setExpiresTime(Time expiresTime) {
-        this.expiresTime = expiresTime;
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
     }
 
     @Override
