@@ -189,7 +189,7 @@ public class LeasesAddController implements Initializable {
     public void btn_manageLeases_onClick() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/leasesManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leasesManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage leases");
                 window.setResizable(false);

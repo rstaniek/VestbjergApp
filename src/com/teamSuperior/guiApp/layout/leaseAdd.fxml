@@ -9,13 +9,13 @@
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="205.0" prefWidth="305.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.LeasesAddController">
     <children>
 
-        <Text layoutX="27.0" layoutY="44.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Machine" />
-        <JFXComboBox fx:id="lease_machines_available" layoutX="134.0" layoutY="27.0" prefWidth="150.0" />
-        <Text layoutX="27.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
-        <JFXComboBox fx:id="customers" layoutX="134.0" layoutY="66.0" prefWidth="150.0" />
-        <Text layoutX="27.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Return date" />
-        <JFXDatePicker fx:id="datePicker_returnDate" defaultColor="#385ba4" layoutX="134.0" layoutY="101.0" prefHeight="31.0" prefWidth="155.0" />
-        <JFXButton fx:id="btn_add" layoutX="70.0" layoutY="161.0" mnemonicParsing="false" style="-fx-background-color: #c9c9c9;" onAction="#btn_add_onClick" text="Add" />
-        <JFXButton fx:id="btn_manageLeases" layoutX="128.0" layoutY="161.0" mnemonicParsing="false" style="-fx-background-color: #c9c9c9;" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="112.0" text="Manage leases" />
+        <Text layoutX="27.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Machine" />
+        <JFXComboBox fx:id="lease_machines_available" layoutX="123.0" layoutY="27.0" prefWidth="150.0" />
+        <Text layoutX="27.0" layoutY="86.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
+        <JFXComboBox fx:id="customers" layoutX="123.0" layoutY="66.0" prefWidth="150.0" />
+        <Text layoutX="27.0" layoutY="125.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Return date" />
+        <JFXDatePicker fx:id="datePicker_returnDate" defaultColor="#385ba4" layoutX="123.0" layoutY="101.0" prefHeight="31.0" prefWidth="155.0" />
+        <JFXButton fx:id="btn_add" layoutX="70.0" layoutY="160.0" mnemonicParsing="false" onAction="#btn_add_onClick" style="-fx-background-color: #c9c9c9;" text="Add" />
+        <JFXButton fx:id="btn_manageLeases" layoutX="124.0" layoutY="160.0" mnemonicParsing="false" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="112.0" style="-fx-background-color: #c9c9c9;" text="Manage leases" />
     </children>
 </AnchorPane>

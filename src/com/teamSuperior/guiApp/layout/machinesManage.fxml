@@ -16,14 +16,14 @@
                 <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="636.0" layoutY="13.0" prefHeight="25" prefWidth="150.0" />
             </children>
         </AnchorPane>
-        <TableView fx:id="tableView_machines" layoutY="50.0" onMouseClicked="#tableView_machines_onMouseClicked" prefHeight="400.0" prefWidth="340.0">
+        <TableView fx:id="tableView_machines" layoutX="13.0" layoutY="50.0" onMouseClicked="#tableView_machines_onMouseClicked" prefHeight="400.0" prefWidth="327.0">
         </TableView>
-        <JFXTextField fx:id="text_name" focusColor="#385ba4" labelFloat="true" layoutX="355.0" layoutY="131.0" maxWidth="425.0" minWidth="425.0" prefHeight="37.0" prefWidth="425.0" promptText="Name" />
-        <JFXTextField fx:id="text_pricePerDay" focusColor="#385ba4" labelFloat="true" layoutX="355.0" layoutY="198.0" maxWidth="425.0" minWidth="425.0" prefHeight="37.0" prefWidth="425.0" promptText="Price per day" />
-        <JFXCheckBox fx:id="checkBox_leased" checkedColor="#385ba4" layoutX="355.0" layoutY="278.0" mnemonicParsing="false" onAction="#checkBox_leased_onClick" text="Availability" unCheckedColor="#f92d26" />
+        <JFXTextField fx:id="text_name" focusColor="#385ba4" labelFloat="true" layoutX="372.0" layoutY="131.0" maxWidth="425.0" minWidth="387.0" prefHeight="37.0" prefWidth="387.0" promptText="Name" />
+        <JFXTextField fx:id="text_pricePerDay" focusColor="#385ba4" labelFloat="true" layoutX="372.0" layoutY="195.0" maxWidth="425.0" minWidth="387.0" prefHeight="37.0" prefWidth="387.0" promptText="Price per day" />
+        <JFXCheckBox fx:id="checkBox_leased" checkedColor="#385ba4" disable="true" layoutX="363.0" layoutY="272.0" mnemonicParsing="false" onAction="#checkBox_leased_onClick" text="Availability" unCheckedColor="#f92d26" />
 
-        <JFXButton fx:id="btn_save" layoutX="355.0" layoutY="419.0" mnemonicParsing="false" onAction="#btn_save_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Save changes" />
-        <JFXButton fx:id="btn_delete" layoutX="650.0" layoutY="419.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete machine" />
-        <JFXButton fx:id="btn_show" layoutX="475.0" layoutY="419.0" mnemonicParsing="false" onAction="#btn_show_onClick" text="Show available machines" />
+        <JFXButton fx:id="btn_save" layoutX="372.0" layoutY="422.0" mnemonicParsing="false" onAction="#btn_save_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Save changes" />
+        <JFXButton fx:id="btn_delete" layoutX="660.0" layoutY="422.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete machine" />
+        <JFXButton fx:id="btn_show" layoutX="486.0" layoutY="422.0" mnemonicParsing="false" onAction="#btn_show_onClick" ripplerFill="#385ba4" style="-fx-background-color: #c9c9c9;" text="Show available machines" />
         </children>
 </AnchorPane>

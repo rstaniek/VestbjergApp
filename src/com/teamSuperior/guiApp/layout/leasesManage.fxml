@@ -20,23 +20,21 @@
         </AnchorPane>
         <TableView fx:id="tableView_leases" layoutY="50.0" onMouseClicked="#tableView_leases_onMouseClicked" prefHeight="400.0" prefWidth="800.0">
         </TableView>
-        <JFXComboBox fx:id="list_machines" focusColor="#385ba4" layoutX="15.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Machine ID" />
-        <JFXComboBox fx:id="list_customers" focusColor="#385ba4" layoutX="15.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Customer ID" />
-        <JFXTextField fx:id="text_price" focusColor="#385ba4" layoutX="15.0" layoutY="545.0" prefHeight="25.0" prefWidth="200.0" promptText="Current price" />
-        <Label layoutX="230.0" layoutY="472.0" text="- Machine ID" />
-        <Label layoutX="230.0" layoutY="512.0" text="- Customer ID" />
-        <Label layoutX="230.0" layoutY="552.0" text="- Current price" />
-        <JFXDatePicker fx:id="datePicker_borrowDate" disable="true" layoutX="443.0" layoutY="465.0" />
-        <JFXDatePicker fx:id="datePicker_returnDate" defaultColor="#385ba4" layoutX="444.0" layoutY="504.0" />
+        <JFXComboBox fx:id="list_machines" focusColor="#385ba4" layoutX="46.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Machine ID" />
+        <JFXComboBox fx:id="list_customers" focusColor="#385ba4" layoutX="46.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Customer ID" />
+        <JFXTextField fx:id="text_price" focusColor="#385ba4" layoutX="46.0" layoutY="545.0" prefHeight="25.0" prefWidth="200.0" promptText="Current price" />
+        <Label layoutX="261.0" layoutY="472.0" text="- Machine ID" />
+        <Label layoutX="261.0" layoutY="512.0" text="- Customer ID" />
+        <Label layoutX="261.0" layoutY="552.0" text="- Current price" />
+        <JFXDatePicker fx:id="datePicker_borrowDate" defaultColor="#385ba4" layoutX="443.0" layoutY="465.0" prefHeight="28.0" prefWidth="193.0" />
+        <JFXDatePicker fx:id="datePicker_returnDate" defaultColor="#385ba4" layoutX="443.0" layoutY="505.0" prefHeight="28.0" prefWidth="193.0" />
         <Label layoutX="640.0" layoutY="472.0" text="- Borrow date" />
         <Label layoutX="640.0" layoutY="512.0" text="- Return date" />
 
-        <JFXButton fx:id="btn_save" layoutX="449.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save changes" />
-        <JFXButton fx:id="btn_endLease" layoutX="554.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_endLease_onClick" style="-fx-background-color: #c9c9c9;" text="End lease" />
+        <JFXButton fx:id="btn_save" layoutX="446.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save changes" />
+        <JFXButton fx:id="btn_endLease" layoutX="552.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_endLease_onClick" style="-fx-background-color: #c9c9c9;" text="End lease" />
         <JFXButton fx:id="btn_delete" layoutX="636.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete lease" />
-        <JFXButton fx:id="btn_show" layoutX="15.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_show_onClick" prefHeight="25.0" prefWidth="171.0" text="Show leases not returned" />
-
-
+        <JFXButton fx:id="btn_show" layoutX="45.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_show_onClick" prefHeight="25.0" prefWidth="171.0" style="-fx-background-color: #c9c9c9;" text="Show not returned leases" />
 
     </children>
 </AnchorPane>

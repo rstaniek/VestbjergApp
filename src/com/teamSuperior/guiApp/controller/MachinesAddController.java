@@ -59,7 +59,7 @@ public class MachinesAddController {
     public void btn_manageMachines_onClick() {
         if (UserController.isAllowed(2)) {
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("../layout/machinesManage.fxml"));
+                Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machinesManage.fxml"));
                 Stage window = new Stage();
                 window.setTitle("Manage machines");
                 window.setResizable(false);
