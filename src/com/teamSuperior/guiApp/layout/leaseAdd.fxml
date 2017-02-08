@@ -14,8 +14,8 @@
         <Text layoutX="27.0" layoutY="83.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Customer" />
         <JFXComboBox fx:id="customers" layoutX="134.0" layoutY="66.0" prefWidth="150.0" />
         <Text layoutX="27.0" layoutY="122.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Return date" />
-        <JFXDatePicker fx:id="datePicker_returnDate" layoutX="127.0" layoutY="101.0" prefHeight="31.0" prefWidth="162.0" />
-        <JFXButton fx:id="btn_add" layoutX="70.0" layoutY="161.0" mnemonicParsing="false" onAction="#btn_add_onClick" text="Add" />
-        <JFXButton fx:id="btn_manageLeases" layoutX="128.0" layoutY="161.0" mnemonicParsing="false" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="112.0" text="Manage leases" />
+        <JFXDatePicker fx:id="datePicker_returnDate" defaultColor="#385ba4" layoutX="134.0" layoutY="101.0" prefHeight="31.0" prefWidth="155.0" />
+        <JFXButton fx:id="btn_add" layoutX="70.0" layoutY="161.0" mnemonicParsing="false" style="-fx-background-color: #c9c9c9;" onAction="#btn_add_onClick" text="Add" />
+        <JFXButton fx:id="btn_manageLeases" layoutX="128.0" layoutY="161.0" mnemonicParsing="false" style="-fx-background-color: #c9c9c9;" onAction="#btn_manageLeases_onClick" prefHeight="25.0" prefWidth="112.0" text="Manage leases" />
     </children>
 </AnchorPane>

@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="665.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ContractorsManageController">
+<AnchorPane prefHeight="688.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.ContractorsManageController">
     <children>
         <AnchorPane prefHeight="50.0" prefWidth="800.0">
             <children>
@@ -18,17 +18,17 @@
         </AnchorPane>
         <TableView fx:id="tableView_contractors" layoutY="50.0" onMouseClicked="#tableView_contractors_onMouseClicked" prefHeight="400.0" prefWidth="800.0">
         </TableView>
-        <JFXTextField fx:id="text_name" focusColor="#385ba4" layoutX="15.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
-        <JFXTextField fx:id="text_address" focusColor="#385ba4" layoutX="15.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
-        <JFXTextField fx:id="text_city" focusColor="#385ba4" layoutX="15.0" layoutY="545.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
-        <JFXTextField fx:id="text_zip" focusColor="#385ba4" layoutX="15.0" layoutY="585.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
-        <JFXTextField fx:id="text_phone" focusColor="#385ba4" layoutX="15.0" layoutY="625.0" prefHeight="25.0" prefWidth="200.0" promptText="Phone number" />
-        <Label layoutX="230.0" layoutY="469.0" text="- Name" />
-        <Label layoutX="230.0" layoutY="509.0" text="- Address" />
-        <Label layoutX="230.0" layoutY="549.0" text="- City" />
-        <Label layoutX="230.0" layoutY="589.0" text="- ZIP code" />
-        <Label layoutX="230.0" layoutY="629.0" text="- Phone" />
-        <JFXButton fx:id="btn_save" layoutX="503.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save changes" />
-        <JFXButton fx:id="btn_delete" layoutX="640.0" layoutY="614.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete contractor" />
+        <JFXTextField fx:id="text_name" focusColor="#385ba4" layoutX="55.0" layoutY="465.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
+        <JFXTextField fx:id="text_address" focusColor="#385ba4" layoutX="55.0" layoutY="505.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
+        <JFXTextField fx:id="text_city" focusColor="#385ba4" layoutX="55.0" layoutY="545.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
+        <JFXTextField fx:id="text_zip" focusColor="#385ba4" layoutX="55.0" layoutY="585.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
+        <JFXTextField fx:id="text_phone" focusColor="#385ba4" layoutX="55.0" layoutY="625.0" prefHeight="25.0" prefWidth="200.0" promptText="Phone number" />
+        <Label layoutX="270.0" layoutY="469.0" text="- Name" />
+        <Label layoutX="270.0" layoutY="509.0" text="- Address" />
+        <Label layoutX="270.0" layoutY="549.0" text="- City" />
+        <Label layoutX="270.0" layoutY="589.0" text="- ZIP code" />
+        <Label layoutX="270.0" layoutY="629.0" text="- Phone number" />
+        <JFXButton fx:id="btn_save" layoutX="503.0" layoutY="621.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save changes" />
+        <JFXButton fx:id="btn_delete" layoutX="640.0" layoutY="621.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete contractor" />
     </children>
 </AnchorPane>

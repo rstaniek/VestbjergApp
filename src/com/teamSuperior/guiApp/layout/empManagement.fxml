@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="620.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagementController">
+<AnchorPane prefHeight="620.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagementController">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
         <children>
             <JFXButton fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
@@ -18,26 +18,26 @@
     </AnchorPane>
     <TableView fx:id="tableView_employees" layoutY="50.0" onMouseClicked="#tableView_employees_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
     </TableView>
-    <AnchorPane layoutY="450.0" prefHeight="170.0" prefWidth="1000.0">
-      <children>
-         <JFXTextField fx:id="text_name" focusColor="#385ba4" layoutX="14.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
-         <JFXTextField fx:id="text_surname" focusColor="#385ba4" layoutX="14.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="Surname" />
-          <JFXTextField fx:id="text_email" focusColor="#385ba4" layoutX="14.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" />
-         <Label layoutX="225.0" layoutY="19.0" text="- Name" />
-          <Label layoutX="225.0" layoutY="59.0" text="- Surname" />
-          <Label layoutX="225.0" layoutY="99.0" text="- Email" />
-          <Label layoutX="225.0" layoutY="139.0" text="- Position" />
-         <JFXTextField fx:id="text_address" focusColor="#385ba4" layoutX="514.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
-          <JFXTextField fx:id="text_city" focusColor="#385ba4" layoutX="514.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
-          <JFXTextField fx:id="text_zip" focusColor="#385ba4" layoutX="514.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
-         <Label layoutX="725.0" layoutY="19.0" text=" - Address" />
-          <Label layoutX="725.0" layoutY="59.0" text=" - City" />
-          <Label layoutX="725.0" layoutY="99.0" text=" - ZIP code" />
-         <JFXButton fx:id="btn_save" layoutX="514.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save" />
-         <JFXButton fx:id="btn_saveQuit" layoutX="570.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_saveQuit_onClick" style="-fx-background-color: #c9c9c9;" text="Save &amp; Quit" />
-         <JFXButton fx:id="btn_quit" layoutX="675.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_quit_onClick" style="-fx-background-color: #c9c9c9;" text="Quit without saving" />
-         <JFXButton fx:id="btn_delete" layoutX="830.0" layoutY="135.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete" />
-         <JFXComboBox fx:id="comboBox_position" layoutX="14.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" />
-      </children>
-   </AnchorPane>
+    <AnchorPane layoutY="450.0" prefHeight="197.0" prefWidth="1000.0">
+        <children>
+            <JFXTextField fx:id="text_name" focusColor="#385ba4" layoutX="138.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
+            <JFXTextField fx:id="text_surname" focusColor="#385ba4" layoutX="138.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="Surname" />
+            <JFXTextField fx:id="text_email" focusColor="#385ba4" layoutX="138.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" />
+            <Label layoutX="354.0" layoutY="22.0" text="- Name" />
+            <Label layoutX="354.0" layoutY="62.0" text="- Surname" />
+            <Label layoutX="354.0" layoutY="102.0" text="- Email" />
+            <Label layoutX="354.0" layoutY="142.0" text="- Position" />
+            <JFXTextField fx:id="text_address" focusColor="#385ba4" layoutX="588.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
+            <JFXTextField fx:id="text_city" focusColor="#385ba4" layoutX="588.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
+            <JFXTextField fx:id="text_zip" focusColor="#385ba4" layoutX="588.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
+            <Label layoutX="804.0" layoutY="22.0" text=" - Address" />
+            <Label layoutX="804.0" layoutY="62.0" text=" - City" />
+            <Label layoutX="804.0" layoutY="102.0" text=" - ZIP code" />
+            <JFXButton fx:id="btn_save" layoutX="588.0" layoutY="157.0" mnemonicParsing="false" onAction="#btn_save_onClick" style="-fx-background-color: #c9c9c9;" text="Save" />
+            <JFXButton fx:id="btn_saveQuit" layoutX="650.0" layoutY="157.0" mnemonicParsing="false" onAction="#btn_saveQuit_onClick" style="-fx-background-color: #c9c9c9;" text="Save &amp; Quit" />
+            <JFXButton fx:id="btn_quit" layoutX="751.0" layoutY="157.0" mnemonicParsing="false" onAction="#btn_quit_onClick" style="-fx-background-color: #c9c9c9;" text="Quit" />
+            <JFXButton fx:id="btn_delete" layoutX="811.0" layoutY="157.0" mnemonicParsing="false" onAction="#btn_delete_onClick" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete" />
+            <JFXComboBox fx:id="comboBox_position" layoutX="138.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" />
+        </children>
+    </AnchorPane>
 </AnchorPane>
