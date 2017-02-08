@@ -9,7 +9,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
 
-<AnchorPane prefHeight="620.0" prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/8.0.112" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagementController">
+<AnchorPane prefHeight="620.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.112" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.EmployeeManagementController">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
         <JFXButton fx:id="clearSearchButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#clickClearSearch" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
         <JFXTextField fx:id="searchQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0" onKeyReleased="#handleSearchQuery" prefHeight="25.0" prefWidth="779.0" promptText="Search..." />
@@ -32,11 +32,9 @@
     <AnchorPane layoutY="450.0" prefHeight="197.0" prefWidth="1000.0">
         <JFXTextField fx:id="nameField" focusColor="#385ba4" layoutX="48.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Name" />
         <JFXTextField fx:id="surnameField" focusColor="#385ba4" layoutX="48.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="Surname" />
-        <JFXTextField fx:id="emailField" focusColor="#385ba4" layoutX="48.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="Email" />
         <Label layoutX="264.0" layoutY="22.0" text="- Name" />
         <Label layoutX="264.0" layoutY="62.0" text="- Surname" />
-        <Label layoutX="264.0" layoutY="102.0" text="- Email" />
-        <Label layoutX="264.0" layoutY="142.0" text="- Position" />
+        <Label layoutX="264.0" layoutY="102.0" text="- Position" />
         <JFXTextField fx:id="addressField" focusColor="#385ba4" layoutX="438.0" layoutY="15.0" prefHeight="25.0" prefWidth="200.0" promptText="Address" />
         <JFXTextField fx:id="cityField" focusColor="#385ba4" layoutX="438.0" layoutY="55.0" prefHeight="25.0" prefWidth="200.0" promptText="City" />
         <JFXTextField fx:id="zipField" focusColor="#385ba4" layoutX="438.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" promptText="ZIP code" />
@@ -47,6 +45,6 @@
         <JFXButton fx:id="saveQuitButton" layoutX="500.0" layoutY="157.0" mnemonicParsing="false" onAction="#clickSaveQuit" style="-fx-background-color: #c9c9c9;" text="Save &amp; Quit" />
         <JFXButton fx:id="quitButton" layoutX="601.0" layoutY="157.0" mnemonicParsing="false" onAction="#clickQuit" style="-fx-background-color: #c9c9c9;" text="Quit" />
         <JFXButton fx:id="deleteButton" layoutX="661.0" layoutY="157.0" mnemonicParsing="false" onAction="#clickDelete" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="Delete" />
-        <JFXComboBox fx:id="positionComboBox" layoutX="48.0" layoutY="135.0" prefHeight="25.0" prefWidth="200.0" />
+        <JFXComboBox fx:id="positionComboBox" layoutX="48.0" layoutY="95.0" prefHeight="25.0" prefWidth="200.0" />
     </AnchorPane>
 </AnchorPane>

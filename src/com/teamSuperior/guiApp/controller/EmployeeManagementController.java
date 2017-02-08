@@ -48,8 +48,6 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
     @FXML
     public JFXTextField surnameField;
     @FXML
-    public JFXTextField emailField;
-    @FXML
     public JFXTextField addressField;
     @FXML
     public JFXTextField cityField;
@@ -177,7 +175,6 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
         selectedEmployee = employeesTableView.getFocusModel().getFocusedItem();
         nameField.setText(selectedEmployee.getName());
         surnameField.setText(selectedEmployee.getSurname());
-        emailField.setText(selectedEmployee.getEmail());
         addressField.setText(selectedEmployee.getAddress());
         cityField.setText(selectedEmployee.getCity());
         zipField.setText(selectedEmployee.getZip());
@@ -211,7 +208,6 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
             e.setCity(cityField.getText());
             e.setZip(zipField.getText());
             e.setPosition(positionComboBox.getSelectionModel().getSelectedItem());
-            e.setEmail(emailField.getText());
             e.setAccessLevel(getAccessLevelBySelectedPosition());
             update(e);
         }
