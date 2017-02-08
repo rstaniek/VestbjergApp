@@ -3,6 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.teamSuperior.core.connection.ConnectionController;
+import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
@@ -26,12 +28,12 @@ import static javafx.scene.control.Alert.AlertType.ERROR;
 /**
  * Employee management controller
  */
-public class EmployeeManagementController implements DAO<Employee, Integer>, Initializable {
+public class EmployeeManagementController implements IDataAccessObject<Employee, Integer>, Initializable {
     private static final String[] EMPLOYEE_CRITERIA = new String[]{"Name", "Surname", "Address", "City", "ZIP", "Phone", "Position"};
     private static Employee loggedInUser;
 
-    private static Controller<Employee, Integer> controller = new Controller<>(Employee.class);
-    private static Controller<Position, Integer> positionController = new Controller<>(Position.class);
+    private static ConnectionController<Employee, Integer> controller = new ConnectionController<>(Employee.class);
+    private static ConnectionController<Position, Integer> positionController = new ConnectionController<>(Position.class);
 
     @FXML
     public TableView<Employee> employeesTableView;
