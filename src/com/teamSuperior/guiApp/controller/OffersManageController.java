@@ -5,19 +5,15 @@ import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
-import java.sql.Time;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -36,72 +32,68 @@ public class OffersManageController implements Initializable {
     private static Controller<Offer, Integer> offerController = new Controller<>(Offer.class);
 
     @FXML
-    public Button btn_search_clear;
+    public Button clearSearchButton;
     @FXML
-    public TextField text_search_query;
+    public TextField searchQueryField;
     @FXML
-    public CheckComboBox<String> checkComboBox_search_criteria;
+    public CheckComboBox<String> searchCriteriaComboBox;
     @FXML
-    public TableView tableView_offers;
+    public TableView<Offer> offersTableView;
     @FXML
-    public Label label_productName;
+    public Label productNameLabel;
     @FXML
-    public Label label_price;
+    public Label priceLabel;
     @FXML
-    public Label label_productID;
+    public Label productLabel;
     @FXML
-    public Label label_offerID;
+    public Label offerIdLabel;
     @FXML
-    public TextField text_newDiscount;
+    public TextField newDiscountField;
     @FXML
-    public TextField text_newPrice;
+    public TextField newPriceField;
     @FXML
-    public Button btn_update;
+    public Button updateButton;
     @FXML
-    public Button btn_delete;
+    public Button deleteButton;
     @FXML
-    public Label label_status;
+    public Label statusLabel;
+    @FXML
     private TableColumn<Offer, Integer> idColumn;
+    @FXML
     private TableColumn<Offer, Product> productColumn;
+    @FXML
     private TableColumn<Offer, Double> priceColumn;
+    @FXML
     private TableColumn<Offer, Date> dateColumn;
+    @FXML
     private TableColumn<Offer, String> discountColumn;
-    private TableColumn<Offer, Time> timeColumn;
+    @FXML
     private TableColumn<Offer, Date> expiresDateColumn;
-    private TableColumn<Offer, Time> expiresTimeColumn;
+    @FXML
     private TableColumn<Offer, String> statusColumn;
+
     private ObservableList<Offer> offers;
     private ObservableList<Offer> searchResults;
     private Offer selectedOffer;
     private DBConnect conn;
 
     @FXML
-    public void btn_search_clear_onClick(ActionEvent actionEvent) {
-        text_search_query.clear();
+    public void clickClearSearch() {
+        searchQueryField.clear();
         initTableColumns(offers);
-        selectedOffer = (Offer) tableView_offers.getFocusModel().getFocusedItem();
+        selectedOffer = offersTableView.getFocusModel().getFocusedItem();
     }
 
     @FXML
-    public void tableView_employees_onMouseClicked(MouseEvent mouseEvent) {
-        selectedOffer = (Offer) tableView_offers.getFocusModel().getFocusedItem();
+    public void clickOffersTableView() {
+        selectedOffer = offersTableView.getFocusModel().getFocusedItem();
         updateText();
     }
 
     @FXML
-    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+    public void text_search_query_onKeyReleased() {
         searchResults = null;
-        searchResults = performSearch(text_search_query.getText());
-        tableView_offers.getColumns().removeAll(idColumn,
-                productColumn,
-
-                priceColumn,
-                discountColumn,
-                dateColumn,
-                timeColumn,
-                expiresDateColumn,
-                expiresTimeColumn,
-                statusColumn);
+        searchResults = performSearch(searchQueryField.getText());
         initTableColumns(searchResults);
     }
 
@@ -112,8 +104,8 @@ public class OffersManageController implements Initializable {
         }
         for (Offer o : offers) {
             ObservableList<String> clist;
-            if (checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0) {
-                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            if (searchCriteriaComboBox.getCheckModel().getCheckedItems().size() != 0) {
+                clist = searchCriteriaComboBox.getCheckModel().getCheckedItems();
             } else {
                 clist = FXCollections.observableArrayList(OFFERS_CRITERIA);
             }
@@ -156,12 +148,12 @@ public class OffersManageController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         offers = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll(OFFERS_CRITERIA);
+        searchCriteriaComboBox.getItems().addAll(OFFERS_CRITERIA);
         conn = new DBConnect();
 
         retrieveData();
         initTableColumns(offers);
-        selectedOffer = (Offer) tableView_offers.getFocusModel().getFocusedItem();
+        selectedOffer = offersTableView.getFocusModel().getFocusedItem();
         updateText();
     }
 
@@ -170,105 +162,58 @@ public class OffersManageController implements Initializable {
     }
 
     private void initTableColumns(ObservableList<Offer> source) {
-        idColumn = new TableColumn<>("ID");
-        idColumn.setMinWidth(30);
-        idColumn.setCellValueFactory(new PropertyValueFactory<Offer, Integer>("id"));
-
-        productColumn = new TableColumn<>("Product");
-        productColumn.setMinWidth(100);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
-
-        dateColumn = new TableColumn<>("Date");
-        dateColumn.setMinWidth(100);
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        discountColumn.setCellValueFactory(new PropertyValueFactory<>("discount_str"));
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        expiresDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiresDate"));
+        statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
 
-        discountColumn = new TableColumn<>("Discount");
-        discountColumn.setMinWidth(60);
-        discountColumn.setCellValueFactory(new PropertyValueFactory<Offer, String>("discount_str"));
-
-        priceColumn = new TableColumn<>("Price");
-        priceColumn.setMinWidth(60);
-        priceColumn.setCellValueFactory(new PropertyValueFactory<Offer, Double>("price"));
-
-        timeColumn = new TableColumn<>("Time");
-        timeColumn.setMinWidth(100);
-        timeColumn.setCellValueFactory(new PropertyValueFactory<Offer, Time>("time"));
-
-        expiresDateColumn = new TableColumn<>("Expires");
-        expiresDateColumn.setMinWidth(100);
-        expiresDateColumn.setCellValueFactory(new PropertyValueFactory<Offer, Date>("expiresDate"));
-
-        expiresTimeColumn = new TableColumn<>("Exp time");
-        expiresTimeColumn.setMinWidth(100);
-        expiresTimeColumn.setCellValueFactory(new PropertyValueFactory<Offer, Time>("expiresTime"));
-
-        statusColumn = new TableColumn<>("Status");
-        statusColumn.setMinWidth(100);
-        statusColumn.setCellValueFactory(new PropertyValueFactory<Offer, String>("status"));
-
-        tableView_offers.setItems(source);
-        tableView_offers.getColumns().addAll(idColumn,
-                productColumn,
-                priceColumn,
-                discountColumn,
-                dateColumn,
-                timeColumn,
-                expiresDateColumn,
-                expiresTimeColumn,
-                statusColumn);
+        offersTableView.setItems(source);
     }
 
     private void updateText() {
-        label_productName.setText(selectedOffer.getProduct().getName());
-        label_price.setText(String.valueOf(selectedOffer.getPrice()));
-        label_offerID.setText(String.valueOf(selectedOffer.getId()));
-        label_productID.setText(String.valueOf(selectedOffer.getProduct().getId()));
-        text_newPrice.setText(label_price.getText());
-        text_newDiscount.setText(String.valueOf(selectedOffer.getDiscount()));
+        productNameLabel.setText(selectedOffer.getProduct().getName());
+        priceLabel.setText(String.valueOf(selectedOffer.getPrice()));
+        offerIdLabel.setText(String.valueOf(selectedOffer.getId()));
+        productLabel.setText(String.valueOf(selectedOffer.getProduct().getId()));
+        newPriceField.setText(priceLabel.getText());
+        newDiscountField.setText(String.valueOf(selectedOffer.getDiscount()));
 //        label_status.setText(isExpired(selectedOffer.getExpiresDate()));
-        if (label_status.getText().equals("VALID")) {
-            label_status.setStyle("-fx-text-fill: #009b29");
+        if (statusLabel.getText().equals("VALID")) {
+            statusLabel.setStyle("-fx-text-fill: #009b29");
         } else {
-            label_status.setStyle("-fx-text-fill: #9b000f");
+            statusLabel.setStyle("-fx-text-fill: #9b000f");
         }
     }
 
-    public void refreshWindow() {
+    private void refreshWindow() {
         offers.removeAll();
         offers = null;
         offers = FXCollections.observableArrayList();
-        tableView_offers.getColumns().removeAll(idColumn,
-                productColumn,
-                priceColumn,
-                discountColumn,
-                dateColumn,
-                timeColumn,
-                expiresDateColumn,
-                expiresTimeColumn,
-                statusColumn);
         retrieveData();
         initTableColumns(offers);
-        selectedOffer = (Offer) tableView_offers.getFocusModel().getFocusedItem();
+        selectedOffer = offersTableView.getFocusModel().getFocusedItem();
         updateText();
     }
 
-    public void btn_update_onClick(ActionEvent actionEvent) {
-        if (isNumeric(text_newDiscount.getText()) &&
-                isNumeric(text_newPrice.getText())) {
-            if (Double.parseDouble(text_newDiscount.getText()) < 100.0) {
-                if (Double.parseDouble(text_newPrice.getText()) > 0) {
+    public void clickUpdate() {
+        if (isNumeric(newDiscountField.getText()) &&
+                isNumeric(newPriceField.getText())) {
+            if (Double.parseDouble(newDiscountField.getText()) < 100.0) {
+                if (Double.parseDouble(newPriceField.getText()) > 0) {
                     Alert a = new Alert(Alert.AlertType.CONFIRMATION);
                     a.setHeaderText("You are about to edit the existing element.");
                     a.setContentText("Do you want to perform this action?");
-                    Button btnYes = (Button) a.getDialogPane().lookupButton(ButtonType.OK);
                     Optional<ButtonType> yesResponse = a.showAndWait();
                     if (yesResponse.isPresent()) {
                         if (ButtonType.OK.equals(yesResponse.get())) {
                             conn = new DBConnect();
                             try {
                                 conn.upload(String.format("UPDATE offers SET price='%1$s',discount='%2$s' WHERE id=%3$d",
-                                        text_newPrice.getText(),
-                                        text_newDiscount.getText(),
+                                        newPriceField.getText(),
+                                        newDiscountField.getText(),
                                         selectedOffer.getId()));
                             } catch (SQLException sqlEx) {
                                 displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
@@ -287,7 +232,7 @@ public class OffersManageController implements Initializable {
         }
     }
 
-    public void btn_delete_onClick(ActionEvent actionEvent) {
+    public void clickDelete() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setHeaderText(String.format("Are you sure you want to delete offer with ID: %d ?", selectedOffer.getId()));
         alert.setContentText("You will not be able to revert this action.");
