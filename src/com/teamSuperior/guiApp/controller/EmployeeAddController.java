@@ -3,6 +3,7 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
+import com.teamSuperior.guiApp.GUI.AlertBox;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,11 +45,15 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
     @FXML
     public TextField text_zip;
     @FXML
-    public TextField text_email;
-    @FXML
     public TextField text_phone;
     @FXML
+    public TextField text_email;
+    @FXML
+    public TextField text_email_confirm;
+    @FXML
     public PasswordField text_password;
+    @FXML
+    public PasswordField text_password_confirm;
     @FXML
     public ComboBox choiceBox_position;
     @FXML
@@ -93,8 +98,13 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
                 validateField(text_city) &&
                 validateField(text_zip) &&
                 validateField(text_email) &&
+                validateField(text_email_confirm) &&
                 validateField(text_phone) &&
-                validateField(text_password)) {
+                validateField(text_password) &&
+                validateField(text_password_confirm) &&
+                emailMatch() &&
+                passwordMatch() &&
+                newEmail()) {
             try {
                 conn = new DBConnect();
                 Position selectedPosition = null;
@@ -116,6 +126,7 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
                         selectedPosition.getName(),
                         passwordSafe,
                         selectedPosition.getAccessLevel()));
+                AlertBox.display("Success", "Employee successfully added");
 
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
@@ -157,7 +168,9 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
         text_zip.clear();
         text_email.clear();
         text_phone.clear();
+        text_email_confirm.clear();
         text_password.clear();
+        text_password_confirm.clear();
     }
 
     @Override
@@ -188,5 +201,37 @@ public class EmployeeAddController implements Initializable, DAO<Employee, Integ
     @Override
     public void deleteAll() {
         controller.deleteAll();
+    }
+
+
+    public boolean emailMatch() {
+        if (!text_email.getText().equals(text_email_confirm.getText()))
+            AlertBox.display("Error", "Emails don't match, please try again");
+        return (text_email.getText().equals(text_email_confirm.getText()));
+    }
+
+    public boolean passwordMatch() {
+        if (!text_password.getText().equals(text_password_confirm.getText()))
+            AlertBox.display("Error", "Passwords don't match, please try again");
+        return (text_password.getText().equals(text_password_confirm.getText()));
+    }
+
+    public boolean newEmail() {
+        boolean isNew = true;
+        try {
+            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
+            while (rs.next()) {
+                if (rs.getString("email").equals(org.apache.commons.codec.digest.DigestUtils.sha256Hex(text_email.getText()))) {
+                    isNew = false;
+                }
+            }
+        } catch (SQLException ex) {
+            displayMessage(ERROR, "SQL connection error", ex.getMessage());
+        } catch (Exception exception) {
+            displayMessage(ERROR, exception.getMessage());
+        }
+        if(!isNew)
+            AlertBox.display("Error", "Email already exists");
+        return isNew;
     }
 }
