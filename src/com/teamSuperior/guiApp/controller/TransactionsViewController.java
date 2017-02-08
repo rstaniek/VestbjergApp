@@ -3,8 +3,14 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -80,14 +86,38 @@ public class TransactionsViewController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        WaitingBox waitingBox = new WaitingBox();
+        waitingBox.setMessage("Fetching data.");
         transactions = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         products = FXCollections.observableArrayList();
         searchCriteriaComboBox.getItems().addAll(TRANSACTION_CRITERIA);
-        retrieveData();
-        initTransactionTableColumns(transactions);
-        selectedTransaction = transactionsTableView.getFocusModel().getFocusedItem();
-        initProductsTableColumns();
+        Task<Void> initData = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(() -> waitingBox.displayIndefinite());
+                transactions = FXCollections.observableArrayList(transactionConnectionController.getAll());
+                return null;
+            }
+        };
+
+        initData.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initTransactionTableColumns(transactions);
+                    waitingBox.closeWindow();
+                    selectedTransaction = transactionsTableView.getFocusModel().getFocusedItem();
+                    initProductsTableColumns();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread thread = new Thread(initData);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML
@@ -101,10 +131,6 @@ public class TransactionsViewController implements Initializable {
         searchResults = null;
         searchResults = performSearch(searchQueryField.getText());
         initTransactionTableColumns(searchResults);
-    }
-
-    private void retrieveData() {
-        transactions = FXCollections.observableArrayList(transactionConnectionController.getAll());
     }
 
     private void initTransactionTableColumns(ObservableList<Transaction> source) {
@@ -128,21 +154,42 @@ public class TransactionsViewController implements Initializable {
     }
 
     private void initProductsTableColumns() {
-        Integer[] ids = Arrays.stream(selectedTransaction.getProductIDs().split(","))
-                .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-        products = FXCollections.observableArrayList(productConnectionController.getByArray("id", ids));
+        WaitingBox waitingBox = new WaitingBox("Fetching products data.");
+        Task<Void> initProducts = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Integer[] ids = Arrays.stream(selectedTransaction.getProductIDs().split(","))
+                        .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
+                products = FXCollections.observableArrayList(productConnectionController.getByArray("id", ids));
+                return null;
+            }
+        };
 
-        idProductColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        nameProductColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        subnameProductColumn.setCellValueFactory(new PropertyValueFactory<>("subname"));
-        barcodeProductColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
-        categoryProductColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-        priceProductColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        locationProductColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
-        quantityProductColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        contractorProductColumn.setCellValueFactory(new PropertyValueFactory<>("contractor"));
+        initProducts.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    idProductColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+                    nameProductColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+                    subnameProductColumn.setCellValueFactory(new PropertyValueFactory<>("subname"));
+                    barcodeProductColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
+                    categoryProductColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+                    priceProductColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+                    locationProductColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
+                    quantityProductColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+                    contractorProductColumn.setCellValueFactory(new PropertyValueFactory<>("contractor"));
 
-        productsTableView.setItems(products);
+                    productsTableView.setItems(products);
+                    waitingBox.closeWindow();
+                } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(initProducts);
+        th.setDaemon(true);
+        th.start();
     }
 
     private ObservableList<Transaction> performSearch(String query) {
