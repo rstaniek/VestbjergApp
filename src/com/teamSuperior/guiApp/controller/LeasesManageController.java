@@ -18,12 +18,15 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.KeyEvent;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -352,7 +355,28 @@ public class LeasesManageController implements Initializable {
 
     @FXML
     public void tableView_leases_onMouseClicked() {
+
+
         selectedLease = (Lease) tableView_leases.getFocusModel().getFocusedItem();
+
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(selectedLease.getBorrowDate().toLocalDate())) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                    }
+                };
+            }
+        };
+
+        datePicker_returnDate.setDayCellFactory(dayCellFactory);
+
         list_machines.getSelectionModel().select(getMachineName(selectedLease.getLeaseMachineID()));
         list_customers.getSelectionModel().select(getCustomerName(selectedLease.getCustomerID()));
         datePicker_borrowDate.setValue(selectedLease.getBorrowDate().toLocalDate());
