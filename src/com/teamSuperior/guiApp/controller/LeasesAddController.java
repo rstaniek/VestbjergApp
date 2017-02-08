@@ -15,6 +15,8 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
+import javafx.util.Callback;
+import javafx.util.StringConverter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -52,8 +54,54 @@ public class LeasesAddController implements Initializable {
     private ObservableList<Machine> machinesList;
     private ObservableList<Customer> customersList;
 
+    private final String datePattern = "yyyy-MM-dd";
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        StringConverter converter = new StringConverter<LocalDate>() {
+            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
+
+            @Override
+            public String toString(LocalDate object) {
+                if (object != null) {
+                    return dateTimeFormatter.format(object);
+                } else {
+                    return "";
+                }
+            }
+
+            @Override
+            public LocalDate fromString(String string) {
+                if (string != null && !string.isEmpty()) {
+                    return LocalDate.parse(string, dateTimeFormatter);
+                } else {
+                    return null;
+                }
+            }
+        };
+
+        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(LocalDate.now())) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                        if (item.isAfter(LocalDate.now()) && item.isBefore(datePicker.getValue())) {
+                            setStyle("-fx-background-color: #67aaf4");
+                        }
+                    }
+                };
+            }
+        };
+        datePicker_returnDate.setConverter(converter);
+        datePicker_returnDate.setDayCellFactory(dayCellFactory);
+        datePicker_returnDate.setValue(LocalDate.now());
+        datePicker_returnDate.setPromptText(datePattern.toLowerCase());
         datePicker_returnDate.setEditable(false);
         conn = new DBConnect();
         machinesList = FXCollections.observableArrayList();
