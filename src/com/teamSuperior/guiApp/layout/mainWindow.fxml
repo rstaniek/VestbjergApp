@@ -18,38 +18,39 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Connection">
                 <MenuItem mnemonicParsing="false" onAction="#handleConnect" text="Connect"/>
+                <SeparatorMenuItem mnemonicParsing="false"/>
                 <MenuItem mnemonicParsing="false" onAction="#handleLogIn" text="Log in"/>
                 <MenuItem mnemonicParsing="false" onAction="#handleLogOut" text="Log out"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Transactions">
-                <MenuItem mnemonicParsing="false" onAction="#handleNewTransaction" text="New"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleViewTransactions" text="View"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleNewTransaction" text="Add new transaction"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleViewTransactions" text="View transactions"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Products">
-                <MenuItem mnemonicParsing="false" onAction="#handleAddNewProduct" text="Add new"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleProductsView" text="View"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleAddNewProduct" text="Add new product"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleProductsView" text="Manage products"/>
                 <SeparatorMenuItem mnemonicParsing="false"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleAddOffer" text="Add Offer"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleViewOffers" text="View Offers"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleAddOffer" text="Add new offer"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleViewOffers" text="Manage offers"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Employees">
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Statistics"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Edit"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesAdd" text="Add new employee"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesEdit" text="Manage employees"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleEmployeesStatistics" text="Employee statistics"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Contractors">
-                <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add"/>
-                <MenuItem mnemonicParsing="false" onAction="#handleContractorsManage" text="Manage"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleContractorsAdd" text="Add new contractor"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleContractorsManage" text="Manage contractors"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Customers">
-                <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Edit"/>
+                <MenuItem mnemonicParsing="false" onAction="#handleCustomers" text="Manage customers"/>
             </Menu>
             <Menu mnemonicParsing="false" text="Lease machines">
                 <items>
-                    <MenuItem mnemonicParsing="false" onAction="#handleMachinesAdd" text="Add machine" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleMachinesAdd" text="Add new machine" />
                     <MenuItem mnemonicParsing="false" onAction="#handleMachinesManage" text="Manage machines"/>
                     <SeparatorMenuItem mnemonicParsing="false" />
-                    <MenuItem mnemonicParsing="false" onAction="#handleLeasesAdd" text="Add lease" />
+                    <MenuItem mnemonicParsing="false" onAction="#handleLeasesAdd" text="Add new lease" />
                     <MenuItem mnemonicParsing="false" onAction="#handleLeasesManage" text="Manage leases" />
                 </items>
             </Menu>

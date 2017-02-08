@@ -165,7 +165,6 @@ public class TransactionsAddController implements Initializable {
         customers = FXCollections.observableArrayList();
         searchCustomersResults = FXCollections.observableArrayList();
         searchCustomersCriteriaComboBox.getItems().addAll(CUSTOMERS_CRITERIA);
-        searchCustomersCriteriaComboBox.getCheckModel().checkAll();
         retrieveCustomerData();
         initCustomerTableColumns(customers);
         customersTableView.getSelectionModel().selectFirst();
@@ -384,7 +383,6 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void calculateDiscount() {
-        //first it checks if the quantity discount is applicable and applies it if so (right now it's set at 20 000 kr.)
         if (noDiscountPrice > QUANTITY_DISCOUNT_THRESHOLD) {
             if (!discountIDs.contains(3)) discountIDs.add(3);
         } else if (discountIDs.contains(3)) discountIDs.remove(discountIDs.indexOf(3));

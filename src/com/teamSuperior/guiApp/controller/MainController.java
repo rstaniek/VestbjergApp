@@ -519,22 +519,6 @@ public class MainController implements Initializable {
         }
     }
 
-    private void displayXmasWnd() {
-        Stage window = new Stage();
-        window.initModality(Modality.APPLICATION_MODAL);
-        window.setMinWidth(666);
-        window.setMinHeight(563);
-        window.setResizable(false);
-        window.setTitle("Merry X-mas mofos");
-        AnchorPane anchorPane = new AnchorPane();
-        ImageView imageView = new ImageView();
-        anchorPane.getChildren().addAll(imageView);
-        imageView.setImage(Drawable.getImage(this.getClass(), Drawables.X_MAS_IMAGE));
-        Scene scene = new Scene(anchorPane);
-        window.setScene(scene);
-        window.showAndWait();
-    }
-
     @FXML
     private void displayEfficiencyChart(){
         if(UserController.isLoggedIn()){
