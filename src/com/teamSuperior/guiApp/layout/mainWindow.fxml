@@ -55,7 +55,7 @@
                 </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
-                <MenuItem mnemonicParsing="false" text="About"/>
+                <MenuItem mnemonicParsing="false" text="About" onAction="#handleAboutView"/>
             </Menu>
         </MenuBar>
     </top>

@@ -7,7 +7,6 @@ import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.AlertBox;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.Window;
-import com.teamSuperior.guiApp.enums.Drawables;
 import com.teamSuperior.guiApp.enums.WindowType;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -26,8 +25,6 @@ import javafx.scene.Scene;
 import javafx.scene.chart.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -35,6 +32,7 @@ import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -48,6 +46,7 @@ import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
@@ -818,5 +817,18 @@ public class MainController implements Initializable {
                 Error.displayMessage(ERROR, ex.getMessage());
             }
         }
+    }
+
+    @FXML
+    public void handleAboutView(ActionEvent actionEvent) {
+        Desktop desktop = Desktop.getDesktop();
+        if (desktop.isSupported(Desktop.Action.BROWSE)) {
+            try {
+                desktop.browse(new URI("http://remix1436.ct8.pl/resources/about/"));
+            } catch (Exception ex) {
+                displayMessage(ERROR, ex.getMessage());
+            }
+        }
+
     }
 }
