@@ -3,7 +3,6 @@ package com.teamSuperior.guiApp.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.teamSuperior.core.Utils;
-import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
@@ -86,14 +85,12 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
     private TableColumn<Product, Integer> contractorColumn;
 
     private ObservableList<Product> products = FXCollections.observableArrayList();
-    private Employee loggedInUser;
     private Product selectedProduct;
     private boolean showsAll;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         searchCriteriaCheckComboBox.getItems().addAll(PRODUCTS_CRITERIA);
-        loggedInUser = UserController.getUser();
         showsAll = true;
 
         setColumns();
@@ -109,7 +106,7 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
                 (observable, oldValue, newValue) -> applyFilter(newValue)
         );
 
-        if (loggedInUser.getAccessLevel() < 2) {
+        if (UserController.getUser().getAccessLevel() < 2) {
             requestResupplyButton.setDisable(true);
             amountToRequestField.setDisable(true);
         }

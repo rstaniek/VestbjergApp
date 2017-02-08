@@ -1,7 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.DBConnect;
-import com.teamSuperior.core.exception.ConnectionException;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Offer;
 import javafx.collections.FXCollections;
@@ -20,7 +19,6 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Time;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -130,7 +128,7 @@ public class OffersManageController implements Initializable {
                         }
                         break;
                     case "Product ID":
-                        if(String.valueOf(o.getProductID()).contains(query)){
+                        if(String.valueOf(o.getProductIDs()).contains(query)){
                             results.add(o);
                         }
                         break;
@@ -256,7 +254,7 @@ public class OffersManageController implements Initializable {
         label_productName.setText(selectedOffer.getProductName());
         label_price.setText(String.valueOf(selectedOffer.getPrice()));
         label_offerID.setText(String.valueOf(selectedOffer.getId()));
-        label_productID.setText(String.valueOf(selectedOffer.getProductID()));
+        label_productID.setText(String.valueOf(selectedOffer.getProductIDs()));
         text_newPrice.setText(label_price.getText());
         text_newDiscount.setText(String.valueOf(selectedOffer.getDiscount()));
         label_status.setText(isExpired(selectedOffer.getExpiresDate()));

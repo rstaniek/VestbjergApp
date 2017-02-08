@@ -6,12 +6,16 @@ import com.teamSuperior.guiApp.GUI.WaitingBox;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
+import java.util.ResourceBundle;
 
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
@@ -19,7 +23,7 @@ import static com.teamSuperior.guiApp.enums.ErrorCode.*;
 /**
  * Login Controller.
  */
-public class UserController {
+public class UserController implements DAO<Employee, Integer>, Initializable {
     @FXML
     public Button btn_logIn;
     @FXML
@@ -28,6 +32,8 @@ public class UserController {
     public PasswordField txt_empPassw;
     @FXML
     public TextField txt_empID;
+
+    private static Controller<Employee, Integer> controller = new Controller<>(Employee.class);
 
     private static Employee loggedUser;
     private static boolean loggedFinal = false;
@@ -135,7 +141,7 @@ public class UserController {
     static boolean isAllowed(int minAccessLevel) {
         if (loggedFinal && loggedUser.getAccessLevel() >= minAccessLevel) {
             return true;
-        } else if (!loggedFinal){
+        } else if (!loggedFinal) {
             displayError(ACCESS_DENIED_NOT_LOGGED_IN);
         } else {
             displayError(ACCESS_DENIED_INSUFFICIENT_PERMISSIONS);
@@ -149,5 +155,40 @@ public class UserController {
             loggedFinal = false;
             return true;
         } else return false;
+    }
+
+    @Override
+    public void persist(Employee employee) {
+        controller.persist(employee);
+    }
+
+    @Override
+    public Employee getById(Integer integer) {
+        return controller.getById(integer);
+    }
+
+    @Override
+    public List<Employee> getAll() {
+        return controller.getAll();
+    }
+
+    @Override
+    public void update(Employee employee) {
+        controller.update(employee);
+    }
+
+    @Override
+    public void delete(Employee employee) {
+        controller.delete(employee);
+    }
+
+    @Override
+    public void deleteAll() {
+        controller.deleteAll();
+    }
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+
     }
 }

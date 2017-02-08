@@ -5,17 +5,43 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import org.controlsfx.control.CheckComboBox?>
-
-<AnchorPane prefHeight="650.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.teamSuperior.guiApp.controller.TransactionsViewController">
+<?import javafx.scene.control.TableColumn?>
+<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.TransactionsViewController" prefHeight="650.0"
+            prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
-        <children>
-            <JFXButton fx:id="btn_search_clear" layoutX="14.0" layoutY="13.0" mnemonicParsing="false" onAction="#btn_search_clear_onClick" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X" />
-            <JFXTextField fx:id="text_search_query" focusColor="#385ba4" layoutX="49.0" layoutY="13.0" onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0" promptText="Search..." />
-            <CheckComboBox fx:id="checkComboBox_search_criteria" layoutX="838.0" layoutY="13.0" prefHeight="25" prefWidth="150.0" />
-        </children>
+        <JFXButton fx:id="clearSearchButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
+                   onAction="#clickSearchClear" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26"
+                   style="-fx-background-color: #c9c9c9;" text="X"/>
+        <JFXTextField fx:id="searchQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0"
+                      onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0"
+                      promptText="Search..."/>
+        <CheckComboBox fx:id="searchCriteriaComboBox" layoutX="838.0" layoutY="13.0" prefHeight="25"
+                       prefWidth="150.0"/>
     </AnchorPane>
-    <TableView fx:id="tableView_offers" layoutY="50.0" onMouseClicked="#tableView_offers_onMouseClicked" prefHeight="400.0" prefWidth="1000.0">
+    <TableView fx:id="transactionsTableView" layoutY="50.0" onMouseClicked="#clickOffersTableView"
+               prefHeight="400.0" prefWidth="1000.0">
+        <columns>
+            <TableColumn fx:id="idTransactionColumn" minWidth="30.0" text="ID"/>
+            <TableColumn fx:id="dateTransactionColumn" minWidth="50.0" text="Date"/>
+            <TableColumn fx:id="descriptionTransactionColumn" minWidth="100.0" text="Description"/>
+            <TableColumn fx:id="discountIDsTransactionColumn" minWidth="50.0" text="Discount IDs"/>
+            <TableColumn fx:id="employeeTransactionColumn" minWidth="50.0" text="Employee ID"/>
+            <TableColumn fx:id="customerTransactionColumn" minWidth="30.0" text="Customer ID"/>
+            <TableColumn fx:id="priceTransactionColumn" minWidth="50.0" text="Price"/>
+            <TableColumn fx:id="productIDsTransactionColumn" minWidth="50.0" text="Product IDs"/>
+        </columns>
     </TableView>
-    <TableView fx:id="tableView_products" layoutY="450.0" prefHeight="200.0" prefWidth="1000.0">
+    <TableView fx:id="productsTableView" layoutY="450.0" prefHeight="200.0" prefWidth="1000.0">
+        <columns>
+            <TableColumn fx:id="idProductColumn" minWidth="50.0" text="ID"/>
+            <TableColumn fx:id="nameProductColumn" minWidth="80.0" text="Name"/>
+            <TableColumn fx:id="subnameProductColumn" minWidth="150.0" text="Sub name"/>
+            <TableColumn fx:id="barcodeProductColumn" minWidth="50.0" text="Barcode"/>
+            <TableColumn fx:id="categoryProductColumn" minWidth="80.0" text="Category"/>
+            <TableColumn fx:id="priceProductColumn" minWidth="80.0" text="Price"/>
+            <TableColumn fx:id="locationProductColumn" minWidth="220.0" text="Warehouse location"/>
+            <TableColumn fx:id="quantityProductColumn" minWidth="30.0" text="Q"/>
+            <TableColumn fx:id="contractorProductColumn" minWidth="50.0" text="Contractor"/>
+        </columns>
     </TableView>
 </AnchorPane>

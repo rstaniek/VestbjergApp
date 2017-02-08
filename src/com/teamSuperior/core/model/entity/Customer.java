@@ -115,10 +115,7 @@ public class Customer implements Model {
 
     @Override
     public String toString() {
-        return "{rpduct{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                '}';
+        return id + " - " + name + " " + surname;
     }
 
     @Override

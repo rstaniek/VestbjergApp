@@ -1,13 +1,13 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.Utils;
-import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.BasketItem;
 import com.teamSuperior.core.model.Discount;
 import com.teamSuperior.core.model.entity.Customer;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
+import com.teamSuperior.core.model.service.Transaction;
 import com.teamSuperior.guiApp.GUI.TextFieldBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
@@ -24,11 +24,7 @@ import org.controlsfx.control.CheckComboBox;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static com.teamSuperior.core.Utils.*;
@@ -51,6 +47,10 @@ public class TransactionsAddController implements Initializable {
 
     private static Controller<Product, Integer> productController = new Controller<>(Product.class);
     private static Controller<Customer, Integer> customerController = new Controller<>(Customer.class);
+    private static Controller<Discount, Integer> discountController = new Controller<>(Discount.class);
+    private static Controller<Offer, Integer> offerController = new Controller<>(Offer.class);
+    private static Controller<Transaction, Integer> transactionController = new Controller<>(Transaction.class);
+    private static Controller<Employee, Integer> employeeController = new Controller<>(Employee.class);
 
     private static Employee loggedUser;
     @FXML
@@ -135,7 +135,7 @@ public class TransactionsAddController implements Initializable {
     private double noDiscountPrice;
     private double noDiscountPriceOnLabels;
     private ArrayList<Integer> discountIDs;
-    private int customerID;
+    private Customer customer;
     private double discountThreshold;
     private ObservableList<Product> products;
     private ObservableList<Customer> customers;
@@ -143,7 +143,6 @@ public class TransactionsAddController implements Initializable {
     private ObservableList<Customer> searchCustomersResults;
     private Product selectedProduct;
     private Customer selectedCustomer;
-    private DBConnect conn;
     private ObservableList<BasketItem> basketItems;
     private BasketItem selectedBasketItem;
     private ObservableList<Offer> offers;
@@ -152,8 +151,6 @@ public class TransactionsAddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        selectedCustomer = customersTableView.getFocusModel().getFocusedItem();
-        conn = new DBConnect();
         loggedUser = UserController.getUser();
         basketItems = FXCollections.observableArrayList();
 
@@ -174,13 +171,13 @@ public class TransactionsAddController implements Initializable {
         customersTableView.getSelectionModel().selectFirst();
         selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
 
-        offers = getOffersFromDatabase();
-        discounts = getDiscountsFromDatabase();
+        offers = FXCollections.observableArrayList(offerController.getAll());
+        discounts = FXCollections.observableArrayList(discountController.getAll());
 
         numOfItemsLabel.setText(String.format("Number of items in the basket: %d", basketItems.size()));
         overallPriceLabel.setText("Total: kr. 0");
 
-        customerID = -1;
+        customer = null;
         discountIDs = new ArrayList<>();
         discountIDs.add(-1);
 
@@ -204,80 +201,6 @@ public class TransactionsAddController implements Initializable {
             currency = CURRENCIES[newValue.intValue()];
             updateLabels();
         });
-    }
-
-    private Employee retrieveEmploeeData() {
-        conn = new DBConnect();
-        Employee e;
-        try {
-            ResultSet rs = conn.getFromDataBase(String.format("SELECT * FROM employees WHERE id='%s'", loggedUser.getId()));
-            rs.next();
-            e = new Employee(rs.getInt("id"),
-                    rs.getString("name"),
-                    rs.getString("surname"),
-                    rs.getString("address"),
-                    rs.getString("city"),
-                    rs.getString("zip"),
-                    rs.getString("email"),
-                    rs.getString("phone"),
-                    rs.getString("password"),
-                    rs.getString("position"),
-                    rs.getInt("numberOfSales"),
-                    rs.getDouble("totalRevenue"),
-                    rs.getInt("accessLevel"));
-        } catch (SQLException sqlex) {
-            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
-            e = null;
-        } catch (Exception ex) {
-            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
-            e = null;
-        }
-        return e;
-    }
-
-    private ObservableList<Discount> getDiscountsFromDatabase() {
-        ObservableList<Discount> result = FXCollections.observableArrayList();
-        conn = new DBConnect();
-        try {
-            ResultSet rs = conn.getFromDataBase("SELECT * FROM discounts");
-            while (rs.next()) {
-                result.add(new Discount(rs.getInt("id"),
-                        rs.getDouble("value"),
-                        rs.getString("title")));
-            }
-        } catch (SQLException sqlex) {
-            displayMessage(Alert.AlertType.ERROR, "SQL Exception", sqlex.getMessage());
-        } catch (Exception ex) {
-            displayMessage(Alert.AlertType.ERROR, "Unexpected Exception", ex.getMessage());
-        }
-        return result;
-    }
-
-    private ObservableList<Offer> getOffersFromDatabase() {
-        conn = new DBConnect();
-        ObservableList<Offer> results = FXCollections.observableArrayList();
-        try {
-            ResultSet rs = conn.getFromDataBase("SELECT offers.id,offers.date,offers.time,offers.productIDs,offers.price,offers.discount,offers.expiresDate,offers.expiresTime,products.name FROM offers,products WHERE offers.productIDs = products.id");
-            while (rs.next()) {
-                if (rs.getInt("offers.id") != -1) {
-                    results.add(new Offer(rs.getDate("offers.date"),
-                            rs.getInt("offers.id"),
-                            rs.getInt("offers.productIDs"),
-                            rs.getDouble("offers.price"),
-                            rs.getDouble("offers.discount"),
-                            rs.getString("products.name"),
-                            rs.getTime("offers.time"),
-                            rs.getDate("offers.expiresDate"),
-                            rs.getTime("offers.expiresTime"),
-                            isExpired(rs.getDate("offers.expiresDate"))));
-                }
-            }
-        } catch (SQLException sqlException) {
-            displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
-        } catch (Exception ex) {
-            displayMessage(ERROR, ex.getMessage());
-        }
-        return results;
     }
 
     @FXML
@@ -392,7 +315,7 @@ public class TransactionsAddController implements Initializable {
             double price = selectedProduct.getPrice();
             String discount = "";
             for (Offer offer : offers) {
-                if (selectedProduct.getId() == offer.getProductID() && isValidOffer(offer.getExpiresDate())) {
+                if (selectedProduct.getId() == offer.getProductIDs() && isValidOffer(offer.getExpiresDate())) {
                     price = offer.getPrice();
                     discount = String.valueOf(offer.getDiscount());
                 }
@@ -591,7 +514,7 @@ public class TransactionsAddController implements Initializable {
 
     @FXML
     public void clickAssignCustomer() {
-        customerID = selectedCustomer.getId();
+        customer = selectedCustomer;
         assignedCustomerLabel.setText(String.format("Assigned customer: %1$s %2$s", selectedCustomer.getName(), selectedCustomer.getSurname()));
         Alert a = new Alert(Alert.AlertType.INFORMATION);
         a.setHeaderText("Assigned registered customer to the transaction.");
@@ -649,58 +572,38 @@ public class TransactionsAddController implements Initializable {
 
     @FXML
     public void btn_completePurchase_onClick() {
-        DateTimeFormatter dtf_date = DateTimeFormatter.ofPattern("yyyy/MM/dd");
-        DateTimeFormatter dtf_time = DateTimeFormatter.ofPattern("HH:mm:ss");
-        LocalDateTime now = LocalDateTime.now();
-
-        loggedUser = retrieveEmploeeData(); //retrieves most current employee data
-        if (loggedUser == null) loggedUser = retrieveEmploeeData(); //if failure tries once again
-        if (loggedUser == null)
-            loggedUser = UserController.getUser(); //if second failure gets the employee from userConreoller
-
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setHeaderText("Are you sure you want to complete the transaction?");
         a.setContentText("You will not be able to revert this action!");
         Optional<ButtonType> okResponse = a.showAndWait();
         if (okResponse.isPresent() && ButtonType.OK.equals(okResponse.get()) && verifyFields()) {
-            conn = new DBConnect();
             try {
-                conn.upload(String.format("INSERT INTO transactions (productIDs,employeeID,customerID,price,discountIDs,description,date,time) VALUES ('%1$s','%2$s','%3$s','%4$s','%5$s','%6$s','%7$s','%8$s')",
+                transactionController.persist(new Transaction(
+                        loggedUser,
+                        customer,
                         Utils.arrayToString(getProductIDs()),
-                        loggedUser.getId(),
-                        customerID,
-                        finalPrice,
                         Utils.arrayToString(discountIDs),
                         descriptionField.getText(),
-                        dtf_date.format(now),
-                        dtf_time.format(now)));
-                if (customerID != -1) {
-                    conn.upload(String.format("UPDATE customers SET salesMade='%1$d',totalSpent='%2$s' WHERE id='%3$d'",
-                            selectedCustomer.getSalesMade() + 1,
-                            selectedCustomer.getTotalSpent() + finalPrice,
-                            customerID));
+                        finalPrice
+                ));
+                if (customer != null) {
+                    selectedCustomer.setSalesMade(selectedCustomer.getSalesMade() + 1);
+                    selectedCustomer.setTotalSpent(selectedCustomer.getTotalSpent() + finalPrice);
+                    customerController.update(selectedCustomer);
                 }
-                conn.upload(String.format("UPDATE employees SET numberOfSales='%1$s',totalRevenue='%2$s' WHERE id='%3$d'",
-                        loggedUser.getNumberOfSales() + 1,
-                        loggedUser.getTotalRevenue() + finalPrice,
-                        loggedUser.getId()));
-                String productsQuery = "";
+                loggedUser.setNumberOfSales(loggedUser.getNumberOfSales() + 1);
+                loggedUser.setTotalRevenue(loggedUser.getTotalRevenue() + finalPrice);
+                employeeController.update(loggedUser);
                 for (BasketItem item : basketItems) {
-                    int qLeft = -1;
                     for (Product p : products) {
                         if (p.getId() == item.getItemID()) {
-                            qLeft = p.getQuantity() - item.getQuantity();
+                            p.setQuantity(p.getQuantity() - item.getQuantity());
+                            productController.update(p);
                         }
                     }
-                    productsQuery += String.format("UPDATE products SET quantity=%d WHERE id=%d;\n",
-                            qLeft, item.getItemID());
                 }
-                System.out.println(productsQuery);
-                conn.upload(productsQuery);
                 clearAll();
                 displayMessage(INFORMATION, "Transaction completed successfully.");
-            } catch (SQLException sqlEx) {
-                displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
             } finally {
@@ -721,12 +624,11 @@ public class TransactionsAddController implements Initializable {
         basketListView.setItems(basketItems);
         basketListView.refresh();
         assignedCustomerLabel.setText("Assigned customer: ");
-        customerID = -1;
+        customer = null;
         discountIDs.clear();
         discountIDs.add(-1);
         descriptionField.clear();
         updateLabels();
-
     }
 
     @FXML
@@ -745,7 +647,7 @@ public class TransactionsAddController implements Initializable {
                 double price = selectedProduct.getPrice();
                 String discount = "";
                 for (Offer offer : offers) {
-                    if (selectedProduct.getId() == offer.getProductID() && isValidOffer(offer.getExpiresDate())) {
+                    if (selectedProduct.getId() == offer.getProductIDs() && isValidOffer(offer.getExpiresDate())) {
                         price = (float) offer.getPrice();
                         discount = String.valueOf(offer.getDiscount());
                     }
