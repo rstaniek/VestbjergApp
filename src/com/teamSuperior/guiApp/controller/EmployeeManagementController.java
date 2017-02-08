@@ -8,8 +8,14 @@ import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -95,23 +101,44 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        WaitingBox waitingBox = new WaitingBox();
+        waitingBox.setMessage("Retrieving data from the database.");
         employees = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         searchCriteriaComboBox.getItems().addAll(EMPLOYEE_CRITERIA);
         loggedInUser = UserController.getUser();
 
-        retrieveData();
-        //fill the table with data
-        initTableColumns(loggedInUser.getAccessLevel(), employees);
-        selectedEmployee = employeesTableView.getFocusModel().getFocusedItem();
 
-        positions = retrievePositionsData();
-        positionComboBox.setItems(getPositionNames());
-        positionComboBox.getSelectionModel().selectFirst();
-    }
+        Task<Void> initTables = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(() -> waitingBox.displayIndefinite());
+                employees = FXCollections.observableArrayList(getAll());
+                positions = FXCollections.observableArrayList(positionController.getAll());
+                return null;
+            }
+        };
 
-    private ObservableList<Position> retrievePositionsData() {
-        return FXCollections.observableArrayList(positionController.getAll());
+        initTables.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    waitingBox.closeWindow();
+                    //fill the table with data
+                    initTableColumns(loggedInUser.getAccessLevel(), employees);
+                    selectedEmployee = employeesTableView.getFocusModel().getFocusedItem();
+
+                    positionComboBox.setItems(getPositionNames());
+                    positionComboBox.getSelectionModel().selectFirst();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(initTables);
+        th.setDaemon(true);
+        th.start();
     }
 
     private ObservableList<String> getPositionNames() {
@@ -120,10 +147,6 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
             results.add(p.getName());
         }
         return results;
-    }
-
-    private void retrieveData() {
-        employees = FXCollections.observableArrayList(getAll());
     }
 
     private void initTableColumns(int accessLevel, ObservableList<Employee> source) {
@@ -229,8 +252,31 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
                     cityColumn,
                     zipColumn);
         }
-        retrieveData();
-        initTableColumns(loggedInUser.getAccessLevel(), employees);
+
+        WaitingBox waitingBox = new WaitingBox("Refreshing employee data.");
+        Task<Void> refreshData = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                employees = FXCollections.observableArrayList(getAll());
+                return null;
+            }
+        };
+
+        refreshData.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initTableColumns(loggedInUser.getAccessLevel(), employees);
+                    waitingBox.closeWindow();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(refreshData);
+        th.setDaemon(true);
+        th.start();
     }
 
     //search bar
