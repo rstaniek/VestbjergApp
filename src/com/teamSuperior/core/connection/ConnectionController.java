@@ -1,4 +1,4 @@
-package com.teamSuperior.guiApp.controller;
+package com.teamSuperior.core.connection;
 
 import com.teamSuperior.core.model.Model;
 import org.hibernate.Session;
@@ -14,13 +14,13 @@ import java.util.List;
 /**
  * CRUD (create, read, update, delete) controller
  */
-public class Controller<T, Id extends Serializable> implements DAO<T, Id> {
+public class ConnectionController<T, Id extends Serializable> implements IDataAccessObject<T, Id> {
 
     private final Class<T> clazz; // To store a generic class type
     private Session currentSession; // To store a MySQL database access session
     private Transaction currentTransaction; // Helper to manage database commits
 
-    Controller(Class<T> clazz) {
+    public ConnectionController(Class<T> clazz) {
         this.clazz = clazz;
     }
 

@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
 import javafx.collections.FXCollections;
@@ -24,8 +25,8 @@ import java.util.ResourceBundle;
 public class TransactionsViewController implements Initializable {
     private static final String[] TRANSACTION_CRITERIA = new String[]{"ID", "Discount", "Customer ID", "Employee ID", "product ID", "Date", "Description"};
 
-    private static Controller<Product, Integer> productController = new Controller<>(Product.class);
-    private static Controller<Transaction, Integer> transactionController = new Controller<>(Transaction.class);
+    private static ConnectionController<Product, Integer> productConnectionController = new ConnectionController<>(Product.class);
+    private static ConnectionController<Transaction, Integer> transactionConnectionController = new ConnectionController<>(Transaction.class);
 
     @FXML
     public TextField searchQueryField;
@@ -103,7 +104,7 @@ public class TransactionsViewController implements Initializable {
     }
 
     private void retrieveData() {
-        transactions = FXCollections.observableArrayList(transactionController.getAll());
+        transactions = FXCollections.observableArrayList(transactionConnectionController.getAll());
     }
 
     private void initTransactionTableColumns(ObservableList<Transaction> source) {
@@ -129,7 +130,7 @@ public class TransactionsViewController implements Initializable {
     private void initProductsTableColumns() {
         Integer[] ids = Arrays.stream(selectedTransaction.getProductIDs().split(","))
                 .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-        products = FXCollections.observableArrayList(productController.getByArray("id", ids));
+        products = FXCollections.observableArrayList(productConnectionController.getByArray("id", ids));
 
         idProductColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         nameProductColumn.setCellValueFactory(new PropertyValueFactory<>("name"));

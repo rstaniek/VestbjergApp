@@ -1,5 +1,7 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.Utils;
+import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import javafx.collections.FXCollections;
@@ -13,7 +15,6 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.Utils.isNumeric;
@@ -28,10 +29,8 @@ import static javafx.scene.control.Alert.AlertType.INFORMATION;
  */
 public class OfferAddController implements Initializable {
 
-    private static Controller<Product, Integer> productController = new Controller<>(Product.class);
-    private static Controller<Offer, Integer> offerController = new Controller<>(Offer.class);
-
-    private final String datePattern = "yyyy-MM-dd";
+    private static ConnectionController<Product, Integer> productConnectionController = new ConnectionController<>(Product.class);
+    private static ConnectionController<Offer, Integer> offerConnectionController = new ConnectionController<>(Offer.class);
 
     @FXML
     public TextField productField;
@@ -55,15 +54,14 @@ public class OfferAddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        products = FXCollections.observableArrayList(productController.getAll());
+        products = FXCollections.observableArrayList(productConnectionController.getAll());
         productNameLabel.setText("");
-        StringConverter converter = new StringConverter<LocalDate>() {
-            DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(datePattern);
 
+        expiresDatePicker.setConverter(new StringConverter<LocalDate>() {
             @Override
-            public String toString(LocalDate object) {
-                if (object != null) {
-                    return dateTimeFormatter.format(object);
+            public String toString(LocalDate date) {
+                if (date != null) {
+                    return Utils.dateFormatter(Utils.FormatterType.DATE).format(date);
                 } else {
                     return "";
                 }
@@ -72,13 +70,14 @@ public class OfferAddController implements Initializable {
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateTimeFormatter);
+                    return LocalDate.parse(string, Utils.dateFormatter(Utils.FormatterType.DATE));
                 } else {
                     return null;
                 }
             }
-        };
-        final Callback<DatePicker, DateCell> dayCellFactory = new Callback<DatePicker, DateCell>() {
+        });
+
+        expiresDatePicker.setDayCellFactory(new Callback<DatePicker, DateCell>() {
             @Override
             public DateCell call(final DatePicker datePicker) {
                 return new DateCell() {
@@ -95,11 +94,13 @@ public class OfferAddController implements Initializable {
                     }
                 };
             }
-        };
-        expiresDatePicker.setConverter(converter);
-        expiresDatePicker.setDayCellFactory(dayCellFactory);
+        });
+
         expiresDatePicker.setValue(LocalDate.now());
-        expiresDatePicker.setPromptText(datePattern.toLowerCase());
+
+        productField.textProperty().addListener(
+                (observable, oldValue, newValue) -> handleProductChange(newValue)
+        );
     }
 
     @FXML
@@ -112,8 +113,8 @@ public class OfferAddController implements Initializable {
                 isNumeric(productField.getText())) {
             if (Double.parseDouble(discountField.getText()) < 100.0) {
                 if (findProduct(Integer.parseInt(productField.getText())) != null) {
-                    offerController.persist(new Offer(
-                            productController.getById(Integer.parseInt(productField.getText())),
+                    offerConnectionController.persist(new Offer(
+                            productConnectionController.getById(Integer.parseInt(productField.getText())),
                             Double.parseDouble(priceField.getText()),
                             Double.parseDouble(discountField.getText()),
                             Date.valueOf(expiresDatePicker.getValue())
@@ -137,44 +138,47 @@ public class OfferAddController implements Initializable {
         expiresDatePicker.getEditor().clear();
     }
 
-    @FXML
-    public void text_product_onKeyReleased() {
-        if (isNumeric(productField.getText())) {
-            if (findProduct(Integer.parseInt(productField.getText())) != null) {
-                productNameLabel.setText(findProduct(Integer.parseInt(productField.getText())).getName());
-                priceField.setText(Double.toString(findProduct(Integer.parseInt(productField.getText())).getPrice()).replace(",", "."));
-            } else {
-                displayError(DATABASE_PRODUCTS_NOT_FOUND);
+    private void handleProductChange(String productId) {
+        if (!productId.isEmpty()) {
+            if (isNumeric(productId)) {
+                if (findProduct(Integer.parseInt(productId)) != null) {
+                    productNameLabel.setText(findProduct(Integer.parseInt(productId)).getName());
+                    priceField.setText(Double.toString(findProduct(Integer.parseInt(productId)).getPrice()).replace(",", "."));
+                } else {
+                    displayError(DATABASE_PRODUCTS_NOT_FOUND);
+                }
             }
+        } else {
+            priceField.clear();
         }
     }
 
     @FXML
-    public void text_discount_onKeyReleased() {
-        if (discountField.getText().isEmpty()) { //after the last character is deleted, it resets the price
+    public void handleDiscountChange() {
+        if (!discountField.getText().isEmpty()) { //after the last character is deleted, it resets the price
+            if (isNumeric(discountField.getText())) {
+                double currentPrice = findProduct(Integer.parseInt(productField.getText())).getPrice();
+                double currentDiscount = Double.parseDouble(discountField.getText());
+                double newPrice = currentPrice / 100 * (100 - currentDiscount);
+                if (newPrice >= 0) { //checks that the price never goes under 0 (discount doesn't go higher than 100)
+                    priceField.setText(String.format("%.2f", newPrice).replace(",", "."));
+                } else { //should the price go under 0, error pops up, discount field is cleared and price is updated to original value
+                    discountField.clear();
+                    priceField.setText(String.format("%.2f", currentPrice).replace(",", "."));
+                    displayError(OFFER_DISCOUNT_OUT_OF_BOUND);
+                }
+            } else { //same as in previous case, only different error pops up
+                discountField.clear();
+                priceField.setText(String.format("%.2f", findProduct(Integer.parseInt(productField.getText())).getPrice()).replace(",", "."));
+                displayError(TEXT_FIELD_NON_NUMERIC);
+            }
+        } else {
             priceField.setText(Double.toString(findProduct(Integer.parseInt(productField.getText())).getPrice()).replace(",", "."));
         }
-        if (isNumeric(discountField.getText())) {
-            double currentPrice = findProduct(Integer.parseInt(productField.getText())).getPrice();
-            double currentDiscount = Double.parseDouble(discountField.getText());
-            double newPrice = currentPrice / 100 * (100 - currentDiscount);
-            if (newPrice >= 0) { //checks that the price never goes under 0 (discount doesn't go higher than 100)
-                priceField.setText(String.format("%.2f", newPrice).replace(",", "."));
-            } else { //should the price go under 0, error pops up, discount field is cleared and price is updated to original value
-                discountField.clear();
-                priceField.setText(String.format("%.2f", currentPrice).replace(",", "."));
-                displayError(OFFER_DISCOUNT_OUT_OF_BOUND);
-            }
-        } else { //same as in previous case, only different error pops up
-            discountField.clear();
-            priceField.setText(String.format("%.2f", findProduct(Integer.parseInt(productField.getText())).getPrice()).replace(",", "."));
-            displayError(TEXT_FIELD_NON_NUMERIC);
-        }
-
     }
 
     @FXML
-    public void text_price_onKeyReleased() {
+    public void handlePriceChange() {
         if (priceField.getText().isEmpty()) discountField.clear();
         if (isNumeric(priceField.getText())) {
             double originalPrice = findProduct(Integer.parseInt(productField.getText())).getPrice();

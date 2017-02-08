@@ -3,6 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXTextField;
 import com.teamSuperior.core.Utils;
+import com.teamSuperior.core.connection.ConnectionController;
+import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
@@ -23,15 +25,15 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
- * Product controller
+ * Product connectionController
  */
-public class ProductsController implements DAO<Product, Integer>, Initializable {
+public class ProductsController implements IDataAccessObject<Product, Integer>, Initializable {
 
     static final int MAX_CAP = 250;
     private static final int CAP_THRESHOLD = 15;
     private static final String[] PRODUCTS_CRITERIA = new String[]{"ID", "Barcode", "Name", "Subname", "Category", "Location", "Price", "Contractor"};
 
-    private static Controller<Product, Integer> controller = new Controller<>(Product.class);
+    private static ConnectionController<Product, Integer> connectionController = new ConnectionController<>(Product.class);
 
     @FXML
     public JFXTextField amountToRequestField;
@@ -315,32 +317,32 @@ public class ProductsController implements DAO<Product, Integer>, Initializable 
 
     @Override
     public void persist(Product product) {
-        controller.persist(product);
+        connectionController.persist(product);
     }
 
     @Override
     public Product getById(Integer id) {
-        return controller.getById(id);
+        return connectionController.getById(id);
     }
 
     @Override
     public List<Product> getAll() {
-        return controller.getAll();
+        return connectionController.getAll();
     }
 
     @Override
     public void update(Product product) {
-        controller.update(product);
+        connectionController.update(product);
     }
 
     @Override
     public void delete(Product product) {
-        controller.delete(product);
+        connectionController.delete(product);
     }
 
     @Override
     public void deleteAll() {
-        controller.deleteAll();
+        connectionController.deleteAll();
     }
 
 }

@@ -3,6 +3,8 @@ package com.teamSuperior.guiApp.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
+import com.teamSuperior.core.connection.ConnectionController;
+import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.service.Contractor;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.ProductCategory;
@@ -25,11 +27,11 @@ import static javafx.scene.control.Alert.AlertType.INFORMATION;
 /**
  * Product add controller
  */
-public class ProductAddController implements DAO<Product, Integer>, Initializable {
+public class ProductAddController implements IDataAccessObject<Product, Integer>, Initializable {
 
-    private static Controller<Product, Integer> productController = new Controller<>(Product.class);
-    private static Controller<ProductCategory, Integer> productCategoryController = new Controller<>(ProductCategory.class);
-    private static Controller<Contractor, Integer> contractorController = new Controller<>(Contractor.class);
+    private static ConnectionController<Product, Integer> productConnectionController = new ConnectionController<>(Product.class);
+    private static ConnectionController<ProductCategory, Integer> productCategoryConnectionController = new ConnectionController<>(ProductCategory.class);
+    private static ConnectionController<Contractor, Integer> contractorConnectionController = new ConnectionController<>(Contractor.class);
 
     @FXML
     public JFXTextField nameField;
@@ -59,10 +61,10 @@ public class ProductAddController implements DAO<Product, Integer>, Initializabl
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        categoryComboBox.setItems(FXCollections.observableArrayList(productCategoryController.getAll()));
+        categoryComboBox.setItems(FXCollections.observableArrayList(productCategoryConnectionController.getAll()));
         categoryComboBox.getSelectionModel().selectFirst();
 
-        contractorComboBox.setItems(FXCollections.observableArrayList(contractorController.getAll()));
+        contractorComboBox.setItems(FXCollections.observableArrayList(contractorConnectionController.getAll()));
         contractorComboBox.getSelectionModel().selectFirst();
 
         priceField.textProperty().addListener((observable, oldValue, newValue) -> validatePrice(newValue));
@@ -147,31 +149,31 @@ public class ProductAddController implements DAO<Product, Integer>, Initializabl
 
     @Override
     public void persist(Product product) {
-        productController.persist(product);
+        productConnectionController.persist(product);
     }
 
     @Override
     public Product getById(Integer id) {
-        return productController.getById(id);
+        return productConnectionController.getById(id);
     }
 
     @Override
     public List<Product> getAll() {
-        return productController.getAll();
+        return productConnectionController.getAll();
     }
 
     @Override
     public void update(Product product) {
-        productController.update(product);
+        productConnectionController.update(product);
     }
 
     @Override
     public void delete(Product product) {
-        productController.delete(product);
+        productConnectionController.delete(product);
     }
 
     @Override
     public void deleteAll() {
-        productController.deleteAll();
+        productConnectionController.deleteAll();
     }
 }
