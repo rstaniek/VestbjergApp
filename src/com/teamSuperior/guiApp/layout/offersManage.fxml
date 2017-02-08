@@ -5,14 +5,14 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
-<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.OffersManageController" prefHeight="570.0"
+<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.OffersManageController" stylesheets="/style/offer.css" prefHeight="570.0"
             prefWidth="1000.0" xmlns:fx="http://javafx.com/fxml">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
         <JFXButton fx:id="clearSearchButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
                    onAction="#clickClearSearch" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26"
                    style="-fx-background-color: #c9c9c9;" text="X"/>
         <JFXTextField fx:id="searchQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0"
-                      onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0"
+                      onKeyReleased="#handleSearchQuery" prefHeight="25.0" prefWidth="779.0"
                       promptText="Search..."/>
         <CheckComboBox fx:id="searchCriteriaComboBox" layoutX="838.0" layoutY="13.0" prefHeight="25"
                        prefWidth="150.0"/>
@@ -21,7 +21,7 @@
                prefHeight="293.0" prefWidth="1000.0">
         <columns>
             <TableColumn fx:id="idColumn" minWidth="30.0" text="ID"/>
-            <TableColumn fx:id="productColumn" minWidth="100.0" text="Product"/>
+            <TableColumn fx:id="productColumn" minWidth="150.0" text="Product"/>
             <TableColumn fx:id="priceColumn" minWidth="60.0" text="Price"/>
             <TableColumn fx:id="discountColumn" minWidth="60.0" text="Discount"/>
             <TableColumn fx:id="dateColumn" minWidth="100.0" text="Date"/>

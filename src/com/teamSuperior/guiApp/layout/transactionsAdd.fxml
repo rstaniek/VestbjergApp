@@ -13,7 +13,7 @@
                    onAction="#clickClearSearchProducts" prefHeight="25.0" prefWidth="25.0"
                    ripplerFill="#f92d26" style="-fx-background-color: #c9c9c9;" text="X"/>
         <JFXTextField fx:id="searchProductsField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0"
-                      onKeyReleased="#text_searchProducts_query_onKeyReleased" prefHeight="25.0" prefWidth="466.0"
+                      onKeyReleased="#handleSearchProductQuery" prefHeight="25.0" prefWidth="466.0"
                       promptText="Search for products..."/>
         <CheckComboBox fx:id="searchProductsCriteriaComboBox" layoutX="528.0" layoutY="13.0" prefHeight="25"
                        prefWidth="139.0"/>

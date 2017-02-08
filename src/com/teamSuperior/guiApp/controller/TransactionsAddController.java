@@ -223,7 +223,7 @@ public class TransactionsAddController implements Initializable {
     }
 
     @FXML
-    public void text_searchProducts_query_onKeyReleased() {
+    public void handleSearchProductQuery() {
         printQueryLog("searchProducts_query_onKeyReleased", searchProductsCriteriaComboBox, searchProductsField);
         searchProductsResults = null;
         searchProductsResults = performProductSearch(searchProductsField.getText());
@@ -350,7 +350,7 @@ public class TransactionsAddController implements Initializable {
         for (BasketItem basketItem : basketListView.getItems()) {
             tmp += basketItem.getPrice() * basketItem.getQuantity();
         }
-        noDiscountPrice = (float) tmp;
+        noDiscountPrice = tmp;
         String dkkusd = getExchangeRatioBloomberg(DKKUSD);
         String dkkeur = getExchangeRatioBloomberg(DKKEUR);
         while (!isNumeric(dkkusd)) {
@@ -370,12 +370,12 @@ public class TransactionsAddController implements Initializable {
                 noDiscountPriceOnLabels = noDiscountPrice;
                 break;
             case "$":
-                finalPriceOnLabels = finalPrice * (float) Double.parseDouble(dkkusd);
-                noDiscountPriceOnLabels = noDiscountPrice * (float) Double.parseDouble(dkkusd);
+                finalPriceOnLabels = finalPrice * Double.parseDouble(dkkusd);
+                noDiscountPriceOnLabels = noDiscountPrice * Double.parseDouble(dkkusd);
                 break;
             case "€":
-                finalPriceOnLabels = finalPrice * (float) Double.parseDouble(dkkeur);
-                noDiscountPriceOnLabels = noDiscountPrice * (float) Double.parseDouble(dkkeur);
+                finalPriceOnLabels = finalPrice * Double.parseDouble(dkkeur);
+                noDiscountPriceOnLabels = noDiscountPrice * Double.parseDouble(dkkeur);
                 break;
         }
         System.out.println("finalPrice: " + finalPrice);
@@ -402,8 +402,8 @@ public class TransactionsAddController implements Initializable {
         }
         if (discount > discountThreshold) discount = discountThreshold;
         discountLabel.setText(String.format("Total discount: %.1f", discount));
-        finalPrice = noDiscountPrice * ((100 - (float) discount) / 100);
-        finalPriceOnLabels = noDiscountPriceOnLabels * ((100 - (float) discount) / 100);
+        finalPrice = noDiscountPrice * ((100 - discount) / 100);
+        finalPriceOnLabels = noDiscountPriceOnLabels * ((100 - discount) / 100);
     }
 
     @FXML
@@ -646,7 +646,7 @@ public class TransactionsAddController implements Initializable {
                 String discount = "";
                 for (Offer offer : offers) {
                     if (selectedProduct.getId() == offer.getProduct().getId() && isValidOffer(offer.getExpiresDate())) {
-                        price = (float) offer.getPrice();
+                        price = offer.getPrice();
                         discount = String.valueOf(offer.getDiscount());
                     }
                 }
