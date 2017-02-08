@@ -31,9 +31,11 @@ public class SplashScreen {
         window.initStyle(StageStyle.TRANSPARENT);
         window.setMinWidth(600);
         window.setMinHeight(400);
+        window.setMaxWidth(600);
+        window.setMaxHeight(600);
 
         ImageView img = new ImageView();
-        img.setImage(new Image(Drawables.SPLASH.getPath()));
+        img.setImage(new Image(Drawables.SPLASH_SMALL.getPath()));
         imgView = img;
 
         VBox layout = new VBox();

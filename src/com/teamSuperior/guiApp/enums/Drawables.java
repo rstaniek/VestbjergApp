@@ -10,7 +10,8 @@ public enum Drawables {
     APP_LOGO("/silvan_logo_rectangle.png"),
     TEAM_LOGO("/img/team_logo.png"),
     X_MAS_IMAGE("/img/post-8868-Have-a-fucking-weekend-and-don-YeZz.jpeg"),
-    SPLASH("/img/splash_big.png"),
+    SPLASH("/img/splash_screen_square.png"),
+    SPLASH_SMALL("/img/splash_screen_square_500px.png"),
     ICON("/img/icon_256.png");
 
     private String path;
