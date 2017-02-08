@@ -161,7 +161,7 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
 
             employeesTableView.setItems(source);
         }
-        if (accessLevel >= 10) {
+        if (accessLevel >= 3) {
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
             cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
             zipColumn.setCellValueFactory(new PropertyValueFactory<>("zip"));

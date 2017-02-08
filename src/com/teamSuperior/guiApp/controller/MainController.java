@@ -78,9 +78,6 @@ public class MainController implements Initializable {
     public Hyperlink button_copyUsd;
 
 
-
-
-
     private Stage settings;
     static Stage loginWindow;
     private Window window;
@@ -156,7 +153,7 @@ public class MainController implements Initializable {
                     Platform.runLater(() -> setCurrentDateTime(timeFormat.format(now), dateFormat.format(now)));
                     Thread.sleep(1000);
                 }
-            } 
+            }
         };
 
         //Currency exchange update
@@ -168,24 +165,21 @@ public class MainController implements Initializable {
                     String ratioEUR = WebsiteCrawler.getExchangeRatioBloomberg(Currency.EURDKK);
                     Platform.runLater(() -> {
                         setUSDRatio(ratioUSD);
-                        if(usdData.size() < 30){
+                        if (usdData.size() < 30) {
                             usdData.add(ratioUSD);
-                        }
-                        else{
+                        } else {
                             usdData.remove(0);
                             usdData.add(ratioUSD);
                         }
                         setEURRatio(ratioEUR);
-                        if(eurData.size() < 30){
+                        if (eurData.size() < 30) {
                             eurData.add(ratioEUR);
-                        }
-                        else{
+                        } else {
                             eurData.remove(0);
                             eurData.add(ratioUSD);
                         }
                         displayCurrencyCharts();
-                        if(!effChartInitialized)
-                        {
+                        if (!effChartInitialized) {
                             sortEmployees();
                             displayEfficiencyChart();
                             displaySalesPercentageChart();
@@ -242,7 +236,7 @@ public class MainController implements Initializable {
         th2.start();
         th3.start();
         //th4.start();
-        if(eurSeries.getData() != null){
+        if (eurSeries.getData() != null) {
             currency_eurChart.getData().addAll(eurSeries, usdSeries);
         }
     }
@@ -259,19 +253,24 @@ public class MainController implements Initializable {
         return welcomeMessage;
     }
 
-    public void setCurrentDateTime(String currentTime, String currentDate)
-    {
+    public void setCurrentDateTime(String currentTime, String currentDate) {
         this.currentTime.set(currentTime);
         this.currentDate.set(currentDate);
     }
 
-    public String getCurrentTime() { return currentTime.get(); }
+    public String getCurrentTime() {
+        return currentTime.get();
+    }
 
-    public String getCurrentDate() { return currentDate.get(); }
+    public String getCurrentDate() {
+        return currentDate.get();
+    }
 
-    public StringProperty currentDateProperty() { return currentDate; }
+    public StringProperty currentDateProperty() {
+        return currentDate;
+    }
 
-    public StringProperty currentTimeProperty()  {
+    public StringProperty currentTimeProperty() {
         return currentTime;
     }
 
@@ -519,8 +518,8 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void displayEfficiencyChart(){
-        if(UserController.isLoggedIn()){
+    private void displayEfficiencyChart() {
+        if (UserController.isLoggedIn()) {
             XYChart.Series effSeries = new XYChart.Series();
             XYChart.Series effSeriesPersonal = new XYChart.Series();
             xAxis.setTickLabelsVisible(false);
@@ -528,23 +527,21 @@ public class MainController implements Initializable {
             efficiency.setTitle("Efficiency chart");
             double eff;
             int zeroEffCounter = 0;
-            for(int i = 0; i < employees.size(); i++) {
+            for (int i = 0; i < employees.size(); i++) {
                 if (employees.get(i).getId() == UserController.getUser().getId()) {
-                    if((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)){
+                    if ((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)) {
                         eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
                         effSeriesPersonal.getData().add(new XYChart.Data(i, eff));
                         effSeries.getData().add(new XYChart.Data(i, eff));
-                    }
-                    else {
+                    } else {
                         eff = 0;
                         zeroEffCounter++;
                     }
                 } else {
-                    if((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)){
+                    if ((employees.get(i).getNumberOfSales() != 0) || (employees.get(i).getTotalRevenue() != 0)) {
                         eff = (employees.get(i).getTotalRevenue()) / (employees.get(i).getNumberOfSales());
                         effSeries.getData().add(new XYChart.Data(i, eff));
-                    }
-                    else{
+                    } else {
                         eff = 0;
                         zeroEffCounter++;
                     }
@@ -561,53 +558,51 @@ public class MainController implements Initializable {
     }
 
     private void displaySalesPercentageChart() {
-        if(UserController.isLoggedIn()){
+        if (UserController.isLoggedIn()) {
             contributionData = FXCollections.observableArrayList();
             int totalSales = 0;
-            for(Employee e : employees){
+            for (Employee e : employees) {
                 totalSales += e.getNumberOfSales();
             }
-            double salesPercentageLabel = (((double)UserController.getUser().getNumberOfSales()*100)/(double)totalSales);
+            double salesPercentageLabel = (((double) UserController.getUser().getNumberOfSales() * 100) / (double) totalSales);
             DecimalFormat percentageFormat = new DecimalFormat("###.##");
-            contributionData.addAll(new PieChart.Data("Total sales\n" + totalSales, totalSales), new PieChart.Data("Your sales \n"+ percentageFormat.format(salesPercentageLabel)+"%", UserController.getUser().getNumberOfSales()));
+            contributionData.addAll(new PieChart.Data("Total sales\n" + totalSales, totalSales), new PieChart.Data("Your sales \n" + percentageFormat.format(salesPercentageLabel) + "%", UserController.getUser().getNumberOfSales()));
             sales_chart.getData().addAll(contributionData);
         }
     }
 
     @FXML
-    private void displayCurrencyCharts(){
-        if(UserController.isLoggedIn()){
+    private void displayCurrencyCharts() {
+        if (UserController.isLoggedIn()) {
             currency_eurChart.setAnimated(false);
-            double eurValue = 0;
-            double usdValue = 0;
+            double eurValue;
+            double usdValue;
             xAxisCurrencyEur.setTickMarkVisible(false);
             currency_eurChart.setLegendVisible(true);
             currency_eurChart.setLegendSide(Side.RIGHT);
-            eurSeries.setName("EUR/DKK \n("+getEURRatio()+")");
-            usdSeries.setName("USD/DKK \n("+getUSDRatio()+")");
+            eurSeries.setName("EUR/DKK \n(" + getEURRatio() + ")");
+            usdSeries.setName("USD/DKK \n(" + getUSDRatio() + ")");
             button_copyEur.setVisible(true);
             button_copyUsd.setVisible(true);
             button_copyEur.toFront();
             button_copyUsd.toFront();
             currency_eurChart.setTitle("Currency rates tracker");
             chartCounter++;
-            try{
+            try {
                 eurValue = Double.parseDouble(getEURRatio());
                 usdValue = Double.parseDouble(getUSDRatio());
                 yAxisCurrencyEur.setAutoRanging(false);
-                yAxisCurrencyEur.setLowerBound(((eurValue+usdValue)/2)-1);
-                yAxisCurrencyEur.setUpperBound(((eurValue+usdValue)/2)+1);
+                yAxisCurrencyEur.setLowerBound(((eurValue + usdValue) / 2) - 1);
+                yAxisCurrencyEur.setUpperBound(((eurValue + usdValue) / 2) + 1);
                 yAxisCurrencyEur.setTickUnit(1);
-            }
-            catch(NumberFormatException ex){
+            } catch (NumberFormatException ex) {
                 eurValue = 0;
                 usdValue = 0;
             }
-            if(chartCounter < 43200){
-                eurSeries.getData().addAll(new XYChart.Data(chartCounter-1, eurValue));
-                usdSeries.getData().addAll(new XYChart.Data(chartCounter-1, usdValue));
-            }
-            else{
+            if (chartCounter < 43200) {
+                eurSeries.getData().addAll(new XYChart.Data(chartCounter - 1, eurValue));
+                usdSeries.getData().addAll(new XYChart.Data(chartCounter - 1, usdValue));
+            } else {
                 eurSeries.getData().clear();
                 chartCounter = 0;
                 /* Code that supposedly should work but it doesn't - make the chart dynamic again
@@ -624,8 +619,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleCopyEur(ActionEvent actionEvent)
-    {
+    public void handleCopyEur() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Clipboard clipboard = toolkit.getSystemClipboard();
         StringSelection str = new StringSelection(getEURRatio());
@@ -633,15 +627,17 @@ public class MainController implements Initializable {
 
 
     }
+
     @FXML
-    public void handleCopyUsd(){
+    public void handleCopyUsd() {
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Clipboard clipboard = toolkit.getSystemClipboard();
         StringSelection str = new StringSelection(getUSDRatio());
         clipboard.setContents(str, null);
     }
+
     @FXML
-    public void handleAddOffer(ActionEvent actionEvent) {
+    public void handleAddOffer() {
         if (UserController.isAllowed(2)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/offerAdd.fxml"));
@@ -658,7 +654,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleViewOffers(ActionEvent actionEvent) {
+    public void handleViewOffers() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/offersManage.fxml"));
@@ -675,7 +671,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleNewTransaction(ActionEvent actionEvent) {
+    public void handleNewTransaction() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsAdd.fxml"));
@@ -692,7 +688,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleViewTransactions(ActionEvent actionEvent) {
+    public void handleViewTransactions() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/transactionsView.fxml"));
@@ -709,7 +705,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleCustomers(ActionEvent actionEvent) {
+    public void handleCustomers() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/customersManage.fxml"));
@@ -726,7 +722,7 @@ public class MainController implements Initializable {
     }
 
     //sorting stuff
-    public void sortEmployees(){
+    private void sortEmployees() {
         Collections.sort(employees, new Comparator<Employee>() {
             public int compare(Employee e1, Employee e2) {
                 return Double.compare(e1.getTotalRevenue() / e1.getNumberOfSales(), e2.getTotalRevenue() / e2.getNumberOfSales());
@@ -735,7 +731,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleAddNewProduct(ActionEvent actionEvent) {
+    public void handleAddNewProduct() {
         if (UserController.isAllowed(2)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/productAdd.fxml"));
@@ -752,7 +748,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleMachinesAdd (ActionEvent actionEvent) {
+    public void handleMachinesAdd() {
         if (UserController.isAllowed(2)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machineAdd.fxml"));
@@ -769,7 +765,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleMachinesManage (ActionEvent actionEvent) {
+    public void handleMachinesManage() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/machinesManage.fxml"));
@@ -786,7 +782,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleLeasesAdd (ActionEvent actionEvent) {
+    public void handleLeasesAdd() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leaseAdd.fxml"));
@@ -803,7 +799,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void handleLeasesManage (ActionEvent actionEvent) {
+    public void handleLeasesManage() {
         if (UserController.isAllowed(1)) {
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/leasesManage.fxml"));
