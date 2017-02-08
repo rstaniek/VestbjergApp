@@ -1,296 +1,202 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
-import com.teamSuperior.core.connection.DBConnect;
+import com.jfoenix.controls.JFXTextField;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.ConfirmBox;
-import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import org.controlsfx.control.CheckComboBox;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.net.URL;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
-import static com.teamSuperior.core.connection.DBConnect.validateField;
-import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
- * Created by Domestos Maximus on 06-Dec-16.
+ * Employee management controller
  */
-public class EmployeeManagementController implements Initializable, DAO<Employee, Integer> {
+public class EmployeeManagementController implements DAO<Employee, Integer>, Initializable {
+    private static final String[] EMPLOYEE_CRITERIA = new String[]{"Name", "Surname", "Address", "City", "ZIP", "Phone", "Position"};
+    private static Employee loggedInUser;
+
+    private static Controller<Employee, Integer> controller = new Controller<>(Employee.class);
+    private static Controller<Position, Integer> positionController = new Controller<>(Position.class);
+
     @FXML
-    public TableView tableView_employees;
+    public TableView<Employee> employeesTableView;
     @FXML
-    public TextField text_name;
+    public JFXTextField nameField;
     @FXML
-    public TextField text_surname;
+    public JFXTextField surnameField;
     @FXML
-    public TextField text_email;
+    public JFXTextField emailField;
     @FXML
-    public TextField text_address;
+    public JFXTextField addressField;
     @FXML
-    public TextField text_city;
+    public JFXTextField cityField;
     @FXML
-    public TextField text_zip;
+    public JFXTextField zipField;
     @FXML
-    public Button btn_save;
+    public JFXButton saveButton;
     @FXML
-    public Button btn_saveQuit;
+    public JFXButton saveQuitButton;
     @FXML
-    public Button btn_quit;
+    public JFXButton quitButton;
     @FXML
-    public Button btn_search_clear;
+    public JFXButton clearSearchButton;
     @FXML
-    public TextField text_search_query;
+    public JFXTextField searchQueryField;
     @FXML
-    public CheckComboBox<String> checkComboBox_search_criteria;
+    public CheckComboBox<String> searchCriteriaComboBox;
     @FXML
-    public Button btn_delete;
+    public JFXButton deleteButton;
     @FXML
-    public JFXComboBox<String> comboBox_position;
+    public JFXComboBox<String> positionComboBox;
 
     private ObservableList<Employee> employees;
     private ObservableList<Employee> searchResults;
     private ObservableList<Position> positions;
-    private static Employee loggedInUser;
     private Employee selectedEmployee;
-    private DBConnect conn;
 
     //Columns
+    @FXML
     private TableColumn<Employee, String> nameColumn;
+    @FXML
     private TableColumn<Employee, String> surnameColumn;
+    @FXML
     private TableColumn<Employee, String> emailColumn;
+    @FXML
     private TableColumn<Employee, String> positionColumn;
+    @FXML
     private TableColumn<Employee, String> numOfSalesColumn;
+    @FXML
     private TableColumn<Employee, String> totalRevenueColumn;
+    @FXML
     private TableColumn<Employee, String> accessLevelColumn;
+    @FXML
     private TableColumn<Employee, String> addressColumn;
+    @FXML
     private TableColumn<Employee, String> cityColumn;
+    @FXML
     private TableColumn<Employee, String> zipColumn;
-
-    private static final String[] employeeCriteria = new String[]{"Name", "Surname", "Address", "City", "ZIP", "Phone", "Position"};
-    private static Controller<Employee, Integer> controller;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         employees = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
-        checkComboBox_search_criteria.getItems().addAll(employeeCriteria);
-        conn = new DBConnect();
+        searchCriteriaComboBox.getItems().addAll(EMPLOYEE_CRITERIA);
         loggedInUser = UserController.getUser();
 
         retrieveData();
         //fill the table with data
         initTableColumns(loggedInUser.getAccessLevel(), employees);
-        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
+        selectedEmployee = employeesTableView.getFocusModel().getFocusedItem();
 
         positions = retrievePositionsData();
-        comboBox_position.setItems(getPositionNames());
-        comboBox_position.getSelectionModel().selectFirst();
+        positionComboBox.setItems(getPositionNames());
+        positionComboBox.getSelectionModel().selectFirst();
     }
 
-    private ObservableList<Position> retrievePositionsData(){
-        conn = new DBConnect();
-        ObservableList<Position> results = FXCollections.observableArrayList();
-        try {
-            ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
-            while (rs.next()){
-                results.add(new Position(rs.getInt("accessLevel"),
-                        rs.getString("name")));
-            }
-        } catch (SQLException sqlException) {
-            displayMessage(ERROR, "Server connection error.", sqlException.getMessage());
-        } catch (Exception ex) {
-            displayMessage(ERROR, ex.getMessage());
-        }
-        return results;
+    private ObservableList<Position> retrievePositionsData() {
+        return FXCollections.observableArrayList(positionController.getAll());
     }
 
-    private ObservableList<String> getPositionNames(){
+    private ObservableList<String> getPositionNames() {
         ObservableList<String> results = FXCollections.observableArrayList();
-        for (Position p : positions){
+        for (Position p : positions) {
             results.add(p.getName());
         }
         return results;
     }
 
     private void retrieveData() {
-        /*try {
-            ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
-            while (rs.next()) {
-                if (rs.getInt("id") != -1 && rs.getString("name") != null
-                        && rs.getString("surname") != null
-                        && rs.getString("address") != null
-                        && rs.getString("city") != null
-                        && rs.getString("zip") != null
-                        && rs.getString("email") != null
-                        && rs.getString("phone") != null
-                        && rs.getString("password") != null
-                        && rs.getString("position") != null
-                        && rs.getInt("accessLevel") >= 1
-                        ) {
-                    employees.add(new Employee(rs.getInt("id"),
-                            rs.getString("name"),
-                            rs.getString("surname"),
-                            rs.getString("address"),
-                            rs.getString("city"),
-                            rs.getString("zip"),
-                            rs.getString("email"),
-                            rs.getString("phone"),
-                            rs.getString("password"),
-                            rs.getString("position"),
-                            rs.getInt("numberOfSales"),
-                            rs.getDouble("totalRevenue"),
-                            rs.getInt("accessLevel")));
-                }
-            }
-        } catch (SQLException sqlException) {
-            displayMessage(ERROR, "Server connection error.", sqlException.getMessage());
-        } catch (Exception ex) {
-            displayMessage(ERROR, ex.getMessage());
-        }*/
         employees = FXCollections.observableArrayList(getAll());
     }
 
     private void initTableColumns(int accessLevel, ObservableList<Employee> source) {
         if (accessLevel >= 2) {
-            nameColumn = new TableColumn<>("Name");
-            nameColumn.setMinWidth(90);
             nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-
-            surnameColumn = new TableColumn<>("Surname");
-            surnameColumn.setMinWidth(90);
             surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
-
-            emailColumn = new TableColumn<>("Email");
-            emailColumn.setMinWidth(150);
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
-
-            positionColumn = new TableColumn<>("Position");
-            positionColumn.setMinWidth(90);
             positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
+            numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfSales_str"));
+            totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<>("totalRevenue_str"));
+            accessLevelColumn.setCellValueFactory(new PropertyValueFactory<>("accessLevel_str"));
 
-            numOfSalesColumn = new TableColumn<>("Number of sales");
-            numOfSalesColumn.setMinWidth(80);
-            numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("numberOfSales_str"));
-
-            totalRevenueColumn = new TableColumn<>("Total revenue");
-            totalRevenueColumn.setMinWidth(80);
-            totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("totalRevenue_str"));
-
-            accessLevelColumn = new TableColumn<>("Access level");
-            accessLevelColumn.setMinWidth(80);
-            accessLevelColumn.setCellValueFactory(new PropertyValueFactory<Employee, String>("accessLevel_str"));
-
-            tableView_employees.setItems(source);
-            tableView_employees.getColumns().addAll(nameColumn, surnameColumn, emailColumn, positionColumn, numOfSalesColumn, totalRevenueColumn, accessLevelColumn);
+            employeesTableView.setItems(source);
         }
-        if (accessLevel >= 3) {
-            //stuff
-            addressColumn = new TableColumn<>("Address");
-            addressColumn.setMinWidth(120);
+        if (accessLevel >= 10) {
             addressColumn.setCellValueFactory(new PropertyValueFactory<>("address"));
-
-            cityColumn = new TableColumn<>("City");
-            cityColumn.setMinWidth(100);
             cityColumn.setCellValueFactory(new PropertyValueFactory<>("city"));
-
-            zipColumn = new TableColumn<>("ZIP code");
-            zipColumn.setMinWidth(80);
             zipColumn.setCellValueFactory(new PropertyValueFactory<>("zip"));
-
-            tableView_employees.getColumns().addAll(addressColumn, cityColumn, zipColumn);
+        } else {
+            employeesTableView.getColumns().remove(addressColumn);
+            employeesTableView.getColumns().remove(cityColumn);
+            employeesTableView.getColumns().remove(zipColumn);
         }
     }
 
     @FXML
-    public void tableView_employees_onMouseClicked(MouseEvent mouseEvent) {
-        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
-        text_name.setText(selectedEmployee.getName());
-        text_surname.setText(selectedEmployee.getSurname());
-        text_email.setText(selectedEmployee.getEmail());
-        text_address.setText(selectedEmployee.getAddress());
-        text_city.setText(selectedEmployee.getCity());
-        text_zip.setText(selectedEmployee.getZip());
-        comboBox_position.getSelectionModel().select(selectedEmployee.getPosition());
+    public void clickEmployeesTableView() {
+        selectedEmployee = employeesTableView.getFocusModel().getFocusedItem();
+        nameField.setText(selectedEmployee.getName());
+        surnameField.setText(selectedEmployee.getSurname());
+        emailField.setText(selectedEmployee.getEmail());
+        addressField.setText(selectedEmployee.getAddress());
+        cityField.setText(selectedEmployee.getCity());
+        zipField.setText(selectedEmployee.getZip());
+        positionComboBox.getSelectionModel().select(selectedEmployee.getPosition());
     }
 
     @FXML
-    public void btn_save_onClick(ActionEvent actionEvent) {
+    public void clickSave() {
         saveChanges(selectedEmployee);
     }
 
     @FXML
-    public void btn_saveQuit_onClick(ActionEvent actionEvent) {
+    public void clickSaveQuit() {
         saveChanges(selectedEmployee);
-        Stage window = (Stage) btn_saveQuit.getScene().getWindow();
+        Stage window = (Stage) saveQuitButton.getScene().getWindow();
         window.close();
     }
 
     @FXML
-    public void btn_quit_onClick(ActionEvent actionEvent) {
-        Stage window = (Stage) btn_quit.getScene().getWindow();
+    public void clickQuit() {
+        Stage window = (Stage) quitButton.getScene().getWindow();
         window.close();
     }
 
     private void saveChanges(Employee e) {
         boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about " + selectedEmployee.getName() + "?");
-        if (result &&
-                validateField(text_name) &&
-                validateField(text_surname) &&
-                validateField(text_email) &&
-                validateField(text_address) &&
-                validateField(text_city) &&
-                validateField(text_zip)) {
-            /*conn = new DBConnect();
-            try {
-                conn.upload(String.format("UPDATE employees SET name='%1$s',surname='%2$s',address='%3$s',city='%4$s',zip='%5$s',position='%6$s',email='%7$s',accessLevel='%9$d' WHERE id='%8$d'",
-                        text_name.getText(),
-                        text_surname.getText(),
-                        text_address.getText(),
-                        text_city.getText(),
-                        text_zip.getText(),
-                        comboBox_position.getSelectionModel().getSelectedItem(),
-                        text_email.getText(),
-                        e.getId(),
-                        getAccessLevelBySelectedPosition()));
-            } catch (Exception ex) {
-                displayMessage(ERROR, ex.getMessage());
-            }*/
-            e.setName(text_name.getText());
-            e.setSurname(text_surname.getText());
-            e.setAddress(text_address.getText());
-            e.setCity(text_city.getText());
-            e.setZip(text_zip.getText());
-            e.setPosition(comboBox_position.getSelectionModel().getSelectedItem());
-            e.setEmail(text_email.getText());
+        if (result) {
+            e.setName(nameField.getText());
+            e.setSurname(surnameField.getText());
+            e.setAddress(addressField.getText());
+            e.setCity(cityField.getText());
+            e.setZip(zipField.getText());
+            e.setPosition(positionComboBox.getSelectionModel().getSelectedItem());
+            e.setEmail(emailField.getText());
             e.setAccessLevel(getAccessLevelBySelectedPosition());
             update(e);
-        } else if (result) displayError(ErrorCode.VALIDATION_ILLEGAL_CHARS);
+        }
         refreshTable();
     }
 
-    private int getAccessLevelBySelectedPosition(){
+    private int getAccessLevelBySelectedPosition() {
         int tmp = 0;
-        for (Position p : positions){
-            if(p.getName().equals(comboBox_position.getSelectionModel().getSelectedItem())){
+        for (Position p : positions) {
+            if (p.getName().equals(positionComboBox.getSelectionModel().getSelectedItem())) {
                 tmp = p.getAccessLevel();
             }
         }
@@ -302,7 +208,7 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
         employees = null;
         employees = FXCollections.observableArrayList();
         if (loggedInUser.getAccessLevel() < 3) {
-            tableView_employees.getColumns().removeAll(nameColumn,
+            employeesTableView.getColumns().removeAll(nameColumn,
                     surnameColumn,
                     emailColumn,
                     positionColumn,
@@ -310,7 +216,7 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
                     totalRevenueColumn,
                     accessLevelColumn);
         } else {
-            tableView_employees.getColumns().removeAll(nameColumn,
+            employeesTableView.getColumns().removeAll(nameColumn,
                     surnameColumn,
                     emailColumn,
                     positionColumn,
@@ -327,19 +233,19 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
 
     //search bar
     @FXML
-    public void btn_search_clear_onClick(ActionEvent actionEvent) {
-        text_search_query.clear();
+    public void clickClearSearch() {
+        searchQueryField.clear();
         printQueryLog("clear_onClick");
         initTableColumns(loggedInUser.getAccessLevel(), employees);
     }
 
     @FXML
-    public void text_search_query_onKeyReleased(KeyEvent keyEvent) {
+    public void handleSearchQuery() {
         printQueryLog("onKeyReleased");
         searchResults = null;
-        searchResults = performSearch(text_search_query.getText());
+        searchResults = performSearch(searchQueryField.getText());
         if (loggedInUser.getAccessLevel() < 3) {
-            tableView_employees.getColumns().removeAll(nameColumn,
+            employeesTableView.getColumns().removeAll(nameColumn,
                     surnameColumn,
                     emailColumn,
                     positionColumn,
@@ -347,7 +253,7 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
                     totalRevenueColumn,
                     accessLevelColumn);
         } else {
-            tableView_employees.getColumns().removeAll(nameColumn,
+            employeesTableView.getColumns().removeAll(nameColumn,
                     surnameColumn,
                     emailColumn,
                     positionColumn,
@@ -363,10 +269,10 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
 
     private void printQueryLog(String sender) {
         String c = "";
-        for (String s : checkComboBox_search_criteria.getCheckModel().getCheckedItems()) {
+        for (String s : searchCriteriaComboBox.getCheckModel().getCheckedItems()) {
             c += s + ", ";
         }
-        System.out.printf("%s@[%s]: %s%n", sender, c, text_search_query.getText());
+        System.out.printf("%s@[%s]: %s%n", sender, c, searchQueryField.getText());
     }
 
     private ObservableList<Employee> performSearch(String query) {
@@ -376,10 +282,10 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
         }
         for (Employee employee : employees) {
             ObservableList<String> clist;
-            if(checkComboBox_search_criteria.getCheckModel().getCheckedItems().size() != 0){
-                clist = checkComboBox_search_criteria.getCheckModel().getCheckedItems();
+            if (searchCriteriaComboBox.getCheckModel().getCheckedItems().size() != 0) {
+                clist = searchCriteriaComboBox.getCheckModel().getCheckedItems();
             } else {
-                clist = FXCollections.observableArrayList(employeeCriteria);
+                clist = FXCollections.observableArrayList(EMPLOYEE_CRITERIA);
             }
             for (String criteria : clist) {
                 switch (criteria) {
@@ -427,20 +333,19 @@ public class EmployeeManagementController implements Initializable, DAO<Employee
     }
 
     @FXML
-    public void btn_delete_onClick(ActionEvent actionEvent) {
+    public void clickDelete() {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setHeaderText("You are about to perform an non-revertable action!");
+        alert.setHeaderText("You are about to perform an non-revertible action!");
         alert.setContentText(String.format("Are you sure you want to delete %1$s from the employees list?", selectedEmployee.getName()));
-        Button deleteButton = (Button)alert.getDialogPane().lookupButton(ButtonType.OK);
+        Button deleteButton = (Button) alert.getDialogPane().lookupButton(ButtonType.OK);
         deleteButton.setText("Delete");
         Optional<ButtonType> deleteResponse = alert.showAndWait();
-        if(deleteResponse.isPresent()){
-            if(ButtonType.OK.equals(deleteResponse.get())){
-                conn = new DBConnect();
-                try{
-                    conn.upload(String.format("DELETE FROM employees WHERE id='%1$s'", selectedEmployee.getId()));
-                } catch (SQLException sqlEx){
-                    displayMessage(ERROR, "SQL connection error", sqlEx.getMessage());
+        if (deleteResponse.isPresent()) {
+            if (ButtonType.OK.equals(deleteResponse.get())) {
+                try {
+                    controller.delete(selectedEmployee);
+                } catch (Error error) {
+                    displayMessage(ERROR, "Database error", error.getMessage());
                 } finally {
                     refreshTable();
                 }
