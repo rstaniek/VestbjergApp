@@ -26,8 +26,8 @@
         <Label layoutX="230.0" layoutY="472.0" text="- Machine ID" />
         <Label layoutX="230.0" layoutY="512.0" text="- Customer ID" />
         <Label layoutX="230.0" layoutY="552.0" text="- Current price" />
-        <JFXDatePicker fx:id="datePicker_borrowDate" layoutX="443.0" layoutY="465.0" />
-        <JFXDatePicker fx:id="datePicker_returnDate" layoutX="443.0" layoutY="505.0" />
+        <JFXDatePicker fx:id="datePicker_borrowDate" disable="true" layoutX="443.0" layoutY="465.0" />
+        <JFXDatePicker fx:id="datePicker_returnDate" defaultColor="#385ba4" layoutX="444.0" layoutY="504.0" />
         <Label layoutX="640.0" layoutY="472.0" text="- Borrow date" />
         <Label layoutX="640.0" layoutY="512.0" text="- Return date" />
 
