@@ -5,13 +5,15 @@ import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.enums.Drawables;
 import javafx.application.Platform;
-import javafx.beans.InvalidationListener;
-import javafx.beans.Observable;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.stage.Stage;
@@ -242,18 +244,44 @@ public class SettingsController implements Initializable {
             }
         });
         isPlaying = false;
-        mediaPlayer.currentTimeProperty().addListener(new InvalidationListener() {
+        mediaPlayer.currentTimeProperty().addListener(new ChangeListener<Duration>() {
             @Override
-            public void invalidated(Observable observable) {
+            public void changed(ObservableValue<? extends Duration> observable, Duration oldValue, Duration newValue) {
                 updateValues();
             }
         });
-        slider_timeline.valueProperty().addListener(new InvalidationListener() {
+        /*slider_timeline.valueProperty().addListener(new InvalidationListener() {
             @Override
             public void invalidated(Observable observable) {
                 if (slider_timeline.isValueChanging()) {
                     mediaPlayer.seek(new Duration(slider_timeline.getValue()));
                 }
+            }
+        });*/
+        slider_timeline.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                mediaPlayer.seek(Duration.seconds(slider_timeline.getValue()));
+            }
+        });
+
+        mediaPlayer.setOnError(new Runnable() {
+            @Override
+            public void run() {
+                isPlaying = false;
+                mediaPlayer.stop();
+                slider_timeline.setValue(0.0);
+                btn_play.setText("Play");
+            }
+        });
+
+        mediaPlayer.setOnEndOfMedia(new Runnable() {
+            @Override
+            public void run() {
+                mediaPlayer.stop();
+                slider_timeline.setValue(0.0);
+                isPlaying = false;
+                btn_play.setText("Play");
             }
         });
     }
@@ -270,7 +298,7 @@ public class SettingsController implements Initializable {
                     }
                     int mins = (int) current.toMinutes();
                     String secs = String.valueOf((int) current.toSeconds() % 60);
-                    if (((int) current.toSeconds() & 60) < 10) {
+                    if (((int) current.toSeconds() % 60) < 10) {
                         secs = "0" + secs;
                     }
                     label_timeline.setText(String.format("%d:%s", mins, secs));
@@ -308,5 +336,8 @@ public class SettingsController implements Initializable {
     @FXML
     public void btn_stop_onClick(ActionEvent actionEvent) {
         mediaPlayer.stop();
+        btn_play.setText("Play");
+        isPlaying = false;
+        slider_timeline.setValue(0.0);
     }
 }

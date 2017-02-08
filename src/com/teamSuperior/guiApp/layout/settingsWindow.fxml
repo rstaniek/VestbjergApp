@@ -35,7 +35,7 @@
                                                <Insets left="10.0"/>
                                            </HBox.margin>
                                        </Button>
-                                       <Slider fx:id="slider_timeline" prefWidth="350.0">
+                                       <Slider fx:id="slider_timeline" prefHeight="14.0" prefWidth="420.0">
                                            <HBox.margin>
                                                <Insets left="10.0" top="5.0"/>
                                            </HBox.margin>
