@@ -1,7 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.Utils;
-import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import javafx.collections.FXCollections;
@@ -14,18 +13,14 @@ import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
 import java.sql.Date;
-import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.Utils.isExpired;
 import static com.teamSuperior.core.Utils.isNumeric;
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
-import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
-import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Offer manage controller
@@ -79,7 +74,6 @@ public class OffersManageController implements Initializable {
     private ObservableList<Offer> offers;
     private ObservableList<Offer> searchResults;
     private Offer selectedOffer;
-    private DBConnect conn;
 
     @FXML
     public void clickClearSearch() {
@@ -153,7 +147,6 @@ public class OffersManageController implements Initializable {
         offers = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         searchCriteriaComboBox.getItems().addAll(OFFERS_CRITERIA);
-        conn = new DBConnect();
 
         retrieveData();
         initTableColumns(offers);
@@ -176,7 +169,7 @@ public class OffersManageController implements Initializable {
                 setText(empty ? null : item.toLocalDateTime().format(Utils.dateFormatter(Utils.FormatterType.DATE)));
             }
         });
-        discountColumn.setCellValueFactory(new PropertyValueFactory<>("discount_str"));
+        discountColumn.setCellValueFactory(new PropertyValueFactory<>("discount"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         expiresDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiresDate"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -227,15 +220,9 @@ public class OffersManageController implements Initializable {
                     Optional<ButtonType> yesResponse = a.showAndWait();
                     if (yesResponse.isPresent()) {
                         if (ButtonType.OK.equals(yesResponse.get())) {
-                            conn = new DBConnect();
-                            try {
-                                conn.upload(String.format("UPDATE offers SET price='%1$s',discount='%2$s' WHERE id=%3$d",
-                                        newPriceField.getText(),
-                                        newDiscountField.getText(),
-                                        selectedOffer.getId()));
-                            } catch (SQLException sqlEx) {
-                                displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
-                            }
+                            selectedOffer.setPrice(Double.parseDouble(newPriceField.getText()));
+                            selectedOffer.setDiscount(Double.parseDouble(newDiscountField.getText()));
+                            offerController.update(selectedOffer);
                             refreshWindow();
                         }
                     }
@@ -259,12 +246,7 @@ public class OffersManageController implements Initializable {
         Optional<ButtonType> deleteResponse = alert.showAndWait();
         if (deleteResponse.isPresent()) {
             if (ButtonType.OK.equals(deleteResponse.get())) {
-                conn = new DBConnect();
-                try {
-                    conn.upload(String.format("DELETE FROM offers WHERE id=%1$d", selectedOffer.getId()));
-                } catch (SQLException sqlEx) {
-                    displayMessage(ERROR, "SQL connection error.", sqlEx.getMessage());
-                }
+                offerController.delete(selectedOffer);
                 refreshWindow();
             }
         }
