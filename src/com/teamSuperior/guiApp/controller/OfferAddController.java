@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import javafx.collections.FXCollections;
@@ -13,7 +14,6 @@ import javafx.util.StringConverter;
 import java.net.URL;
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.ResourceBundle;
 
 import static com.teamSuperior.core.Utils.isNumeric;
@@ -57,17 +57,10 @@ public class OfferAddController implements Initializable {
         productNameLabel.setText("");
 
         expiresDatePicker.setConverter(new StringConverter<LocalDate>() {
-            String pattern = "dd-MM-yyyy";
-            DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern(pattern);
-
-            {
-                expiresDatePicker.setPromptText(pattern.toLowerCase());
-            }
-
             @Override
             public String toString(LocalDate date) {
                 if (date != null) {
-                    return dateFormatter.format(date);
+                    return Utils.dateFormatter(Utils.FormatterType.DATE).format(date);
                 } else {
                     return "";
                 }
@@ -76,7 +69,7 @@ public class OfferAddController implements Initializable {
             @Override
             public LocalDate fromString(String string) {
                 if (string != null && !string.isEmpty()) {
-                    return LocalDate.parse(string, dateFormatter);
+                    return LocalDate.parse(string, Utils.dateFormatter(Utils.FormatterType.DATE));
                 } else {
                     return null;
                 }

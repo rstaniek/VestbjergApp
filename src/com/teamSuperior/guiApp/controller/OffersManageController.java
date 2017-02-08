@@ -1,5 +1,6 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
@@ -14,9 +15,12 @@ import org.controlsfx.control.CheckComboBox;
 import java.net.URL;
 import java.sql.Date;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
+import static com.teamSuperior.core.Utils.isExpired;
 import static com.teamSuperior.core.Utils.isNumeric;
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
@@ -64,7 +68,7 @@ public class OffersManageController implements Initializable {
     @FXML
     private TableColumn<Offer, Double> priceColumn;
     @FXML
-    private TableColumn<Offer, Date> dateColumn;
+    private TableColumn<Offer, Timestamp> dateColumn;
     @FXML
     private TableColumn<Offer, String> discountColumn;
     @FXML
@@ -165,10 +169,24 @@ public class OffersManageController implements Initializable {
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         productColumn.setCellValueFactory(new PropertyValueFactory<>("product"));
         dateColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        dateColumn.setCellFactory(col -> new TableCell<Offer, Timestamp>() {
+            @Override
+            protected void updateItem(Timestamp item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.toLocalDateTime().format(Utils.dateFormatter(Utils.FormatterType.DATE)));
+            }
+        });
         discountColumn.setCellValueFactory(new PropertyValueFactory<>("discount_str"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
         expiresDateColumn.setCellValueFactory(new PropertyValueFactory<>("expiresDate"));
         statusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        expiresDateColumn.setCellFactory(col -> new TableCell<Offer, Date>() {
+            @Override
+            protected void updateItem(Date item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.toLocalDate().format(Utils.dateFormatter(Utils.FormatterType.DATE)));
+            }
+        });
 
         offersTableView.setItems(source);
     }
@@ -180,7 +198,7 @@ public class OffersManageController implements Initializable {
         productLabel.setText(String.valueOf(selectedOffer.getProduct().getId()));
         newPriceField.setText(priceLabel.getText());
         newDiscountField.setText(String.valueOf(selectedOffer.getDiscount()));
-//        label_status.setText(isExpired(selectedOffer.getExpiresDate()));
+        statusLabel.setText(isExpired(selectedOffer.getExpiresDate()));
         if (statusLabel.getText().equals("VALID")) {
             statusLabel.setStyle("-fx-text-fill: #009b29");
         } else {

@@ -2,6 +2,7 @@ package com.teamSuperior.core;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 /**
@@ -48,6 +49,25 @@ public class Utils {
             result.add(Integer.parseInt(s1));
         }
         return result;
+    }
+
+    public enum FormatterType {
+        DATE, DATETIME, TIME
+    }
+
+    public static DateTimeFormatter dateFormatter(FormatterType type) {
+        String pattern = "dd-MM-yyyy";
+        switch (type) {
+            case DATE:
+                pattern = "dd-MM-yyyy";
+                break;
+            case DATETIME:
+                pattern = "dd-MM-yyyy hh:mm";
+                break;
+            case TIME:
+                pattern = "hh:mm";
+        }
+        return DateTimeFormatter.ofPattern(pattern);
     }
 
     /***
