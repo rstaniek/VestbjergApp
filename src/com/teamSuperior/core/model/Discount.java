@@ -1,12 +1,21 @@
 package com.teamSuperior.core.model;
 
+import javax.persistence.*;
+
 /**
- * Created by rajmu on 17.01.22.
+ * Discount entity
  */
-public class Discount {
-    int id;
-    double value;
-    String title;
+@Entity
+@Table(name = "discounts")
+public class Discount implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    private double value;
+    private String title;
+
+    public Discount() {
+    }
 
     public Discount(int id, double value, String title) {
         this.id = id;
@@ -18,11 +27,28 @@ public class Discount {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public double getValue() {
         return value;
     }
 
+    public void setValue(double value) {
+        this.value = value;
+    }
+
     public String getTitle() {
         return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    @Override
+    public String toJson() {
+        return null;
     }
 }

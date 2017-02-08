@@ -1,82 +1,108 @@
 package com.teamSuperior.core.model.service;
 
-import com.teamSuperior.core.connection.DBConnect;
+import com.teamSuperior.core.model.Model;
+import com.teamSuperior.core.model.entity.Customer;
+import com.teamSuperior.core.model.entity.Employee;
 
-import java.sql.Date;
-import java.sql.Time;
-import java.util.ArrayList;
-
-import static com.teamSuperior.core.Utils.arrayToString;
+import javax.persistence.*;
+import java.sql.Timestamp;
 
 /**
- * Created by rajmu on 17.01.11.
+ * Transaction entity
  */
-public class Transaction {
-
-    private int id, employeeID, customerID;
-    private ArrayList<Integer> productIDs, discountIDs;
-    private String productIDs_str, discountIDs_str, description;
+@Entity
+@Table(name = "transactions")
+public class Transaction implements Model {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+    @ManyToOne
+    private Employee employee;
+    @ManyToOne
+    private Customer customer;
+    private String productIDs, discountIDs;
+    private String description;
     private double price;
-    private Date date;
-    private Time time;
-    private DBConnect conn;
+    private Timestamp createDate;
 
-    public Transaction(int id, int employeeID, int customerID, ArrayList<Integer> productIDs, ArrayList<Integer> discountIDs, double price, String description, Date date, Time time) {
-        this.id = id;
-        this.employeeID = employeeID;
-        this.customerID = customerID;
+    public Transaction() {
+    }
+
+    public Transaction(Employee employee, Customer customer, String productIDs, String discountIDs, String description, double price) {
+        this.employee = employee;
+        this.customer = customer;
         this.productIDs = productIDs;
         this.discountIDs = discountIDs;
-        this.price = price;
         this.description = description;
-        this.date = date;
-        this.time = time;
-        productIDs_str = arrayToString(productIDs);
-        discountIDs_str = arrayToString(discountIDs);
+        this.price = price;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getEmployeeID() {
-        return employeeID;
+    public void setId(int id) {
+        this.id = id;
     }
 
-    public int getCustomerID() {
-        return customerID;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public ArrayList<Integer> getProductIDs() {
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
+    }
+
+    public Customer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(Customer customer) {
+        this.customer = customer;
+    }
+
+    public String getProductIDs() {
         return productIDs;
     }
 
-    public ArrayList<Integer> getDiscountIDs() {
+    public void setProductIDs(String productIDs) {
+        this.productIDs = productIDs;
+    }
+
+    public String getDiscountIDs() {
         return discountIDs;
     }
 
-    public String getProductIDs_str() {
-        return productIDs_str;
-    }
-
-    public String getDiscountIDs_str() {
-        return discountIDs_str;
+    public void setDiscountIDs(String discountIDs) {
+        this.discountIDs = discountIDs;
     }
 
     public String getDescription() {
         return description;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
-    public Time getTime() {
-        return time;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public double getPrice() {
         return price;
     }
 
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
+    public Timestamp getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Timestamp createDate) {
+        this.createDate = createDate;
+    }
+
+    @Override
+    public String toJson() {
+        return null;
+    }
 }

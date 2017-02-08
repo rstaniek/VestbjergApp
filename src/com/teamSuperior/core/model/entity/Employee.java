@@ -13,27 +13,17 @@ import java.util.Locale;
 @Entity
 @Table(name = "employees")
 public class Employee implements Model {
-
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private String name;
-    private String surname;
-    private String address;
-    private String city;
-    private String zip;
-    private String email;
-    private String phone;
-    private String password;
-    private String position;
-    private NumberFormat formatter;
+    private String name, surname, address, city, zip, email, phone, password, position;
+    @Transient
     private Locale loc;
     private int numberOfSales;
     private double totalRevenue;
     private int accessLevel;
-    private String numberOfSales_str;
-    private String totalRevenue_str;
-    private String accessLevel_str;
+    @Transient
+    private String numberOfSales_str, totalRevenue_str, accessLevel_str;
 
     public Employee() {
     }
@@ -53,7 +43,7 @@ public class Employee implements Model {
         this.totalRevenue = totalRevenue;
         this.accessLevel = accessLevel;
         loc = new Locale("da", "DK");
-        formatter = NumberFormat.getInstance(loc);
+        NumberFormat formatter = NumberFormat.getInstance(loc);
         numberOfSales_str = String.valueOf(numberOfSales);
         totalRevenue_str = String.valueOf("kr " + formatter.format(totalRevenue));
         accessLevel_str = String.valueOf(accessLevel);
@@ -177,26 +167,7 @@ public class Employee implements Model {
 
     @Override
     public String toString() {
-        return "Employee{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", surname='" + surname + '\'' +
-                ", address='" + address + '\'' +
-                ", city='" + city + '\'' +
-                ", zip='" + zip + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", password='" + password + '\'' +
-                ", position='" + position + '\'' +
-                ", formatter=" + formatter +
-                ", loc=" + loc +
-                ", numberOfSales=" + numberOfSales +
-                ", totalRevenue=" + totalRevenue +
-                ", accessLevel=" + accessLevel +
-                ", numberOfSales_str='" + numberOfSales_str + '\'' +
-                ", totalRevenue_str='" + totalRevenue_str + '\'' +
-                ", accessLevel_str='" + accessLevel_str + '\'' +
-                '}';
+        return id + " - " + name + " " + surname;
     }
 
     @Override

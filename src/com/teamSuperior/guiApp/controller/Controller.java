@@ -6,6 +6,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.criterion.Restrictions;
 
 import java.io.Serializable;
 import java.util.List;
@@ -84,6 +85,16 @@ public class Controller<T, Id extends Serializable> implements DAO<T, Id> {
     public List<T> getAll() {
         openCurrentSession();
         List<T> list = (List<T>) getCurrentSession().createQuery("from " + clazz.getName()).list();
+        closeCurrentSession();
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<T> getByArray(String column, Object[] args) {
+        openCurrentSession();
+        List<T> list = (List<T>) getCurrentSession().createCriteria(clazz.getName())
+                .add(Restrictions.in(column, args))
+                .list();
         closeCurrentSession();
         return list;
     }
