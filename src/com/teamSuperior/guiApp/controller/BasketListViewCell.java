@@ -40,7 +40,7 @@ public class BasketListViewCell extends ListCell<BasketItem> {
             setGraphic(null);
         } else {
             if (mLLoader == null) {
-                mLLoader = new FXMLLoader(getClass().getResource("/com/teamSuperior/guiApp//layout/basketCell.fxml"));
+                mLLoader = new FXMLLoader(getClass().getResource("/com/teamSuperior/guiApp/layout/basketCell.fxml"));
                 mLLoader.setController(this);
                 try {
                     mLLoader.load();
