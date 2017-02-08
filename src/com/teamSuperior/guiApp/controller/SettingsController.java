@@ -217,7 +217,7 @@ public class SettingsController implements Initializable {
 
         URL url = null;
         try {
-            url = new URL("http://remix1436.ct8.pl/resources/Media/Thomas_Jack-Booka_Shake.mp4");
+            url = new URL("http://remix1436.ct8.pl/resources/Media/Thomas_Jack_-_Booka_Shake.mp3");
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }
