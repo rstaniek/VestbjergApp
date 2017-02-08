@@ -9,8 +9,13 @@ import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.chart.PieChart;
@@ -92,41 +97,56 @@ public class ProductsController implements IDataAccessObject<Product, Integer>, 
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        WaitingBox waitingBox = new WaitingBox();
+        waitingBox.setMessage("Retrieving data from the database.");
         searchCriteriaCheckComboBox.getItems().addAll(PRODUCTS_CRITERIA);
         showsAll = true;
 
         setColumns();
-        updateTable();
+
+        Task<Void> initData = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(() -> waitingBox.displayIndefinite());
+                products = FXCollections.observableArrayList(getAll());
+                return null;
+            }
+        };
+
+        initData.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    tableView.setItems(products);
+                    tableView.getSelectionModel().selectFirst();
+                    waitingBox.closeWindow();
+                    runWarehouseCheck();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
 
         tableView.getSelectionModel().selectedItemProperty().addListener(
                 (observable, oldValue, newValue) -> selectProduct(newValue)
         );
 
-        tableView.getSelectionModel().selectFirst();
-
         searchQueryField.textProperty().addListener(
                 (observable, oldValue, newValue) -> applyFilter(newValue)
         );
+
+        Thread thread = new Thread(initData);
+        thread.setDaemon(true);
+        thread.start();
 
         if (UserController.getUser().getAccessLevel() < 2) {
             requestResupplyButton.setDisable(true);
             amountToRequestField.setDisable(true);
         }
-
-        runWarehouseCheck();
     }
 
     private ObservableList<Product> getLowQuantity() {
         return products.filtered(product -> product.getQuantity() < CAP_THRESHOLD);
-    }
-
-    private void retrieveData() {
-        products = FXCollections.observableArrayList(getAll());
-    }
-
-    private void updateTable() {
-        retrieveData();
-        tableView.setItems(products);
     }
 
     private void setColumns() {
@@ -211,9 +231,34 @@ public class ProductsController implements IDataAccessObject<Product, Integer>, 
                 );
             }
             selectedProduct.setQuantity(itemsTotal);
-            update(selectedProduct);
-            amountToRequestField.clear();
-            updateTable();
+
+            WaitingBox waitingBox = new WaitingBox("Updating info and refreshing the table.");
+            Task<Void> update = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    update(selectedProduct);
+                    products = FXCollections.observableArrayList(getAll());
+                    return null;
+                }
+            };
+
+            update.stateProperty().addListener(new ChangeListener<Worker.State>() {
+                @Override
+                public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                    if (newValue.equals(Worker.State.SUCCEEDED)) {
+                        amountToRequestField.clear();
+                        tableView.setItems(products);
+                        tableView.getSelectionModel().selectFirst();
+                        waitingBox.closeWindow();
+                    } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                        waitingBox.closeWindow();
+                    }
+                }
+            });
+
+            Thread thread = new Thread(update);
+            thread.setDaemon(true);
+            thread.start();
         } else Error.displayError(ErrorCode.TEXT_FIELD_NON_NUMERIC);
     }
 
