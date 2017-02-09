@@ -29,10 +29,10 @@ public class SplashScreen {
 
         window.initModality(Modality.APPLICATION_MODAL);
         window.initStyle(StageStyle.TRANSPARENT);
-        window.setMinWidth(600);
-        window.setMinHeight(400);
-        window.setMaxWidth(600);
-        window.setMaxHeight(600);
+        window.setMinWidth(640);
+        window.setMinHeight(360);
+        window.setMaxWidth(700);
+        window.setMaxHeight(400);
 
         ImageView img = new ImageView();
         img.setImage(new Image(Drawables.SPLASH_SMALL.getPath()));
