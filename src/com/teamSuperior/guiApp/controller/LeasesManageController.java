@@ -104,7 +104,29 @@ public class LeasesManageController implements Initializable {
         retrieveCustomers();
         initTableColumns(leases);
         selectedLease = (Lease) tableView_leases.getFocusModel().getFocusedItem();
+        datePicker_borrowDate.setDisable(true);
         runLeaseExpirationCheck();
+
+        datePicker_returnDate.setDayCellFactory(new Callback<DatePicker, DateCell>() {
+            @Override
+            public DateCell call(final DatePicker datePicker) {
+                return new DateCell() {
+                    @Override
+                    public void updateItem(LocalDate item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (item.isBefore(datePicker_borrowDate.getValue().plusDays(1))) {
+                            setDisable(true);
+                            setStyle("-fx-background-color: #ffc0cb;");
+                        }
+                        if (item.isAfter(LocalDate.now()) && item.isBefore(datePicker_borrowDate.getValue())) {
+                            setStyle("-fx-background-color: #67aaf4");
+                        }
+                    }
+                };
+            }
+        });
+        datePicker_returnDate.setValue(LocalDate.now());
+
     }
 
 
