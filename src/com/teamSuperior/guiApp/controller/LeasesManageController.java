@@ -607,7 +607,7 @@ public class LeasesManageController implements Initializable {
     @FXML
     public void btn_show_onClick(){
         switch (btn_show.getText()){
-            case "Show leases not returned":
+            case "Show not returned leases":
                 leases.clear();
                 retrieveNotReturnedLeaseData();
                 btn_show.setText("Show all leases");
@@ -615,7 +615,7 @@ public class LeasesManageController implements Initializable {
             case "Show all leases":
                 leases.clear();
                 retrieveLeaseData();
-                btn_show.setText("Show leases not returned");
+                btn_show.setText("Show not returned leases");
                 break;
         }
     }
