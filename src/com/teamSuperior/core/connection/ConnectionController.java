@@ -90,10 +90,20 @@ public class ConnectionController<T, Id extends Serializable> implements IDataAc
     }
 
     @SuppressWarnings("unchecked")
-    public List<T> getByArray(String column, Object[] args) {
+    public List<T> listByArray(String propertyName, Object[] values) {
         openCurrentSession();
         List<T> list = (List<T>) getCurrentSession().createCriteria(clazz.getName())
-                .add(Restrictions.in(column, args))
+                .add(Restrictions.in(propertyName, values))
+                .list();
+        closeCurrentSession();
+        return list;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<T> listByParam(String propertyName, Object value) {
+        openCurrentSession();
+        List<T> list = (List<T>) getCurrentSession().createCriteria(clazz.getName())
+                .add(Restrictions.gt(propertyName, value))
                 .list();
         closeCurrentSession();
         return list;
