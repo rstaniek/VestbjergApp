@@ -152,9 +152,9 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
             surnameColumn.setCellValueFactory(new PropertyValueFactory<>("surname"));
             emailColumn.setCellValueFactory(new PropertyValueFactory<>("email"));
             positionColumn.setCellValueFactory(new PropertyValueFactory<>("position"));
-            numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfSales_str"));
-            totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<>("totalRevenue_str"));
-            accessLevelColumn.setCellValueFactory(new PropertyValueFactory<>("accessLevel_str"));
+            numOfSalesColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfSales"));
+            totalRevenueColumn.setCellValueFactory(new PropertyValueFactory<>("totalRevenue"));
+            accessLevelColumn.setCellValueFactory(new PropertyValueFactory<>("accessLevel"));
 
             employeesTableView.setItems(source);
         }
