@@ -13,8 +13,6 @@ import com.teamSuperior.guiApp.GUI.TextFieldBox;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -170,7 +168,7 @@ public class TransactionsAddController implements Initializable {
         Task<Void> retrieve = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Platform.runLater(() -> initWaitingBox.displayIndefinite());
+                Platform.runLater(initWaitingBox::displayIndefinite);
                 products = FXCollections.observableArrayList(productConnectionController.getAll());
                 customers = FXCollections.observableArrayList(customerConnectionController.getAll());
                 offers = FXCollections.observableArrayList(offerConnectionController.getAll());
@@ -179,31 +177,28 @@ public class TransactionsAddController implements Initializable {
             }
         };
 
-        retrieve.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue == Worker.State.SUCCEEDED) {
-                    initWaitingBox.closeWindow();
-                    System.out.println("[Retrieve]: Thread finished");
+        retrieve.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                initWaitingBox.closeWindow();
+                System.out.println("[Retrieve]: Thread finished");
 
-                    //products
-                    initProductTableColumns(products);
-                    productsTableView.getSelectionModel().selectFirst();
-                    selectedProduct = productsTableView.getSelectionModel().getSelectedItem();
+                //products
+                initProductTableColumns(products);
+                productsTableView.getSelectionModel().selectFirst();
+                selectedProduct = productsTableView.getSelectionModel().getSelectedItem();
 
-                    //customers
-                    initCustomerTableColumns(customers);
-                    customersTableView.getSelectionModel().selectFirst();
-                    selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
+                //customers
+                initCustomerTableColumns(customers);
+                customersTableView.getSelectionModel().selectFirst();
+                selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
 
-                    for (Discount d : discounts) {
-                        if (d.getId() == 5) {
-                            discountThreshold = d.getValue();
-                        }
+                for (Discount d : discounts) {
+                    if (d.getId() == 5) {
+                        discountThreshold = d.getValue();
                     }
-                } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
-                    initWaitingBox.closeWindow();
                 }
+            } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
+                initWaitingBox.closeWindow();
             }
         });
 
@@ -603,15 +598,12 @@ public class TransactionsAddController implements Initializable {
             }
         };
 
-        retrieve.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue == Worker.State.SUCCEEDED) {
-                    wb.closeWindow();
-                    initCustomerTableColumns(customers);
-                } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
-                    wb.closeWindow();
-                }
+        retrieve.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue == Worker.State.SUCCEEDED) {
+                wb.closeWindow();
+                initCustomerTableColumns(customers);
+            } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
+                wb.closeWindow();
             }
         });
 
@@ -664,12 +656,9 @@ public class TransactionsAddController implements Initializable {
                         }
                     };
 
-                    taskUpdateCustomer.stateProperty().addListener(new ChangeListener<Worker.State>() {
-                        @Override
-                        public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                            if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
-                                waitingBoxUpdateCustomer.closeWindow();
-                            }
+                    taskUpdateCustomer.stateProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                            waitingBoxUpdateCustomer.closeWindow();
                         }
                     });
 
@@ -679,15 +668,6 @@ public class TransactionsAddController implements Initializable {
                 }
                 loggedUser.setNumberOfSales(loggedUser.getNumberOfSales() + 1);
                 loggedUser.setTotalRevenue(loggedUser.getTotalRevenue() + finalPrice);
-                /*employeeConnectionController.update(loggedUser);
-                for (BasketItem item : basketItems) {
-                    for (Product p : products) {
-                        if (p.getId() == item.getItemID()) {
-                            p.setQuantity(p.getQuantity() - item.getQuantity());
-                            productConnectionController.update(p);
-                        }
-                    }
-                }*/
                 WaitingBox wb1 = new WaitingBox("Finalizing the transaction");
                 Task<Void> updateFinal = new Task<Void>() {
                     @Override
@@ -705,15 +685,12 @@ public class TransactionsAddController implements Initializable {
                     }
                 };
 
-                updateFinal.stateProperty().addListener(new ChangeListener<Worker.State>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                        if (newValue.equals(Worker.State.SUCCEEDED)) {
-                            wb1.closeWindow();
-                            displayMessage(INFORMATION, "Transaction completed successfully.");
-                        } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
-                            wb1.closeWindow();
-                        }
+                updateFinal.stateProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue.equals(Worker.State.SUCCEEDED)) {
+                        wb1.closeWindow();
+                        displayMessage(INFORMATION, "Transaction completed successfully.");
+                    } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                        wb1.closeWindow();
                     }
                 });
 
@@ -737,15 +714,12 @@ public class TransactionsAddController implements Initializable {
                     }
                 };
 
-                retrieve.stateProperty().addListener(new ChangeListener<Worker.State>() {
-                    @Override
-                    public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                        if (newValue == Worker.State.SUCCEEDED) {
-                            initProductTableColumns(products);
-                            wb.closeWindow();
-                        } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
-                            wb.closeWindow();
-                        }
+                retrieve.stateProperty().addListener((observable, oldValue, newValue) -> {
+                    if (newValue == Worker.State.SUCCEEDED) {
+                        initProductTableColumns(products);
+                        wb.closeWindow();
+                    } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
+                        wb.closeWindow();
                     }
                 });
 
