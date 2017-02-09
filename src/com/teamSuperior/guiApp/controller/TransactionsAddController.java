@@ -108,19 +108,19 @@ public class TransactionsAddController implements Initializable {
     public ComboBox<String> currencyComboBox;
     //products table columns
     @FXML
-    private TableColumn<Product, Integer> productIdColumn;
+    private TableColumn<Product, Integer> idProductColumn;
     @FXML
-    private TableColumn<Product, String> productNameColumn;
+    private TableColumn<Product, String> nameProductColumn;
     @FXML
-    private TableColumn<Product, String> productSubnameColumn;
+    private TableColumn<Product, String> subnameProductColumn;
     @FXML
-    private TableColumn<Product, String> productCategoryColumn;
+    private TableColumn<Product, String> categoryProductColumn;
     @FXML
-    private TableColumn<Product, Float> productPriceColumn;
+    private TableColumn<Product, Double> priceProductColumn;
     @FXML
-    private TableColumn<Product, String> productLocationColumn;
+    private TableColumn<Product, String> locationProductColumn;
     @FXML
-    private TableColumn<Product, Integer> productQuantityColumn;
+    private TableColumn<Product, Integer> quantityProductColumn;
     //customer table columns
     @FXML
     private TableColumn<Customer, String> customerNameColumn;
@@ -340,13 +340,20 @@ public class TransactionsAddController implements Initializable {
     }
 
     private void initProductTableColumns(ObservableList<Product> source) {
-        productCategoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-        productIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-        productLocationColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
-        productNameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        productPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        productQuantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-        productSubnameColumn.setCellValueFactory(new PropertyValueFactory<>("subname"));
+        categoryProductColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+        idProductColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        locationProductColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
+        nameProductColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        priceProductColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceProductColumn.setCellFactory(col -> new TableCell<Product, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : Utils.decimalFormat().format(item));
+            }
+        });
+        quantityProductColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+        subnameProductColumn.setCellValueFactory(new PropertyValueFactory<>("subname"));
 
         productsTableView.setItems(source);
     }
