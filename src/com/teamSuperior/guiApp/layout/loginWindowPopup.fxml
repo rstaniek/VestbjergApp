@@ -29,7 +29,7 @@
                 <Insets left="10.0" right="10.0" />
             </GridPane.margin>
         </JFXPasswordField>
-        <JFXButton fx:id="btn_logIn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#btn_logIn_click" prefHeight="31.0" prefWidth="100.0" ripplerFill="#385ba4" style="-fx-background-color: #c3c3c3;" text="Log in" GridPane.rowIndex="2">
+        <JFXButton fx:id="btn_logIn" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" defaultButton="true" onAction="#btn_logIn_click" prefHeight="31.0" prefWidth="100.0" ripplerFill="#385ba4" style="-fx-background-color: #c3c3c3;" text="Log in" GridPane.rowIndex="2">
             <GridPane.margin>
                 <Insets left="20.0" />
             </GridPane.margin>
