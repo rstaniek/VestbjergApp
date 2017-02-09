@@ -7,7 +7,6 @@ import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
-import com.teamSuperior.guiApp.GUI.ConfirmBox;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -200,8 +199,11 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
     }
 
     private void saveChanges(Employee e) {
-        boolean result = ConfirmBox.display("Saving changes", "Are you sure you want to update information about " + selectedEmployee.getName() + "?");
-        if (result) {
+        Alert a = new Alert(Alert.AlertType.CONFIRMATION);
+        a.setHeaderText("Saving changes");
+        a.setContentText(String.format("Are you sure you want to update information about %s?", selectedEmployee.getName()));
+        Optional<ButtonType> yesResponse = a.showAndWait();
+        if (yesResponse.isPresent() && ButtonType.OK.equals(yesResponse.get())) {
             e.setName(nameField.getText());
             e.setSurname(surnameField.getText());
             e.setAddress(addressField.getText());
@@ -263,6 +265,27 @@ public class EmployeeManagementController implements IDataAccessObject<Employee,
             public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
                 if (newValue.equals(Worker.State.SUCCEEDED)) {
                     initTableColumns(loggedInUser.getAccessLevel(), employees);
+                    if (loggedInUser.getAccessLevel() < 3) {
+                        employeesTableView.getColumns().addAll(nameColumn,
+                                surnameColumn,
+                                emailColumn,
+                                positionColumn,
+                                numOfSalesColumn,
+                                totalRevenueColumn,
+                                accessLevelColumn);
+                    } else {
+                        employeesTableView.getColumns().addAll(nameColumn,
+                                surnameColumn,
+                                emailColumn,
+                                positionColumn,
+                                numOfSalesColumn,
+                                totalRevenueColumn,
+                                accessLevelColumn,
+                                addressColumn,
+                                cityColumn,
+                                zipColumn);
+                    }
+                    selectedEmployee = employeesTableView.getFocusModel().getFocusedItem();
                     waitingBox.closeWindow();
                 } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
                     waitingBox.closeWindow();
