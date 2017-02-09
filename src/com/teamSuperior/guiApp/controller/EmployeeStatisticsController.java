@@ -3,10 +3,14 @@ package com.teamSuperior.guiApp.controller;
 import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.model.entity.Employee;
 import com.teamSuperior.guiApp.GUI.Error;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -77,7 +81,7 @@ public class EmployeeStatisticsController implements Initializable {
         employees = FXCollections.observableArrayList();
         searchResults = FXCollections.observableArrayList();
         checkComboBox_search_criteria.getItems().addAll(employeeCriteria);
-        conn = new DBConnect();
+        /*conn = new DBConnect();
         loggedInUser = UserController.getUser();
         try {
             ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
@@ -112,14 +116,74 @@ public class EmployeeStatisticsController implements Initializable {
             Error.displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
         } catch (Exception ex) {
             Error.displayMessage(ERROR, ex.getMessage());
-        }
+        }*/
 
-        //fill the table with data
-        initTableColumns(loggedInUser.getAccessLevel(), employees);
-        selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
-        System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
-        updateStatsView();
-        updateLabels();
+        WaitingBox waitingBox = new WaitingBox();
+        waitingBox.setMessage("Fetching data from the database.");
+        Task<Void> fetch = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(waitingBox::displayIndefinite);
+                conn = new DBConnect();
+                loggedInUser = UserController.getUser();
+                try {
+                    ResultSet rs = conn.getFromDataBase("SELECT * FROM employees");
+                    while (rs.next()) {
+                        if (rs.getInt("id") != -1 && rs.getString("name") != null
+                                && rs.getString("surname") != null
+                                && rs.getString("address") != null
+                                && rs.getString("city") != null
+                                && rs.getString("zip") != null
+                                && rs.getString("email") != null
+                                && rs.getString("phone") != null
+                                && rs.getString("password") != null
+                                && rs.getString("position") != null
+                                && rs.getInt("accessLevel") >= 1
+                                ) {
+                            employees.add(new Employee(rs.getInt("id"),
+                                    rs.getString("name"),
+                                    rs.getString("surname"),
+                                    rs.getString("address"),
+                                    rs.getString("city"),
+                                    rs.getString("zip"),
+                                    rs.getString("email"),
+                                    rs.getString("phone"),
+                                    rs.getString("password"),
+                                    rs.getString("position"),
+                                    rs.getInt("numberOfSales"),
+                                    rs.getDouble("totalRevenue"),
+                                    rs.getInt("accessLevel")));
+                        }
+                    }
+                } catch (SQLException sqlException) {
+                    Error.displayMessage(ERROR, "SQL connection error.", sqlException.getMessage());
+                } catch (Exception ex) {
+                    Error.displayMessage(ERROR, ex.getMessage());
+                }
+                return null;
+            }
+        };
+
+        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    //fill the table with data
+                    initTableColumns(loggedInUser.getAccessLevel(), employees);
+                    waitingBox.closeWindow();
+                    selectedEmployee = (Employee) tableView_employees.getFocusModel().getFocusedItem();
+                    System.out.println(String.format("Currently selected Employee: Name %1$s, Surname %2$s, NOS %3$s, R %4$s", selectedEmployee.getName(), selectedEmployee.getSurname(), selectedEmployee.getNumberOfSales_str(), selectedEmployee.getTotalRevenue_str()));
+                    updateStatsView();
+                    updateLabels();
+                } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread thread = new Thread(fetch);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     private void initTableColumns(int accessLevel, ObservableList<Employee> source) {

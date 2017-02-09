@@ -8,7 +8,13 @@ import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.service.Contractor;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.ProductCategory;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
@@ -59,13 +65,42 @@ public class ProductAddController implements IDataAccessObject<Product, Integer>
     private double validatedPrice = 0.0;
     private int validatedQuantity = 0;
 
+    private ObservableList<ProductCategory> categories;
+    private ObservableList<Contractor> contractors;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        categoryComboBox.setItems(FXCollections.observableArrayList(productCategoryConnectionController.getAll()));
-        categoryComboBox.getSelectionModel().selectFirst();
+        categories = FXCollections.observableArrayList();
+        contractors = FXCollections.observableArrayList();
 
-        contractorComboBox.setItems(FXCollections.observableArrayList(contractorConnectionController.getAll()));
-        contractorComboBox.getSelectionModel().selectFirst();
+        WaitingBox waitingBox = new WaitingBox("Fetching data from the database.");
+        Task<Void> fetch = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                categories.addAll(productCategoryConnectionController.getAll());
+                contractors.addAll(contractorConnectionController.getAll());
+                return null;
+            }
+        };
+
+        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    categoryComboBox.setItems(categories);
+                    contractorComboBox.setItems(contractors);
+                    waitingBox.closeWindow();
+                    categoryComboBox.getSelectionModel().selectFirst();
+                    contractorComboBox.getSelectionModel().selectFirst();
+                } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread thread = new Thread(fetch);
+        thread.setDaemon(true);
+        thread.start();
 
         priceField.textProperty().addListener((observable, oldValue, newValue) -> validatePrice(newValue));
 

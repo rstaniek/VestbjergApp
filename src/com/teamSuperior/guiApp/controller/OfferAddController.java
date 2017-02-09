@@ -4,8 +4,13 @@ import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -54,8 +59,24 @@ public class OfferAddController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        products = FXCollections.observableArrayList(productConnectionController.getAll());
-        productNameLabel.setText("");
+        WaitingBox wb = new WaitingBox("Fetching data from the database.");
+        Task<Void> fetch = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                products = FXCollections.observableArrayList(productConnectionController.getAll());
+                return null;
+            }
+        };
+
+        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    wb.closeWindow();
+                    productNameLabel.setText("");
+                }
+            }
+        });
 
         expiresDatePicker.setConverter(new StringConverter<LocalDate>() {
             @Override
@@ -101,6 +122,10 @@ public class OfferAddController implements Initializable {
         productField.textProperty().addListener(
                 (observable, oldValue, newValue) -> handleProductChange(newValue)
         );
+
+        Thread thread = new Thread(fetch);
+        thread.setDaemon(true);
+        thread.start();
     }
 
     @FXML

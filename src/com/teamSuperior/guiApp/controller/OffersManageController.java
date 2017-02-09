@@ -4,8 +4,14 @@ import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -149,14 +155,32 @@ public class OffersManageController implements Initializable {
         searchResults = FXCollections.observableArrayList();
         searchCriteriaComboBox.getItems().addAll(OFFERS_CRITERIA);
 
-        retrieveData();
-        initTableColumns(offers);
-        selectedOffer = offersTableView.getFocusModel().getFocusedItem();
-        updateText();
-    }
+        WaitingBox waitingBox = new WaitingBox("Fetching data from the database.");
+        Task<Void> fetch = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                offers = FXCollections.observableArrayList(offerConnectionController.getAll());
+                return null;
+            }
+        };
 
-    private void retrieveData() {
-        offers = FXCollections.observableArrayList(offerConnectionController.getAll());
+        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initTableColumns(offers);
+                    waitingBox.closeWindow();
+                    selectedOffer = offersTableView.getFocusModel().getFocusedItem();
+                    updateText();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(fetch);
+        th.setDaemon(true);
+        th.start();
     }
 
     private void initTableColumns(ObservableList<Offer> source) {
@@ -203,11 +227,35 @@ public class OffersManageController implements Initializable {
     private void refreshWindow() {
         offers.removeAll();
         offers = null;
-        offers = FXCollections.observableArrayList();
-        retrieveData();
-        initTableColumns(offers);
-        selectedOffer = offersTableView.getFocusModel().getFocusedItem();
-        updateText();
+        WaitingBox wb = new WaitingBox();
+        wb.setMessage("Refreshing data.");
+        Task<Void> update = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(wb::displayIndefinite);
+                offers = FXCollections.observableArrayList();
+                offers = FXCollections.observableArrayList(offerConnectionController.getAll());
+                return null;
+            }
+        };
+
+        update.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initTableColumns(offers);
+                    wb.closeWindow();
+                    selectedOffer = offersTableView.getFocusModel().getFocusedItem();
+                    updateText();
+                } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    wb.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(update);
+        th.setDaemon(true);
+        th.start();
     }
 
     public void clickUpdate() {

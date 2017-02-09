@@ -5,8 +5,13 @@ import com.teamSuperior.core.connection.DBConnect;
 import com.teamSuperior.core.connection.IDataAccessObject;
 import com.teamSuperior.core.model.Position;
 import com.teamSuperior.core.model.entity.Employee;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,7 +78,7 @@ public class EmployeeAddController implements Initializable, IDataAccessObject<E
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         positions = FXCollections.observableArrayList();
-        conn = new DBConnect();
+        /*conn = new DBConnect();
         try {
             ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
             while (rs.next()) {
@@ -89,7 +94,46 @@ public class EmployeeAddController implements Initializable, IDataAccessObject<E
         } finally {
             choiceBox_position.getItems().addAll(positions.stream().map(Position::getName).collect(Collectors.toList()));
             choiceBox_position.getSelectionModel().selectFirst();
-        }
+        }*/
+
+        WaitingBox waitingBox = new WaitingBox("Fetching data.");
+        Task<Void> fetch = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                conn = new DBConnect();
+                try {
+                    ResultSet rs = conn.getFromDataBase("SELECT * FROM positions");
+                    while (rs.next()) {
+                        if (!rs.getString("name").isEmpty() && rs.getInt("id") != 0) {
+                            positions.add(new Position(rs.getInt("id"), rs.getInt("accessLevel"), rs.getString("name")));
+                        }
+                    }
+                    System.out.print(positions.toString());
+                } catch (SQLException ex) {
+                    displayMessage(ERROR, "SQL connection error", ex.getMessage());
+                } catch (Exception exception) {
+                    displayMessage(ERROR, exception.getMessage());
+                }
+                return null;
+            }
+        };
+
+        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    waitingBox.closeWindow();
+                    choiceBox_position.getItems().addAll(positions.stream().map(Position::getName).collect(Collectors.toList()));
+                    choiceBox_position.getSelectionModel().selectFirst();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(fetch);
+        th.setDaemon(true);
+        th.start();
     }
 
     @FXML
