@@ -13,9 +13,8 @@
         <JFXButton fx:id="clearSearchButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
                    onAction="#clickSearchClear" prefHeight="25.0" prefWidth="25.0" ripplerFill="#f92d26"
                    style="-fx-background-color: #c9c9c9;" text="X"/>
-        <JFXTextField fx:id="searchQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0"
-                      onKeyReleased="#text_search_query_onKeyReleased" prefHeight="25.0" prefWidth="779.0"
-                      promptText="Search..."/>
+        <JFXTextField fx:id="searchQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="13.0" prefHeight="25.0"
+                      prefWidth="779.0" promptText="Search..."/>
         <CheckComboBox fx:id="searchCriteriaComboBox" layoutX="838.0" layoutY="13.0" prefHeight="25" prefWidth="150.0"/>
     </AnchorPane>
     <TableView fx:id="transactionsTableView" layoutY="50.0" onMouseClicked="#clickOffersTableView" prefHeight="383.0"

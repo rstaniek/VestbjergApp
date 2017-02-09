@@ -6,8 +6,6 @@ import com.teamSuperior.core.model.service.Offer;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -164,17 +162,14 @@ public class OffersManageController implements Initializable {
             }
         };
 
-        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue.equals(Worker.State.SUCCEEDED)) {
-                    initTableColumns(offers);
-                    waitingBox.closeWindow();
-                    selectedOffer = offersTableView.getFocusModel().getFocusedItem();
-                    updateText();
-                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
-                    waitingBox.closeWindow();
-                }
+        fetch.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(Worker.State.SUCCEEDED)) {
+                initTableColumns(offers);
+                waitingBox.closeWindow();
+                selectedOffer = offersTableView.getFocusModel().getFocusedItem();
+                updateText();
+            } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                waitingBox.closeWindow();
             }
         });
 
@@ -239,17 +234,14 @@ public class OffersManageController implements Initializable {
             }
         };
 
-        update.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue.equals(Worker.State.SUCCEEDED)) {
-                    initTableColumns(offers);
-                    wb.closeWindow();
-                    selectedOffer = offersTableView.getFocusModel().getFocusedItem();
-                    updateText();
-                } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
-                    wb.closeWindow();
-                }
+        update.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(Worker.State.SUCCEEDED)) {
+                initTableColumns(offers);
+                wb.closeWindow();
+                selectedOffer = offersTableView.getFocusModel().getFocusedItem();
+                updateText();
+            } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                wb.closeWindow();
             }
         });
 
