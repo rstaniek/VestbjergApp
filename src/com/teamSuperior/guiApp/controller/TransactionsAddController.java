@@ -13,6 +13,8 @@ import com.teamSuperior.guiApp.GUI.TextFieldBox;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -153,6 +155,7 @@ public class TransactionsAddController implements Initializable {
     private ObservableList<Offer> offers;
     private ObservableList<Discount> discounts;
     private String currency;
+    private int tasksAlive = 4;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -165,7 +168,93 @@ public class TransactionsAddController implements Initializable {
         searchProductsResults = FXCollections.observableArrayList();
         searchProductsCriteriaComboBox.getItems().addAll(PRODUCTS_CRITERIA);
 
-        Task<Void> retrieve = new Task<Void>() {
+        Task<Void> productTask, customerTask, offerTask, discountTask;
+        productTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                Platform.runLater(initWaitingBox::displayIndefinite);
+                products = FXCollections.observableArrayList(productConnectionController.getAll());
+                return null;
+            }
+        };
+        customerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                customers = FXCollections.observableArrayList(customerConnectionController.getAll());
+                return null;
+            }
+        };
+        offerTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                offers = FXCollections.observableArrayList(offerConnectionController.getAll());
+                return null;
+            }
+        };
+        discountTask = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                discounts = FXCollections.observableArrayList(discountConnectionController.getAll());
+                return null;
+            }
+        };
+
+        productTask.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initProductTableColumns(products);
+                    productsTableView.getSelectionModel().selectFirst();
+                    selectedProduct = productsTableView.getSelectionModel().getSelectedItem();
+                }
+                if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    tasksAlive--;
+                }
+                if (tasksAlive == 0) initWaitingBox.closeWindow();
+            }
+        });
+        customerTask.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initCustomerTableColumns(customers);
+                    customersTableView.getSelectionModel().selectFirst();
+                    selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();
+                }
+                if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    tasksAlive--;
+                }
+                if (tasksAlive == 0) initWaitingBox.closeWindow();
+            }
+        });
+        offerTask.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    tasksAlive--;
+                }
+                if (tasksAlive == 0) initWaitingBox.closeWindow();
+            }
+        });
+        discountTask.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    for (Discount d : discounts) {
+                        if (d.getId() == 5) {
+                            discountThreshold = d.getValue();
+                        }
+                    }
+                }
+                if (newValue.equals(Worker.State.SUCCEEDED) || newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                    tasksAlive--;
+                }
+                if (tasksAlive == 0) initWaitingBox.closeWindow();
+            }
+        });
+
+        //TODO: please don't delete the commented out code yet, still in testing phase
+        /*Task<Void> retrieve = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
                 Platform.runLater(initWaitingBox::displayIndefinite);
@@ -200,15 +289,28 @@ public class TransactionsAddController implements Initializable {
             } else if (newValue == Worker.State.FAILED || newValue == Worker.State.CANCELLED) {
                 initWaitingBox.closeWindow();
             }
-        });
+        });*/
 
         customers = FXCollections.observableArrayList();
         searchCustomersResults = FXCollections.observableArrayList();
         searchCustomersCriteriaComboBox.getItems().addAll(CUSTOMERS_CRITERIA);
 
-        Thread th1 = new Thread(retrieve);
+        /*Thread th1 = new Thread(retrieve);
         th1.setDaemon(true);
+        th1.start();*/
+        Thread th1, th2, th3, th4;
+        th1 = new Thread(customerTask);
+        th2 = new Thread(discountTask);
+        th3 = new Thread(offerTask);
+        th4 = new Thread(productTask);
+        th1.setDaemon(true);
+        th2.setDaemon(true);
+        th3.setDaemon(true);
+        th4.setDaemon(true);
         th1.start();
+        th2.start();
+        th3.start();
+        th4.start();
 
         numOfItemsLabel.setText(String.format("Number of items in the basket: %d", basketItems.size()));
         overallPriceLabel.setText("Total: kr. 0");
