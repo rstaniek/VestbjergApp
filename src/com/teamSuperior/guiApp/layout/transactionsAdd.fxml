@@ -62,7 +62,7 @@
         </ListView>
     </HBox>
     <JFXButton fx:id="clearSearchCustomersButton" layoutX="14.0" layoutY="280.0" mnemonicParsing="false"
-               onAction="#btn_searchCustomers_clear_onClick" prefHeight="25.0" prefWidth="25.0"
+               onAction="#clickClearSearchCustomersQuery" prefHeight="25.0" prefWidth="25.0"
                style="-fx-background-color: #c9c9c9;" text="X"/>
     <JFXTextField fx:id="searchCustomersQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="280.0"
                   onKeyReleased="#handleSearchCustomersQuery" prefHeight="25.0" prefWidth="466.0"

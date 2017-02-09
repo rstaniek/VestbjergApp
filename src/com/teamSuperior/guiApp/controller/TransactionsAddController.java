@@ -202,20 +202,9 @@ public class TransactionsAddController implements Initializable {
             }
         });
 
-        /*retrieveProductsData();
-        initProductTableColumns(products);
-        productsTableView.getSelectionModel().selectFirst();
-        selectedProduct = productsTableView.getSelectionModel().getSelectedItem();*/
-
-
         customers = FXCollections.observableArrayList();
         searchCustomersResults = FXCollections.observableArrayList();
         searchCustomersCriteriaComboBox.getItems().addAll(CUSTOMERS_CRITERIA);
-
-        /*retrieveCustomerData();
-        initCustomerTableColumns(customers);
-        customersTableView.getSelectionModel().selectFirst();
-        selectedCustomer = customersTableView.getSelectionModel().getSelectedItem();*/
 
         Thread th1 = new Thread(retrieve);
         th1.setDaemon(true);
@@ -468,7 +457,7 @@ public class TransactionsAddController implements Initializable {
     }
 
     @FXML
-    public void btn_searchCustomers_clear_onClick() {
+    public void clickClearSearchCustomersQuery() {
         searchCustomersQueryField.clear();
         initCustomerTableColumns(customers);
         selectedCustomer = customersTableView.getFocusModel().getFocusedItem();
@@ -674,12 +663,9 @@ public class TransactionsAddController implements Initializable {
                     protected Void call() throws Exception {
                         employeeConnectionController.update(loggedUser);
                         for (BasketItem item : basketItems) {
-                            for (Product p : products) {
-                                if (p.getId() == item.getItemID()) {
-                                    p.setQuantity(p.getQuantity() - item.getQuantity());
-                                    productConnectionController.update(p);
-                                }
-                            }
+                            Product product = productConnectionController.getById(item.getItemID());
+                            product.setQuantity(product.getQuantity() - item.getQuantity());
+                            productConnectionController.update(product);
                         }
                         return null;
                     }
