@@ -2,8 +2,13 @@ package com.teamSuperior.guiApp.controller;
 
 import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Contractor;
+import com.teamSuperior.guiApp.GUI.WaitingBox;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
@@ -73,13 +78,31 @@ public class ContractorsManageController implements Initializable {
                 (observable, oldValue, newValue) -> applyFilter(newValue)
         );
 
-        retrieveData();
-        initTableColumns(contractors);
-        selectedContractor = contractorsTableView.getFocusModel().getFocusedItem();
-    }
+        WaitingBox waitingBox = new WaitingBox("Fetching data from the database.");
+        Task<Void> fetch = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+                contractors = FXCollections.observableArrayList(contractorConnectionController.getAll());
+                return null;
+            }
+        };
 
-    private void retrieveData() {
-        contractors = FXCollections.observableArrayList(contractorConnectionController.getAll());
+        fetch.stateProperty().addListener(new ChangeListener<Worker.State>() {
+            @Override
+            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    initTableColumns(contractors);
+                    waitingBox.closeWindow();
+                    selectedContractor = contractorsTableView.getFocusModel().getFocusedItem();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
+                }
+            }
+        });
+
+        Thread th = new Thread(fetch);
+        th.setDaemon(true);
+        th.start();
     }
 
     private void initTableColumns(ObservableList<Contractor> source) {
@@ -113,13 +136,37 @@ public class ContractorsManageController implements Initializable {
         yesButton.setText("Yes");
         Optional<ButtonType> yesResponse = a.showAndWait();
         if (yesResponse.isPresent() && ButtonType.OK.equals(yesResponse.get())) {
-            selectedContractor.setName(nameField.getText());
-            selectedContractor.setAddress(addressField.getText());
-            selectedContractor.setCity(cityField.getText());
-            selectedContractor.setZip(zipField.getText());
-            selectedContractor.setPhone(phoneField.getText());
-            contractorConnectionController.update(selectedContractor);
-            refreshTable();
+            WaitingBox waitingBox = new WaitingBox("Updating changes.");
+            Task<Void> update = new Task<Void>() {
+                @Override
+                protected Void call() throws Exception {
+                    selectedContractor.setName(nameField.getText());
+                    selectedContractor.setAddress(addressField.getText());
+                    selectedContractor.setCity(cityField.getText());
+                    selectedContractor.setZip(zipField.getText());
+                    selectedContractor.setPhone(phoneField.getText());
+                    contractorConnectionController.update(selectedContractor);
+
+                    contractors = FXCollections.observableArrayList(contractorConnectionController.getAll());
+                    return null;
+                }
+            };
+
+            update.stateProperty().addListener(new ChangeListener<Worker.State>() {
+                @Override
+                public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                    if (newValue.equals(Worker.State.SUCCEEDED)) {
+                        contractorsTableView.setItems(contractors);
+                        waitingBox.closeWindow();
+                    } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                        waitingBox.closeWindow();
+                    }
+                }
+            });
+
+            Thread thread = new Thread(update);
+            thread.setDaemon(true);
+            thread.start();
         }
     }
 
@@ -139,17 +186,35 @@ public class ContractorsManageController implements Initializable {
                 Optional<ButtonType> deleteFinal = alertFinal.showAndWait();
                 if (deleteFinal.isPresent()) {
                     if (ButtonType.OK.equals(deleteFinal.get())) {
-                        contractorConnectionController.delete(selectedContractor);
-                        refreshTable();
+                        WaitingBox waitingBox = new WaitingBox("Deleting contractor from the database.");
+                        Task<Void> delete = new Task<Void>() {
+                            @Override
+                            protected Void call() throws Exception {
+                                contractorConnectionController.delete(selectedContractor);
+                                contractors = FXCollections.observableArrayList(contractorConnectionController.getAll());
+                                return null;
+                            }
+                        };
+
+                        delete.stateProperty().addListener(new ChangeListener<Worker.State>() {
+                            @Override
+                            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
+                                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                                    contractorsTableView.setItems(contractors);
+                                    waitingBox.closeWindow();
+                                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                                    waitingBox.closeWindow();
+                                }
+                            }
+                        });
+
+                        Thread th = new Thread(delete);
+                        th.setDaemon(true);
+                        th.start();
                     }
                 }
             }
         }
-    }
-
-    private void refreshTable() {
-        retrieveData();
-        contractorsTableView.setItems(contractors);
     }
 
     @FXML
