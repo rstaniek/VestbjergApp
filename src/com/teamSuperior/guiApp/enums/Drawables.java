@@ -11,7 +11,7 @@ public enum Drawables {
     TEAM_LOGO("/img/team_logo.png"),
     X_MAS_IMAGE("/img/post-8868-Have-a-fucking-weekend-and-don-YeZz.jpeg"),
     SPLASH("/img/splash_screen_square.png"),
-    SPLASH_SMALL("/img/splash_screen_square_500px.png"),
+    SPLASH_SMALL("/img/splash_360p.png"),
     ICON("/img/icon_256.png");
 
     private String path;
