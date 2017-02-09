@@ -79,7 +79,6 @@ public class TransactionsViewController implements Initializable {
     private TableColumn<Product, Integer> contractorProductColumn;
 
     private ObservableList<Transaction> transactions;
-    private ObservableList<Transaction> searchResults;
     private ObservableList<Product> products;
     private Transaction selectedTransaction;
 
@@ -88,7 +87,6 @@ public class TransactionsViewController implements Initializable {
         WaitingBox waitingBox = new WaitingBox();
         waitingBox.setMessage("Fetching data.");
         transactions = FXCollections.observableArrayList();
-        searchResults = FXCollections.observableArrayList();
         products = FXCollections.observableArrayList();
         searchCriteriaComboBox.getItems().addAll(TRANSACTION_CRITERIA);
         Task<Void> initData = new Task<Void>() {
@@ -114,19 +112,16 @@ public class TransactionsViewController implements Initializable {
         Thread thread = new Thread(initData);
         thread.setDaemon(true);
         thread.start();
+
+        searchQueryField.textProperty().addListener(
+                (observable, oldValue, newValue) -> applyFilter(newValue)
+        );
     }
 
     @FXML
     public void clickSearchClear() {
         searchQueryField.clear();
         initTransactionTableColumns(transactions);
-    }
-
-    @FXML
-    public void text_search_query_onKeyReleased() {
-        searchResults = null;
-        searchResults = performSearch(searchQueryField.getText());
-        initTransactionTableColumns(searchResults);
     }
 
     private void initTransactionTableColumns(ObservableList<Transaction> source) {
@@ -204,62 +199,64 @@ public class TransactionsViewController implements Initializable {
         th.start();
     }
 
-    private ObservableList<Transaction> performSearch(String query) {
-        ObservableList<Transaction> results = FXCollections.observableArrayList();
-        if (query.isEmpty()) {
-            return transactions;
+    private void applyFilter(String query) {
+        ObservableList<String> clist;
+        if (searchCriteriaComboBox.getCheckModel().getCheckedItems().size() != 0) {
+            clist = searchCriteriaComboBox.getCheckModel().getCheckedItems();
+        } else {
+            clist = FXCollections.observableArrayList(TRANSACTION_CRITERIA);
         }
-        for (Transaction t : transactions) {
-            ObservableList<String> clist;
-            if (searchCriteriaComboBox.getCheckModel().getCheckedItems().size() != 0) {
-                clist = searchCriteriaComboBox.getCheckModel().getCheckedItems();
+        transactionsTableView.setItems(transactions.filtered(transaction -> {
+            if (query == null || query.isEmpty()) {
+                return true;
             } else {
-                clist = FXCollections.observableArrayList(TRANSACTION_CRITERIA);
-            }
-            for (String criteria : clist) {
-                switch (criteria) {
-                    case "ID":
-                        if (String.valueOf(t.getId()).contains(query)) {
-                            results.add(t);
-                        }
-                        break;
-                    case "Discount":
-                        if (t.getDiscountIDs().contains(query)) {
-                            results.add(t);
-                        }
-                        break;
-                    case "Employee ID":
-                        if (String.valueOf(t.getEmployee()).contains(query)) {
-                            results.add(t);
-                        }
-                        break;
+                String lowerCaseFilter = query.toLowerCase();
 
-                    case "Customer ID":
-                        if (String.valueOf(t.getCustomer().getId()).contains(query)) {
-                            results.add(t);
-                        }
-                        break;
+                for (String criteria : clist) {
+                    switch (criteria) {
+                        case "ID":
+                            if (String.valueOf(transaction.getId()).contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
+                        case "Discount":
+                            if (transaction.getDiscountIDs().contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
+                        case "Employee":
+                            if (transaction.getEmployee().toString().toLowerCase().contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
 
-                    case "Product ID":
-                        if (t.getProductIDs().contains(query)) {
-                            results.add(t);
-                        }
-                        break;
-                    case "Date":
-                        if (String.valueOf(t.getCreateDate()).contains(query)) {
-                            results.add(t);
-                        }
-                        break;
-                    case "Description":
-                        if (t.getDescription().contains(query)) {
-                            results.add(t);
-                        }
-                        break;
-                    default:
-                        break;
+                        case "Customer":
+                            if (transaction.getCustomer().toString().contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
+
+                        case "Product ID":
+                            if (transaction.getProductIDs().contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
+                        case "Date":
+                            if (String.valueOf(transaction.getCreateDate()).contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
+                        case "Description":
+                            if (transaction.getDescription().toLowerCase().contains(lowerCaseFilter)) {
+                                return true;
+                            }
+                            break;
+                        default:
+                            break;
+                    }
                 }
+                return false;
             }
-        }
-        return results;
+        }));
     }
 }
