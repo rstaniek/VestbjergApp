@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
-<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.ProductsController" prefHeight="850.0" prefWidth="1000.0"
+<AnchorPane fx:controller="com.teamSuperior.guiApp.controller.ProductsController" stylesheets="/style/product.css" prefHeight="850.0" prefWidth="1000.0"
             xmlns:fx="http://javafx.com/fxml">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
         <JFXButton fx:id="clearSearchButton" layoutX="14.0" layoutY="13.0" mnemonicParsing="false"
@@ -19,15 +19,15 @@
     </AnchorPane>
     <TableView layoutY="50.0" fx:id="tableView" prefHeight="400.0" prefWidth="1000.0">
         <columns>
-            <TableColumn fx:id="idColumn" minWidth="50.0" text="ID"/>
-            <TableColumn fx:id="nameColumn" minWidth="80.0" text="Name"/>
+            <TableColumn fx:id="idColumn" minWidth="20.0" text="ID"/>
+            <TableColumn fx:id="nameColumn" minWidth="120.0" text="Name"/>
             <TableColumn fx:id="subnameColumn" minWidth="150.0" text="Sub name"/>
             <TableColumn fx:id="barcodeColumn" minWidth="60.0" text="Barcode"/>
-            <TableColumn fx:id="categoryColumn" minWidth="80.0" text="Category"/>
+            <TableColumn fx:id="categoryColumn" minWidth="120.0" text="Category"/>
             <TableColumn fx:id="priceColumn" minWidth="80.0" text="Price"/>
-            <TableColumn fx:id="locationColumn" minWidth="220.0" text="Warehouse location"/>
-            <TableColumn fx:id="quantityColumn" minWidth="30.0" text="Q"/>
-            <TableColumn fx:id="contractorColumn" minWidth="50.0" text="Contractor"/>
+            <TableColumn fx:id="locationColumn" minWidth="120.0" text="Warehouse loc."/>
+            <TableColumn fx:id="quantityColumn" minWidth="20.0" text="Q"/>
+            <TableColumn fx:id="contractorColumn" minWidth="120.0" text="Contractor"/>
         </columns>
     </TableView>
     <PieChart fx:id="storageCapPieChart" layoutY="450.0" prefHeight="400.0" prefWidth="400.0" title="Storage Capacity"/>

@@ -10,8 +10,6 @@ import com.teamSuperior.guiApp.GUI.Error;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import com.teamSuperior.guiApp.enums.ErrorCode;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
@@ -83,7 +81,7 @@ public class ProductsController implements IDataAccessObject<Product, Integer>, 
     @FXML
     private TableColumn<Product, String> categoryColumn;
     @FXML
-    private TableColumn<Product, Float> priceColumn;
+    private TableColumn<Product, Double> priceColumn;
     @FXML
     private TableColumn<Product, String> locationColumn;
     @FXML
@@ -107,23 +105,20 @@ public class ProductsController implements IDataAccessObject<Product, Integer>, 
         Task<Void> initData = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Platform.runLater(() -> waitingBox.displayIndefinite());
+                Platform.runLater(waitingBox::displayIndefinite);
                 products = FXCollections.observableArrayList(getAll());
                 return null;
             }
         };
 
-        initData.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue.equals(Worker.State.SUCCEEDED)) {
-                    tableView.setItems(products);
-                    tableView.getSelectionModel().selectFirst();
-                    waitingBox.closeWindow();
-                    runWarehouseCheck();
-                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
-                    waitingBox.closeWindow();
-                }
+        initData.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(Worker.State.SUCCEEDED)) {
+                tableView.setItems(products);
+                tableView.getSelectionModel().selectFirst();
+                waitingBox.closeWindow();
+                runWarehouseCheck();
+            } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                waitingBox.closeWindow();
             }
         });
 
@@ -156,6 +151,13 @@ public class ProductsController implements IDataAccessObject<Product, Integer>, 
         barcodeColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
         categoryColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
         priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        priceColumn.setCellFactory(col -> new TableCell<Product, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : Utils.decimalFormat().format(item));
+            }
+        });
         locationColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
         quantityColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         contractorColumn.setCellValueFactory(new PropertyValueFactory<>("contractor"));
@@ -242,17 +244,14 @@ public class ProductsController implements IDataAccessObject<Product, Integer>, 
                 }
             };
 
-            update.stateProperty().addListener(new ChangeListener<Worker.State>() {
-                @Override
-                public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                    if (newValue.equals(Worker.State.SUCCEEDED)) {
-                        amountToRequestField.clear();
-                        tableView.setItems(products);
-                        tableView.getSelectionModel().selectFirst();
-                        waitingBox.closeWindow();
-                    } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
-                        waitingBox.closeWindow();
-                    }
+            update.stateProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue.equals(Worker.State.SUCCEEDED)) {
+                    amountToRequestField.clear();
+                    tableView.setItems(products);
+                    tableView.getSelectionModel().selectFirst();
+                    waitingBox.closeWindow();
+                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                    waitingBox.closeWindow();
                 }
             });
 
