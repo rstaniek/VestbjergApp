@@ -1,6 +1,7 @@
 package com.teamSuperior.core;
 
 import java.sql.Date;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -68,6 +69,10 @@ public class Utils {
                 pattern = "hh:mm";
         }
         return DateTimeFormatter.ofPattern(pattern);
+    }
+
+    public static DecimalFormat decimalFormat() {
+        return new DecimalFormat("###,###.00");
     }
 
     /***

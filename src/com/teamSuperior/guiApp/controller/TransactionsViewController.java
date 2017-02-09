@@ -1,27 +1,23 @@
 package com.teamSuperior.guiApp.controller;
 
+import com.teamSuperior.core.Utils;
 import com.teamSuperior.core.connection.ConnectionController;
 import com.teamSuperior.core.model.service.Product;
 import com.teamSuperior.core.model.service.Transaction;
 import com.teamSuperior.guiApp.GUI.WaitingBox;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
 import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import org.controlsfx.control.CheckComboBox;
 
 import java.net.URL;
-import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
@@ -36,18 +32,20 @@ public class TransactionsViewController implements Initializable {
 
     @FXML
     public TextField searchQueryField;
+
     @FXML
     public Button clearSearchButton;
+
     @FXML
     public CheckComboBox<String> searchCriteriaComboBox;
+
     @FXML
     public TableView<Transaction> transactionsTableView;
     @FXML
     public TableView<Product> productsTableView;
+
     @FXML
     private TableColumn<Transaction, Integer> idTransactionColumn;
-    @FXML
-    private TableColumn<Transaction, String> productIDsTransactionColumn;
     @FXML
     private TableColumn<Transaction, Integer> customerTransactionColumn;
     @FXML
@@ -59,7 +57,8 @@ public class TransactionsViewController implements Initializable {
     @FXML
     private TableColumn<Transaction, String> descriptionTransactionColumn;
     @FXML
-    private TableColumn<Transaction, Date> dateTransactionColumn;
+    private TableColumn<Transaction, Timestamp> dateTransactionColumn;
+
     @FXML
     private TableColumn<Product, Integer> idProductColumn;
     @FXML
@@ -95,23 +94,20 @@ public class TransactionsViewController implements Initializable {
         Task<Void> initData = new Task<Void>() {
             @Override
             protected Void call() throws Exception {
-                Platform.runLater(() -> waitingBox.displayIndefinite());
+                Platform.runLater(waitingBox::displayIndefinite);
                 transactions = FXCollections.observableArrayList(transactionConnectionController.getAll());
                 return null;
             }
         };
 
-        initData.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue.equals(Worker.State.SUCCEEDED)) {
-                    initTransactionTableColumns(transactions);
-                    waitingBox.closeWindow();
-                    selectedTransaction = transactionsTableView.getFocusModel().getFocusedItem();
-                    initProductsTableColumns();
-                } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
-                    waitingBox.closeWindow();
-                }
+        initData.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(Worker.State.SUCCEEDED)) {
+                initTransactionTableColumns(transactions);
+                waitingBox.closeWindow();
+                selectedTransaction = transactionsTableView.getFocusModel().getFocusedItem();
+                initProductsTableColumns();
+            } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
+                waitingBox.closeWindow();
             }
         });
 
@@ -136,13 +132,25 @@ public class TransactionsViewController implements Initializable {
     private void initTransactionTableColumns(ObservableList<Transaction> source) {
         idTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         dateTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("createDate"));
+        dateTransactionColumn.setCellFactory(col -> new TableCell<Transaction, Timestamp>() {
+            @Override
+            protected void updateItem(Timestamp item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : item.toLocalDateTime().format(Utils.dateFormatter(Utils.FormatterType.DATETIME)));
+            }
+        });
         descriptionTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("description"));
-        discountIDsTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("discountIDs_str"));
+        discountIDsTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("discountIDs"));
         employeeTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("employee"));
         customerTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("customer"));
         priceTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-        productIDsTransactionColumn.setCellValueFactory(new PropertyValueFactory<>("productIDs_str"));
-
+        priceTransactionColumn.setCellFactory(col -> new TableCell<Transaction, Double>() {
+            @Override
+            protected void updateItem(Double item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(empty ? null : Utils.decimalFormat().format(item));
+            }
+        });
         transactionsTableView.setItems(source);
     }
 
@@ -160,30 +168,34 @@ public class TransactionsViewController implements Initializable {
             protected Void call() throws Exception {
                 Integer[] ids = Arrays.stream(selectedTransaction.getProductIDs().split(","))
                         .mapToInt(Integer::parseInt).boxed().toArray(Integer[]::new);
-                products = FXCollections.observableArrayList(productConnectionController.getByArray("id", ids));
+                products = FXCollections.observableArrayList(productConnectionController.listByArray("id", ids));
                 return null;
             }
         };
 
-        initProducts.stateProperty().addListener(new ChangeListener<Worker.State>() {
-            @Override
-            public void changed(ObservableValue<? extends Worker.State> observable, Worker.State oldValue, Worker.State newValue) {
-                if (newValue.equals(Worker.State.SUCCEEDED)) {
-                    idProductColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
-                    nameProductColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-                    subnameProductColumn.setCellValueFactory(new PropertyValueFactory<>("subname"));
-                    barcodeProductColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
-                    categoryProductColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
-                    priceProductColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
-                    locationProductColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
-                    quantityProductColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
-                    contractorProductColumn.setCellValueFactory(new PropertyValueFactory<>("contractor"));
+        initProducts.stateProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue.equals(Worker.State.SUCCEEDED)) {
+                idProductColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+                nameProductColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+                subnameProductColumn.setCellValueFactory(new PropertyValueFactory<>("subname"));
+                barcodeProductColumn.setCellValueFactory(new PropertyValueFactory<>("barcode"));
+                categoryProductColumn.setCellValueFactory(new PropertyValueFactory<>("category"));
+                priceProductColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+                priceProductColumn.setCellFactory(col -> new TableCell<Product, Double>() {
+                    @Override
+                    protected void updateItem(Double item, boolean empty) {
+                        super.updateItem(item, empty);
+                        setText(empty ? null : Utils.decimalFormat().format(item));
+                    }
+                });
+                locationProductColumn.setCellValueFactory(new PropertyValueFactory<>("warehouseLocation"));
+                quantityProductColumn.setCellValueFactory(new PropertyValueFactory<>("quantity"));
+                contractorProductColumn.setCellValueFactory(new PropertyValueFactory<>("contractor"));
 
-                    productsTableView.setItems(products);
-                    waitingBox.closeWindow();
-                } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
-                    waitingBox.closeWindow();
-                }
+                productsTableView.setItems(products);
+                waitingBox.closeWindow();
+            } else if (newValue.equals(Worker.State.CANCELLED) || newValue.equals(Worker.State.FAILED)) {
+                waitingBox.closeWindow();
             }
         });
 
