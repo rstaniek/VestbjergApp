@@ -480,8 +480,8 @@ public class TransactionsAddController implements Initializable {
     }
 
     @FXML
-    public void text_searchCustomers_query_onKeyReleased() {
-        printQueryLog("text_searchCustomers_query_onKeyReleased", searchCustomersCriteriaComboBox, searchCustomersQueryField);
+    public void handleSearchCustomersQuery() {
+        printQueryLog("handleSearchCustomersQuery", searchCustomersCriteriaComboBox, searchCustomersQueryField);
         searchCustomersResults = null;
         searchCustomersResults = performCustomerSearch(searchCustomersQueryField.getText());
         initCustomerTableColumns(searchCustomersResults);
@@ -629,7 +629,7 @@ public class TransactionsAddController implements Initializable {
     }
 
     @FXML
-    public void btn_completePurchase_onClick() {
+    public void clickCompletePurchase() {
         Alert a = new Alert(Alert.AlertType.CONFIRMATION);
         a.setHeaderText("Are you sure you want to complete the transaction?");
         a.setContentText("You will not be able to revert this action!");
@@ -745,7 +745,7 @@ public class TransactionsAddController implements Initializable {
     }
 
     @FXML
-    public void deleteItem_onClick() {
+    public void clickDeleteItem() {
         basketItems.remove(selectedBasketItem);
         System.out.println(basketItems.size());
         basketListView.refresh();
@@ -753,7 +753,7 @@ public class TransactionsAddController implements Initializable {
     }
 
     @FXML
-    public void AddToBasketMore_contextMenu_onClick() {
+    public void clickAddToBasketMore() {
         String ans = TextFieldBox.display("Product quantity", "Quantity");
         if (isInteger(ans)) {
             if (Integer.parseInt(ans) <= selectedProduct.getQuantity()) {

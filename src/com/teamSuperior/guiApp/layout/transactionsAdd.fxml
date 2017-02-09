@@ -6,7 +6,8 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.CheckComboBox?>
-<AnchorPane prefHeight="792.0" prefWidth="1000.0" stylesheets="/style/transaction.css" xmlns="http://javafx.com/javafx/8.0.112"
+<AnchorPane prefHeight="792.0" prefWidth="1000.0" stylesheets="/style/transaction.css"
+            xmlns="http://javafx.com/javafx/8.0.112"
             xmlns:fx="http://javafx.com/fxml/1"
             fx:controller="com.teamSuperior.guiApp.controller.TransactionsAddController">
     <AnchorPane prefHeight="50.0" prefWidth="1000.0">
@@ -39,7 +40,7 @@
             <ContextMenu>
                 <items>
                     <MenuItem mnemonicParsing="false" onAction="#clickAddToBasket" text="Add 1 item"/>
-                    <MenuItem mnemonicParsing="false" onAction="#AddToBasketMore_contextMenu_onClick"
+                    <MenuItem mnemonicParsing="false" onAction="#clickAddToBasketMore"
                               text="Add more..."/>
                 </items>
             </ContextMenu>
@@ -54,7 +55,7 @@
             <contextMenu>
                 <ContextMenu>
                     <items>
-                        <MenuItem mnemonicParsing="false" onAction="#deleteItem_onClick" text="Delete item"/>
+                        <MenuItem mnemonicParsing="false" onAction="#clickDeleteItem" text="Delete item"/>
                     </items>
                 </ContextMenu>
             </contextMenu>
@@ -64,7 +65,7 @@
                onAction="#btn_searchCustomers_clear_onClick" prefHeight="25.0" prefWidth="25.0"
                style="-fx-background-color: #c9c9c9;" text="X"/>
     <JFXTextField fx:id="searchCustomersQueryField" focusColor="#385ba4" layoutX="49.0" layoutY="280.0"
-                  onKeyReleased="#text_searchCustomers_query_onKeyReleased" prefHeight="25.0" prefWidth="466.0"
+                  onKeyReleased="#handleSearchCustomersQuery" prefHeight="25.0" prefWidth="466.0"
                   promptText="Search for customers..."/>
     <CheckComboBox fx:id="searchCustomersCriteriaComboBox" layoutX="528.0" layoutY="280.0" prefHeight="25"
                    prefWidth="139.0"/>
@@ -86,7 +87,7 @@
     <JFXButton fx:id="registerCustomerButton" layoutX="178.0" layoutY="480.0" mnemonicParsing="false"
                onAction="#clickRegisterCustomer" style="-fx-background-color: #c9c9c9;" text="Register a new customer"/>
     <JFXButton fx:id="completePurchaseButton" layoutX="399.0" layoutY="734.0" mnemonicParsing="false"
-               onAction="#btn_completePurchase_onClick" prefHeight="36.0" prefWidth="202.0"
+               onAction="#clickCompletePurchase" prefHeight="36.0" prefWidth="202.0"
                style="-fx-background-color: #c9c9c9;" text="Complete the purchase">
         <font>
             <Font size="16.0"/>
