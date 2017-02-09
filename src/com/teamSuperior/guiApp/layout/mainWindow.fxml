@@ -97,7 +97,7 @@
             </ImageView>
             <JFXButton fx:id="btn_logIn" layoutX="845.0" layoutY="26.0" lineSpacing="1.0" mnemonicParsing="false"
                        onAction="#handleLogIn" prefHeight="50.0" prefWidth="140.0" ripplerFill="#385BA4"
-                       text="Log In">
+                       text="Log In" defaultButton="true">
                 <font>
                     <Font size="25.0"/>
                 </font>
