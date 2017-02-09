@@ -673,6 +673,7 @@ public class TransactionsAddController implements Initializable {
 
                 updateFinal.stateProperty().addListener((observable, oldValue, newValue) -> {
                     if (newValue.equals(Worker.State.SUCCEEDED)) {
+                        clearAll();
                         wb1.closeWindow();
                         displayMessage(INFORMATION, "Transaction completed successfully.");
                     } else if (newValue.equals(Worker.State.FAILED) || newValue.equals(Worker.State.CANCELLED)) {
@@ -683,8 +684,6 @@ public class TransactionsAddController implements Initializable {
                 Thread thread = new Thread(updateFinal);
                 thread.setDaemon(true);
                 thread.start();
-
-                clearAll();
             } catch (Exception ex) {
                 displayMessage(ERROR, ex.getMessage());
             } finally {
