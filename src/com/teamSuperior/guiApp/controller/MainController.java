@@ -848,4 +848,19 @@ public class MainController implements Initializable {
             Error.displayMessage(ERROR, ex.getMessage());
         }
     }
+
+    @FXML
+    public void handleHTTP_products(ActionEvent actionEvent) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/apiProducts.fxml"));
+            Stage window = new Stage();
+            window.setTitle("Test HTTP requests");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
+        }
+    }
 }
