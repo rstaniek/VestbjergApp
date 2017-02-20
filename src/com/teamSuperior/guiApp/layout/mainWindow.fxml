@@ -56,6 +56,7 @@
             </Menu>
             <Menu mnemonicParsing="false" text="Help">
                 <MenuItem mnemonicParsing="false" text="About" onAction="#handleAboutView"/>
+                <MenuItem mnemonicParsing="false" text="HTTP requests" onAction="#handleHTTP"/>
             </Menu>
         </MenuBar>
     </top>

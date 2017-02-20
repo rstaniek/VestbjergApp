@@ -28,10 +28,15 @@ import javafx.scene.control.Hyperlink;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.net.URL;
 import java.sql.ResultSet;
@@ -45,6 +50,7 @@ import java.util.Comparator;
 import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
+import static com.teamSuperior.core.connection.HttpRequestHandler.sendGet;
 import static com.teamSuperior.guiApp.GUI.Error.displayError;
 import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
 import static com.teamSuperior.guiApp.enums.ErrorCode.*;
@@ -826,5 +832,20 @@ public class MainController implements Initializable {
             }
         }
 
+    }
+
+    @FXML
+    public void handleHTTP(ActionEvent actionEvent) {
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/com/teamSuperior/guiApp/layout/httpRequestTest.fxml"));
+            Stage window = new Stage();
+            window.setTitle("Test HTTP requests");
+            window.setResizable(false);
+            Scene scene = new Scene(root);
+            window.setScene(scene);
+            window.show();
+        } catch (IOException ex) {
+            Error.displayMessage(ERROR, ex.getMessage());
+        }
     }
 }

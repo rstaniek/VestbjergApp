@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXTextArea?>
+<?import com.jfoenix.controls.JFXTextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0"
+            prefWidth="800.0" xmlns="http://javafx.com/javafx/8.0.102" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="com.teamSuperior.guiApp.controller.HttpRequestTestController">
+    <children>
+        <JFXTextField fx:id="text_getURL" labelFloat="true" layoutX="14.0" layoutY="56.0" prefHeight="43.0"
+                      prefWidth="461.0" promptText="URL"/>
+        <JFXButton fx:id="btn_sendGET" buttonType="RAISED" layoutX="657.0" layoutY="232.0" mnemonicParsing="false"
+                   onAction="#handleSendGetRequest" ripplerFill="#3bda55" text="Send GET" wrapText="true"/>
+        <JFXTextArea fx:id="textArea_getOutput" layoutX="14.0" layoutY="111.0" prefHeight="84.0" prefWidth="776.0"/>
+        <JFXButton fx:id="btn_sendPOST" buttonType="RAISED" layoutX="641.0" layoutY="283.0" mnemonicParsing="false"
+                   onAction="#handleSendPostRequest" ripplerFill="#3add56" text="Send POST"/>
+        <JFXTextField fx:id="text_username" labelFloat="true" layoutX="14.0" layoutY="232.0" promptText="Username"/>
+        <JFXTextField fx:id="text_pass" labelFloat="true" layoutX="14.0" layoutY="331.0" promptText="Password"/>
+        <JFXTextField fx:id="text_description" labelFloat="true" layoutX="14.0" layoutY="438.0"
+                      promptText="Description"/>
+        <JFXButton fx:id="btn_sedDelete" layoutX="617.0" layoutY="334.0" mnemonicParsing="false"
+                   onAction="#handleHttpDeleteRequest" ripplerFill="#5ec342" text="Send DELETE"/>
+    </children>
+</AnchorPane>
