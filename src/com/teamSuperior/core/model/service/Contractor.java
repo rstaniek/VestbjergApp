@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "contractors")
 public class Contractor implements Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name, address, city, zip, phone, email;
 

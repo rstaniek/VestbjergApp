@@ -14,7 +14,7 @@ import java.util.Locale;
 @Table(name = "employees")
 public class Employee implements Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name, surname, address, city, zip, email, phone, password, position;
     @Transient

@@ -14,7 +14,7 @@ import java.sql.Timestamp;
 @Table(name = "transactions")
 public class Transaction implements Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     @ManyToOne
     private Employee employee;

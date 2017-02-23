@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "productCategories")
 public class ProductCategory implements Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private String name, url;
 

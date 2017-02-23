@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name = "products")
 public class Product implements Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private int quantity;
     private String barcode, name, subname, warehouseLocation;

@@ -4,10 +4,13 @@ import com.teamSuperior.core.model.Model;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.MetadataSources;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
-import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.service.ServiceRegistry;
 
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
 import java.io.Serializable;
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class ConnectionController<T, Id extends Serializable> implements IDataAc
         return currentSession;
     }
 
-    private Session openCurrentSessionwithTransaction() {
+    private Session openCurrentSessionWithTransaction() {
         currentSession = getSessionFactory().openSession();
         currentTransaction = currentSession.beginTransaction();
         return currentSession;
@@ -39,16 +42,14 @@ public class ConnectionController<T, Id extends Serializable> implements IDataAc
         currentSession.close();
     }
 
-    private void closeCurrentSessionwithTransaction() {
+    private void closeCurrentSessionWithTransaction() {
         currentTransaction.commit();
         currentSession.close();
     }
 
     private static SessionFactory getSessionFactory() {
-        Configuration configuration = new Configuration().configure();
-        StandardServiceRegistryBuilder builder = new StandardServiceRegistryBuilder()
-                .applySettings(configuration.getProperties());
-        return configuration.buildSessionFactory(builder.build());
+        final ServiceRegistry registry = new StandardServiceRegistryBuilder().configure().build();
+        return new MetadataSources(registry).buildMetadata().buildSessionFactory();
     }
 
     private Session getCurrentSession() {
@@ -68,9 +69,9 @@ public class ConnectionController<T, Id extends Serializable> implements IDataAc
     }
 
     public void persist(T t) {
-        openCurrentSessionwithTransaction();
+        openCurrentSessionWithTransaction();
         getCurrentSession().save(t);
-        closeCurrentSessionwithTransaction();
+        closeCurrentSessionWithTransaction();
     }
 
     public T getById(Id id) {
@@ -84,8 +85,15 @@ public class ConnectionController<T, Id extends Serializable> implements IDataAc
     @SuppressWarnings("unchecked")
     public List<T> getAll() {
         openCurrentSession();
-        List<T> list = (List<T>) getCurrentSession().createQuery("from " + clazz.getName()).list();
+
+        CriteriaBuilder builder = getCurrentSession().getCriteriaBuilder();
+        CriteriaQuery<T> criteria = builder.createQuery(clazz);
+        criteria.from(clazz);
+
+        List<T> list = getCurrentSession().createQuery(criteria).getResultList();
+
         closeCurrentSession();
+
         return list;
     }
 
@@ -110,24 +118,24 @@ public class ConnectionController<T, Id extends Serializable> implements IDataAc
     }
 
     public void update(T t) {
-        openCurrentSessionwithTransaction();
+        openCurrentSessionWithTransaction();
         getCurrentSession().update(t);
-        closeCurrentSessionwithTransaction();
+        closeCurrentSessionWithTransaction();
     }
 
     public void delete(T t) {
-        openCurrentSessionwithTransaction();
+        openCurrentSessionWithTransaction();
         getCurrentSession().delete(t);
-        closeCurrentSessionwithTransaction();
+        closeCurrentSessionWithTransaction();
     }
 
     public void deleteAll() {
-        openCurrentSessionwithTransaction();
+        openCurrentSessionWithTransaction();
         List<T> people = getAll();
         for (T t : people) {
             delete(t);
         }
-        closeCurrentSessionwithTransaction();
+        closeCurrentSessionWithTransaction();
     }
 
     public void printToJson(List<T> l) {

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Table(name = "offers")
 public class Offer implements Model {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Date expiresDate;
     @ManyToOne
