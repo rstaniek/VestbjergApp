@@ -1,23 +1,13 @@
 package com.teamSuperior.core.connection;
 
 import com.teamSuperior.core.exception.ConnectionException;
-import com.teamSuperior.guiApp.GUI.AlertBox;
-import com.teamSuperior.guiApp.GUI.Error;
-import com.teamSuperior.guiApp.enums.ErrorCode;
-import javafx.fxml.Initializable;
-import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 
-import java.net.URL;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
 import java.util.prefs.Preferences;
 
-import static com.teamSuperior.guiApp.GUI.Error.*;
-import static com.teamSuperior.guiApp.enums.ErrorCode.*;
-import static javafx.scene.control.Alert.*;
-import static javafx.scene.control.Alert.AlertType.*;
+import static com.teamSuperior.guiApp.GUI.Error.displayMessage;
+import static javafx.scene.control.Alert.AlertType.ERROR;
 
 /**
  * Created by Domestos Maximus on 24-Nov-16.
@@ -117,6 +107,10 @@ public class DBConnect {
      */
     public static boolean validateField(TextField tf){
         //TODO: should be implemented better but didn't have creativity to do it better
-        return !(tf.getText().contains(";") || tf.getText().contains("[") || tf.getText().contains("]") || tf.getText().contains("{") || tf.getText().contains("}")) && !tf.getText().isEmpty();
+        return !(tf.getText().contains(";") ||
+                tf.getText().contains("[") ||
+                tf.getText().contains("]") ||
+                tf.getText().contains("{") ||
+                tf.getText().contains("}")) && !tf.getText().isEmpty();
     }
 }
