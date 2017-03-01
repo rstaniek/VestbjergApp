@@ -1,4 +1,4 @@
-package com.teamSuperior.core;
+package com.teamSuperior.core.testingUtilities;
 
 import org.junit.rules.TestRule;
 import org.junit.runner.Description;

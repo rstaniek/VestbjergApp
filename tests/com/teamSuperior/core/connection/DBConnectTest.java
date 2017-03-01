@@ -1,6 +1,6 @@
 package com.teamSuperior.core.connection;
 
-import com.teamSuperior.core.Retry;
+import com.teamSuperior.core.testingUtilities.Retry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;

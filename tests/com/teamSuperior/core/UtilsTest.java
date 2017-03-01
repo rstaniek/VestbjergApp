@@ -7,7 +7,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Random;
 
-import static com.teamSuperior.core.Utils.*;
+import static com.teamSuperior.core.Utils.arrayToString;
+import static com.teamSuperior.core.Utils.isInteger;
 import static org.junit.Assert.*;
 
 /**
@@ -19,17 +20,6 @@ public class UtilsTest {
     @Before
     public void setUp() throws Exception {
         random = new Random();
-    }
-
-    @Test
-    public void testIsNumeric() throws Exception {
-        assertTrue(isNumeric(String.valueOf(random.nextDouble())));
-        assertTrue(isNumeric(String.valueOf(random.nextInt())));
-        assertTrue(isNumeric(String.valueOf(random.nextFloat())));
-
-        assertFalse(isNumeric("asd325"));
-        assertFalse(isNumeric("2345asf"));
-        assertFalse(isNumeric("asghk"));
     }
 
     @Test
